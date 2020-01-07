@@ -1,0 +1,42 @@
+<div class="top-bar">
+	<header class="top-bar__header">
+		<nav class="top-bar__nav">
+			<a href="{{helpLink}}" class="col-md-1 btn top-bar__btn help-btn">Help</a>
+			<a id="logout-btn" class="col-md-1 btn top-bar__btn logout-btn">Log Out</a>
+		</nav>
+	</header>
+</div>
+
+<div class="row header-row">
+	<div class="col-sm-4">
+		<img class="logo-img col-4" src="{{logoPath}}"></a>
+	</div>
+
+	<div class="col-sm-8">
+		<div class="logo-img col-3" {{#not_contains privileges 'ADMIN'}} style="display: none" {{/not_contains}}>Management console</div>
+		{{#not_empty applications}}
+			<div class="dropdown btn btn-secondary header-btn" id="applications-dropdown">
+				<span class="dropdown-toggle" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">Applications</span>
+				<ul class="dropdown-menu" role="menu">
+					{{#each applications}}
+						<li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
+					{{/each}}
+				</ul>
+			</div>
+		{{/not_empty}}
+
+		<div class="dropdown btn btn-secondary header-btn" id="super-admin-dropdown" {{#not_contains privileges 'SUPER_ADMIN'}} style="display: none" {{/not_contains}}>
+			<span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
+			<ul class="dropdown-menu" role="menu">
+				<li class="dropdown"><a id="appMgmt-super-admin" href="/psamaui/applicationManagement">Application management</a></li>
+				<li class="dropdown"><a id="connMgmt-super-admin" href="/psamaui/connectionManagement">Connection management</a></li>
+				<li class="dropdown"><a id="privMgmt-super-admin" href="/psamaui/privilegeManagement">Privilege management</a></li>
+				<li class="dropdown"><a id="roleMgmt-super-admin" href="/psamaui/roleManagement">Role management</a></li>
+			</ul>
+		</div>
+		<a class="btn btn-default header-btn" id="userMgmt-users" href="/psamaui/userManagement" {{#not_contains privileges 'ADMIN'}} style="display: none" {{/not_contains}}>Users
+		</a>
+		<a id="user-profile-btn" class="btn btn-default header-btn">User Profile</a>
+	</div>
+</div>

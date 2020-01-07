@@ -1,0 +1,227 @@
+.container {
+    padding-right: 0; 
+    padding-left: 0;
+}
+
+.row {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+.top-bar {
+    background-color: #6d6e70;
+    color: #ffffff
+}
+
+.top-bar__nav {
+    display: flex;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.sub-nav-pills {
+    padding: 10px;
+    border: 1px solid #6d6e70;
+    border-radius: 0 0 4px 4px;
+}
+
+.sub-nav-pills>li {
+    padding-right: 10px;
+    float: left;
+}
+
+.subcat-row {
+    background-color: rgb(223, 238, 255)
+}
+
+body {
+    background-color: #f4f4f6;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+ #header {
+    color: black;
+    width: 100%;
+    background-color: white;
+}
+
+ #header-content {
+    height: 80px;
+    overflow: hidden;
+    width: 100%;
+    height: unset;
+}
+
+.header-btn {
+    top: 44px; 
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    border-bottom-style: solid;
+    border-bottom-width: 10px;
+    border-bottom-color: white;
+    position: relative;
+    float: left;
+    border-radius: 0px;
+    background-color: transparent;
+    border: none;
+    color: black;
+}
+
+.header-row {
+    color: unset;
+}
+
+
+.header-btn:hover {
+     border-bottom-color: #6d6e70;
+}
+
+.top-bar__btn {
+    background-color: #6d6e70;
+    color: #ffffff;
+    border-radius: unset;
+}
+
+.logo-img {
+    padding-top: 10px;
+}
+
+
+.dropdown-menu {
+    position: fixed;
+    top: unset;
+    left: unset;
+}
+
+.category-restriction-type-row {
+    display:flex;
+    flex-direction: row;
+    padding-bottom: 5px;
+}
+
+.category-filter-restriction-container {
+    flex: 1;
+}
+
+.resizable-select-div {
+    resize: both;
+    overflow: auto;
+    border: 1px solid #6d6e70;
+    padding: 5px;
+    min-height: 175px;
+    width: 40%;
+/*    display: table-cell;  */
+    display: flex;
+    flex-direction: column;
+}
+
+.multi-select-box {
+    flex: 1;
+}
+
+#patient-count-box {
+    background-color: rgb(223, 238, 255);
+    border-radius: 4px;
+}
+
+#pic-sure-instances {
+    width: 90%;
+}
+
+.value-operator-range-label {
+	width: unset;
+}
+
+.filter-qualifier {
+    display: contents;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.filter-search-row {
+    background-color: rgb(223, 238, 255);
+    padding: 10px;
+    border-radius: 4px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.search-box, .filter-search-box {
+    width: 80%;
+}
+
+.tab-pane {
+    overflow-y: unset;
+    max-height: unset;
+}
+
+.search-result-list {
+    overflow-y: auto;
+    max-height: 300px;
+    border-bottom: 1px solid rgb(223, 238, 255);
+}
+
+.filter-list-entry {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.constrain-filter {
+   margin-left: 0;
+}
+
+.constrain-filter button {
+    width: unset;
+}
+
+.constrain-filter input, .constrain-filter-label {
+    padding: 3px 3px;
+    text-align: center;
+}
+
+.constrain-filter-btn {
+    min-width: 160px;
+}
+
+.constrain-range-separator {
+    width: unset;
+    top: 10px;
+    float:left;
+}
+
+.value-type-select, .constrain-type-select {
+	float:left;
+	width: auto
+}
+
+.edit {
+    padding: 6px 6px;
+    width: unset;
+   float:right;
+} 
+
+.delete {
+    float: right;
+}
+
+.change-constraint {
+    float: right;
+}
+
+.search-tooltip-help-icon {
+    float: left;
+}
+
+#prepare-btn {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 25;
+}
+
+.anyvalueof-value-list {
+    max-height: 300;
+    overflow: auto;
+    border: 1px solid;
+    padding: 4px;
+    border-radius: 5px;
+}

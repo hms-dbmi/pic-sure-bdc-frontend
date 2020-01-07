@@ -1,0 +1,14 @@
+{
+  "resources":[
+		{
+			"id" : "HPDS",
+			"name" : "HPDS",
+			"basePath" : "/picsure",
+			"findPath" : "/PIC-SURE/search"
+		}
+		],
+  "picSureResourceId":"",
+  "applicationIdForBaseQuery":"",
+  "helpLink": "about:blank",
+  "advancedSearchLink": ""
+}
