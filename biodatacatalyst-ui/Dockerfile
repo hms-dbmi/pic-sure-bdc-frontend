@@ -1,5 +1,5 @@
-FROM dbmi/pic-sure-hpds-ui:master.0800720 AS pic-sure-ui
-FROM dbmi/pic-sure-auth-ui:fence-integration.7e46cdb1fe84 as psama-ui
+FROM dbmi/pic-sure-hpds-ui:TARGET_BUILD_VERSION AS pic-sure-ui
+FROM dbmi/pic-sure-auth-ui:TARGET_BUILD_VERSION as psama-ui
 FROM httpd:2.4.27-alpine
 
 # Replace virtual host config file with ours
@@ -29,5 +29,5 @@ COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui /usr/local/apache2/h
 COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui/
 COPY src/main/webapp/psamaui /usr/local/apache2/htdocs/psamaui/
 
-COPY DataStage-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
-COPY DataStage-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
+COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
+COPY stacked-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
