@@ -37,7 +37,8 @@ define(["picSure/settings", "text!overrides/not_authorized.hbs", "handlebars"], 
          * as login.displayNotAuthorized() function.
          */
         displayNotAuthorized: function () {
-            $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
+            //$('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
+            window.location = "/";
         }
 	};
 });
