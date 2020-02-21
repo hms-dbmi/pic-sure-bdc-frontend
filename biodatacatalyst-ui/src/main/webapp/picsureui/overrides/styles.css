@@ -1,1 +1,4 @@
 /* Add your style overrides here */
+.advanced-search-btn {
+  display: none;	
+}
