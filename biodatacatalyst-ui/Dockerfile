@@ -4,7 +4,7 @@ FROM httpd:2.4.27-alpine
 
 # Replace virtual host config file with ours
 COPY httpd-vhosts.conf ${HTTPD_PREFIX}/conf/extra/httpd-vhosts.conf
-COPY DataStage-logo.png ${HTTPD_PREFIX}/htdocs/
+COPY stacked-logo.png ${HTTPD_PREFIX}/htdocs/DataStage-logo.png
 
 # Enable virtual hosting config file
 RUN sed -i '/^#Include conf.extra.httpd-vhosts.conf/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
@@ -30,4 +30,4 @@ COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui/
 COPY src/main/webapp/psamaui /usr/local/apache2/htdocs/psamaui/
 
 COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
-COPY stacked-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
+COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
