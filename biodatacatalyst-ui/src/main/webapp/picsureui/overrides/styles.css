@@ -2,3 +2,9 @@
 .advanced-search-btn {
   display: none;	
 }
+
+.logo-img {
+  max-height: 90px;
+  max-width: 100%;
+  padding-top: 10px;
+}
