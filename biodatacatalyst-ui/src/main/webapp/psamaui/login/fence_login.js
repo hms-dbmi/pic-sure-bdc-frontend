@@ -18,7 +18,7 @@ define(['common/session', 'picSure/settings', 'common/searchParser', 'jquery', '
                 }
                 var code = params['code'];
                 if (code) {
-                    $('#main-content').html('DataStage authentication is successful. Processing UserProfile information...');
+                    $('#main-content').html('BioDataCatalyst authentication is successful. Processing UserProfile information...');
 
                     $.ajax({
                         url: '/psama/authentication',
