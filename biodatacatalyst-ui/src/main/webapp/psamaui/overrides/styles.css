@@ -52,7 +52,6 @@ body {
 }
 
 .header-btn {
-    top: 44px; 
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
     border-bottom-style: solid;
     border-bottom-width: 10px;
@@ -68,7 +67,9 @@ body {
 .header-row {
     color: unset;
 }
-
+.help-btn {
+    background-color: transparent;
+}
 
 .header-btn:hover {
      border-bottom-color: #6d6e70;
