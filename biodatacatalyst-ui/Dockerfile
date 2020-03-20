@@ -18,6 +18,7 @@ RUN sed -i '/^#LoadModule proxy_connect_module/s/^#//' ${HTTPD_PREFIX}/conf/http
 RUN sed -i '/^#LoadModule ssl_module modules\/mod_ssl.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN sed -i '/^#LoadModule rewrite_module modules\/mod_rewrite.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
+RUN sed -i 's/DirectoryIndex index.html/DirectoryIndex index_03182020.html/' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
 # copy pic-sure-hpds-ui and psama_ui repos
