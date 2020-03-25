@@ -29,3 +29,22 @@
 #main-content {
     padding-bottom: 20px;
 }
+
+.fence-login-btn {
+	display: block; 
+	padding: 5px; 
+	background-color: #d0d0d0; 
+	width: auto;
+	margin: auto auto;
+}
+
+.fence-login-wrapper {
+	margin: auto auto;
+	text-align: center;
+	display: inline-block;
+}
+
+.fence-inner-span {
+	left: -60px;
+	position: relative;
+}
