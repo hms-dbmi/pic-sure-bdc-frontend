@@ -5,7 +5,7 @@
 
 require.config({
   baseUrl: "/psamaui/",
-  urlArgs: "version=1.0.0",
+  urlArgs: "release_date=03182020",
   paths: {
     jquery: 'webjars/jquery/3.3.1/jquery.min',
     underscore: 'webjars/underscorejs/1.8.3/underscore-min',
@@ -16,8 +16,7 @@ require.config({
     Noty: 'webjars/noty/3.1.4/lib/noty',
     userManagement: "userManagement/",
     common: "common/",
-    tos: "tos/",
-    "header/header": "overrides/header/header"
+    tos: "tos/"
   },
   shim: {
     "bootstrap": {
