@@ -42,16 +42,6 @@ define(["backbone","handlebars", "text!header/header.hbs", "text!../settings/set
 });
 
 
-/*  Set the FavIcon for this site */
-(function() {
-    var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-    link.type = 'image/x-icon';
-    link.rel = 'shortcut icon';
-    link.href = 'static/favicon.ico';
-    document.getElementsByTagName('head')[0].appendChild(link);
-})();
-
-
 /*  Add font */
 
 (function() {
