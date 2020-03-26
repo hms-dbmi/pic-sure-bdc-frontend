@@ -3,10 +3,71 @@
   display: none;	
 }
 
+body {
+    background-color: #f4f4f6;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+
+.logo-div {
+    padding-right: 30px;
+}
+
 .logo-img {
   max-height: 90px;
   max-width: 100%;
   padding-top: 10px;
+  margin-left: 15px;
+}
+
+.top-bar {
+    background-color: #6d6e70;
+    color: #ffffff
+}
+
+.top-bar__nav {
+    display: flex;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.top-bar__btn {
+    background-color: #6d6e70;
+    color: #ffffff;
+    border-radius: unset;
+}
+
+#header {
+     width: 100%;
+     background-color: white;
+     color: black;
+}
+
+#header-content {
+     width: 100%;
+     min-height: unset;
+     padding-left: 0;
+     padding-right: 0;
+}
+
+.header-btn {
+	float: left;
+    top: 44px;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    color:black;
+    background-color:white;
+}
+
+.header-btn:hover {
+     border-bottom-color: #6d6e70;
+}
+
+.btn:hover, .btn:focus {
+    color: #ffffff;
+    background-color: #76a6de;
+    border-color: #76a6de;
 }
 
 /* take out footer padding */

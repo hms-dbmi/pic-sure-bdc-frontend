@@ -1,5 +1,5 @@
-define(["backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json"],
-		function(BB, HBS, template, overrides, settings){
+define(["backbone","handlebars", "text!header/header.hbs", "text!../settings/settings.json"],
+		function(BB, HBS, template, settings){
 	var headerView = BB.View.extend({
 		initialize : function(){
 			this.template = HBS.compile(template);
@@ -13,8 +13,7 @@ define(["backbone","handlebars", "text!header/header.hbs", "overrides/header", "
 		},
 		render : function(){
 			this.$el.html(this.template({
-				logoPath: (overrides.logoPath
-					? overrides.logoPath : "/images/logo.png"),
+				logoPath: ("/images/logo.png"),
 				helpLink: JSON.parse(settings).helpLink
 			}));
 			$.ajax({
