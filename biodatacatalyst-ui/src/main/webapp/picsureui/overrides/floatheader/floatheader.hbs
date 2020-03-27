@@ -1,7 +1,13 @@
 <div class="top-bar">
 	<header class="top-bar__header">
 		<nav class="top-bar__nav">
-			<a href="{{helpLink}}" class="col-md-1 btn top-bar__btn help-btn">Help</a>
+			<div class="col-md-1 dropdown btn top-bar__btn help-btn" id="help-dropdown">
+		        <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Help</span>
+		        <ul class="dropdown-menu" role="menu">
+			        <li class="dropdown"><a href="{{{pdfLink}}}" target="_blank" "="">User Guide</a></li>
+		            <li class="dropdown"><a href="{{{helpLink}}}" target="_blank" "="">Contact Us</a></li>
+				</ul>
+		    </div>
 			<a id="logout-btn" class="col-md-1 btn top-bar__btn logout-btn">Log Out</a>
 		</nav>
 	</header>

@@ -1,4 +1,9 @@
 /* Add your style overrides here */
+.login-logo {
+    width: 50%;
+    padding-top: 20px;
+}
+
 .advanced-search-btn {
   display: none;	
 }
