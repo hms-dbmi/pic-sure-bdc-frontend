@@ -17,8 +17,8 @@ require.config({
     Noty: 'webjars/noty/3.1.4/lib/noty',
     userManagement: "userManagement/",
     common: "common/",
-    tos: "tos/",
-	"header/header" : "overrides/floatheader/floatheader"
+    tos: "tos/"
+	//"header/header" : "overrides/floatheader/floatheader"
   },
   shim: {
     "bootstrap": {

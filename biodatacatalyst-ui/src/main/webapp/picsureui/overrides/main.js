@@ -15,7 +15,7 @@ define([],function(){
 			 *  "picSure/queryBuilder" : "path/in/src/main/javascript/newQueryBuilder",
 			 *  "common/login" : "path/in/src/main/javascript/newLogin"
 			 */
-			"header/header" : "overrides/floatheader/floatheader"
+			// "header/header" : "overrides/floatheader/floatheader"
 		}
 	});	
 });
