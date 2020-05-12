@@ -1,4 +1,4 @@
-define([], function(){
+define(["jquery"], function($){
 	return {
 		/*
 		 * A function that takes a PUI that is already split on forward slash and returns
