@@ -3,7 +3,8 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration){
 
     var studyAccessFunctions = {
         ready: false,
-        displayData: false
+        displayData: false,
+		freezeMsg: "Current TOPMed data is Freeze5b"
     };
 
     studyAccessFunctions.init = function() {
@@ -55,6 +56,7 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration){
 
     studyAccessFunctions.showPage = function(in_studyAccess) {
             $("#modal-window").html(this.modalTemplate({title: "BioData Catalyst Data Access"}));
+            $(".modal-title").after("<div>" + this.freezeMsg + "</div>");
             $("#modalDialog").show();
             $(".modal-body").html(this.studyAccessTemplate(in_studyAccess));
             $('.close').click(this.closePage);
