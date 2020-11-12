@@ -1,5 +1,5 @@
-define(["handlebars", "text!options/modal.hbs", "text!studyAccess/studyAccessTemplate.hbs", "text!studyAccess/studies-data.json"],
-function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration){
+define(["handlebars", "text!options/modal.hbs", "text!studyAccess/studyAccessTemplate.hbs", "text!studyAccess/studies-data.json", "common/transportErrors"],
+function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, transportErrors){
 
     var studyAccessFunctions = {
         ready: false,
@@ -44,22 +44,36 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration){
     }.bind(studyAccessFunctions);
 
     studyAccessFunctions.addHeaderTab = function() {
-            // initialize if not already done
-            this.init();
-            // inject button and click handler
-            $('<a class="col-md-2 btn btn-default header-btn" id="data-access-btn" href="#">Data Access</a>').insertAfter("#user-profile-btn");
-            $('#data-access-btn').click(function(e){
-                this.showPage(this.displayData);
-                e.currentTarget.blur();
-            }.bind(this));
+        // initialize if not already done
+        this.init();
+        // inject button and click handler
+        $('<a class="col-md-2 btn btn-default header-btn" id="data-access-btn" href="#">Data Access</a>').insertAfter("#user-profile-btn");
+        $('#data-access-btn').click(function(e){
+            this.showPage(this.displayData);
+            e.currentTarget.blur();
+        }.bind(this));
     }.bind(studyAccessFunctions);
 
     studyAccessFunctions.showPage = function(in_studyAccess) {
-            $("#modal-window").html(this.modalTemplate({title: "BioData Catalyst Data Access"}));
-            $(".modal-title").after("<div>" + this.freezeMsg + "</div>");
-            $("#modalDialog").show();
-            $(".modal-body").html(this.studyAccessTemplate(in_studyAccess));
-            $('.close').click(this.closePage);
+        if (typeof(in_studyAccess) == "undefined") { in_studyAccess = this.displayData}
+        if ($("#modal-window").length == 0) $("body").append('<div id="modal-window"></div>');
+        $("#modal-window").html(this.modalTemplate({title: "BioData Catalyst Data Access"}));
+        $(".modal-title").after("<div>" + this.freezeMsg + "</div>");
+        $("#modalDialog").show();
+        $(".modal-body").html(this.studyAccessTemplate(in_studyAccess));
+        $('.close').click(this.closePage);
+    }.bind(studyAccessFunctions);
+
+    studyAccessFunctions.showBlocker = function() {
+        if ($("#modal-window").length == 0) $("body").append('<div id="modal-window"></div>');
+        $("#modal-window").html(this.modalTemplate({title: "BioData Catalyst Data Access"}));
+        $(".modal-title").after("<div>" + this.freezeMsg + "</div>");
+        $("#modalDialog").show();
+        $(".modal-body").html(this.studyAccessTemplate(this.displayData));
+        $('.close').click(function() {
+            sessionStorage.clear();
+            window.location = require("common/transportErrors").redirectionUrl;
+        });
     }.bind(studyAccessFunctions);
 
     studyAccessFunctions.closePage = function() {

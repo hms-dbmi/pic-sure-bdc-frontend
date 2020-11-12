@@ -22,7 +22,8 @@
     .modal-body table thead tr th:nth-child(5),
     .modal-body table thead tr th:nth-child(6),
     .modal-body table thead tr th:nth-child(7),
-    .modal-body table thead tr th:nth-child(8) {
+    .modal-body table thead tr th:nth-child(8),
+    .modal-body table tbody tr td:nth-child(10) {
         width: 1%;
     }
 
@@ -54,7 +55,7 @@
     <tbody>
     {{#each permitted}}
         <tr>
-            <td>{{study_identifer}}</td>
+            <td>{{study_identifier}}</td>
             <td>{{abbreviated_name}}</td>
             <td>{{full_study_name}}</td>
             <td>{{consent_group_name}}</td>
@@ -69,7 +70,7 @@
     {{/each}}
     {{#each denied}}
         <tr>
-            <td>{{study_identifer}}</td>
+            <td>{{study_identifier}}</td>
             <td>{{abbreviated_name}}</td>
             <td>{{full_study_name}}</td>
             <td>{{consent_group_name}}</td>
@@ -80,7 +81,7 @@
             <td>{{study_version}}</td>
             <td>{{study_phase}}</td>
             <td>
-                <a href="{{Access_Link}}" target="_blank">
+                <a href="{{request_access}}" target="_blank">
                     <span class="btn btn-primary">Request</span>
                 </a>
             </td>
