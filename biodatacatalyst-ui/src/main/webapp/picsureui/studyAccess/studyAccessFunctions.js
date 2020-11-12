@@ -12,18 +12,18 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
             this.displayData = {"permitted": [], "denied": []};
             // extract the consent identifiers from the query template
             var session = JSON.parse(sessionStorage.getItem("session"));
-            var validConsents = session.queryTemplate.categoryFilters["\\_Consents\\Short Study Accession with Consent Code\\"];
+            var validConsents = JSON.parse(session.queryTemplate).categoryFilters["\\_consents\\"];
 
             // process the study data into permission granted or not groups
             for (groupid in this.configurationData) {
                 for (idx=0; idx < this.configurationData[groupid].length; idx++) {
                     // determine if logged in user is permmited access
                     var tmpStudy = this.configurationData[groupid][idx];
-                    tmpStudy["consent_group_code"] = tmpStudy["consent_group_code"];
                     tmpStudy["clinical_variable_count"] = parseInt(tmpStudy["clinical_variable_count"]).toLocaleString();
                     tmpStudy["clinical_sample_size"] = parseInt(tmpStudy["clinical_sample_size"]).toLocaleString();
                     tmpStudy["genetic_sample_size"] = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
-                    if (validConsents.includes(tmpStudy["consent_group_code"])) {
+                    var studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"]
+                    if (validConsents.includes(studyConsent)) {
                         this.displayData.permitted.push(tmpStudy);
                     } else {
                         this.displayData.denied.push(tmpStudy);
@@ -82,7 +82,6 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
 
     studyAccessFunctions.modalTemplate = HBS.compile(modalTemplate);
     studyAccessFunctions.studyAccessTemplate = HBS.compile(studyAccessTemplate);
-    studyAccessFunctions.configurationData = JSON.parse(studyAccessConfiguration);
     studyAccessFunctions.configurationData = JSON.parse(studyAccessConfiguration);
 
     return studyAccessFunctions;
