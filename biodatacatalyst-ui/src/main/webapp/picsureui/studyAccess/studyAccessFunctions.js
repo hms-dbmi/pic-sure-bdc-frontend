@@ -19,7 +19,7 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
                 for (idx=0; idx < this.configurationData[groupid].length; idx++) {
                     // determine if logged in user is permmited access
                     var tmpStudy = this.configurationData[groupid][idx];
-                    tmpStudy["consent_group_code"] = tmpStudy["consent_group_code"].replaceAll("PRIV_FENCE_", "").replaceAll("_",".");
+                    tmpStudy["consent_group_code"] = tmpStudy["consent_group_code"];
                     tmpStudy["clinical_variable_count"] = parseInt(tmpStudy["clinical_variable_count"]).toLocaleString();
                     tmpStudy["clinical_sample_size"] = parseInt(tmpStudy["clinical_sample_size"]).toLocaleString();
                     tmpStudy["genetic_sample_size"] = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
