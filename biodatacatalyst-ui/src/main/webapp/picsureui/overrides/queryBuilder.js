@@ -26,11 +26,11 @@ define(["jquery"], function($){
 			
 			topmedPresent = false;
 			
-			if(_.keys(query.query.variantInfoFilters[0].numericVariantInfoFilters).length == 0){
+			if(_.keys(query.query.variantInfoFilters[0].numericVariantInfoFilters).length > 0){
 				topmedPresent = true;
 			}
 			
-			if(_.keys(query.query.variantInfoFilters[0].categoryVariantInfoFilters).length == 0){
+			if(_.keys(query.query.variantInfoFilters[0].categoryVariantInfoFilters).length > 0){
 				topmedPresent = true;
 			}
 			
