@@ -9,7 +9,7 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
 
     studyAccessFunctions.init = function() {
             if (this.ready === true) return;
-            this.displayData = {"permitted": [], "denied": []};
+            this.displayData = {"permitted": [], "denied": [], "na": []};
             // extract the consent identifiers from the query template
             var session = JSON.parse(sessionStorage.getItem("session"));
             var validConsents = JSON.parse(session.queryTemplate).categoryFilters["\\_consents\\"];
@@ -26,7 +26,11 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
                     if (validConsents.includes(studyConsent)) {
                         this.displayData.permitted.push(tmpStudy);
                     } else {
-                        this.displayData.denied.push(tmpStudy);
+                        if (tmpStudy["consent_group_code"] == "c0") {
+                            this.displayData.na.push(tmpStudy);
+                        } else {
+                            this.displayData.denied.push(tmpStudy);
+                        }
                     }
                     // sort by "consent group" then "abbreviated name"
                     var funcSort = function (a, b) {
@@ -38,6 +42,7 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
                     };
                     this.displayData.permitted.sort(funcSort);
                     this.displayData.denied.sort(funcSort);
+                    this.displayData.na.sort(funcSort);
                 }
             }
             this.ready = true;

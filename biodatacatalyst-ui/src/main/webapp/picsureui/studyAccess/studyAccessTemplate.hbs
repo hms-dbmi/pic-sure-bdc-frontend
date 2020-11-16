@@ -36,6 +36,10 @@
         height:75% !important;
     }
 
+    #modalDialog span.btn {
+        width: 100px;
+    }
+
     div.modal-body table th {
         position: -webkit-sticky;
         position: sticky;
@@ -93,6 +97,23 @@
                 <a href="{{request_access}}" target="_blank">
                     <span class="btn btn-primary">Request</span>
                 </a>
+            </td>
+        </tr>
+    {{/each}}
+    {{#each na}}
+        <tr>
+            <td>{{study_identifier}}</td>
+            <td>{{abbreviated_name}}</td>
+            <td>{{full_study_name}}</td>
+            <td>{{consent_group_name}}</td>
+            <td>{{clinical_variable_count}}</td>
+            <td>{{clinical_sample_size}}</td>
+            <td>{{genetic_sample_size}}</td>
+            <td></td>
+            <td>{{study_version}}</td>
+            <td>{{study_phase}}</td>
+            <td>
+                <span class="btn btn-default disabled">N/A</span>
             </td>
         </tr>
     {{/each}}
