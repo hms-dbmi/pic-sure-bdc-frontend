@@ -20,7 +20,7 @@ define(["jquery", "studyAccess/studyAccessFunctions"],
                     studyAccess.init();
                     studyAccess.showBlocker();
                 } else {
-                    window.location.href = this.redirectionUrl;
+                    window.location.href = "/psamaui/logout";
                 }
             }
             return false;
