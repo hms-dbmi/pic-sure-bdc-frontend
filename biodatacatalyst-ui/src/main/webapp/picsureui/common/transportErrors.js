@@ -5,7 +5,7 @@ define(["jquery", "studyAccess/studyAccessFunctions"],
 
         transportErrorHandlers.handleAll = function (response) {
             var hasError = false;
-            if (!hasError && this.handle401(response)) {
+            if (this.handle401(response)) {
                 console.debug("Captured HTTP 401 response");
                 hasError = true;
             }
@@ -16,9 +16,12 @@ define(["jquery", "studyAccess/studyAccessFunctions"],
         transportErrorHandlers.handle401 = function (response, redirectionUrl = false) {
             if (redirectionUrl === false) redirectionUrl = this.redirectionUrl;
             if (response.status === 401) {
-                studyAccess.init();
-                studyAccess.showBlocker();
-                return true;
+                if (new Date().getTime()/1000 < JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp) {
+                    studyAccess.init();
+                    studyAccess.showBlocker();
+                } else {
+                    window.location.href = this.redirectionUrl;
+                }
             }
             return false;
         }.bind(transportErrorHandlers);

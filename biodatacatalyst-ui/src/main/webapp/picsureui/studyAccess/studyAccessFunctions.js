@@ -12,7 +12,16 @@ function(HBS, modalTemplate, studyAccessTemplate, studyAccessConfiguration, tran
             this.displayData = {"permitted": [], "denied": [], "na": []};
             // extract the consent identifiers from the query template
             var session = JSON.parse(sessionStorage.getItem("session"));
-            var validConsents = JSON.parse(session.queryTemplate).categoryFilters["\\_consents\\"];
+            if (session.queryTemplate === undefined ) {
+                var validConsents = [];
+            } else {
+                var temp = JSON.parse(session.queryTemplate);
+                if (temp.categoryFilters === undefined || temp.categoryFilters["\\_consents\\"] === undefined) {
+                    var validConsents = [];
+                } else {
+                    var validConsents = temp.categoryFilters["\\_consents\\"];
+                }
+            }
 
             // process the study data into permission granted or not groups
             for (groupid in this.configurationData) {
