@@ -5,7 +5,7 @@
 
     .modal-body table thead tr th,
     .modal-body table tbody tr td:nth-child(2),
-    .modal-body table tbody tr td:nth-child(5),
+    .modal-body table tbody tr td:nth-child(3),
     .modal-body table tbody tr td:nth-child(6),
     .modal-body table tbody tr td:nth-child(7),
     .modal-body table tbody tr td:nth-child(8),
@@ -15,10 +15,11 @@
         text-align: center;
     }
 
-    .modal-body table thead tr th:nth-child(3) {
+    .modal-body table thead tr th:nth-child(4) {
         text-align: left;
     }
 
+    .modal-body table thead tr th:nth-child(3),
     .modal-body table thead tr th:nth-child(5),
     .modal-body table thead tr th:nth-child(6),
     .modal-body table thead tr th:nth-child(7),
@@ -37,7 +38,7 @@
     }
 
     #modalDialog span.btn {
-        width: 100px;
+        width: 100px
     }
 
     div.modal-body table th {
@@ -48,18 +49,36 @@
         background-color: white;
     }
 
+    .btn-blue {
+        background-color: #1a568c;
+    }
+
+    .study-lst-btn1, .study-lst-btn2 {
+        height: 2.5em;
+        background: #f4f4f6;
+        color: #000;
+    }
+    .study-lst-btn-no-hov:hover {
+        color: #000;
+        background-color: #fff;
+    }
+
+    .study-lst-btn2:hover {
+        background-color: #76a6de;
+    }
+
 </style>
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Identifier</th>
             <th>Code</th>
+            <th>Data Type</th>
             <th>Name</th>
             <th>Consents</th>
             <th>Clinical Variables</th>
             <th>Participants with Phenotypes</th>
             <th>Genotype Samples</th>
-            <th>Imaging Data Available</th>
             <th>Version</th>
             <th>Participant Number</th>
             <th>Access</th>
@@ -70,12 +89,12 @@
         <tr>
             <td>{{study_identifier}}</td>
             <td>{{abbreviated_name}}</td>
+            <td>{{data_type}}</td>
             <td>{{full_study_name}}</td>
             <td>{{consent_group_name}}</td>
             <td>{{clinical_variable_count}}</td>
             <td>{{clinical_sample_size}}</td>
             <td>{{genetic_sample_size}}</td>
-            <td></td>
             <td>{{study_version}}</td>
             <td>{{study_phase}}</td>
             <td><span class="btn btn-default disabled">Granted</span></td>
@@ -85,31 +104,37 @@
         <tr>
             <td>{{study_identifier}}</td>
             <td>{{abbreviated_name}}</td>
+            <td>{{data_type}}</td>
             <td>{{full_study_name}}</td>
             <td>{{consent_group_name}}</td>
             <td>{{clinical_variable_count}}</td>
             <td>{{clinical_sample_size}}</td>
             <td>{{genetic_sample_size}}</td>
-            <td></td>
             <td>{{study_version}}</td>
             <td>{{study_phase}}</td>
             <td>
                 <a href="{{request_access}}" target="_blank">
-                    <span class="btn btn-primary">Request</span>
+                    <span class="btn btn-primary btn-blue">Request</span>
                 </a>
             </td>
         </tr>
     {{/each}}
-    {{#each na}}
         <tr>
+            <td colspan="11" style="background-color: #fff;" align="right"><div class="btn-group" role="group" style="position: relative;">
+                <button type="button" class="btn btn-default btn-lg study-lst-btn1 study-lst-btn-no-hov">Studies with data unavailable (withdrawn or no consents)</button>
+                <button type="button" class="btn btn-default btn-lg study-lst-btn2"><span id="no-consent-toggle" class="glyphicon glyphicon-chevron-down"></span></button>
+            </div></td>
+        </tr>
+    {{#each na}}
+        <tr class="no-consent-row">
             <td>{{study_identifier}}</td>
             <td>{{abbreviated_name}}</td>
+            <td>{{data_type}}</td>
             <td>{{full_study_name}}</td>
             <td>{{consent_group_name}}</td>
             <td>{{clinical_variable_count}}</td>
             <td>{{clinical_sample_size}}</td>
             <td>{{genetic_sample_size}}</td>
-            <td></td>
             <td>{{study_version}}</td>
             <td>{{study_phase}}</td>
             <td>
