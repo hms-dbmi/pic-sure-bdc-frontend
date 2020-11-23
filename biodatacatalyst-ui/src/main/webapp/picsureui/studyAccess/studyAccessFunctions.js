@@ -12,10 +12,15 @@ function(HBS, transportErrors, modalTemplate, studyAccessTemplate, studyAccessCo
             this.displayData = {"permitted": [], "denied": [], "na": []};
             // extract the consent identifiers from the query template
             var session = JSON.parse(sessionStorage.getItem("session"));
-            try {
-                var validConsents = session.queryTemplate.categoryFilters["\\_Consents\\Short Study Accession with Consent Code\\"];
-            } catch(err) {
+            if (session.queryTemplate === undefined) {
                 var validConsents = [];
+            } else {
+                var temp = JSON.parse(session.queryTemplate);
+                if (temp.categoryFilters === undefined || temp.categoryFilters["\\_consents\\"] === undefined) {
+                    var validConsents = [];
+                } else {
+                    var validConsents = temp.categoryFilters["\\_consents\\"];
+                }
             }
 
             // process the study data into permission granted or not groups
@@ -23,32 +28,32 @@ function(HBS, transportErrors, modalTemplate, studyAccessTemplate, studyAccessCo
                 for (idx=0; idx < this.configurationData[groupid].length; idx++) {
                     // determine if logged in user is permmited access
                     var tmpStudy = this.configurationData[groupid][idx];
-                    tmpStudy["consent_group_code"] = tmpStudy["consent_group_code"].replaceAll("PRIV_FENCE_", "").replaceAll("_",".");
                     tmpStudy["clinical_variable_count"] = parseInt(tmpStudy["clinical_variable_count"]).toLocaleString();
                     tmpStudy["clinical_sample_size"] = parseInt(tmpStudy["clinical_sample_size"]).toLocaleString();
                     tmpStudy["genetic_sample_size"] = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
-                    if (validConsents.includes(tmpStudy["consent_group_code"])) {
+                    var studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"];
+                    if (validConsents.includes(studyConsent)) {
                         this.displayData.permitted.push(tmpStudy);
                     } else {
-			if (tmpStudy["consent_group_code"] == "c0") {
+            			if (tmpStudy["consent_group_code"] == "c0") {
                             this.displayData.na.push(tmpStudy);
                         } else {
                             this.displayData.denied.push(tmpStudy);
                         }
                     }
-                    // sort by "consent group" then "abbreviated name"
-                    var funcSort = function (a, b) {
-                        if (a["abbreviated_name"] == b["abbreviated_name"]) {
-       	                    return (a["consent_group_name"] > b["consent_group_name"]);
-                        } else {
-                            return (a["abbreviated_name"] > b["abbreviated_name"]);
-                        }
-                    };
-                    this.displayData.permitted.sort(funcSort);
-                    this.displayData.denied.sort(funcSort);
-                    this.displayData.na.sort(funcSort);
                 }
             }
+            // sort by "consent group" then "abbreviated name"
+            var funcSort = function (a, b) {
+                if (a["abbreviated_name"] == b["abbreviated_name"]) {
+                    return (a["consent_group_name"] > b["consent_group_name"]);
+                } else {
+                    return (a["abbreviated_name"] > b["abbreviated_name"]);
+                }
+            };
+            this.displayData.permitted.sort(funcSort);
+            this.displayData.denied.sort(funcSort);
+            this.displayData.na.sort(funcSort);
             this.ready = true;
     }.bind(studyAccessFunctions);
 
@@ -107,11 +112,9 @@ function(HBS, transportErrors, modalTemplate, studyAccessTemplate, studyAccessCo
         }
     }.bind(studyAccessFunctions);
 
-
-
+    
     studyAccessFunctions.modalTemplate = HBS.compile(modalTemplate);
     studyAccessFunctions.studyAccessTemplate = HBS.compile(studyAccessTemplate);
-    studyAccessFunctions.configurationData = JSON.parse(studyAccessConfiguration);
     studyAccessFunctions.configurationData = JSON.parse(studyAccessConfiguration);
 
     return studyAccessFunctions;
