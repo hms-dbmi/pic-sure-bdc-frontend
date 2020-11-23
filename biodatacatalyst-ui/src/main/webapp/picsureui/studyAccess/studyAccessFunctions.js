@@ -32,11 +32,11 @@ function(HBS, transportErrors, modalTemplate, studyAccessTemplate, studyAccessCo
                     tmpStudy["clinical_sample_size"] = parseInt(tmpStudy["clinical_sample_size"]).toLocaleString();
                     tmpStudy["genetic_sample_size"] = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
                     var studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"];
-                    if (validConsents.includes(studyConsent)) {
-                        this.displayData.permitted.push(tmpStudy);
+                    if (tmpStudy["consent_group_code"] == "c0") {
+                        this.displayData.na.push(tmpStudy);
                     } else {
-            			if (tmpStudy["consent_group_code"] == "c0") {
-                            this.displayData.na.push(tmpStudy);
+                        if (validConsents.includes(studyConsent)) {
+                            this.displayData.permitted.push(tmpStudy);
                         } else {
                             this.displayData.denied.push(tmpStudy);
                         }
@@ -112,7 +112,7 @@ function(HBS, transportErrors, modalTemplate, studyAccessTemplate, studyAccessCo
         }
     }.bind(studyAccessFunctions);
 
-    
+
     studyAccessFunctions.modalTemplate = HBS.compile(modalTemplate);
     studyAccessFunctions.studyAccessTemplate = HBS.compile(studyAccessTemplate);
     studyAccessFunctions.configurationData = JSON.parse(studyAccessConfiguration);
