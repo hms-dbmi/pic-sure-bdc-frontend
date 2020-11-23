@@ -4,7 +4,7 @@ function(HBS, transportErrors, modalTemplate, studyAccessTemplate, studyAccessCo
     var studyAccessFunctions = {
         ready: false,
         displayData: false,
-		freezeMsg: "Current genomic data is Freeze5b"
+		freezeMsg: "Current TOPMed genomic data is Freeze5b"
     };
 
     studyAccessFunctions.init = function() {
