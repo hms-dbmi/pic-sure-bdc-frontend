@@ -60,7 +60,7 @@ define(["handlebars", "backbone"], function(HBS, BB){
 				    return concept.includes(parsedSettings.harmonizedPath);
 				}).length  == 0
 			){
-				console.log("removing harmonized consents");
+//				console.log("removing harmonized consents");
 				query.query.categoryFilters[parsedSettings.harmonizedConsentPath] = undefined;
 			}
 			
@@ -76,7 +76,7 @@ define(["handlebars", "backbone"], function(HBS, BB){
 			}
 			
 			if(!topmedPresent){
-				console.log("removing Topmed consents");
+//				console.log("removing Topmed consents");
 				query.query.categoryFilters[parsedSettings.topmedConsentPath] = undefined;
 			}
 			
