@@ -1,0 +1,10 @@
+<div>
+	<div id="patient-count-box">
+		<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+		<span id="patient-count" class="blue center large">{{#if queryRan}}{{#if countDisplayOverride}}{{> (countDisplayOverride) totalPatients}}{{else}}{{outputPanel_obfuscate totalPatients}}{{/if}}{{else}}-{{/if}}</span><br></br>
+		<span class="center medium">Total Participants</span><br></br>
+		<div class="container" id="pic-sure-instances">
+			<div id="select-spinner"></div>
+		</div>
+	</div>
+</div>
