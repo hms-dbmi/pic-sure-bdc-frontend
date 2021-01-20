@@ -1,0 +1,3 @@
+#The crontab automatically run Quickstart Automation code for latest Quickstart 
+This will run every Monday at Midnight 
+0 0 * * 1 root ~/automatepicsureui/pic-sure-ui-selenium/runchromeheadless.sh

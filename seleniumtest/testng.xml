@@ -1,0 +1,20 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Sanity Regression I2b2/TransmartUI" verbose="1">
+	<listeners>
+		<listener class-name="org.uncommons.reportng.HTMLReporter" />
+		<listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
+	</listeners>
+	<test name="i2b2 Sanity Test Cases">
+		<groups>
+			<run>
+		<!-- 	<include name="Sanity Regression" /> -->
+			</run>
+		</groups>
+		<classes>
+			<!-- <class name="dbmi.hms.harvard.edu.testdrivers.TestDriver"> <methods> 
+				</methods> </class> -->
+			<class name="dbmi.hms.harvard.edu.testdrivers.TestDriver"></class>
+		</classes>
+	</test>
+</suite>
+ 

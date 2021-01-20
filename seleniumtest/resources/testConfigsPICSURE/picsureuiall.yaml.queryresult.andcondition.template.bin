@@ -1,0 +1,22 @@
+ name: This setup the environment for running the automation test scripts
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: firefox
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ username: admin
+ password: admin
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ subset1: \demographics\SEX\female
+ subset2:
+ success: patientcountsubset1
+ successvalue: 21210	
+ expected: pass
+ SearchTerm: Vitamin
+ TextToSelect: Vitamin E
+ NumericValueLess: 45
+ PatientCount: 6014
+ SearchTermSecond: mean
+ TextToSelectSecond: mean systolic
+ NumericValueLessSecond: 5

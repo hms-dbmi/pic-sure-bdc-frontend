@@ -5,3 +5,6 @@
 .idea
 target/
 bin/
+seleniumtest/test-output/
+seleniumtest/*.log
+seleniumtest/*.png
