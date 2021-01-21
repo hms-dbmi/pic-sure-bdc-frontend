@@ -36,6 +36,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.ProfilesIni;
@@ -51,11 +52,6 @@ import dbmi.hms.harvard.edu.quickstartmodules.QueryBuilder;
 //import dbmi.hms.harvard.edu.authentication.AuthTypes;
 import dbmi.hms.harvard.edu.reporter.Reporter;
 import dbmi.hms.harvard.edu.results.SummaryStatisticsResults;
-
-
-
-
-
 
 public class QueryBuilderTestPlan extends Testplan {
 	private static final int TIMEOUT = 30;
@@ -73,7 +69,7 @@ public class QueryBuilderTestPlan extends Testplan {
 			.xpath("//div[@class='tab-pane active']//div[@class='search-result-list']");
 	private static By SearchBoxAutocompleteListBoxItems = By.xpath(
 			"//div[@class='tab-pane active']//div[@class='search-result-list']/div/div//span[@class='autocomplete-term']");
-	public String downloadFilepath = "D:\\picsure";
+	public String downloadFilepath = "/tmp/";
 	private By SearchBoxSecondAutocompleteListBox = By
 			.xpath("//div[@id='examination']//div[@class='search-result-list']");
 	private By EmptyFieldByNumeric = By.xpath("//div[contains(text(),'Value invalid! Correct invalid fields.')]");
@@ -134,7 +130,7 @@ public class QueryBuilderTestPlan extends Testplan {
 
 		String browserName = (String) testPlan.get("browser");
 		System.out.println("The launched browser is " + browserName);
-		String browser = browserName.toLowerCase().replaceAll(" ", "");
+		String browser = System.getProperty("browserName").toLowerCase().replaceAll(" ", "");
 		switch (browser) {
 		/*
 		 * case "chrome": DesiredCapabilities capability =
@@ -196,16 +192,26 @@ public class QueryBuilderTestPlan extends Testplan {
 			chromePrefsch.put("profile.default_content_settings.popups", 0);
 			chromePrefsch.put("download.default_directory", downloadFilepath);
 			ChromeOptions chromeOptionsHeadless = new ChromeOptions();
+			chromeOptionsHeadless.addArguments("--no-sandbox");
 			chromeOptionsHeadless.addArguments("--disable-gpu");
 			chromeOptionsHeadless.addArguments("--start-maximized");
 			chromeOptionsHeadless.addArguments("--headless");
 			chromeOptionsHeadless.addArguments("--allow-insecure-localhost");
 			chromeOptionsHeadless.addArguments("window-size=1920,1080");
-			
+//			chromeOptionsHeadless.addArguments("--disable-dev-shm-usage");     
+			chromeOptionsHeadless.addArguments("test-type"); 
+			chromeOptionsHeadless.addArguments("--js-flags=--expose-gc"); 
+			chromeOptionsHeadless.addArguments("--enable-precise-memory-info"); 
+			chromeOptionsHeadless.addArguments("--disable-default-apps");
+			chromeOptionsHeadless.addArguments("--disable-site-isolation-trials");
+			chromeOptionsHeadless.addArguments("--crash-on-hang-seconds=600");
 			
 			chromeOptionsHeadless.setCapability("acceptInsecureCerts", true);
 			chromeOptionsHeadless.setExperimentalOption("prefs", chromePrefsch);
 			driver = new ChromeDriver(chromeOptionsHeadless);
+			driver.manage().timeouts().pageLoadTimeout(600, TimeUnit.SECONDS);
+			driver.manage().timeouts().setScriptTimeout(600, TimeUnit.SECONDS);
+			
 			driver.manage().timeouts().implicitlyWait(17, TimeUnit.SECONDS);
 			break;
 //			options.add_argument("--disable-gpu")
@@ -231,19 +237,22 @@ public class QueryBuilderTestPlan extends Testplan {
 		        profile.setPreference("browser.helperApps.alwaysAsk.force", false);
 		        profile.setPreference("browser.download.manager.showWhenStarting", false);
 		        profile.setPreference("browser.download.folderList", 2);
+		        profile.setPreference("browser.tabs.unloadOnLowMemory", false);
+		        profile.setPreference("browser.download.useDownloadDir", true);
 		        profile.setPreference("browser.download.dir", "/tmp/");
 				profile.setPreference("browser.helperApps.neverAsk.saveToDisk","application/octet-stream,application/csv,text/csv,application/vnd.ms-excel,application/json");
 		        DesiredCapabilities dc = DesiredCapabilities.firefox();
 		        dc.setCapability(FirefoxDriver.PROFILE, profile);
-		        dc.setCapability(FirefoxDriver.)
 		        dc.setCapability("marionette", true);
 		        dc.setPlatform(Platform.LINUX);
+		        dc.setJavascriptEnabled(true);
 				//dc.setPlatform(Platform.LINUX);
 		        FirefoxOptions opt = new FirefoxOptions();
 				opt.merge(dc);
 				FirefoxOptions firefoxOptions = new FirefoxOptions(opt);
 				firefoxOptions.setBinary(firefoxBinary);
 				driver = new FirefoxDriver(firefoxOptions);
+				driver.manage().timeouts().setScriptTimeout(600, TimeUnit.SECONDS);
 				driver.manage().window().maximize();
 		       
 			
@@ -858,19 +867,20 @@ public class QueryBuilderTestPlan extends Testplan {
 		QueryBuilder.class.newInstance().downloadButton(driver);
 		Thread.sleep(4000);
 */
-		WebDriverWait wait = new WebDriverWait(driver, 110);
+
+		driver.manage().timeouts().implicitlyWait(600, TimeUnit.SECONDS);
 		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
 		Thread.sleep(2000);
 		QueryBuilder.class.newInstance().doRunQuery(driver);
 		Thread.sleep(3000);
+		System.out.println("SELECTING  EXPORT ... SELECTING  EXPORT");
 		QueryBuilder.class.newInstance().doSelectExport(driver);
-		//wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@id='j1_1_anchor']")));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@id='j1_1_anchor']")));
 		//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@id='j1_1_anchor']")));
 		//wait.until(ExpectedConditions.elementSelectionStateToBe(By.xpath("//a[@id='j1_1_anchor']"),true));
-		Thread.sleep(180000);
-		// driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		System.out.println("CLICKING DATA ... CLICKING DATA");
+		
 		QueryBuilder.class.newInstance().doubleclickData(driver);
-		Thread.sleep(10000);
 		QueryBuilder.class.newInstance().doubleclickData(driver);
 		Thread.sleep(5000);
 		QueryBuilder.class.newInstance().doubleClickPrepareDownload(driver);

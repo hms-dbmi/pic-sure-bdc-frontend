@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>picsureuiall</groupId>
-	<artifactId>Picsureui</artifactId>
+	<groupId>edu.harvard.hms.dbmi.avillach.picsure.hpds</groupId>
+	<artifactId>selenium-tests</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -46,17 +47,16 @@
 			<version>1.2.17</version>
 			<scope>compile</scope>
 		</dependency>
-		<!-- <dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-java</artifactId> 
-			<version>3.7.1</version> </dependency> <dependency> <groupId>org.seleniumhq.selenium</groupId> 
-			<artifactId>selenium-chrome-driver</artifactId> <version>3.7.1</version> 
-			</dependency> -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>3.141.59</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-chrome-driver</artifactId> 
-			<version>3.141.59</version> </dependency> -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-chrome-driver</artifactId>
+			<version>3.141.59</version>
+		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-firefox-driver</artifactId>
@@ -299,7 +299,7 @@
 				<configuration>
 					<systemPropertyVariables>
 						<pathtoconfigtest>src/test/resources/</pathtoconfigtest>
-						<googlechromepath>D://binaries/chromedriver.exe</googlechromepath>
+						<googlechromepath>/usr/bin/chromedriver</googlechromepath>
 						<geckodriverpath>D://binaries/geckodriver.exe</geckodriverpath>
 						<dirofdownloadedfiles>.</dirofdownloadedfiles>
 						<username>($username)</username>
