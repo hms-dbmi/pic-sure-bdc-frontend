@@ -723,9 +723,11 @@ public class QueryBuilderTestPlan extends Testplan {
 			wait.until(ExpectedConditions.presenceOfElementLocated(SearchBox));
 			WebElement textBoxElement = driver.findElement(SearchBox);
 			textBoxElement.sendKeys(invalidSearchData);
-			QueryBuilder.class.newInstance().enterFromKeyborad();
+			//QueryBuilder.class.newInstance().enterFromKeyborad();
+			String selectAll = Keys.chord(Keys.ENTER, "");
+			driver.findElement(SearchBox).sendKeys(selectAll);
 			Thread.sleep(5000);
-			WebElement noResultFound = driver.findElement(By.xpath("//span[@class='medium']"));
+			WebElement noResultFound = driver.findElement(By.xpath("//span[contains(text(),'No Results Found')]"));
 			if (noResultFound.isDisplayed()) {
 				SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 				LOGGER.info(
@@ -1289,7 +1291,7 @@ public void verifyHelpContactusPageload(Reporter reporter) throws Exception {
 					"---------------------------ContactUs page doesn't  load properly----------------------------");
 
 		}
-
+		driver.switchTo().window(parent);
 	}
 
 	

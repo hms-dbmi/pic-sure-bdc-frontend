@@ -1,10 +1,6 @@
- name: This setup the environment for running the automation test scripts
+ name: Verify the message if user is trying to submit the query with empty input  
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- browser: chrome
- url: http://34.202.235.238/
- #authmethod: ADMINLOGIN
- username: admin
- password: admin
+ url: 
  test: regression
  type: QueryBuilderTestPlan
  reporter: ConsoleReporter
@@ -13,7 +9,5 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Basophils
- TextToSelect: Basophils number
- PatientCount: 7957
- NumericValueLess: 0.1
+ SearchTerm: triglycerides
+ TextToSelect: "Blood mass concentration of triglycderides"

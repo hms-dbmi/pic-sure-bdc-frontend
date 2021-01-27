@@ -1,6 +1,6 @@
- name: This setup the environment for running the automation test scripts
+ name: Verify that query builder works fine with by numeric in between.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- browser: chrome
+ browser: firefox
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
  username: admin
@@ -13,6 +13,8 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Vitamin D
- textToSelect: Vitamin D
- PatientCount: 3039
+ SearchTerm: "Hematocrit"
+ TextToSelect: "age at measurement of hematocrit_vfr_bld_1"
+ PatientCount: 4455
+ NumericValue1: 15
+ NumericValue2: 45

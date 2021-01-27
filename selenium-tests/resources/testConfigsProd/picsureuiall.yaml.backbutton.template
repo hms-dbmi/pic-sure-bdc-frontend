@@ -1,5 +1,4 @@
- name: This test case verify the deletion of query result
- #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ name: This test case verify that clicking back button takes user to one step back 
  browser: chrome
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
@@ -13,6 +12,6 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: vitamin
- TextToSelect: Vitamin A
+ SearchTerm: triglycerides
+ TextToSelect: "Blood mass concentration of triglycerides"
  NumericValueLess: 200

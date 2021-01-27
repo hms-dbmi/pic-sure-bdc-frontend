@@ -1,7 +1,7 @@
- name: This test case verify that query result works fine with NO value option.
+ name: This verify that query builder search is case insensitive
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
- url: https://ec2-54-86-40-196.compute-1.amazonaws.com/picsureui/
+ url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
  username: admin
  password: admin
@@ -13,6 +13,4 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: PHOSPHORUS
- TextToSelect: PHOSPHORUS_mg
- PatientCount: 9999
+ SearchTerm: Hematocrit

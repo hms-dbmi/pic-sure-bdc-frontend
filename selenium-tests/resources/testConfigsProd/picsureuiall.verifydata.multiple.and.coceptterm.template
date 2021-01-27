@@ -1,6 +1,6 @@
  name: This setup the environment for running the automation test scripts
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- browser: chrome
+ browser: firefox
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
  username: admin
@@ -13,10 +13,9 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Vitamin E
- TextToSelect: Vitamin E
- PatientCount: 1456
- SearchTermSecond: mean
- TextToSelectSecond: mean systolic
- NumericValueLess: 50
- NumericValueLessSecond: 150
+ SearchTerm: Vitamin D
+ TextToSelect: Vitamin D
+ PatientCount: 6014
+ SearchTermSecond: Albumin
+ TextToSelectSecond: Albumin (g per dL)
+ myarray: [Patient ID,\laboratory\biochemistry\Albumin (g per dL)\,\laboratory\nutrients\Vitamin D (ng per mL)\]

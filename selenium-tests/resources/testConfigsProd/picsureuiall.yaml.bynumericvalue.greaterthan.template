@@ -1,6 +1,6 @@
- name: This test case verifies that query builder works fine fro decimal values
+ name: Verify that by numeric value greater than works fine.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- browser: chrome
+ browser: firefox
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
  username: admin
@@ -13,7 +13,7 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Vitamin E
- TextToSelect: Vitamin E
- PatientCount: 3008
- NumericValueLessDecimal: 75.58
+ SearchTerm: "ADP threshold"
+ TextToSelect: "ADP threshold"
+ PatientCount: 15
+ NumericValueGreater: 7

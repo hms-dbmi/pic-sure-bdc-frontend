@@ -1,4 +1,4 @@
- name: This setup the environment for running the automation test scripts
+ name: Verify validation message for invalid value in in between fields.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: firefox
  url: http://34.202.235.238/
@@ -13,8 +13,8 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Vitamin
- TextToSelect: Vitamin E
- PatientCount: 4986
+ SearchTerm: "PHOSPHORUS"
+ TextToSelect: "Number of hours fasting"
+ PatientCount: 3094
  NumericValue1: 13
  NumericValue2: 9

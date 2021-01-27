@@ -1,6 +1,5 @@
- name: This setup the environment for running the automation test scripts
- #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- browser: firefox
+ name: This test case verify that restrict by value works fine
+ browser: chrome
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
  username: admin
@@ -13,6 +12,6 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: InvalidVitamin
- textToSelect: Vitamin E
- PatientCount: 8725
+ SearchTerm: ra
+ TextToSelect: AGE
+ PatientCount: 2150 

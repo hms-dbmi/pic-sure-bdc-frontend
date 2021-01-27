@@ -1,8 +1,8 @@
- name: This test verify PICSURE UI site has loaded correctly
+ name: This test verify that PICSURE UI site has loaded correctly.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
- url: https://preprod.picsure.biodatacatalyst.nhlbi.nih.gov/
- authmethod: ERACOMMON
+ url: https://ec2-54-86-40-196.compute-1.amazonaws.com/picsureui/
+ authmethod: ADMINLOGIN
  username: admin
  password: admin
  test: regression

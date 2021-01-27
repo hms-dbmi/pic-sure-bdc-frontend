@@ -1,4 +1,5 @@
- name: This test case verify that clicking back button takes user to one step back 
+ name: This test case verify validation around by numeric fields
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
@@ -12,6 +13,7 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: vitamin
- TextToSelect: Vitamin A
- NumericValueLess: 200
+ SearchTerm: ADP threshold
+ TextToSelect: "ADP threshold"
+ PatientCount: 2150
+ NumericValueOutofRange: 99.9

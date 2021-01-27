@@ -1,4 +1,4 @@
- name: This setup the environment for running the automation test scripts
+ name: This test case verifies that invalid data  can not searched
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: firefox
  url: http://34.202.235.238/
@@ -8,12 +8,4 @@
  test: regression
  type: QueryBuilderTestPlan
  reporter: ConsoleReporter
- subset1: \demographics\SEX\female
- subset2:
- success: patientcountsubset1
- successvalue: 21210
- expected: pass
- SearchTerm: Vitamin
- TextToSelect: Vitamin E
- PatientCount: 1411
- NumericValueGreater: 5
+ SearchTerm: InvalidSearchTerm

@@ -1,6 +1,6 @@
- name: This setup the environment for running the automation test scripts
+ name: Verify that by numeric value less than works fine.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- browser: firefox
+ browser: chrome
  url: http://34.202.235.238/
  #authmethod: ADMINLOGIN
  username: admin
@@ -13,8 +13,7 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Vitamin
- TextToSelect: Vitamin E
- PatientCount: 2161
- NumericValue1: 2
- NumericValue2: 64
+ SearchTerm: "triglycerides"
+ TextToSelect: "Blood mass concentration of triglycerides"
+ PatientCount: 42186
+ NumericValueLess: 1500
