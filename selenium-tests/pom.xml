@@ -302,7 +302,7 @@
 						 <googlechromepath>/usr/bin/chromedriver</googlechromepath>
 						<!-- <googlechromepath>D://binaries/chromedriver.exe</googlechromepath> -->
 						<geckodriverpath>D://binaries/geckodriver.exe</geckodriverpath>
-						<dirofdownloadedfiles>.</dirofdownloadedfiles>
+						<dirofdownloadedfiles>/tmp/</dirofdownloadedfiles>
 						<username>($username)</username>
 						<password>($password)</password>
 						<browserName>firefox</browserName>
