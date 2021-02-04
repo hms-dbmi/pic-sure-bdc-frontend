@@ -1,4 +1,4 @@
-define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json"],
+define(["jquery", "backbone", "handlebars", "studyAccess/studyAccess", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json"],
     function($, BB, HBS, studyAccess, template, overrides, settings){
         var headerView = BB.View.extend({
             initialize : function(){
