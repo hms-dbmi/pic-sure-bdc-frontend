@@ -1,4 +1,4 @@
-define(["jquery", "studyAccess/studyAccessFunctions"],
+define(["jquery", "studyAccess/studyAccess"],
     function($, studyAccess) {
         var transportErrorHandlers = {};
         transportErrorHandlers.redirectionUrl = "/psamaui/login?redirection_url=/picsureui/";
@@ -17,8 +17,8 @@ define(["jquery", "studyAccess/studyAccessFunctions"],
             if (redirectionUrl === false) redirectionUrl = this.redirectionUrl;
             if (response.status === 401) {
                 if (new Date().getTime()/1000 < JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp) {
-                    studyAccess.init();
-                    studyAccess.showBlocker();
+                    alert("Access Denied: Please request access to the missing study.");
+                    studyAccess.displayPage();
                 } else {
                     window.location.href = "/psamaui/logout";
                 }
