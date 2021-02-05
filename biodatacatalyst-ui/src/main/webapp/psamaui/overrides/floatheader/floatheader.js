@@ -1,5 +1,7 @@
-define(["backbone","handlebars", 'picSure/settings', "text!header/header.hbs", "common/session", "picSure/userFunctions","picSure/applicationFunctions", "text!options/modal.hbs","text!header/userProfile.hbs", "util/notification"],
-		function(BB, HBS, settings, template, session, userFunctions, applicationFunctions,modalTemplate, userProfileTemplate, notification){
+define(["backbone","handlebars", 'psamaSettings/settings', "text!header/header.hbs", "common/session", "picSure/userFunctions",
+        "picSure/applicationFunctions", "text!options/modal.hbs","text!header/userProfile.hbs", "util/notification"],
+		function(BB, HBS, settings, template, session, userFunctions,
+                 applicationFunctions,modalTemplate, userProfileTemplate, notification){
 	var headerView = BB.View.extend({
         initialize: function () {
             HBS.registerHelper('not_contains', function (array, object, opts) {
