@@ -116,21 +116,21 @@ define(["backbone","handlebars", 'picSure/settings', "text!header/header.hbs", "
         render: function () {
             if (window.location.pathname !== "/psamaui/tos") {
                 if (window.location.pathname == "/psamaui/userProfile"){
-                    applicationFunctions.fetchApplications(this, function(applications){
-                        this.$el.html(this.template(_.extend({
-                            privileges: [],
-                            applications: applications
-                                .filter(function (app) {
-                                    return app.url;
-                                })
-                                .sort(function(a, b){
-                                    if(a.name < b.name) { return -1; }
-                                    if(a.name > b.name) { return 1; }
-                                    return 0;
-                                })
-                        }, settings)));
-                        $('#user-profile-btn').click();
-                    }.bind(this));
+//                    applicationFunctions.fetchApplications(this, function(applications){
+//                        this.$el.html(this.template(_.extend({
+//                            privileges: [],
+//                            applications: applications
+//                                .filter(function (app) {
+//                                    return app.url;
+//                                })
+//                                .sort(function(a, b){
+//                                    if(a.name < b.name) { return -1; }
+//                                    if(a.name > b.name) { return 1; }
+//                                    return 0;
+//                                })
+//                        }, settings)));
+//                        $('#user-profile-btn').click();
+//                    }.bind(this));
                 }else {
                     userFunctions.me(this, function (user) {
                         applicationFunctions.fetchApplications(this, function(applications){
