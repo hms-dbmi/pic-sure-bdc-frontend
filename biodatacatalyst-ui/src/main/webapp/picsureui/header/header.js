@@ -1,7 +1,9 @@
 define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", "text!header/header.hbs", "overrides/header",
-        "text!../settings/settings.json", "text!options/modal.hbs","text!header/userProfile.hbs"],
+        "text!../settings/settings.json", "text!options/modal.hbs","text!header/userProfile.hbs", "psamaui/overrides/userProfile",
+        "util/notification", "picSure/userFunctions"],
     function($, BB, HBS, studyAccess, template, overrides,
-             settings, modalTemplate, userProfileTemplate){
+             settings, modalTemplate, userProfileTemplate, profileOverride,
+             notification, userFunctions){
         var headerView = BB.View.extend({
             initialize : function(){
                 HBS.registerHelper('not_contains', function (array, object, opts) {
@@ -44,7 +46,8 @@ define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", 
                 this.userProfileTemplate = HBS.compile(userProfileTemplate);
             },
             events : {
-                "click #logout-btn" : "logout"
+                "click #logout-btn" : "logout",
+                "click #user-profile-btn": "userProfile"
             },
             logout : function(event){
                 sessionStorage.clear();
