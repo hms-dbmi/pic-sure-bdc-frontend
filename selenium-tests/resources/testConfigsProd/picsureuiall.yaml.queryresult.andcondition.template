@@ -12,3 +12,4 @@
  TextToSelectSecond: "Mean systolic baseline blood pressure"
  NumericValueLess: 50
  NumericValueLessSecond: 150
+ PatientCount: 42186

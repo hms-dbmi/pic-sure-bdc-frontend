@@ -1,4 +1,4 @@
- name: Verify the validation message for empty value in by numeric fields.
+ name: Verify that by numeric value less than works fine.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
  url: http://34.202.235.238/

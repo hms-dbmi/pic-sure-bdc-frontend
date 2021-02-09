@@ -36,7 +36,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.ProfilesIni;
@@ -52,6 +51,11 @@ import dbmi.hms.harvard.edu.quickstartmodules.QueryBuilder;
 //import dbmi.hms.harvard.edu.authentication.AuthTypes;
 import dbmi.hms.harvard.edu.reporter.Reporter;
 import dbmi.hms.harvard.edu.results.SummaryStatisticsResults;
+
+
+
+
+
 
 public class QueryBuilderTestPlan extends Testplan {
 	private static final int TIMEOUT = 30;
@@ -69,7 +73,7 @@ public class QueryBuilderTestPlan extends Testplan {
 			.xpath("//div[@class='tab-pane active']//div[@class='search-result-list']");
 	private static By SearchBoxAutocompleteListBoxItems = By.xpath(
 			"//div[@class='tab-pane active']//div[@class='search-result-list']/div/div//span[@class='autocomplete-term']");
-	public String downloadFilepath = "/tmp/";
+	public String downloadFilepath = "D:\\picsure";
 	private By SearchBoxSecondAutocompleteListBox = By
 			.xpath("//div[@id='examination']//div[@class='search-result-list']");
 	private By EmptyFieldByNumeric = By.xpath("//div[contains(text(),'Value invalid! Correct invalid fields.')]");
@@ -84,7 +88,7 @@ public class QueryBuilderTestPlan extends Testplan {
 	private String closingButton ="//button[@class='close']";
 	private String aplicationButton ="//button[contains(text(),'Applications')]";
 	private String logoutButton ="//a[@id='logout-btn']";
-	
+	private String InputNumericValueTextBox = "//input[contains(@class,'constrain-value constrain-value-one form-control value-operator')]";
 	
 	public QueryBuilderTestPlan() {
 	}
@@ -130,7 +134,7 @@ public class QueryBuilderTestPlan extends Testplan {
 
 		String browserName = (String) testPlan.get("browser");
 		System.out.println("The launched browser is " + browserName);
-		String browser = System.getProperty("browserName").toLowerCase().replaceAll(" ", "");
+		String browser = browserName.toLowerCase().replaceAll(" ", "");
 		switch (browser) {
 		/*
 		 * case "chrome": DesiredCapabilities capability =
@@ -192,133 +196,46 @@ public class QueryBuilderTestPlan extends Testplan {
 			chromePrefsch.put("profile.default_content_settings.popups", 0);
 			chromePrefsch.put("download.default_directory", downloadFilepath);
 			ChromeOptions chromeOptionsHeadless = new ChromeOptions();
-			chromeOptionsHeadless.addArguments("--no-sandbox");
 			chromeOptionsHeadless.addArguments("--disable-gpu");
 			chromeOptionsHeadless.addArguments("--start-maximized");
 			chromeOptionsHeadless.addArguments("--headless");
 			chromeOptionsHeadless.addArguments("--allow-insecure-localhost");
 			chromeOptionsHeadless.addArguments("window-size=1920,1080");
-//			chromeOptionsHeadless.addArguments("--disable-dev-shm-usage");     
-			chromeOptionsHeadless.addArguments("test-type"); 
-			chromeOptionsHeadless.addArguments("--js-flags=--expose-gc"); 
-			chromeOptionsHeadless.addArguments("--enable-precise-memory-info"); 
-			chromeOptionsHeadless.addArguments("--disable-default-apps");
-			chromeOptionsHeadless.addArguments("--disable-site-isolation-trials");
-			chromeOptionsHeadless.addArguments("--crash-on-hang-seconds=600");
+			
 			
 			chromeOptionsHeadless.setCapability("acceptInsecureCerts", true);
 			chromeOptionsHeadless.setExperimentalOption("prefs", chromePrefsch);
 			driver = new ChromeDriver(chromeOptionsHeadless);
-			driver.manage().timeouts().pageLoadTimeout(600, TimeUnit.SECONDS);
-			driver.manage().timeouts().setScriptTimeout(600, TimeUnit.SECONDS);
-			
 			driver.manage().timeouts().implicitlyWait(17, TimeUnit.SECONDS);
 			break;
-//			options.add_argument("--disable-gpu")
-//			options.add_argument("--no-sandbox")
-//			options.add_argument("start-maximized")
-//			options.add_argument("enable-automation")
-//			options.add_argument("--disable-infobars")
-//			options.add_argument("--disable-dev-shm-usage")
-			
 			
 			
 		case "firefoxheadless":
-				//System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
+				System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
 				FirefoxBinary firefoxBinary = new FirefoxBinary();
 				firefoxBinary.addCommandLineOptions("--headless");
-				firefoxBinary.addCommandLineOptions("--no-sandbox");
-				firefoxBinary.addCommandLineOptions("--disable-application-cache");
-				firefoxBinary.addCommandLineOptions("--disable-gpu");
-				firefoxBinary.addCommandLineOptions("--disable-dev-shm-usage");
 				FirefoxProfile profile = new FirefoxProfile();
 				//profile.setPreference("browser.helperApps.neverAsk.openFile", "text/csv,application/csv,application/text,application/json");
-				
+		
 		        profile.setPreference("browser.helperApps.alwaysAsk.force", false);
 		        profile.setPreference("browser.download.manager.showWhenStarting", false);
 		        profile.setPreference("browser.download.folderList", 2);
-		        profile.setPreference("browser.tabs.unloadOnLowMemory", false);
-		        profile.setPreference("browser.download.useDownloadDir", true);
 		        profile.setPreference("browser.download.dir", "/tmp/");
 				profile.setPreference("browser.helperApps.neverAsk.saveToDisk","application/octet-stream,application/csv,text/csv,application/vnd.ms-excel,application/json");
 		        DesiredCapabilities dc = DesiredCapabilities.firefox();
 		        dc.setCapability(FirefoxDriver.PROFILE, profile);
 		        dc.setCapability("marionette", true);
-		        dc.setPlatform(Platform.LINUX);
-		        dc.setJavascriptEnabled(true);
+		        dc.setPlatform(Platform.WINDOWS);
 				//dc.setPlatform(Platform.LINUX);
 		        FirefoxOptions opt = new FirefoxOptions();
 				opt.merge(dc);
 				FirefoxOptions firefoxOptions = new FirefoxOptions(opt);
 				firefoxOptions.setBinary(firefoxBinary);
 				driver = new FirefoxDriver(firefoxOptions);
-				driver.manage().timeouts().setScriptTimeout(600, TimeUnit.SECONDS);
 				driver.manage().window().maximize();
 		       
 			
-			
-			/*String download_path="D://report//";
-			System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
-			FirefoxBinary firefoxBinary = new FirefoxBinary();
-			//firefoxBinary.addCommandLineOptions("--headless");
-			ProfilesIni profile = new ProfilesIni();
-			FirefoxProfile testprofile = profile.getProfile("debanjan");
-			DesiredCapabilities dc = DesiredCapabilities.firefox();
-			dc.setCapability(FirefoxDriver.PROFILE, testprofile);
-			dc.setPlatform(Platform.WINDOWS);
-			//capabilities.setPlatform(Platform.LINUX);
-			dc.setCapability("marionette", true);
-			dc.setCapability("acceptInsecureCerts", true);
-			dc.setCapability("browser.download.folderList", 2);
-			dc.setCapability("browser.download.dir", download_path);
-			//dc.setCapability("browser.helperApps.alwaysAsk.force", false);
-			dc.setCapability("browser.download.manager.showWhenStarting",false);
-			dc.setCapability("browser.download.dir","D:\\downloads");
-			dc.setCapability("browser.helperApps.neverAsk.saveToDisk","text/csv");
-			
-			FirefoxOptions opt = new FirefoxOptions();
-			opt.merge(dc);
-			
-			FirefoxOptions firefoxOptions = new FirefoxOptions(dc);
-			firefoxOptions.setBinary(firefoxBinary);
-			driver = new FirefoxDriver(firefoxOptions);
-			
-			
-			
-			
-			
-			
-			*/
-			
-			
-			
-			
-			//FirefoxProfile profile=new FirefoxProfile();
-			//profile.setPreference("browser.helperApps.neverAsk.openFile", "application/octet-stream");
-
-			//WebDriver driver=new FirefoxDriver(profile);
-			
-			//driver.Navigate().GoToUrl("http://test.com/");    
-			
-			/*FirefoxBinary firefoxBinary = new FirefoxBinary();
-			//firefoxBinary.addCommandLineOptions("--headless");
-			DesiredCapabilities capabilities = new DesiredCapabilities();
-			// capabilities = DesiredCapabilities.firefox();
-			capabilities.setBrowserName("firefox");
-			//capabilities.setVersion("your firefox version");
-			capabilities.setPlatform(Platform.WINDOWS);
-			//capabilities.setPlatform(Platform.LINUX);
-			capabilities.setCapability("marionette", true);
-			capabilities.setCapability("acceptInsecureCerts", true);
-			capabilities.setCapability("browser.download.folderList", 2);
-			//capabilities.setCapability("browser.download.dir", download_path);
-			capabilities.setCapability("browser.helperApps.neverAsk.saveToDisk","text/csv");
-			// System.setProperty("webdriver.gecko.driver",
-			// System.getProperty("geckodriverpath"));
-			FirefoxOptions firefoxOptions = new FirefoxOptions(capabilities);
-			firefoxOptions.setBinary(firefoxBinary);
-			driver = new FirefoxDriver(firefoxOptions);*/
-		}
+					}
 
 		LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Launching the Browser>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		LOGGER.info("");
@@ -381,8 +298,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//visibilityOfElementLocated(By.xpath(searchBox))).sendKeys(testPlan.get("username").toString());
-		//Thread.sleep(15000);
+
 		try {
 			Assert.assertTrue(driver.findElements(By.xpath(searchBox)).size() != 0,
 					"Google user is able to Login successfully");
@@ -525,6 +441,55 @@ public class QueryBuilderTestPlan extends Testplan {
 
 	}
 
+	
+	public void verifyAndLabel(Reporter reporter) throws InterruptedException, Exception {
+
+		String enterNumber = (String) testPlan.get("NumericValueLess");
+		String enterNumberSecond = (String) testPlan.get("NumericValueLessSecond");
+		String editNumericValue = (String) testPlan.get("EditNumericValue");
+		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
+				SearchBoxAutocompleteListBoxItems);
+		Thread.sleep(4000);
+
+		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
+		QueryBuilder.class.newInstance().doRunQuery(driver);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+		System.out.println("Selecting........................Second Box");
+		searchAndSelectConceptTerm(SearchBoxTwo, "SearchTermSecond", "TextToSelectSecond", SearchBoxAutocompleteListBox,
+				SearchBoxAutocompleteListBoxItems);
+		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumberSecond);
+		QueryBuilder.class.newInstance().doRunQuery(driver);
+		
+		Thread.sleep(5000);
+	
+
+		QueryBuilder.class.newInstance().editingQuery(driver);
+		QueryBuilder.class.newInstance().enterByNumericValue(driver, editNumericValue);
+		QueryBuilder.class.newInstance().doRunQuery(driver);
+		
+		List<WebElement> l= driver.findElements(By.xpath("//*[contains(text(),'AND')]"));
+	      
+	      if ( l.size() == 3){			
+	    	  
+	    	SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+			LOGGER.info(
+					"---------------------------AND LABEL is  present after editing----------------------------");
+
+		} else {
+
+			SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+			LOGGER.info(
+					"---------------------------AND LABEL is hidden after editing----------------------------");
+
+		}
+
+		driver.navigate().refresh();
+
+	}
+
+	
+	
 	public void verifyQueryBuilderSearchInCaseSensitivity(Reporter reporter) {
 
 		String searchTerm = (String) testPlan.get("SearchTerm").toString().toLowerCase();
@@ -540,21 +505,6 @@ public class QueryBuilderTestPlan extends Testplan {
 			textBoxElement.sendKeys(searchTerm);
 			String selectAll = Keys.chord(Keys.ENTER, "");
 			driver.findElement(By.xpath("//input[@class='search-box form-control']")).sendKeys(selectAll);
-			
-
-/*			Robot r = new Robot();
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.keyRelease(KeyEvent.VK_ENTER);
-			Thread.sleep(10000);
-*/			/*
-			 * WebElement autoOptions = driver.findElement(By.xpath(
-			 * "//div[@class='autocomplete-suggestions'][1]"));
-			 * wait.until(ExpectedConditions.visibilityOf(autoOptions));
-			 * 
-			 * List<WebElement> optionsToSelect = autoOptions
-			 * .findElements(By.xpath(
-			 * "//div[@class='autocomplete-suggestions'][1]/div"));
-			 */
 
 			WebElement autoOptions = driver.findElement(SearchBoxAutocompleteListBox);
 			wait.until(ExpectedConditions.visibilityOf(autoOptions));
@@ -573,14 +523,7 @@ public class QueryBuilderTestPlan extends Testplan {
 
 			String selectAllTwo = Keys.chord(Keys.ENTER, "");
 			driver.findElement(By.xpath("//input[@class='search-box form-control']")).sendKeys(selectAllTwo);
-			
-
-/*			r.keyPress(KeyEvent.VK_ENTER);
-			r.keyRelease(KeyEvent.VK_ENTER);
-			Thread.sleep(10000);
-
-*/			
-			
+	
 			wait.until(ExpectedConditions.visibilityOf(driver.findElement(SearchBoxAutocompleteListBox)));
 			WebElement autoOptionsUpper = driver.findElement(SearchBoxAutocompleteListBox);
 			wait.until(ExpectedConditions.visibilityOf(autoOptionsUpper));
@@ -643,6 +586,8 @@ public class QueryBuilderTestPlan extends Testplan {
 		driver.navigate().refresh();
 	}
 
+	
+	
 	public void verifyQueryBuilderByNumericGreaterThan(Reporter reporter) throws Exception {
 
 		String enterNumberGreater = (String) testPlan.get("NumericValueGreater");
@@ -723,7 +668,7 @@ public class QueryBuilderTestPlan extends Testplan {
 			wait.until(ExpectedConditions.presenceOfElementLocated(SearchBox));
 			WebElement textBoxElement = driver.findElement(SearchBox);
 			textBoxElement.sendKeys(invalidSearchData);
-			//QueryBuilder.class.newInstance().enterFromKeyborad();
+//			QueryBuilder.class.newInstance().enterFromKeyborad();
 			String selectAll = Keys.chord(Keys.ENTER, "");
 			driver.findElement(SearchBox).sendKeys(selectAll);
 			Thread.sleep(5000);
@@ -792,6 +737,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
 		QueryBuilder.class.newInstance().doRunQuery(driver);
 
+		
 		Thread.sleep(3000);
 
 		String patientCountActual = driver.findElement(patientCountValue).getText();
@@ -855,52 +801,24 @@ public class QueryBuilderTestPlan extends Testplan {
 		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
 				SearchBoxAutocompleteListBoxItems);
 
-		/*QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
-		Thread.sleep(2000);
-		QueryBuilder.class.newInstance().doRunQuery(driver);
-		Thread.sleep(3000);
-
-		QueryBuilder.class.newInstance().doSelectExport(driver);
-		Thread.sleep(5000);
-		// QueryBuilder.class.newInstance().clickPrepareDownload(driver);
-		QueryBuilder.class.newInstance().doubleClickPrepareDownload(driver);
-		Thread.sleep(4000);
-
-		QueryBuilder.class.newInstance().downloadButton(driver);
-		Thread.sleep(4000);
-*/
-
-		driver.manage().timeouts().implicitlyWait(600, TimeUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, 110);
 		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
 		Thread.sleep(2000);
 		QueryBuilder.class.newInstance().doRunQuery(driver);
 		Thread.sleep(3000);
-		System.out.println("SELECTING  EXPORT ... SELECTING  EXPORT");
 		QueryBuilder.class.newInstance().doSelectExport(driver);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@id='j1_1_anchor']")));
-		//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@id='j1_1_anchor']")));
-		//wait.until(ExpectedConditions.elementSelectionStateToBe(By.xpath("//a[@id='j1_1_anchor']"),true));
-		System.out.println("CLICKING DATA ... CLICKING DATA");
-		
+		Thread.sleep(110000);
 		QueryBuilder.class.newInstance().doubleclickData(driver);
+		Thread.sleep(10000);
 		QueryBuilder.class.newInstance().doubleclickData(driver);
 		Thread.sleep(5000);
 		QueryBuilder.class.newInstance().doubleClickPrepareDownload(driver);
 		Thread.sleep(4000);
 		QueryBuilder.class.newInstance().downloadButton(driver);
 		Thread.sleep(5000);
-		//driver.switchTo().alert();
-		/*BufferedImage image = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-	    ImageIO.write(image, "jpg", new File("./alert.jpg"));
-	    */
-		
 		File reportDownloadPopup1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		FileUtils.copyFile(reportDownloadPopup1, new File("reportDownloadPopup1.png"));
 		
-	
-		/*File reportDownloadPopup = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		FileUtils.copyFile(reportDownloadPopup, new File("reportDownloadPopup.png"));
-		*/
 		try {
 
 			Assert.assertTrue(QueryBuilder.class.newInstance().isFileDownloaded(downloadPath, "data.csv"),
@@ -914,11 +832,9 @@ public class QueryBuilderTestPlan extends Testplan {
 
 		catch (AssertionError error) {
 			LOGGER.error(error);
-			//QueryBuilder.class.newInstance().takeSnapShot(driver, "c://test.png");
 			SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
 			LOGGER.info(
 					"---------------------------The report is NOT downloading , there could be issue with downloading ----------------------------");
-			// Takescreenshot;
 		}
 
 		driver.navigate().refresh();
@@ -945,7 +861,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		QueryBuilder.class.newInstance();
 		// This will load csv file
 		File file = new File(downloadPath + "\\" + "data.csv");
-		// CSVReader reader = new CSVReader(new FileReader(file));
+
 
 		BufferedReader Buff = new BufferedReader(new FileReader(file));
 		String downloadedFileColumn = Buff.readLine();
@@ -1036,9 +952,9 @@ public class QueryBuilderTestPlan extends Testplan {
 		} catch (AssertionError error) {
 			LOGGER.error(error);
 			LOGGER.info("The columns of data loaded of CSV are  NOT matched with expected");
-			// System.out.println("NotMAtched");
+
 			SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
-			// Takescreenshot;
+
 		}
 
 		driver.navigate().refresh();
@@ -1047,10 +963,13 @@ public class QueryBuilderTestPlan extends Testplan {
 
 	public void verifyQueryBuilderByNumericNoValueMessage(Reporter reporter) throws Exception {
 
+		String enterNumber = (String) testPlan.get("NumericValueLess");
 		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
 				SearchBoxAutocompleteListBoxItems);
-
+		Thread.sleep(5000);
 		QueryBuilder.class.newInstance().doRunQuery(driver);
+		Thread.sleep(3000);
+	
 		WebElement NoValue = driver.findElement(EmptyFieldByNumeric);
 		String actualTextNoValue = NoValue.getText();
 		Thread.sleep(3000);
@@ -1133,6 +1052,41 @@ public class QueryBuilderTestPlan extends Testplan {
 		}
 	}
 
+	public void verifyQueryBuilderBack(Reporter reporter) throws Exception {
+
+		String enterNumber = (String) testPlan.get("NumericValueLess");
+		String expectedInputTextBoxValue= (String) testPlan.get("NumericValueLess");
+		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
+				SearchBoxAutocompleteListBoxItems);
+		Thread.sleep(5000);
+		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
+		QueryBuilder.class.newInstance().doRunQuery(driver);
+		Thread.sleep(3000);
+		QueryBuilder.class.newInstance().backButton(driver);
+		Thread.sleep(3000);
+		
+		try {
+			Assert.assertTrue(driver.findElements(By.xpath("//div[@class='tab-pane active']//div[@class='search-result-list']/div/div//span[@class='autocomplete-term']")).size() != 0,
+					"Clicking BackButton navigates to searched  result Lists ");
+			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+			LOGGER.info("------------------------Clicking BackButton navigates to searched  result Lists -------------------------------");
+			System.out.println("passed Login");
+
+		}
+
+		catch (AssertionError error) {
+			LOGGER.error(error);
+			SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+			LOGGER.info("---------------------------Clicking back button is not happening as expected ---------------------------");
+			System.out.println(" "
+					+ "Login failed");
+		}
+
+			driver.navigate().refresh();
+	}
+
+	
+	
 	public void verifyQueryBuilderSelectDataForExport(Reporter reporter) throws Exception {
 		String validationTextExpected = "Value invalid! Correct invalid fields.";
 		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
@@ -1146,6 +1100,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		
 		driver.findElement(By.xpath(userProfile)).click();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(5000);
 
 		try {
 			Assert.assertTrue(driver.findElements(By.xpath("//div[@id='user_token_expiration']")).size() != 0,
