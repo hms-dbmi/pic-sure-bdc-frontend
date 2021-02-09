@@ -199,7 +199,7 @@ public abstract class Testplan {
 
 	}
 
-	public void verifyQueryBuilderBack(Reporter reporter) {
+	public void verifyQueryBuilderBack(Reporter reporter) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
@@ -241,6 +241,11 @@ public abstract class Testplan {
 	}
 
 	public void verifyLogoutPicsure(Reporter reporter) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void verifyAndLabel(Reporter reporter) throws InterruptedException, Exception {
 		// TODO Auto-generated method stub
 		
 	}

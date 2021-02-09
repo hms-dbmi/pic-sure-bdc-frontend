@@ -79,6 +79,7 @@ public class QueryBuilder extends Module {
 	private String prepareDownload = ".//*[@id='prepare-btn']";
 	private String downloadButton = ".//*[@id='download-btn']";
 	private String dataTree = "//a[@id='j1_1_anchor']";
+	private String backButton="div.container:nth-child(2) div.col-md-8 ul.container:nth-child(3) div.filter-list-entry.row.saved:nth-child(1) div.filter-row.container div.filter-search-row.row:nth-child(1) div.filter-saved > div.back-btn.btn.btn-default.col-md-1";
 	
 	
 	public void enterTextInQueryBox(WebDriver driver, String text) {
@@ -167,7 +168,9 @@ public class QueryBuilder extends Module {
 		click(driver, driver.findElement(By.xpath(saveSubSetButton)));
 	}
 
-	
+	public void backButton(WebDriver driver) {
+		click(driver, driver.findElement(By.cssSelector(backButton)));
+	}
 
 	public void deleteButtonQuery(WebDriver driver) {
 		click(driver, driver.findElement(By.cssSelector("div.container:nth-child(2) div.col-md-8 ul.container:nth-child(3) div.filter-list-entry.row.saved:nth-child(1) div.filter-row.container div.filter-search-row.row:nth-child(1) div.filter-saved > div.delete.btn.btn-default.col-md-2")));
