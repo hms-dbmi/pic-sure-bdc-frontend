@@ -26,7 +26,7 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 
 import dbmi.hms.harvard.edu.reporter.Reporter;
 import dbmi.hms.harvard.edu.testplans.Testplan;
-
+//import junit.framework.Test;
 
 public class TestDriver {
  
@@ -41,7 +41,10 @@ public class TestDriver {
 
 		try {
 			final Logger LOGGER = Logger.getLogger(TestDriver.class.getName());
+			//System.out.println("Path of Config.properties file is :   " + baseURI);
+			//LOGGER.info("TestRun" + baseURI);
 			String pathToConfigFile = baseURI + "Config.properties";
+			//System.out.println("path is " + pathToConfigFile);
 			configProperties.load(new FileInputStream(new File(pathToConfigFile)));
 		} catch (FileNotFoundException e) {
 
@@ -92,7 +95,6 @@ public class TestDriver {
 	}
 
 	
-		
 	@Test(priority = 1)
 
 	public void verify_loading_of_PicsureUI() throws Exception {
@@ -105,7 +107,7 @@ public class TestDriver {
 
 	}
 
-	@Test(priority = 2)
+@Test(priority = 2)
 
 	public void verify_successful_Login_To_PicsureUI() throws Exception {
 		LOGGER.info(
@@ -195,12 +197,12 @@ public class TestDriver {
 	}
 
 	
-@Test (priority=9)
+//@Test (priority=9)
 
 		public void verify_QueryBuilder_BackButton() throws Exception {
 			LOGGER.info(
 					"---------------------------------The test case verifyQueryBuilder Back Button Functionality-------------------------");
-			readFile(configProperties.getProperty("verify.backbutton.functionality"));
+			readFile(configProperties.getProperty("verify.queryresult.deletion"));
 			testPlan.verifyQueryBuilderBack(reporter);
 			LOGGER.info(
 					"------------------------The test case verifyQueryBuilder Back Button Functionality is done-------------------------");
@@ -244,7 +246,7 @@ public class TestDriver {
 
 	}
 
-//@Test (priority = 13)
+	//@Test (priority = 13)
 
 		public void verify_Downloading_ofData() throws Exception {
 			LOGGER.info(
@@ -255,7 +257,7 @@ public class TestDriver {
 					"---------------------------------The test case verifyDownloading is completed-------------------------");
 
 		}
-//@Test (priority = 14)
+	//@Test (priority = 14)
 			 //dependsOnMethods={"verifyDownloadingofData"})
 
 		public void verify_TheLoadedData() throws Exception {
@@ -272,7 +274,7 @@ public class TestDriver {
 		}
 		
 		
-//@Test (priority = 15)dependsOnMethods={"verifyDownloadingofData"})
+		//@Test (priority = 15)dependsOnMethods={"verifyDownloadingofData"})
 
 		public void verify_TheLoadedData_ForMultipleConcetps() throws Exception {
 			 
@@ -286,18 +288,19 @@ public class TestDriver {
 						"---------------------------------The test case verify TheLoadedData For MultipleConcetps with AND condition  is completed-------------------------");
 
 			}
-		
-@Test (priority = 16)
-		public void verifypresenceOfANDLabel() throws Exception {
-			 
+		//@Test (priority = 16)
 
+
+			public void verifyANDLabel() throws Exception {
+			 
+			 readFile(configProperties.getProperty("verify.queryresult.downloading.data"));
 			 
 				LOGGER.info(
-						"---------------------------------The test case verify presence of AND LABEL  is running-------------------------");
-				readFile(configProperties.getProperty("verify.presenceof.andlabel"));
-				testPlan.verifyAndLabel(reporter);
+						"---------------------------------The test case verifyTheLoadedData is running-------------------------");
+
+				testPlan.verifyTheLoadedData(reporter);
 				LOGGER.info(
-						"---------------------------------The test case verify presence of AND LABEL  is completed-------------------------");
+						"---------------------------------The test case verifyTheLoadedData is completed-------------------------");
 
 			}
 @Test (priority=17)
@@ -349,8 +352,7 @@ public class TestDriver {
 				"---------------------------------The test case verifyQueryBuilderByNumericInBtnValidationForTextBox is completed-------------------------");
 
 	}
-
-@Test (priority=21)
+//@Test (priority=21)
 
 
 	public void verify_QueryBuilder_Export_Manual_Selection_DataTree() throws Exception {
@@ -363,7 +365,7 @@ public class TestDriver {
 
 	}
 
-//@Test (priority=22)
+	//@Test (priority=22)
 
 	public void verify_QueryBuilder_Restrict_By_Value() throws Exception {
 		LOGGER.info(
@@ -375,8 +377,7 @@ public class TestDriver {
 
 	}
 
-
-//@Test (priority=23)
+	//@Test (priority=23)
 
 	public void verify_SelectDataForExport() throws Exception {
 		LOGGER.info(
@@ -387,8 +388,7 @@ public class TestDriver {
 				"---------------------------------The test case The test case verify Restrict By Value is completed-------------------------");
 	}
 
-
-@Test (priority=24)
+	@Test (priority=24)
 
 	public void verify_userProfile() throws Exception {
 		LOGGER.info(
@@ -400,7 +400,7 @@ public class TestDriver {
 
 	}
 
-@Test (priority=25)
+	//@Test (priority=25)
 	public void verify_AutoBDCColumnReport() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case Auto BDC column  is running-------------------------");
@@ -412,7 +412,7 @@ public class TestDriver {
 	}
 
 
-//@Test (priority=26)
+//	@Test (priority=26)
 	public void verify_dataaccessdashboard() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case dataaccess page load  is running-------------------------");
@@ -423,7 +423,7 @@ public class TestDriver {
 
 	}
 
-@Test (priority=27)
+	@Test (priority=27)
 	public void verify_helpcontactus() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case helpContactUS is running-------------------------");
@@ -434,7 +434,7 @@ public class TestDriver {
 
 	}
 
-@Test (priority=28)
+	@Test (priority=28)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");
@@ -446,6 +446,7 @@ public class TestDriver {
 	}
 
 
+
 	@AfterClass
 	public void closeApplication() {
 
@@ -453,7 +454,7 @@ public class TestDriver {
 	//	testPlan.closeDriver();
 		System.out.println("PICSUREUI Test Automation Testing is finished...");
 		LOGGER.info(
-				"===========================BDC PICSUREUI Test Automation is completed :Closing the Browser ===========================");
+				"===========================PICSUREUI Test Automation is completed :Closing the Browser ===========================");
 
 	}
 

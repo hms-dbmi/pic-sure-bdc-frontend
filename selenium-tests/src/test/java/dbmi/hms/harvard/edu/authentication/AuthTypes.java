@@ -74,8 +74,6 @@ try {
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 			
-			
-			
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

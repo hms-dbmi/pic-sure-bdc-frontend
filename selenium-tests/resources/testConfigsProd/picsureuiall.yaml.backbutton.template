@@ -15,4 +15,3 @@
  SearchTerm: triglycerides
  TextToSelect: "Blood mass concentration of triglycerides"
  NumericValueLess: 200
- expectedInputTextBoxValue: 200
