@@ -117,7 +117,7 @@ public class TestDriver {
 
 	}
 
-//@Test (priority=3)
+@Test (priority=3)
 
 	public void verify_QueryBuilder_ByNoValue() throws Exception {
 		LOGGER.info(
@@ -129,7 +129,7 @@ public class TestDriver {
 
 	}
 
-//@Test(priority=4)
+@Test(priority=4)
 
 	public void verify_QueryBuilder_ByNumericValue_LessThan() throws Throwable {
 		LOGGER.info(
@@ -142,7 +142,7 @@ public class TestDriver {
 	}
 
  
-//@Test (priority=5)
+@Test (priority=5)
 
 	public void verify_QueryBuilder_ByNumericValue_GreaterThan() throws Throwable {
 		LOGGER.info(
@@ -154,7 +154,7 @@ public class TestDriver {
 
 	}
 
-//@Test (priority=6)
+@Test (priority=6)
 
 	public void verify_QueryBuilder_ByNumericValue_Between() throws Exception {
 		LOGGER.info(
@@ -167,7 +167,7 @@ public class TestDriver {
 	}
 
 
-//@Test (priority=7)
+@Test (priority=7)
 
 	public void verify_QueryBuilder_ANDCondition() throws Exception {
 		LOGGER.info(
@@ -182,7 +182,7 @@ public class TestDriver {
 
 	}
 
-//@Test (priority=8)
+@Test (priority=8)
 
 	public void verify_QueryBuilder_Deletion() throws Exception {
 		LOGGER.info(
@@ -207,7 +207,7 @@ public class TestDriver {
 
 		}
 
-//@Test (priority=10)
+@Test (priority=10)
 
 	public void verify_QueryBuilder_Editing() throws Exception {
 		LOGGER.info(
@@ -218,7 +218,7 @@ public class TestDriver {
 				"---------------------------------The test case verifyQueryBuilderEditing is completed-------------------------");
 	}
 
-//@Test(priority = 11)
+@Test(priority = 11)
 
 	public void verify_QueryBuilder_SearchInvalidData() throws Exception {
 		LOGGER.info(
@@ -231,7 +231,7 @@ public class TestDriver {
 
 	}
 
-//@Test(priority = 12)
+@Test(priority = 12)
 
 	public void verify_QueryBuilder_Search_InCaseSensitivity() throws Exception {
 		
@@ -244,7 +244,7 @@ public class TestDriver {
 
 	}
 
-	//@Test (priority = 13)
+//@Test (priority = 13)
 
 		public void verify_Downloading_ofData() throws Exception {
 			LOGGER.info(
@@ -287,7 +287,7 @@ public class TestDriver {
 
 			}
 		
-	//@Test (priority = 16)
+@Test (priority = 16)
 		public void verifypresenceOfANDLabel() throws Exception {
 			 
 
@@ -300,7 +300,7 @@ public class TestDriver {
 						"---------------------------------The test case verify presence of AND LABEL  is completed-------------------------");
 
 			}
-	//@Test (priority=17)
+@Test (priority=17)
 
 			public void verifyQueryBuilder_ByNumericValue_Decimal() throws Exception {
 				LOGGER.info(
@@ -312,7 +312,7 @@ public class TestDriver {
 
 			}
 
-	//@Test(priority=18)
+@Test(priority=18)
 
 			public void verify_QueryBuilder_ByNumericValue_OutOfRangeValidation() throws Throwable {
 				LOGGER.info(
@@ -326,7 +326,7 @@ public class TestDriver {
 
 
 
-	//@Test (priority=19)
+@Test (priority=19)
 
 	public void verify_QueryBuilder_ByNumeric_NoValue_Message() throws Exception {
 		LOGGER.info(
@@ -338,7 +338,8 @@ public class TestDriver {
 
 	}
 
-	//@Test (priority=20)
+
+@Test (priority=20)
 
 	public void verify_QueryBuilder_ByNumeric_InBtnValidation_ForTextBox() throws Exception {
 		LOGGER.info(
@@ -349,7 +350,8 @@ public class TestDriver {
 				"---------------------------------The test case verifyQueryBuilderByNumericInBtnValidationForTextBox is completed-------------------------");
 
 	}
-	//@Test (priority=21)
+
+//@Test (priority=21)
 
 
 	public void verify_QueryBuilder_Export_Manual_Selection_DataTree() throws Exception {
@@ -385,7 +387,7 @@ public class TestDriver {
 				"---------------------------------The test case The test case verify Restrict By Value is completed-------------------------");
 	}
 
-	//@Test (priority=24)
+	@Test (priority=24)
 
 	public void verify_userProfile() throws Exception {
 		LOGGER.info(
@@ -420,7 +422,7 @@ public class TestDriver {
 
 	}
 
-	//@Test (priority=27)
+	@Test (priority=27)
 	public void verify_helpcontactus() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case helpContactUS is running-------------------------");
@@ -431,7 +433,7 @@ public class TestDriver {
 
 	}
 
-	//@Test (priority=28)
+	@Test (priority=28)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");
