@@ -1,7 +1,11 @@
-define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json", "common/transportErrors"],
-    function(BB, HBS, studyAccessTemplate, studyAccessConfiguration, transportErrors){
+define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json", "common/transportErrors", "picSure/queryBuilder"],
+    function(BB, HBS, studyAccessTemplate, studyAccessConfiguration, transportErrors, queryBuilder){
 
-        var studyAccess = {};
+        var studyAccess = {
+            freezeMsg: "(Current TOPMed data is Freeze5b)",
+            open_cnts: {studies: "60", participants: "248,614"},
+            auth_cnts: {studies: "??", participants: "??,???"}
+        };
 
         studyAccess.studyAccessTemplate = HBS.compile(studyAccessTemplate);
         studyAccess.configurationData = JSON.parse(studyAccessConfiguration);
@@ -61,13 +65,38 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 records.push(tmpStudy);
             }
         }
+
+        // count the number of studies (accessable and total)
+        var temp = records.map((rec) => { return rec.study_identifier; });
+        temp = [...new Set(temp)];
+        studyAccess.open_cnts.studies = temp.length;
+        var temp = records.filter((rec) => { return rec.disp_group === "permitted" }).map((rec) => { return rec.study_identifier; });
+        temp = [...new Set(temp)];
+        studyAccess.auth_cnts.studies = temp.length;
+
+        // count the number of participants user can query
+        var query = queryBuilder.createQuery({});
+        query.query.expectedResultType = "COUNT";
+        query.resourceCredentials = {};
+        $.ajax({
+            url: window.location.origin + "/picsure/query/sync",
+            type: 'POST',
+            headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+            contentType: 'application/json',
+            data: JSON.stringify(query),
+            success: function(response){
+                studyAccess.auth_cnts.participants = parseInt(response).toLocaleString();
+                studyAccess.View.render();
+            }
+        });
+
         // build the collection's models
         studyAccess.Collection = new studyAccessCollection(records);
 
         // function for hiding/displaying c0 consents list
         studyAccess.keystrokeConsentC0 = function(event) {
         };
-
+        
         // build view
         studyAccess.View = new (BB.View.extend({
             tagName: "div",
@@ -109,6 +138,13 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 outputData.denied.sort(funcSort);
                 outputData.na.sort(funcSort);
 
+                // get counts for studies and participants
+                outputData["auth_studies_cnt"] = studyAccess.auth_cnts.studies;
+                outputData["open_studies_cnt"] = studyAccess.open_cnts.studies;
+                outputData["auth_participants_cnt"] = studyAccess.auth_cnts.participants;
+                outputData["open_participants_cnt"] = studyAccess.open_cnts.participants;
+                outputData["freeze_msg"] = studyAccess.freezeMsg;
+
                 this.$el.html(studyAccess.studyAccessTemplate(outputData));
             }
         }))({
@@ -125,11 +161,12 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             }.bind(this));
         }.bind(studyAccess);
 
-
         studyAccess.displayPage = function() {
             studyAccess.View.render();
             $('#main-content').empty().append(studyAccess.View.$el);
         };
+
+        studyAccess.View.render();
 
         return studyAccess;
     });
