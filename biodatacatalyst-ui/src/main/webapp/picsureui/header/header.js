@@ -1,7 +1,7 @@
-define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", "text!header/header.hbs", "overrides/header",
+define(["jquery", "backbone", "handlebars", "text!header/header.hbs", "overrides/header",
         "text!../settings/settings.json", "text!options/modal.hbs","text!header/userProfile.hbs", "psamaui/overrides/userProfile",
         "util/notification", "picSure/userFunctions"],
-    function($, BB, HBS, studyAccess, template, overrides,
+    function($, BB, HBS, template, overrides,
              settings, modalTemplate, userProfileTemplate, profileOverride,
              notification, userFunctions){
         var headerView = BB.View.extend({
@@ -153,9 +153,6 @@ define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", 
                             console.log(response);
                         }.bind(this)
                     });
-
-                    // inject data access button (delayed execution)
-                    setTimeout(studyAccess.addHeaderTab, 50);
                 }
             }
         });
