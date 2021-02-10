@@ -47,7 +47,8 @@ define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", 
             },
             events : {
                 "click #logout-btn" : "logout",
-                "click #user-profile-btn": "userProfile"
+                "click #user-profile-btn": "userProfile",
+                "click .header-navigation": "headerClick"
             },
             logout : function(event){
                 sessionStorage.clear();
@@ -117,6 +118,11 @@ define(["jquery", "backbone", "handlebars", "studyAccess/studyAccessFunctions", 
             },
             closeDialog: function () {
                 $("#modalDialog").hide();
+            },
+            headerClick: function(event) {
+                if ($(event.target).data("href")) {
+                    window.history.pushState({}, "", $(event.target).data("href"));
+                }
             },
             render : function(){
                 jsonSettings = JSON.parse(settings);
