@@ -28,7 +28,6 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
 
                 // process the study data into permission granted or not groups
                 this.records = {
-                    freezeMsg: studyAccess.freezeMsg,
                     permitted: [],
                     denied: [],
                     na: []
@@ -83,11 +82,11 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             },
             render: function() {
                 // get counts for studies and participants
-                outputData["auth_studies_cnt"] = studyAccess.auth_cnts.studies;
-                outputData["open_studies_cnt"] = studyAccess.open_cnts.studies;
-                outputData["auth_participants_cnt"] = studyAccess.auth_cnts.participants;
-                outputData["open_participants_cnt"] = studyAccess.open_cnts.participants;
-                outputData["freeze_msg"] = studyAccess.freezeMsg;
+                this.records.auth_studies_cnt = studyAccess.auth_cnts.studies;
+                this.records.open_studies_cnt = studyAccess.open_cnts.studies;
+                this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
+                this.records.open_participants_cnt = studyAccess.open_cnts.participants;
+                this.records.freeze_msg = studyAccess.freezeMsg;
 
                 this.$el.html(studyAccess.displayTemplate(this.records));
             }
