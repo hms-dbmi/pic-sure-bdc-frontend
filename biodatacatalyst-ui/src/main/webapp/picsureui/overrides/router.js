@@ -1,4 +1,4 @@
-define([], function(){
+define(["studyAccess/studyAccess"], function(studyAccess){
     return {
         routes : {
             /**
@@ -8,7 +8,12 @@ define([], function(){
              * Ex:
              * "picsureui/queryBuilder2" : function() { renderQueryBuilder2(); }
              */
-            "picsureui/dataAccess" : function() { console.log("Data acess page"); }
+            "picsureui/dataAccess" : function() {
+                $('#main-content').empty();
+                var studyAccessView = new studyAccess.View;
+                studyAccessView.render();
+                $('#main-content').append(studyAccessView.$el);
+            }
         }
     };
 });
