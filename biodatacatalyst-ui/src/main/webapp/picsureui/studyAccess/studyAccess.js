@@ -1,78 +1,75 @@
 define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json", "common/transportErrors"],
     function(BB, HBS, studyAccessTemplate, studyAccessConfiguration, transportErrors){
 
-        var studyAccess = {};
+        var studyAccess = {
+            freezeMsg: "(Current TOPMed data is Freeze5b)",
+            displayTemplate: HBS.compile(studyAccessTemplate)
+        };
 
-        studyAccess.studyAccessTemplate = HBS.compile(studyAccessTemplate);
-        studyAccess.configurationData = JSON.parse(studyAccessConfiguration);
-
-        // build the model/collection
-        var studyAccessModel = BB.Model.extend({
-            abbreviated_name: '[N/A]',
-            full_study_name: '[N/A]',
-            clinical_sample_size: 0,
-            clinical_variable_count: 0,
-            consent_group_name: '[N/A]',
-            data_type: '-',
-            genetic_sample_size: 0,
-            study_phase: '-',
-            study_version: '-',
-            request_access: ''
-        });
-        var studyAccessCollection = BB.Collection.extend({
-            model: studyAccessModel,
-            modelId: function(attrs) {
-                return attrs.study_identifier + '.' + attrs.consent_group_code;
-            }
-        });
-
-        // extract the consent identifiers from the query template
-        var session = JSON.parse(sessionStorage.getItem("session"));
-        if (session.queryTemplate === undefined ) {
-            var validConsents = [];
-        } else {
-            var temp = JSON.parse(session.queryTemplate);
-
-            if (temp.categoryFilters === undefined || temp.categoryFilters["\\_consents\\"] === undefined) {
-                var validConsents = [];
-            } else {
-                var validConsents = temp.categoryFilters["\\_consents\\"];
-            }
-        }
-        // process the study data into permission granted or not groups
-        var records = [];
-        for (groupid in studyAccess.configurationData) {
-            for (idx = 0; idx < studyAccess.configurationData[groupid].length; idx++) {
-                // determine if logged in user is permmited access
-                var tmpStudy = studyAccess.configurationData[groupid][idx];
-                tmpStudy["clinical_variable_count"] = parseInt(tmpStudy["clinical_variable_count"]).toLocaleString();
-                tmpStudy["clinical_sample_size"] = parseInt(tmpStudy["clinical_sample_size"]).toLocaleString();
-                tmpStudy["genetic_sample_size"] = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
-                var studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"]
-                if (validConsents.includes(studyConsent)) {
-                    tmpStudy["disp_group"] = "permitted";
-                } else {
-                    if (tmpStudy["consent_group_code"] == "c0") {
-                        tmpStudy["disp_group"] = "na";
-                    } else {
-                        tmpStudy["disp_group"] = "denied";
-                    }
-                }
-                records.push(tmpStudy);
-            }
-        }
-        // build the collection's models
-        studyAccess.Collection = new studyAccessCollection(records);
 
         // function for hiding/displaying c0 consents list
         studyAccess.keystrokeConsentC0 = function(event) {
         };
 
         // build view
-        studyAccess.View = new (BB.View.extend({
+        studyAccess.View = BB.View.extend({
             tagName: "div",
             template: studyAccess.studyAccessTemplate,
-            initialize: function(){},
+            initialize: function(){
+                // extract the consent identifiers from the query template
+                var session = JSON.parse(sessionStorage.getItem("session"));
+                if (session.queryTemplate === undefined ) {
+                    var validConsents = [];
+                } else {
+                    var temp = JSON.parse(session.queryTemplate);
+
+                    if (temp.categoryFilters === undefined || temp.categoryFilters["\\_consents\\"] === undefined) {
+                        var validConsents = [];
+                    } else {
+                        var validConsents = temp.categoryFilters["\\_consents\\"];
+                    }
+                }
+
+                // process the study data into permission granted or not groups
+                this.records = {
+                    freezeMsg: studyAccess.freezeMsg,
+                    permitted: [],
+                    denied: [],
+                    na: []
+                };
+                var configurationData = JSON.parse(studyAccessConfiguration);
+                for (groupid in configurationData) {
+                    for (idx = 0; idx < configurationData[groupid].length; idx++) {
+                        // determine if logged in user is permmited access
+                        var tmpStudy = configurationData[groupid][idx];
+                        tmpStudy["clinical_variable_count"] = parseInt(tmpStudy["clinical_variable_count"]).toLocaleString();
+                        tmpStudy["clinical_sample_size"] = parseInt(tmpStudy["clinical_sample_size"]).toLocaleString();
+                        tmpStudy["genetic_sample_size"] = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
+                        var studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"]
+                        if (validConsents.includes(studyConsent)) {
+                            this.records.permitted.push(tmpStudy);
+                        } else {
+                            if (tmpStudy["consent_group_code"] == "c0") {
+                                this.records.na.push(tmpStudy);
+                            } else {
+                                this.records.denied.push(tmpStudy);
+                            }
+                        }
+                    }
+                }
+
+                // sort by "consent group" then "abbreviated name"
+                var funcSort = function (a, b) {
+                    if (a["abbreviated_name"] == b["abbreviated_name"]) {
+                        return (a["consent_group_name"] > b["consent_group_name"]);
+                    } else {
+                        return (a["abbreviated_name"] > b["abbreviated_name"]);
+                    }
+                };
+                this.records.permitted.sort(funcSort);
+                this.records.denied.sort(funcSort);
+                this.records.na.sort(funcSort);
+            },
             events:{
                 "click .study-lst-btn1": "toggleConsent",
                 "click .study-lst-btn2": "toggleConsent"
@@ -89,30 +86,8 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 }
             },
             render: function() {
-                var modelData = this.model.toJSON();
-
-                // break into our 3 display groups
-                var outputData = {
-                    permitted: modelData.filter(function(rec) { return rec.disp_group === "permitted"; }),
-                    denied: modelData.filter(function(rec) { return rec.disp_group === "denied"; }),
-                    na: modelData.filter(function(rec) { return rec.disp_group === "na"; })
-                };
-                // sort by "consent group" then "abbreviated name"
-                var funcSort = function (a, b) {
-                    if (a["abbreviated_name"] == b["abbreviated_name"]) {
-                        return (a["consent_group_name"] > b["consent_group_name"]);
-                    } else {
-                        return (a["abbreviated_name"] > b["abbreviated_name"]);
-                    }
-                };
-                outputData.permitted.sort(funcSort);
-                outputData.denied.sort(funcSort);
-                outputData.na.sort(funcSort);
-
-                this.$el.html(studyAccess.studyAccessTemplate(outputData));
+                this.$el.html(studyAccess.displayTemplate(this.records));
             }
-        }))({
-            model: studyAccess.Collection
         });
 
 
