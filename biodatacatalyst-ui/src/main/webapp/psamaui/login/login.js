@@ -138,5 +138,6 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                 $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
         }
     };
+	// Since we're overriding login completely, we should be able to combine login.js and fence_login.js
 	return settings.idp_provider == "fence" ? fenceLogin : login;
 });
