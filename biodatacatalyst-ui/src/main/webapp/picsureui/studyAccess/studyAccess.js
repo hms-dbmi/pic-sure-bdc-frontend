@@ -6,11 +6,6 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             displayTemplate: HBS.compile(studyAccessTemplate)
         };
 
-
-        // function for hiding/displaying c0 consents list
-        studyAccess.keystrokeConsentC0 = function(event) {
-        };
-
         // build view
         studyAccess.View = BB.View.extend({
             tagName: "div",
@@ -89,22 +84,6 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 this.$el.html(studyAccess.displayTemplate(this.records));
             }
         });
-
-
-        studyAccess.addHeaderTab = function() {
-            // inject button and click handler
-            $('<a class="col-md-2 btn btn-default header-btn" id="data-access-btn" href="#">Data Access</a>').insertAfter("#user-profile-btn");
-            $('#data-access-btn').click(function(e){
-                studyAccess.displayPage();
-                e.currentTarget.blur();
-            }.bind(this));
-        }.bind(studyAccess);
-
-
-        studyAccess.displayPage = function() {
-            studyAccess.View.render();
-            $('#main-content').empty().append(studyAccess.View.$el);
-        };
 
         return studyAccess;
     });
