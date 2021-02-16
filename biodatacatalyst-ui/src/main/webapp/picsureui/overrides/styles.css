@@ -84,3 +84,162 @@
     left: -60px;
     position: relative;
 }
+
+
+/* <StudyAccess styles> */
+#infgfx {
+    background: #fff;
+    border-radius: 8px;
+    border: #aaa 1px solid;
+    padding: 20px;
+    position: relative;
+}
+
+#infgfx-line {
+    float: left;
+    border: 1px solid #777;
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    height: 70%;
+}
+
+.gfx-title button {
+    width: 140px;
+}
+
+.gfx-cohorts, .gfx-participants {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+.gfx-authorization {
+    margin-top: 50px;
+}
+
+.infgfx-content {
+    width: 80%;
+    margin: 40px auto;
+    position: relative;
+    text-align: center;
+}
+
+.infgfx-content > div {
+    font-size: 1.5em;
+}
+
+.infgfx-content > div > img {
+    width: 60px;
+    height: 60px;
+}
+
+.gfx-title {
+    margin: auto;
+    width: 58%;
+    margin-bottom: 50px;
+    margin-right: 12%;
+}
+
+.gfx-title > div {
+    float: left;
+    width: 70%;
+    text-align: center;
+}
+
+.gfx-title > div > div {
+    font-size: 25px;
+    margin: auto;
+    width: 100%;
+    font-weight: bolder;
+}
+
+.gfx-title > img {
+    float: right;
+    height: 80px !important;
+    width: 80px !important;
+}
+
+.gfx-datalevel > img {
+    padding: 10px 0px;
+    margin: 0px -15px;
+}
+
+#studies-access {
+      margin-top: 30px;
+      width:100%;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      padding: 8px 0px;
+      background: #fff;
+  }
+
+#studies-access > div {
+    margin: 10px 0px;
+}
+
+#studies-access > div > div {
+    margin: 5px 20px
+}
+
+#studies-access table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#studies-access table th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+    background-color: white;
+    border-bottom: 1px solid #aaa;
+}
+
+#studies-access table thead tr th,
+#studies-access table tbody tr td:nth-child(2),
+#studies-access table tbody tr td:nth-child(3),
+#studies-access table tbody tr td:nth-child(6),
+#studies-access table tbody tr td:nth-child(7),
+#studies-access table tbody tr td:nth-child(8),
+#studies-access table tbody tr td:nth-child(9),
+#studies-access table tbody tr td:nth-child(10),
+#studies-access table tbody tr td:nth-child(11) {
+    text-align: center;
+}
+
+#studies-access table thead tr th:nth-child(4) {
+    text-align: left;
+}
+
+#studies-access table thead tr th:nth-child(3),
+#studies-access table thead tr th:nth-child(5),
+#studies-access table thead tr th:nth-child(6),
+#studies-access table thead tr th:nth-child(7),
+#studies-access table thead tr th:nth-child(8),
+#studies-access table tbody tr td:nth-child(10) {
+    width: 1%;
+}
+
+#studies-access span.btn {
+    width: 90px;
+}
+
+.btn-blue {
+    background-color: #1a568c;
+}
+
+.study-lst-btn1, .study-lst-btn2 {
+    height: 2.5em;
+    background: #f4f4f6;
+    color: #000;
+}
+.study-lst-btn-no-hov:hover {
+    color: #000;
+    background-color: #fff;
+}
+
+.study-lst-btn2:hover {
+    background-color: #76a6de;
+}
+/* </StudyAccess styles> */
+
