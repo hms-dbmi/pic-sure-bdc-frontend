@@ -18,16 +18,15 @@ RUN sed -i '/^#LoadModule proxy_connect_module/s/^#//' ${HTTPD_PREFIX}/conf/http
 RUN sed -i '/^#LoadModule ssl_module modules\/mod_ssl.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN sed -i '/^#LoadModule rewrite_module modules\/mod_rewrite.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
-RUN sed -i 's/DirectoryIndex index.html/DirectoryIndex index_03272020.html/' ${HTTPD_PREFIX}/conf/httpd.conf
+RUN sed -i 's/DirectoryIndex index.html/DirectoryIndex index.html/' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
-# copy pic-sure-hpds-ui and psama_ui repos
-COPY --from=psama-ui /usr/local/apache2/htdocs/psamaui /usr/local/apache2/htdocs/psamaui
+# copy pic-sure-hpds-ui repo
 COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui /usr/local/apache2/htdocs/picsureui
 
 # then copy overrides
 COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui/
-COPY src/main/webapp/psamaui /usr/local/apache2/htdocs/psamaui/
+COPY src/main/webapp/psamaui /usr/local/apache2/htdocs/picsureui/psamaui/
 COPY src/main/resources/favicon.ico /usr/local/apache2/htdocs/
 
 COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
