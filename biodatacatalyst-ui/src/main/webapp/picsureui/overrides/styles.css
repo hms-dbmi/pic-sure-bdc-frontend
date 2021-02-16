@@ -9,6 +9,11 @@
   padding-top: 10px;
 }
 
+.login-logo {
+    width: 50%;
+    padding-top: 20px;
+}
+
 /* take out footer padding */
 #footer-content {
     padding-top: 0;
@@ -44,7 +49,6 @@
 }
 
 .header-btn {
-    top: 44px;
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
     border-bottom-style: solid;
     border-bottom-width: 10px;
@@ -55,3 +59,28 @@
      border-bottom-color: #6d6e70;
 }
 
+#header-content {
+    width: 100%;
+    min-height: unset;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.fence-login-btn {
+    display: block;
+    padding: 5px;
+    background-color: #d0d0d0;
+    width: auto;
+    margin: auto auto;
+}
+
+.fence-login-wrapper {
+    margin: auto auto;
+    text-align: center;
+    display: inline-block;
+}
+
+.fence-inner-span {
+    left: -60px;
+    position: relative;
+}
