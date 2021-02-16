@@ -93,6 +93,7 @@
     border: #aaa 1px solid;
     padding: 20px;
     position: relative;
+    min-width: 1200px;
 }
 
 #infgfx-line {
@@ -171,6 +172,7 @@
       border-radius: 8px;
       padding: 8px 0px;
       background: #fff;
+      min-width: 1200px;
   }
 
 #studies-access > div {
