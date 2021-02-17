@@ -4,7 +4,11 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
             open_cnts: {studies: "60", participants: "248,614"},
-            auth_cnts: {studies: "??", participants: "??,???"}
+            auth_cnts: {studies: "??", participants: "??,???"},
+            resources: {
+                auth: "02e23f52-f354-4e8b-992c-d37c8b9ba140",
+                open: false
+            }
         };
 
         // build view
@@ -12,6 +16,9 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             tagName: "div",
             template: studyAccess.studyAccessTemplate,
             initialize: function(){
+                // setup the output template
+                this.template = HBS.compile(studyAccessTemplate);
+
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
                 if (session.queryTemplate === undefined ) {
@@ -64,6 +71,39 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 this.records.permitted.sort(funcSort);
                 this.records.denied.sort(funcSort);
                 this.records.na.sort(funcSort);
+
+                // query for participant counts of authorized and open access resources
+                if (studyAccess.resources.auth !== false) {
+                    var query = queryBuilder.createQuery({});
+                    query.query.expectedResultType = "COUNT";
+                    query.resourceCredentials = {};
+                    query.resourceUUID = studyAccess.resources.auth;
+                    $.ajax({
+                        url: window.location.origin + "/picsure/query/sync",
+                        type: 'POST',
+                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                        contentType: 'application/json',
+                        data: JSON.stringify(query),
+                        success: (function(response){
+                            studyAccess.auth_cnts.participants = parseInt(response).toLocaleString();
+                            this.render();
+                        }).bind(this)
+                    });
+                }
+                if (studyAccess.resources.open !== false) {
+                    query.resourceUUID = studyAccess.resources.open;
+                    $.ajax({
+                        url: window.location.origin + "/picsure/query/sync",
+                        type: 'POST',
+                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                        contentType: 'application/json',
+                        data: JSON.stringify(query),
+                        success: (function (response) {
+                            studyAccess.open_cnts.participants = parseInt(response).toLocaleString();
+                            this.render();
+                        }).bind(this)
+                    });
+                }
             },
             events:{
                 "click .study-lst-btn1": "toggleConsent",
@@ -88,7 +128,7 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 this.records.open_participants_cnt = studyAccess.open_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
 
-                this.$el.html(studyAccess.displayTemplate(this.records));
+                this.$el.html(this.template(this.records));
             }
         });
 
