@@ -29,9 +29,10 @@ COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui/
 COPY src/main/webapp/psamaui /usr/local/apache2/htdocs/picsureui/psamaui/
 COPY src/main/resources/favicon.ico /usr/local/apache2/htdocs/
 
-COPY src/main/webapp/picsureui/index.html /usr/local/apache2/htdocs/picsureui/index_20210217.html
-COPY src/main/webapp/picsureui/main.js /usr/local/apache2/htdocs/picsureui/main_20210217.js
+COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui/index.html /usr/local/apache2/htdocs/picsureui/index_20210217.html
+COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui/main.js /usr/local/apache2/htdocs/picsureui/main_20210217.js
 
+RUN sed -i 's/\/picsureui\/main/\/picsureui\/main_20210217/' /usr/local/apache2/htdocs/picsureui/index_20210217.html
 RUN sed -i 's/urlArgs: ""/urlArgs: "20210217"/' /usr/local/apache2/htdocs/picsureui/main_20210217.js
 
 COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
