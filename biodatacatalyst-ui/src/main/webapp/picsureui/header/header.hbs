@@ -23,8 +23,9 @@
             <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
         </ul>
     </div>
-    <a class="col-md-1 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" style="display: none;" id="query-builder-btn">Query Builder</a>
-    <a class="col-md-1 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/dataAccess" href="#" style="display: none;" id="query-builder-btn">Data Access</a>
+    <a class="col-md-1 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" style="display: none;" id="query-builder-btn">Authorized Access</a>
+    <a class="col-md-1 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/openAccess" href="#" style="display: none;" id="open-access-btn">Open Access</a>
+    <a class="col-md-1 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/dataAccess" href="#" style="display: none;" id="data-access-btn">Data Access</a>
     <a class="col-md-1 btn btn-default header-btn admin-visible header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#"
        {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Users
     </a>
