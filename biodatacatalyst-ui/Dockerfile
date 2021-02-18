@@ -33,7 +33,7 @@ COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui/index.html /usr/loca
 COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui/main.js /usr/local/apache2/htdocs/picsureui/main_20210217.js
 
 RUN sed -i 's/\/picsureui\/main/\/picsureui\/main_20210217/' /usr/local/apache2/htdocs/picsureui/index_20210217.html
-RUN sed -i 's/urlArgs: ""/urlArgs: "20210217"/' /usr/local/apache2/htdocs/picsureui/main_20210217.js
+RUN sed -i 's/urlArgs: ""/urlArgs: "v=20210217"/' /usr/local/apache2/htdocs/picsureui/main_20210217.js
 
 COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
 COPY stacked-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
