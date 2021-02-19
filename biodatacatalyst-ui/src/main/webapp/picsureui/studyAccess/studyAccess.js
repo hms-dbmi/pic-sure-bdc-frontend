@@ -3,11 +3,11 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
 
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
-            open_cnts: {studies: "60", participants: "248,614"},
+            open_cnts: {studies: "52", participants: "248,614"},
             auth_cnts: {studies: "??", participants: "??,???"},
             resources: {
-                auth: "02e23f52-f354-4e8b-992c-d37c8b9ba140",
-                open: false
+                open: false,
+                auth: "02e23f52-f354-4e8b-992c-d37c8b9ba140"
             }
         };
 
