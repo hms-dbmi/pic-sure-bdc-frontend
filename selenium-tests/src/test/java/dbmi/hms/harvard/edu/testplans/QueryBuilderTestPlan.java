@@ -132,9 +132,11 @@ public class QueryBuilderTestPlan extends Testplan {
 	@SuppressWarnings("deprecation")
 	public void launchApp() throws InterruptedException {
 
-		String browserName = (String) testPlan.get("browser");
-		System.out.println("The launched browser is " + browserName);
-		String browser = browserName.toLowerCase().replaceAll(" ", "");
+		//String browserName = (String) testPlan.get("browser");
+		
+		String browser = System.getProperty("browserName").toLowerCase().replaceAll(" ", "");
+		System.out.println("The launched browser is " + browser);
+		//String browser = browserName.toLowerCase().replaceAll(" ", "");
 		switch (browser) {
 		/*
 		 * case "chrome": DesiredCapabilities capability =
