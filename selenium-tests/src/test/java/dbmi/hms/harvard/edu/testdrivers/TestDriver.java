@@ -450,7 +450,7 @@ public class TestDriver {
 
 		reporter.doReport();
 	//	testPlan.closeDriver();
-		System.out.println("PICSUREUI Test Automation Testing is finished...");
+		System.out.println("BDC PICSUREUI Test Automation Testing is finished...");
 		LOGGER.info(
 				"===========================BDC PICSUREUI Test Automation is completed :Closing the Browser ===========================");
 
