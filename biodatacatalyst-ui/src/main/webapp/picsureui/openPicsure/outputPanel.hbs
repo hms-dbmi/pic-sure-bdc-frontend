@@ -1,0 +1,110 @@
+<style>
+  #studies-list {
+    width:90%;
+    margin:auto;
+    margin-bottom:-16px
+  }
+  #studies-list div div span.glyphicon {
+    margin: 4px 8px 4px 4px;
+    cursor: pointer;
+  }
+  #studies-list div div ul {
+    margin: 0px 4px;
+    padding-bottom: 6px;
+  }  
+  #studies-list li span {
+    cursor: pointer;
+  }
+  #studies-list li {
+    line-height: 22px;
+  }
+
+  li span.study-count {
+    margin-right: 90px;
+  }
+
+  #studies-list .study-count {
+    float: right;
+    line-height: 22px;
+    padding-right: 10px;
+  }
+
+  #studies-list .request-access:hover {
+    background: #777 !important;
+  }
+  #studies-list .request-access {
+    float: right;
+    padding: 4px;
+    cursor: pointer;
+    margin: 2px;
+    background-color: #1a568c;
+  }
+
+  #studies-list .study-shown {
+    background-color: #eaeaea;
+    border: 1px solid #d5d5d5;
+  }
+
+  #studies-list .study-shown .consent-list {
+    background-color: #ffffff !important;
+    display: block !important;
+    border-radius: 0px 0px 4px 4px;
+    margin-top: 2px;
+  }
+
+  #studies-list > div {
+    border: 1px solid rgb(223, 238, 255);
+    border-radius: 4px;
+    cursor: default;
+  }
+
+</style>
+<div>
+<div id="patient-count-box">
+	<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+	<span id="patient-count" class="blue center large">{{#if queryRan}}{{#if countDisplayOverride}}{{> (countDisplayOverride) totalPatients}}{{else}}{{outputPanel_obfuscate totalPatients}}{{/if}}{{else}}-{{/if}}</span><br></br>
+	<span class="center medium">Total Participants</span><br></br>
+	<div class="container" id="pic-sure-instances">
+		<div id="select-spinner"></div>
+	</div>
+	<div id="studies-list">
+
+{{#each studies}}
+    <div>
+        <div title="{{name}}">
+          <span class="glyphicon glyphicon-chevron-down study-glyph"></span>
+          <span class="consent-grouping"
+            tabindex="0"
+            role="button"
+            aria-expanded="true"
+            aria-pressed="true"
+            aria-label="{{name}} with {{study_matches}} participants. Use enter key to collapse or expand"
+          >{{code}}</span>
+          <div aria-label="Request access to study" class="request-access label label-primary" tabindex="0" role="button" aria-pressed="false" data-href="{{request_access}}">Request Access</div>
+          <span class="study-count">{{study_matches}} participants</span>
+        </div>
+        <div style="display:none" class="consent-list">
+          <ul>
+  {{#each consents}}
+            <li title="{{consent_group_name}}">
+              <span tabindex="0" aria-label="{{consent_group_name}} with {{study_matches}} participants">{{short_title}}</span>
+              <span class="study-count">{{study_matches}} participants</span>
+            </li>
+  {{/each}}
+          </ul>
+        </div>
+    </div>
+{{/each}}
+
+
+
+
+
+
+
+
+
+
+	</div>
+</div>
+</div>
