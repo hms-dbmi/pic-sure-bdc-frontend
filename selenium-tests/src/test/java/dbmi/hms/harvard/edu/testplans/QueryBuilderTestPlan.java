@@ -227,8 +227,8 @@ public class QueryBuilderTestPlan extends Testplan {
 		        DesiredCapabilities dc = DesiredCapabilities.firefox();
 		        dc.setCapability(FirefoxDriver.PROFILE, profile);
 		        dc.setCapability("marionette", true);
-		        dc.setPlatform(Platform.WINDOWS);
-				//dc.setPlatform(Platform.LINUX);
+		       // dc.setPlatform(Platform.WINDOWS);
+				dc.setPlatform(Platform.LINUX);
 		        FirefoxOptions opt = new FirefoxOptions();
 				opt.merge(dc);
 				FirefoxOptions firefoxOptions = new FirefoxOptions(opt);
