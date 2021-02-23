@@ -1,4 +1,4 @@
-define(["studyAccess/studyAccess"], function(studyAccess){
+define(["studyAccess/studyAccess","common/startup"], function(studyAccess, startup){
     return {
         routes : {
             /**
@@ -13,6 +13,10 @@ define(["studyAccess/studyAccess"], function(studyAccess){
                 var studyAccessView = new studyAccess.View;
                 studyAccessView.render();
                 $('#main-content').append(studyAccessView.$el);
+            },
+            "picsureui/openAccess" : function() {
+                $('#main-content').empty();
+                startup();
             }
         }
     };
