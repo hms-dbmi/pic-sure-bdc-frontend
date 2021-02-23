@@ -213,7 +213,7 @@ public class QueryBuilderTestPlan extends Testplan {
 			
 			
 		case "firefoxheadless":
-				System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
+			//	System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
 				FirefoxBinary firefoxBinary = new FirefoxBinary();
 				firefoxBinary.addCommandLineOptions("--headless");
 				FirefoxProfile profile = new FirefoxProfile();
