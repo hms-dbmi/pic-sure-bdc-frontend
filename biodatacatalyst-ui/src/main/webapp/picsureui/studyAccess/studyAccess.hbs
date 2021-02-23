@@ -6,8 +6,8 @@
 				<div style="width:100%;font-size:25px;font-weight:bold">Authorized Access</div>
 				<button type="button" class="btn btn-primary btn-blue">Explore Now</button>
 			</div>
-			<div class="gfx-cohorts"></div>
-			<div class="gfx-participants"></div>
+			<div class="gfx-cohorts">{{auth_studies_cnt}} Studies</div>
+			<div class="gfx-participants">{{auth_participants_cnt}} participants</div>
 			<div class="gfx-authorization">
 				<img src="studyAccess/icons/authorized-protected.svg" />
 				dbGap Approval Required
@@ -43,8 +43,8 @@
 				<div style="width:100%;font-size:25px;font-weight:bold;">Open Access</div>
 				<button type="button" class="btn btn-default active" tabindex="-1" style="cursor:no-drop">Coming Soon</button>
 			</div>
-			<div class="gfx-cohorts"></div>
-			<div class="gfx-participants"></div>
+			<div class="gfx-cohorts">{{open_studies_cnt}} Studies</div>
+			<div class="gfx-participants">{{open_participants_cnt}} participants</div>
 			<div class="gfx-authorization">
 				<img src="studyAccess/icons/authorized-open.svg" style="padding:10px;" />
 				No Authorization Required
@@ -65,7 +65,7 @@
 
 <div id="studies-access">
     <div>
-        <div>{{freezeMsg}}</div>
+        <div>{{freeze_msg}}</div>
         <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic</div>
 
         <table class="table table-striped">
