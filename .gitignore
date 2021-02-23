@@ -10,3 +10,4 @@ tmp/
 selenium-tests/test-output/
 selenium-tests/*.log
 selenium-tests/*.png
+*.iml
