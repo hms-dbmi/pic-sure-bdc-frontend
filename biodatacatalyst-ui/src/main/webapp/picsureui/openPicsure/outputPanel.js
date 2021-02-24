@@ -1,5 +1,5 @@
-define(["jquery", "text!../settings/settings.json", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json"],
-		function($, settings, dataSelection, outputTemplate, resourceMeta, ontology, BB, HBS, overrides, studiesData){
+define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json"],
+		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData){
 
 	
 	// build the studies display info
@@ -54,7 +54,6 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 	});
 
 	var outputView = BB.View.extend({
-		ontology: ontology,
 		initialize: function(){
 			this.template = HBS.compile(outputTemplate);
 			overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
@@ -108,15 +107,9 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 
 			// make a safe deep copy of the incoming query so we don't modify it
 			var query = JSON.parse(JSON.stringify(incomingQuery));
-			query.resourceUUID = JSON.parse(settings).picSureResourceId;
 			query.resourceCredentials = {};
 			query.query.expectedResultType="COUNT";
 			this.model.set("query", query);
-
-			if(this.dataSelection){
-				this.dataSelection.updateQuery(query);
-				this.dataSelection.render();
-			}
 
 			var dataCallback = function(result){
 				this.model.set("totalPatients", parseInt(result));
@@ -157,10 +150,6 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 		render: function(){
 			var context = this.model.toJSON();
 			this.$el.html(this.template(Object.assign({},context , overrides)));
-			if(this.dataSelection){
-				this.dataSelection.setElement($("#concept-tree-div",this.$el));
-				this.dataSelection.render();
-			}
 		}
 	});
 	

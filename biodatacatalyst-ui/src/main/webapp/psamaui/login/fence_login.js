@@ -1,6 +1,7 @@
 define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
-        'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'footer/footer', "common/styles"],
-    function(session, settings, parseQueryString, $, HBS, loginTemplate, notAuthorizedTemplate, overrides, notification, footer){
+        'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'footer/footer', "picSure/settings"],
+    function(session, settings, parseQueryString, $, HBS, loginTemplate,
+             notAuthorizedTemplate, overrides, notification, footer, picSureSettings){
         var loginTemplate = HBS.compile(loginTemplate);
 
         var login = {
@@ -43,12 +44,32 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                                 data.acceptedTOS,
                                 this.handleNotAuthorizedResponse
                             );
+                            $.ajax({
+                                url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+                                type: 'GET',
+                                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    var currentSession = JSON.parse(sessionStorage.getItem("session"));
+                                    currentSession.queryTemplate = response.queryTemplate;
+                                    sessionStorage.setItem("session", JSON.stringify(currentSession));
 
-                            if (data.acceptedTOS !== 'true'){
-                                history.pushState({}, "", "/psamaui/tos");
-                            } else {
-                                window.location = '/picsureui';
-                            }
+                                    if (data.acceptedTOS !== 'true'){
+                                        history.pushState({}, "", "/psamaui/tos");
+                                    } else {
+                                        if (sessionStorage.redirection_url) {
+                                            window.location = sessionStorage.redirection_url;
+                                        }
+                                        else {
+                                            // todo: based on user
+                                            history.pushState({}, "", "/picsureui");
+                                        }
+                                    }
+                                }.bind(this),
+                                error: function (response) {
+                                    transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
+                                }.bind(this)
+                            });
 
                         }.bind(this),
                         error: function(data){
