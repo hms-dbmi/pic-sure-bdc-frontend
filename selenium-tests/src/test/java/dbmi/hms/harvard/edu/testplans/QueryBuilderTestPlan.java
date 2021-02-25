@@ -976,7 +976,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		String actualTextNoValue = NoValue.getText();
 		Thread.sleep(3000);
 		try {
-			Assert.assertEquals(actualTextNoValue, "Value required! Correct invalid fields.");
+			Assert.assertEquals(actualTextNoValue, "Value invalid! Correct invalid fields.");
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 
 			LOGGER.info("It shows the message for NO value correctly");
