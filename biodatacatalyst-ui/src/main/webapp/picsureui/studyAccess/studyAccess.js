@@ -67,7 +67,8 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             },
             events:{
                 "click .study-lst-btn1": "toggleConsent",
-                "click .study-lst-btn2": "toggleConsent"
+                "click .study-lst-btn2": "toggleConsent",
+                "click .explore-now-button": "exploreNowClickHandler"
             },
             toggleConsent: function() {
                 if ($("#no-consent-toggle").hasClass("glyphicon-chevron-down")) {
@@ -79,6 +80,9 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                     $("#no-consent-toggle").removeClass("glyphicon-chevron-up");
                     $("#no-consent-toggle").addClass("glyphicon-chevron-down");
                 }
+            },
+            exploreNowClickHandler: function() {
+                window.history.pushState({}, "", "/picsureui/queryBuilder");
             },
             render: function() {
                 this.$el.html(studyAccess.displayTemplate(this.records));
