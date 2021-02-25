@@ -1,5 +1,7 @@
-define(['common/session', 'picSure/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs', 'text!login/not_authorized.hbs', 'overrides/login', 'util/notification', 'login/fence_login'],
-		function(session, settings, parseQueryString, $, HBS, loginTemplate, notAuthorizedTemplate, overrides, notification, fenceLogin){
+define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs',
+        'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'login/fence_login'],
+		function(session, settings, parseQueryString, $, HBS, loginTemplate,
+                 notAuthorizedTemplate, overrides, notification, fenceLogin){
 
 	var loginTemplate = HBS.compile(loginTemplate);
 
@@ -37,7 +39,7 @@ define(['common/session', 'picSure/settings', 'common/searchParser', 'jquery', '
                                 window.location = sessionStorage.redirection_url;
                             }
                             else {
-                                history.pushState({}, "", "/psamaui/userManagement");
+                                history.pushState({}, "", "/picsureui");
                             }
                         }
                     }.bind(this),
@@ -136,5 +138,6 @@ define(['common/session', 'picSure/settings', 'common/searchParser', 'jquery', '
                 $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
         }
     };
+	// Since we're overriding login completely, we should be able to combine login.js and fence_login.js
 	return settings.idp_provider == "fence" ? fenceLogin : login;
 });

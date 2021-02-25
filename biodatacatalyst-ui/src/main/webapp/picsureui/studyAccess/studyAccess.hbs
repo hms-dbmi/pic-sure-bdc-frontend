@@ -1,0 +1,148 @@
+<div id="infgfx" class="clearfix">
+    <div id="infgfx-line"></div>
+    <span class="col-md-6">
+		<div class="infgfx-content">
+			<div class="gfx-title clearfix" style="margin-right:0px;width:100%">
+				<div style="width:100%;font-size:25px;font-weight:bold">Authorized Access</div>
+				<button type="button" class="btn btn-primary btn-blue">Explore Now</button>
+			</div>
+			<div class="gfx-cohorts"></div>
+			<div class="gfx-participants"></div>
+			<div class="gfx-authorization">
+				<img src="studyAccess/icons/authorized-protected.svg" />
+				dbGap Approval Required
+			</div>
+			<div class="gfx-datatype">
+				<img src="studyAccess/icons/med-record.svg" style="height:100px;width:100px;margin:-20px;position:relative;top:3px"/>
+				<img src="studyAccess/icons/dna.svg" style="height:46px;width:46px;margin:0px 0px 0px -18px;transform:rotate(-45deg)" />
+				Authorized Phenotypic and Genomic Datasets
+			</div>
+			<div class="gfx-datalevel">
+				<img src="studyAccess/icons/users.svg" style="padding:0px; margin:0px 10px;"/>
+				Aggregate Counts
+			</div>
+			<div class="gfx-datalevel">
+				<img src="studyAccess/icons/user.svg" />
+				<img src="studyAccess/icons/user.svg" />
+				<img src="studyAccess/icons/user.svg" style="margin-right: 0px"/>
+				Patient Level Data
+			</div>
+			<div class="gfx-downloads">
+				<img src="studyAccess/icons/download.svg" style="padding:8px" />
+				Download Authorized Datasets
+			</div>
+			<div class="gfx-api">
+				<img src="studyAccess/icons/api-access.svg" style="padding:8px"/>
+				R and Python API Access
+			</div>
+		</div>
+	</span>
+    <span class="col-md-6">
+		<div class="infgfx-content">
+			<div class="gfx-title clearfix" style="margin-right:0px;width:100%">
+				<div style="width:100%;font-size:25px;font-weight:bold;">Open Access</div>
+				<button type="button" class="btn btn-default active" tabindex="-1" style="cursor:no-drop">Coming Soon</button>
+			</div>
+			<div class="gfx-cohorts"></div>
+			<div class="gfx-participants"></div>
+			<div class="gfx-authorization">
+				<img src="studyAccess/icons/authorized-open.svg" style="padding:10px;" />
+				No Authorization Required
+			</div>
+			<div class="gfx-datatype">
+				<img src="studyAccess/icons/med-record.svg" style="height:100px;width:100px;margin:-20px -4px -20px 0px;position:relative;top:3px;"/>
+				All Phenotypic Datasets Available in PIC-SURE
+			</div>
+			<div class="gfx-datalevel">
+				<img src="studyAccess/icons/users.svg" style="padding:0px; margin:0px 10px;"/>
+				Aggregate Counts Only
+			</div>
+		</div>
+	</span>
+</div>
+
+
+
+<div id="studies-access">
+    <div>
+        <div>{{freezeMsg}}</div>
+        <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic</div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Identifier</th>
+                <th>Code</th>
+                <th>Data Type</th>
+                <th>Name</th>
+                <th>Consents</th>
+                <th>Clinical Variables</th>
+                <th>Participants with Phenotypes</th>
+                <th>Genotype Samples</th>
+                <th>Version</th>
+                <th>Participant Number</th>
+                <th>Access</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each permitted}}
+                <tr>
+                    <td>{{study_identifier}}</td>
+                    <td>{{abbreviated_name}}</td>
+                    <td>{{data_type}}</td>
+                    <td>{{full_study_name}}</td>
+                    <td>{{consent_group_name}}</td>
+                    <td>{{clinical_variable_count}}</td>
+                    <td>{{clinical_sample_size}}</td>
+                    <td>{{genetic_sample_size}}</td>
+                    <td>{{study_version}}</td>
+                    <td>{{study_phase}}</td>
+                    <td><span class="btn btn-default disabled">Granted</span></td>
+                </tr>
+            {{/each}}
+            {{#each denied}}
+                <tr>
+                    <td>{{study_identifier}}</td>
+                    <td>{{abbreviated_name}}</td>
+                    <td>{{data_type}}</td>
+                    <td>{{full_study_name}}</td>
+                    <td>{{consent_group_name}}</td>
+                    <td>{{clinical_variable_count}}</td>
+                    <td>{{clinical_sample_size}}</td>
+                    <td>{{genetic_sample_size}}</td>
+                    <td>{{study_version}}</td>
+                    <td>{{study_phase}}</td>
+                    <td>
+                        <a href="{{request_access}}" target="_blank">
+                            <span class="btn btn-primary btn-blue">Request</span>
+                        </a>
+                    </td>
+                </tr>
+            {{/each}}
+            <tr>
+                <td colspan="11" style="background-color: #fff;" align="right"><div class="btn-group" role="group" style="position: relative;">
+                    <button type="button" class="btn btn-default btn-lg study-lst-btn1 study-lst-btn-no-hov" tabindex="-1">Studies with data unavailable (withdrawn or no consents)</button>
+                    <button type="button" class="btn btn-default btn-lg study-lst-btn2"><span id="no-consent-toggle" class="glyphicon glyphicon-chevron-down"></span></button>
+                </div></td>
+            </tr>
+            {{#each na}}
+                <tr class="no-consent-row" style="display:none;">
+                    <td>{{study_identifier}}</td>
+                    <td>{{abbreviated_name}}</td>
+                    <td>{{data_type}}</td>
+                    <td>{{full_study_name}}</td>
+                    <td>{{consent_group_name}}</td>
+                    <td>{{clinical_variable_count}}</td>
+                    <td>{{clinical_sample_size}}</td>
+                    <td>{{genetic_sample_size}}</td>
+                    <td>{{study_version}}</td>
+                    <td>{{study_phase}}</td>
+                    <td>
+                        <span class="btn btn-default disabled">N/A</span>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
