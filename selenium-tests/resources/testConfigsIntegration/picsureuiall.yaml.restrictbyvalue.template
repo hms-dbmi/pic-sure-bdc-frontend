@@ -1,0 +1,17 @@
+ name: This test case verify that restrict by value works fine
+ browser: chrome
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ username: admin
+ password: admin
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ subset1: \demographics\SEX\female
+ subset2:
+ success: patientcountsubset1
+ successvalue: 21210
+ expected: pass
+ SearchTerm: ra
+ TextToSelect: AGE
+ PatientCount: 2150 

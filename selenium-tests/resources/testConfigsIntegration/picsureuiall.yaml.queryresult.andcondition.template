@@ -1,0 +1,14 @@
+ name: This test case verify that query builder works fine for AND condition
+ browser: chrome
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ SearchTerm: "triglycerides"
+ TextToSelect: "Blood mass concentration of triglycerides"
+ PatientCount: 59
+ SearchTermSecond: mean systolic
+ TextToSelectSecond: "Mean Systolic BP"
+ NumericValueLess: 50
+ NumericValueLessSecond: 150
