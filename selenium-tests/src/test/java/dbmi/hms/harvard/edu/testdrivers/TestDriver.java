@@ -155,7 +155,6 @@ public class TestDriver {
 	}
 
 @Test (priority=6)
-
 	public void verify_QueryBuilder_ByNumericValue_Between() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case verifyQueryBuilderByNumericValueBetween is running-------------------------");
@@ -325,7 +324,6 @@ public class TestDriver {
 			}
 
 
-
 @Test (priority=19)
 
 	public void verify_QueryBuilder_ByNumeric_NoValue_Message() throws Exception {
@@ -387,7 +385,7 @@ public class TestDriver {
 				"---------------------------------The test case The test case verify Restrict By Value is completed-------------------------");
 	}
 
-	@Test (priority=24)
+@Test (priority=24)
 
 	public void verify_userProfile() throws Exception {
 		LOGGER.info(
@@ -422,7 +420,7 @@ public class TestDriver {
 
 	}
 
-	@Test (priority=27)
+@Test (priority=27)
 	public void verify_helpcontactus() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case helpContactUS is running-------------------------");
@@ -433,7 +431,7 @@ public class TestDriver {
 
 	}
 
-	@Test (priority=28)
+@Test (priority=28)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");
