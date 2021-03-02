@@ -1,0 +1,19 @@
+ name: Verify that by numeric value less than works fine.
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: chrome
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ username: admin
+ password: admin
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ subset1: \demographics\SEX\female
+ subset2:
+ success: patientcountsubset1
+ successvalue: 21210
+ expected: pass
+ SearchTerm: "triglycerides"
+ TextToSelect: "Blood mass concentration of triglycerides"
+ PatientCount: 46620
+ NumericValueLess: 1500

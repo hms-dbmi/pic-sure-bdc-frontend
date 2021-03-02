@@ -1,0 +1,20 @@
+ name: This test case verify that editing functionality is working
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: chromeheadless
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ username: admin
+ password: admin
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ subset1: \demographics\SEX\female
+ subset2:
+ success: patientcountsubset1
+ successvalue: 21210
+ expected: pass
+ SearchTerm: triglycerides
+ TextToSelect: "Blood mass concentration of triglycerides"
+ NumericValueLess: 150
+ EditNumericValue: 15
+ PatientCountAfterEditing: 3
