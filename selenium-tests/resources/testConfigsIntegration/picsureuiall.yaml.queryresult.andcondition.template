@@ -7,7 +7,7 @@
  reporter: ConsoleReporter
  SearchTerm: "triglycerides"
  TextToSelect: "Blood mass concentration of triglycerides"
- PatientCount: 59
+ PatientCount: 60
  SearchTermSecond: mean systolic
  TextToSelectSecond: "Mean Systolic BP"
  NumericValueLess: 50

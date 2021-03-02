@@ -10,9 +10,8 @@
  subset1: \demographics\SEX\female
  subset2:
  success: patientcountsubset1
- successvalue: 21210
  expected: pass
  SearchTerm: triglycerides
  TextToSelect: "Blood mass concentration of triglycerides"
- PatientCount: 45571
+ PatientCount: 46579
  NumericValueLessDecimal: 882.5

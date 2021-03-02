@@ -15,6 +15,6 @@
  expected: pass
  SearchTerm: "Hematocrit"
  TextToSelect: "age at measurement of hematocrit_vfr_bld_1"
- PatientCount: 4456
+ PatientCount: 4503
  NumericValue1: 15
  NumericValue2: 45

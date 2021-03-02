@@ -17,4 +17,4 @@
  TextToSelect: "Blood mass concentration of triglycerides"
  NumericValueLess: 150
  EditNumericValue: 15
- PatientCountAfterEditing: 4
+ PatientCountAfterEditing: 3

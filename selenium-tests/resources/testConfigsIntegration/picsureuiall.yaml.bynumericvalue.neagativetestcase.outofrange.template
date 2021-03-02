@@ -13,7 +13,7 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: ADP threshold
- TextToSelect: "ADP threshold"
- PatientCount: 2150
- NumericValueOutofRange: 99.9
+ SearchTerm: triglycerides
+ TextToSelect: "Blood mass concentration of triglycerides"
+ PatientCount: 3120
+ NumericValueOutofRange: 3000

@@ -13,7 +13,7 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: Vitamin D
- textToSelect: Vitamin D
+ SearchTerm: triglycerides
+ textToSelect: "Blood mass concentration of triglycerides"
  PatientCount: 3039
  NumericValueLess: 70

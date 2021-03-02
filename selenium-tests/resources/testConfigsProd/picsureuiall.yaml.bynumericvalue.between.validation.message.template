@@ -1,4 +1,4 @@
- name: Verify validation message for invalid value in in between fields.
+ name: Verify validation message for invalid value in between fields.
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: firefox
  url: http://34.202.235.238/
