@@ -39,6 +39,7 @@ define(["psamaSettings/settings", "text!psamaui/overrides/not_authorized.hbs", "
         displayNotAuthorized: function () {
             //$('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
             window.location = "/";
-        }
+        },
+		waitingMessage: "BioDataCatalyst authentication is successful. Processing UserProfile information..."
 	};
 });
