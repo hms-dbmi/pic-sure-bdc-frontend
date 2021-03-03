@@ -77,7 +77,7 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 var temp = allRecs.map((rec) => { return rec.study_identifier; });
                 temp = [...new Set(temp)];
                 studyAccess.open_cnts.studies = temp.length;
-                var temp = records.permitted.map((rec) => { return rec.study_identifier; });
+                var temp = this.records.permitted.map((rec) => { return rec.study_identifier; });
                 temp = [...new Set(temp)];
                 studyAccess.auth_cnts.studies = temp.length;
                 
