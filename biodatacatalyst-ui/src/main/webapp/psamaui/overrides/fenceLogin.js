@@ -1,7 +1,7 @@
 define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
-        'common/session', 'picSure/settings', 'common/transportErrors', 'util/notification'],
+        'common/session', 'picSure/settings', 'common/transportErrors', 'util/notification', 'common/searchParser'],
     function(psamaSettings, $, HBS, loginTemplate,
-             session, picSureSettings, transportErrors, notification){
+             session, picSureSettings, transportErrors, notification, searchParser){
         var loginTemplate = HBS.compile(loginTemplate);
 
         var sessionInit = function(data) {
@@ -51,18 +51,10 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
 
         return {
             showLoginPage : function () {
-                // Check if the `code` parameter is set in the URL, as it would be, when
-                // FENCE redirects back after authentication.
-                var queryString = window.location.search.substring(1);
-                var params = {}, queries, temp, i, l;
-                // Split into key/value pairs
-                queries = queryString.split("&");
-                // Convert the array of strings into an object
-                for ( i = 0, l = queries.length; i < l; i++ ) {
-                    temp = queries[i].split('=');
-                    params[temp[0]] = temp[1];
-                }
-                var code = params['code'];
+                var queryObject = searchParser();
+                if (queryObject.redirection_url)
+                    sessionStorage.redirection_url = queryObject.redirection_url.trim();
+                var code = queryObject.code;
                 if (code) {
                     $('#main-content').html("BioDataCatalyst authentication is successful. Processing UserProfile information...");
 
