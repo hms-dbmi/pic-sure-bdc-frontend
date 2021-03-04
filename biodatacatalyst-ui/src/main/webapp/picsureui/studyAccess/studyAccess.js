@@ -117,7 +117,7 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             events:{
                 "click .study-lst-btn1": "toggleConsent",
                 "click .study-lst-btn2": "toggleConsent",
-                "click .explore-now-button": "exploreNowClickHandler"
+                "click .clickable-button": "buttonClickHandler"
             },
             toggleConsent: function() {
                 if ($("#no-consent-toggle").hasClass("glyphicon-chevron-down")) {
@@ -130,8 +130,10 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                     $("#no-consent-toggle").addClass("glyphicon-chevron-down");
                 }
             },
-            exploreNowClickHandler: function() {
-                window.history.pushState({}, "", "/picsureui/queryBuilder");
+            buttonClickHandler: function(event) {
+                if ($(event.target).data("href")) {
+                    window.history.pushState({}, "", $(event.target).data("href"));
+                }
             },
             render: function() {
                 // get counts for studies and participants
