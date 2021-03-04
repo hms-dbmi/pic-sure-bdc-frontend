@@ -73,10 +73,11 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 this.records.na.sort(funcSort);
 
                 // count the number of studies (accessible and total)
-                var temp = records.map((rec) => { return rec.study_identifier; });
+                var allRecs = [].concat(this.records.permitted, this.records.denied, this.records.na);
+                var temp = allRecs.map((rec) => { return rec.study_identifier; });
                 temp = [...new Set(temp)];
                 studyAccess.open_cnts.studies = temp.length;
-                var temp = records.filter((rec) => { return rec.disp_group === "permitted" }).map((rec) => { return rec.study_identifier; });
+                var temp = this.records.permitted.map((rec) => { return rec.study_identifier; });
                 temp = [...new Set(temp)];
                 studyAccess.auth_cnts.studies = temp.length;
                 
