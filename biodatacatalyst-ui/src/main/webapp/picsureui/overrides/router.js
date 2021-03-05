@@ -20,13 +20,15 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                 "picsureui/openAccess" : function() {
                     $('#main-content').empty();
                     $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
-                    filterList.init(JSON.parse(settings).openAccessResourceId);
+
                     var outputPanelView = outputPanel.View;
                     outputPanelView.render();
                     $('#query-results').append(outputPanelView.$el);
 
                     var query = queryBuilder.createQuery({}, JSON.parse(settings).openAccessResourceId);
                     outputPanelView.update(query);
+
+                    filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView);
                 }
             }
         };

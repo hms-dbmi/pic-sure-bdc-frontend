@@ -1,4 +1,4 @@
-define(["psamaSettings/settings", "text!psamaui/overrides/not_authorized.hbs", "handlebars"], function(settings, notAuthorizedTemplate, HBS){
+define(["psamaSettings/settings", "psamaui/overrides/fenceLogin"], function(settings, fenceLogin){
 	return {
 		/*
 		 * This allows you to build any authorization logic you wish.
@@ -39,6 +39,8 @@ define(["psamaSettings/settings", "text!psamaui/overrides/not_authorized.hbs", "
         displayNotAuthorized: function () {
             //$('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
             window.location = "/";
-        }
+        },
+		waitingMessage: undefined,
+		showLoginPage: fenceLogin.showLoginPage
 	};
 });
