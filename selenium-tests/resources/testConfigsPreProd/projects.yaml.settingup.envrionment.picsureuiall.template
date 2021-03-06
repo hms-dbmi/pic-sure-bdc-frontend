@@ -1,0 +1,12 @@
+ name: This setup the environment for running the automation test scripts
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ #browser: firefox
+ url: https://preprod.picsure.biodatacatalyst.nhlbi.nih.gov/psamaui/login/?redirection_url=/picsureui/
+ #url: https://ec2-54-86-40-196.compute-1.amazonaws.com/psamaui/login/?redirection_url=/picsureui/, https://preprod.picsure.biodatacatalyst.nhlbi.nih.gov/,https://biodatacatalyst.integration.hms.harvard.edu/picsureui/
+ #Please update Authmethod according to Login type Eg for  Google - GOOGLELOGIN, ERACommon-ERACOMMON
+ #authmethod: GOOGLELOGIN
+ authmethod: ERACOMMON
+ #ERACOMMON 
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter 
