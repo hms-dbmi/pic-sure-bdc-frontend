@@ -213,9 +213,9 @@ public class QueryBuilderTestPlan extends Testplan {
 			
 			
 		case "firefoxheadless":
-				System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
+				//System.setProperty("webdriver.gecko.driver", System.getProperty("geckodriverpath"));
 				FirefoxBinary firefoxBinary = new FirefoxBinary();
-			//	firefoxBinary.addCommandLineOptions("--headless");
+				firefoxBinary.addCommandLineOptions("--headless");
 				FirefoxProfile profile = new FirefoxProfile();
 				//profile.setPreference("browser.helperApps.neverAsk.openFile", "text/csv,application/csv,application/text,application/json");
 		
@@ -227,8 +227,8 @@ public class QueryBuilderTestPlan extends Testplan {
 		        DesiredCapabilities dc = DesiredCapabilities.firefox();
 		        dc.setCapability(FirefoxDriver.PROFILE, profile);
 		        dc.setCapability("marionette", true);
-		         dc.setPlatform(Platform.WINDOWS);
-				//dc.setPlatform(Platform.LINUX);
+		        //dc.setPlatform(Platform.WINDOWS);
+		        dc.setPlatform(Platform.LINUX);
 		        FirefoxOptions opt = new FirefoxOptions();
 				opt.merge(dc);
 				FirefoxOptions firefoxOptions = new FirefoxOptions(opt);
