@@ -1,0 +1,10 @@
+ name: This test verify that user successfully logged in PICSURE UI.
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: chrome
+ url: https://preprod.picsure.biodatacatalyst.nhlbi.nih.gov/
+ authmethod: ERACOMMON
+ username: 
+ password: 
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
