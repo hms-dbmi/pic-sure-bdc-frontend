@@ -155,8 +155,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 	
 	
 	return {
-		View : new (overrides.viewOverride ? overrides.viewOverride : outputView)({
-			model: new (overrides.modelOverride ? overrides.modelOverride : outputModel)()
-		})
+		View : (overrides.viewOverride ? overrides.viewOverride : outputView),
+		Model: (overrides.modelOverride ? overrides.modelOverride : outputModel)
 	}
 });

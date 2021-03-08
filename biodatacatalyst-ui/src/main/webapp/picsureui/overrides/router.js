@@ -21,7 +21,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     $('#main-content').empty();
                     $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
 
-                    var outputPanelView = outputPanel.View;
+                    var outputPanelView = new outputPanel.View({model: new outputPanel.Model()});
                     outputPanelView.render();
                     $('#query-results').append(outputPanelView.$el);
 
