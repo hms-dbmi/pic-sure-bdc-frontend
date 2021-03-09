@@ -30,9 +30,9 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     outputPanelView.update(query);
 
                     filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView);
-                },
-                "*path" : displayDataAccess
-            }
+                }
+            },
+            defaultAction: displayDataAccess
         };
     }
 );
