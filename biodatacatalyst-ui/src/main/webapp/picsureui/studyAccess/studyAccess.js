@@ -16,6 +16,10 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             tagName: "div",
             template: studyAccess.studyAccessTemplate,
             initialize: function(){
+                HBS.registerHelper('valueOrNA', function(value){
+                    return value == -1 ? "n/a" : value;
+                });
+
                 // setup the output template
                 this.template = HBS.compile(studyAccessTemplate);
 
