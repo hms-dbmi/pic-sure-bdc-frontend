@@ -85,6 +85,10 @@
     position: relative;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 
 /* <StudyAccess styles> */
 #infgfx {
