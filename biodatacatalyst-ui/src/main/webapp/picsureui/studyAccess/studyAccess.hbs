@@ -7,7 +7,8 @@
 				<button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/queryBuilder">Explore Now</button>
 			</div>
 			<div class="gfx-cohorts">{{auth_studies_cnt}} Studies</div>
-			<div class="gfx-participants">{{auth_participants_cnt}} participants</div>
+			<div class="gfx-participants" id="authorized-participants"></div>
+			<div id="authorized-participants-spinner"></div>
 			<div class="gfx-authorization">
 				<img src="studyAccess/icons/authorized-protected.svg" />
 				dbGap Approval Required
@@ -44,7 +45,8 @@
 				<button type="button" class="btn btn-primary btn-blue clickable-button" tabindex="-1" data-href="/picsureui/openAccess">Explore Now</button>
 			</div>
 			<div class="gfx-cohorts">{{open_studies_cnt}} Studies</div>
-			<div class="gfx-participants">{{open_participants_cnt}} participants</div>
+			<div class="gfx-participants" id="open-participants"></div>
+			<div id="open-participants-spinner"></div>
 			<div class="gfx-authorization">
 				<img src="studyAccess/icons/authorized-open.svg" style="padding:10px;" />
 				No Authorization Required
