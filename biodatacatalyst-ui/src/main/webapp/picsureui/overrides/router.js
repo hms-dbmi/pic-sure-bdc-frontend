@@ -2,6 +2,12 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
         "openPicsure/outputPanel", "picSure/queryBuilder"],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder){
+        var displayDataAccess = function() {            
+              $('#main-content').empty();
+              var studyAccessView = new studyAccess.View;
+              $('#main-content').append(studyAccessView.$el);
+              studyAccessView.render();
+        };
         return {
             routes : {
                 /**
@@ -11,12 +17,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                  * Ex:
                  * "picsureui/queryBuilder2" : function() { renderQueryBuilder2(); }
                  */
-                "picsureui/dataAccess" : function() {
-                    $('#main-content').empty();
-                    var studyAccessView = new studyAccess.View;
-                    $('#main-content').append(studyAccessView.$el);
-                    studyAccessView.render();
-                },
+                "picsureui/dataAccess" : displayDataAccess,
                 "picsureui/openAccess" : function() {
                     $('#main-content').empty();
                     $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
@@ -30,7 +31,8 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
 
                     filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView);
                 }
-            }
+            },
+            defaultAction: displayDataAccess
         };
     }
 );
