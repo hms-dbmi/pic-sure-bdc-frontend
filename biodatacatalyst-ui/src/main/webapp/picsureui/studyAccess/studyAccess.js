@@ -137,6 +137,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 }
 
                 if (studyAccess.resources.open !== false) {
+                    // This logic is incorrect in the same way the query on the open access tab is incorrect.
+                    // Update as part of https://hms-dbmi.atlassian.net/browse/ALS-1876
                     var query = queryBuilder.createQuery({}, studyAccess.resources.open);
                     query.query.expectedResultType = "COUNT";
                     $.ajax({
