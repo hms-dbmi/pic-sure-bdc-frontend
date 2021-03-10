@@ -7,7 +7,8 @@
 				<button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/queryBuilder">Explore Now</button>
 			</div>
 			<div class="gfx-cohorts">{{auth_studies_cnt}} Studies</div>
-			<div class="gfx-participants">{{auth_participants_cnt}} participants</div>
+			<div class="gfx-participants" id="authorized-participants"></div>
+			<div id="authorized-participants-spinner"></div>
 			<div class="gfx-authorization">
 				<img src="studyAccess/icons/authorized-protected.svg" />
 				dbGap Approval Required
@@ -44,14 +45,15 @@
 				<button type="button" class="btn btn-primary btn-blue clickable-button" tabindex="-1" data-href="/picsureui/openAccess">Explore Now</button>
 			</div>
 			<div class="gfx-cohorts">{{open_studies_cnt}} Studies</div>
-			<div class="gfx-participants">{{open_participants_cnt}} participants</div>
+			<div class="gfx-participants" id="open-participants"></div>
+			<div id="open-participants-spinner"></div>
 			<div class="gfx-authorization">
 				<img src="studyAccess/icons/authorized-open.svg" style="padding:10px;" />
 				No Authorization Required
 			</div>
 			<div class="gfx-datatype">
 				<img src="studyAccess/icons/med-record.svg" style="height:100px;width:100px;margin:-20px -4px -20px 0px;position:relative;top:3px;"/>
-				All Phenotypic Datasets Available in PIC-SURE
+				All Phenotypic Datasets Available in <span class="nowrap">PIC-SURE</span>
 			</div>
 			<div class="gfx-datalevel">
 				<img src="studyAccess/icons/users.svg" style="padding:0px; margin:0px 10px;"/>
@@ -66,7 +68,7 @@
 <div id="studies-access">
     <div>
         <div>{{freeze_msg}}</div>
-        <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic</div>
+        <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic, n/a = Not Applicable</div>
 
         <table class="table table-striped">
             <thead>
@@ -92,9 +94,9 @@
                     <td>{{data_type}}</td>
                     <td>{{full_study_name}}</td>
                     <td>{{consent_group_name}}</td>
-                    <td>{{clinical_variable_count}}</td>
-                    <td>{{clinical_sample_size}}</td>
-                    <td>{{genetic_sample_size}}</td>
+                    <td>{{valueOrNA clinical_variable_count}}</td>
+                    <td>{{valueOrNA clinical_sample_size}}</td>
+                    <td>{{valueOrNA genetic_sample_size}}</td>
                     <td>{{study_version}}</td>
                     <td>{{study_phase}}</td>
                     <td><span class="btn btn-default disabled">Granted</span></td>
@@ -107,9 +109,9 @@
                     <td>{{data_type}}</td>
                     <td>{{full_study_name}}</td>
                     <td>{{consent_group_name}}</td>
-                    <td>{{clinical_variable_count}}</td>
-                    <td>{{clinical_sample_size}}</td>
-                    <td>{{genetic_sample_size}}</td>
+                    <td>{{valueOrNA clinical_variable_count}}</td>
+                    <td>{{valueOrNA clinical_sample_size}}</td>
+                    <td>{{valueOrNA genetic_sample_size}}</td>
                     <td>{{study_version}}</td>
                     <td>{{study_phase}}</td>
                     <td>
@@ -132,9 +134,9 @@
                     <td>{{data_type}}</td>
                     <td>{{full_study_name}}</td>
                     <td>{{consent_group_name}}</td>
-                    <td>{{clinical_variable_count}}</td>
-                    <td>{{clinical_sample_size}}</td>
-                    <td>{{genetic_sample_size}}</td>
+                    <td>{{valueOrNA clinical_variable_count}}</td>
+                    <td>{{valueOrNA clinical_sample_size}}</td>
+                    <td>{{valueOrNA genetic_sample_size}}</td>
                     <td>{{study_version}}</td>
                     <td>{{study_phase}}</td>
                     <td>

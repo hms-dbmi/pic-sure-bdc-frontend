@@ -2,11 +2,11 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
         "openPicsure/outputPanel", "picSure/queryBuilder"],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder){
-        var displayDataAccess = function() {
-            $('#main-content').empty();
-            var studyAccessView = new studyAccess.View;
-            studyAccessView.render();
-            $('#main-content').append(studyAccessView.$el);
+        var displayDataAccess = function() {            
+              $('#main-content').empty();
+              var studyAccessView = new studyAccess.View;
+              $('#main-content').append(studyAccessView.$el);
+              studyAccessView.render();
         };
         return {
             routes : {
