@@ -1,13 +1,17 @@
-define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json", "common/transportErrors", "picSure/queryBuilder"],
-    function(BB, HBS, studyAccessTemplate, studyAccessConfiguration, transportErrors, queryBuilder){
+define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json",
+        "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner", "text!../settings/settings.json",
+        "overrides/outputPanel"],
+    function($, BB, HBS, studyAccessTemplate, studyAccessConfiguration,
+             transportErrors, queryBuilder, picSureSettings, spinner, settingsJson,
+             outputPanelOverrides){
 
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
-            open_cnts: {studies: "52", participants: "248,614"},
-            auth_cnts: {studies: "??", participants: "??,???"},
+            open_cnts: {},
+            auth_cnts: {},
             resources: {
-                open: false,
-                auth: "02e23f52-f354-4e8b-992c-d37c8b9ba140"
+                open: picSureSettings.openAccessResourceId,
+                auth: picSureSettings.picSureResourceId
             }
         };
 
@@ -16,20 +20,21 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
             tagName: "div",
             template: studyAccess.studyAccessTemplate,
             initialize: function(){
+                HBS.registerHelper('valueOrNA', function(value){
+                    return value == -1 ? "n/a" : value;
+                });
+
                 // setup the output template
                 this.template = HBS.compile(studyAccessTemplate);
 
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
-                if (session.queryTemplate === undefined ) {
-                    var validConsents = [];
-                } else {
+                var validConsents = [];
+                if (session.queryTemplate !== undefined ) {
                     var temp = JSON.parse(session.queryTemplate);
 
-                    if (temp.categoryFilters === undefined || temp.categoryFilters["\\_consents\\"] === undefined) {
-                        var validConsents = [];
-                    } else {
-                        var validConsents = temp.categoryFilters["\\_consents\\"];
+                    if (temp.categoryFilters && temp.categoryFilters["\\_consents\\"]) {
+                        validConsents = temp.categoryFilters["\\_consents\\"];
                     }
                 }
 
@@ -80,39 +85,6 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 var temp = this.records.permitted.map((rec) => { return rec.study_identifier; });
                 temp = [...new Set(temp)];
                 studyAccess.auth_cnts.studies = temp.length;
-                
-                // query for participant counts of authorized and open access resources
-                if (studyAccess.resources.auth !== false) {
-                    var query = queryBuilder.createQuery({});
-                    query.query.expectedResultType = "COUNT";
-                    query.resourceCredentials = {};
-                    query.resourceUUID = studyAccess.resources.auth;
-                    $.ajax({
-                        url: window.location.origin + "/picsure/query/sync",
-                        type: 'POST',
-                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                        contentType: 'application/json',
-                        data: JSON.stringify(query),
-                        success: (function(response){
-                            studyAccess.auth_cnts.participants = parseInt(response).toLocaleString();
-                            this.render();
-                        }).bind(this)
-                    });
-                }
-                if (studyAccess.resources.open !== false) {
-                    query.resourceUUID = studyAccess.resources.open;
-                    $.ajax({
-                        url: window.location.origin + "/picsure/query/sync",
-                        type: 'POST',
-                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                        contentType: 'application/json',
-                        data: JSON.stringify(query),
-                        success: (function (response) {
-                            studyAccess.open_cnts.participants = parseInt(response).toLocaleString();
-                            this.render();
-                        }).bind(this)
-                    });
-                }
             },
             events:{
                 "click .study-lst-btn1": "toggleConsent",
@@ -144,6 +116,43 @@ define(["backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!stud
                 this.records.freeze_msg = studyAccess.freezeMsg;
 
                 this.$el.html(this.template(this.records));
+
+                // query for participant counts of authorized and open access resources
+                if (studyAccess.resources.auth) {
+                    var query = queryBuilder.createQuery({}, studyAccess.resources.auth);
+                    query.query.expectedResultType = "COUNT";
+                    if (outputPanelOverrides.updateConsentFilters)
+                        outputPanelOverrides.updateConsentFilters(query, settingsJson);
+                    var deferredParticipants = $.ajax({
+                        url: window.location.origin + "/picsure/query/sync",
+                        type: 'POST',
+                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                        contentType: 'application/json',
+                        data: JSON.stringify(query),
+                        success: (function(response){
+                            $("#authorized-participants").html(parseInt(response).toLocaleString() + " participants");
+                        }).bind(this)
+                    });
+                    spinner.medium(deferredParticipants, "#authorized-participants-spinner", "");
+                }
+
+                if (studyAccess.resources.open !== false) {
+                    // This logic is incorrect in the same way the query on the open access tab is incorrect.
+                    // Update as part of https://hms-dbmi.atlassian.net/browse/ALS-1876
+                    var query = queryBuilder.createQuery({}, studyAccess.resources.open);
+                    query.query.expectedResultType = "COUNT";
+                    $.ajax({
+                        url: window.location.origin + "/picsure/query/sync",
+                        type: 'POST',
+                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                        contentType: 'application/json',
+                        data: JSON.stringify(query),
+                        success: (function (response) {
+                            $("#open-participants").html(parseInt(response).toLocaleString() + " participants");
+                        }).bind(this)
+                    });
+                    spinner.medium(deferredParticipants, "#open-participants-spinner", "");
+                }
             }
         });
 

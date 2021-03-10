@@ -14,8 +14,8 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                 "picsureui/dataAccess" : function() {
                     $('#main-content').empty();
                     var studyAccessView = new studyAccess.View;
-                    studyAccessView.render();
                     $('#main-content').append(studyAccessView.$el);
+                    studyAccessView.render();
                 },
                 "picsureui/openAccess" : function() {
                     $('#main-content').empty();
