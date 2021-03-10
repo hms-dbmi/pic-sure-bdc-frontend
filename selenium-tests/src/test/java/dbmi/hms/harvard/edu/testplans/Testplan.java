@@ -249,6 +249,11 @@ public abstract class Testplan {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void verifyDataaccessExplore(Reporter reporter) throws Exception, IllegalAccessException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

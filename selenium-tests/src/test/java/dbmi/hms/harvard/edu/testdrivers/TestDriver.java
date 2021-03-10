@@ -409,7 +409,7 @@ public class TestDriver {
 	}
 
 
-//	@Test (priority=26)
+	@Test (priority=26)
 	public void verify_dataaccessdashboard() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case dataaccess page load  is running-------------------------");
@@ -420,7 +420,19 @@ public class TestDriver {
 
 	}
 
-@Test (priority=27)
+	
+	@Test (priority=27)
+	public void verify_dataaccessExploreButton() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifying Explore button  is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.dataaccess.explore"));
+		testPlan.verifyDataaccessExplore(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifying Explore button  is completed-------------------------");
+
+	}
+
+@Test (priority=28)
 	public void verify_helpcontactus() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case helpContactUS is running-------------------------");
@@ -431,7 +443,7 @@ public class TestDriver {
 
 	}
 
-@Test (priority=28)
+@Test (priority=29)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");

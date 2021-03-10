@@ -67,6 +67,7 @@ public class QueryBuilderTestPlan extends Testplan {
 	private static WebDriver driver;
 	private static WebDriverWait wait;
 	private String FractalisType;
+	private String SearchBoxField ="//input[@placeholder='Search...']";
 	private By SearchBox = By.xpath(".//*[@id='filter-list']/div/div/div[1]/div[1]/div[2]/input");
 	private By SearchBoxTwo = By.xpath(".//*[@id='filter-list']/div[2]/div/div[1]/div[1]/div[2]/input");
 	private By SearchBoxAutocompleteListBox = By
@@ -82,7 +83,8 @@ public class QueryBuilderTestPlan extends Testplan {
 	private static By SearchBoxSecondAutocompleteListBoxItems = By.xpath("//span[contains(text(),'mean')]");
 	private static final Logger LOGGER = Logger.getLogger(QueryBuilderTestPlan.class.getName());
 	private static String downloadPath = System.getProperty("dirofdownloadedfiles");
-	private String dataAccess = "//a[@id='data-access-btn']";
+	private String dataAccess = "//a[contains(text(),'Data Access')]";
+	private String dataAccessExploreNow = "//button[contains(text(),'Explore Now')]";
 	private String helpTab = "//span[contains(text(),'Help')]";
 	private String contactus = "//a[contains(text(),'Contact Us')]";
 	private String closingButton ="//button[@class='close']";
@@ -282,15 +284,15 @@ public class QueryBuilderTestPlan extends Testplan {
 
 	public void verifySuccessfulLoginPicsureUILaunch(Reporter reporter) throws InterruptedException, Exception {
 		
-		String searchBox="//input[@placeholder='Search...']";
+	//	String searchBoxField="//input[@placeholder='Search...']";
 		AuthTypes authTypes = new AuthTypes();
 		wait = new WebDriverWait(driver, 30);
 		authTypes.doAuth(driver, testPlan);
 		Thread.sleep(5000);
 		driver.navigate().refresh();
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(searchBox)));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(SearchBoxField)));
 		driver.navigate().refresh();
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(searchBox)));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(SearchBoxField)));
 		
 		
 		try {
@@ -302,7 +304,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		}
 
 		try {
-			Assert.assertTrue(driver.findElements(By.xpath(searchBox)).size() != 0,
+			Assert.assertTrue(driver.findElements(By.xpath(SearchBoxField)).size() != 0,
 					"Google user is able to Login successfully");
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 			LOGGER.info("---------------------------Google us"
@@ -1190,7 +1192,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
 		try {
-			Assert.assertTrue(driver.findElements(By.xpath("//h4[contains(text(),'BioData Catalyst PIC-SURE Data Access')]")).size() != 0,
+			Assert.assertTrue(driver.findElements(By.xpath("//button[contains(text(),'Explore Now')]")).size() != 0,
 					"Data Access page loads properly");
 
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
@@ -1205,10 +1207,37 @@ public class QueryBuilderTestPlan extends Testplan {
 					"---------------------------Data Access page doesn't  load properly----------------------------");
 
 		}
-
-		driver.findElement(By.xpath(closingButton)).click();
-		
 	}
+	
+	
+	
+		public void verifyDataaccessExplore(Reporter reporter) throws Exception, IllegalAccessException {
+			
+			driver.findElement(By.xpath(dataAccessExploreNow)).click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+			try {
+				Assert.assertTrue(driver.findElements(By.xpath(SearchBoxField)).size() != 0,
+						"Data Access page loads properly");
+
+				SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+				LOGGER.info("---------------------------Clicking on ExploreNow loads Query Builder properly ----------------------------");
+
+			}
+
+			catch (AssertionError error) {
+				LOGGER.error(error);
+				SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+				LOGGER.info(
+						"---------------------------Clicking Explore Now doesn't load QueryBuilder ----------------------------");
+
+			}
+			
+		}
+
+		//driver.findElement(By.xpath(closingButton)).click();
+		
+	
 
 public void verifyHelpContactusPageload(Reporter reporter) throws Exception {
 		

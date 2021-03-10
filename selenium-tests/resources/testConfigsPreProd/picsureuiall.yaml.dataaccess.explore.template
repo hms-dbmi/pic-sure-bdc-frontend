@@ -1,0 +1,10 @@
+ name: This test verify that clicking Explore button opens Query Builder page.
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: chrome
+ url: https://ec2-54-86-40-196.compute-1.amazonaws.com/picsureui/
+ #authmethod: ADMINLOGIN
+ username: admin
+ password: admin
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
