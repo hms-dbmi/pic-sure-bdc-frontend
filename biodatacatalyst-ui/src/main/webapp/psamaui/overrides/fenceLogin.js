@@ -4,8 +4,12 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
              session, picSureSettings, transportErrors, notification, searchParser){
         var loginTemplate = HBS.compile(loginTemplate);
 
+        var handleNotAuthorizedResponse = function() {
+            history.pushState({}, "", "/psamaui/not_authorized");
+        };
+
         var sessionInit = function(data) {
-            session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
+            session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, handleNotAuthorizedResponse);
             var queryTemplateRequest = function() {
                 return $.ajax({
                     url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
