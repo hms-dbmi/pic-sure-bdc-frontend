@@ -136,13 +136,12 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			 	},
 			 	error: function(response){
 					if (response.status === 401) {
-						sessionStorage.clear();
-						window.location = "/";
+						history.pushState({}, "", "/psamaui/not_authorized");
 					} else {
 						response.responseText = "<h4>"
 							+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
 							+ "</h4>";
-				 		errorCallback(response.responseText);//console.log("error");console.log(response);
+				 		errorCallback(response.responseText);
 					}
 				}
 			});
