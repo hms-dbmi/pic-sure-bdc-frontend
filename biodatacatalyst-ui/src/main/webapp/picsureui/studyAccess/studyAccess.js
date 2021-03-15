@@ -30,10 +30,10 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
                 var validConsents = [];
-                if (session.queryTemplate !== undefined ) {
+                if (session.queryTemplate) {
                     var temp = JSON.parse(session.queryTemplate);
 
-                    if (temp.categoryFilters && temp.categoryFilters["\\_consents\\"]) {
+                    if (temp && temp.categoryFilters && temp.categoryFilters["\\_consents\\"]) {
                         validConsents = temp.categoryFilters["\\_consents\\"];
                     }
                 }
