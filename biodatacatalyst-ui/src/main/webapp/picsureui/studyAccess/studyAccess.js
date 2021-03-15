@@ -30,10 +30,10 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
                 var validConsents = [];
-                if (session.queryTemplate !== undefined ) {
+                if (session.queryTemplate) {
                     var temp = JSON.parse(session.queryTemplate);
 
-                    if (temp.categoryFilters && temp.categoryFilters["\\_consents\\"]) {
+                    if (temp && temp.categoryFilters && temp.categoryFilters["\\_consents\\"]) {
                         validConsents = temp.categoryFilters["\\_consents\\"];
                     }
                 }
@@ -131,7 +131,14 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         data: JSON.stringify(query),
                         success: (function(response){
                             $("#authorized-participants").html(parseInt(response).toLocaleString() + " participants");
-                        }).bind(this)
+                        }).bind(this),
+                        statusCode: {
+                            401: function(){
+                            }
+                        },
+                        error: function() {
+                            $("#authorized-participants").html("0 participants");
+                        }
                     });
                     spinner.medium(deferredParticipants, "#authorized-participants-spinner", "");
                 }
@@ -139,7 +146,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 if (studyAccess.resources.open !== false) {
                     // This logic is incorrect in the same way the query on the open access tab is incorrect.
                     // Update as part of https://hms-dbmi.atlassian.net/browse/ALS-1876
-                    var query = queryBuilder.createQuery({}, studyAccess.resources.open);
+                    var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
                     query.query.expectedResultType = "COUNT";
                     $.ajax({
                         url: window.location.origin + "/picsure/query/sync",
@@ -149,7 +156,14 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         data: JSON.stringify(query),
                         success: (function (response) {
                             $("#open-participants").html(parseInt(response).toLocaleString() + " participants");
-                        }).bind(this)
+                        }).bind(this),
+                        statusCode: {
+                            401: function(){
+                            }
+                        },
+                        error: function() {
+                            $("#open-participants").html("0 participants");
+                        }
                     });
                     spinner.medium(deferredParticipants, "#open-participants-spinner", "");
                 }

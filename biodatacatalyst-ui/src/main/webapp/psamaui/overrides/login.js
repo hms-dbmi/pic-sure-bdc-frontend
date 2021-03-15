@@ -36,10 +36,7 @@ define(["psamaSettings/settings", "psamaui/overrides/fenceLogin"], function(sett
          * Example configuration: provide custom not_authorized.hbs template in overrides folder and render it similar manner
          * as login.displayNotAuthorized() function.
          */
-        displayNotAuthorized: function () {
-            //$('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
-            window.location = "/";
-        },
+        displayNotAuthorized: undefined,
 		waitingMessage: undefined,
 		showLoginPage: fenceLogin.showLoginPage
 	};
