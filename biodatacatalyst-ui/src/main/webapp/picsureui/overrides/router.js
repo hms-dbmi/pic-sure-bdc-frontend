@@ -26,7 +26,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     outputPanelView.render();
                     $('#query-results').append(outputPanelView.$el);
 
-                    var query = queryBuilder.createQuery({}, JSON.parse(settings).openAccessResourceId);
+                    var query = queryBuilder.generateQuery({}, null, JSON.parse(settings).openAccessResourceId);
                     outputPanelView.update(query);
 
                     filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView);
