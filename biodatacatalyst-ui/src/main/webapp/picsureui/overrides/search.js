@@ -10,7 +10,7 @@ define([], function(){
 			var bOrder = 0;
 			
 			var lastIndexTermA = aValue.lastIndexOf(searchterm);
-			vat lastIndexSeparatorA = aValue.lastIndexOf("\\");
+			var lastIndexSeparatorA = aValue.lastIndexOf("\\");
 			
 			while(lastIndexTermA < lastIndexSeparatorA  && lastIndexSeparatorA >= 0){
 				aOrder +=1000;
@@ -18,14 +18,13 @@ define([], function(){
 			}
 			
 			var lastIndexTermB = bValue.lastIndexOf(searchterm);
-			vat lastIndexSeparatorB = bValue.lastIndexOf("\\");
+			var lastIndexSeparatorB = bValue.lastIndexOf("\\");
 			while(lastIndexTermB < lastIndexSeparatorB  && lastIndexSeparatorB >= 0){
 				bOrder +=1000;
 				lastIndexSeparatorB = aValue.substring(0, lastIndexSeparatorB).lastIndexOf("\\");
 			}
 				
 	        return aOrder - bOrder;
-	    },
-	
+	    }	
 	};
 });
