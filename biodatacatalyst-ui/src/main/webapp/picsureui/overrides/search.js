@@ -4,8 +4,8 @@ define([], function(){
 		 * Override the ordering of search results
 		 */
 		orderResults : function(searchterm, a, b){
-			var aValue = a.value.toLowerCase();
-			var bValue = b.value.toLowerCase();
+			var aValue = a.data.toLowerCase();
+			var bValue = b.data.toLowerCase();
 			var aOrder = 0;
 			var bOrder = 0;
 			
