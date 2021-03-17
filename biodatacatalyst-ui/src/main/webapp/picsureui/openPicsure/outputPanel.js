@@ -134,7 +134,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			 	success: function(response){
 			 		dataCallback(response);
 			 	},
-			 	error: function(response){
+			 	/*error: function(response){
 					if (response.status === 401) {
 						history.pushState({}, "", "/psamaui/not_authorized");
 					} else {
@@ -143,7 +143,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 							+ "</h4>";
 				 		errorCallback(response.responseText);
 					}
-				}
+				}*/
 			});
 		},
 		render: function(){
