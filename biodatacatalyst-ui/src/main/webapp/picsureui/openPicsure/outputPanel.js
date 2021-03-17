@@ -13,7 +13,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		temp.request_access = x.request_access;
 		temp.study_concept = "\\_studies\\" + temp.name + " ( " + x.study_identifier + " )\\"; 
 
-		x.study_matches = x.clinical_sample_size.toLocaleString();
+		x.study_matches = x.clinical_sample_size;
 		var t = x.consent_group_name;
 		if (t.lastIndexOf('(') === -1) {
 			x.short_title = '(withdrawn)';
@@ -24,7 +24,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		if (x.consent_group_code !== 'c0') temp.consents.push(x);
 	});
 	for (var idx in studiesInfo) {
-		studiesInfo[idx].study_matches = studiesInfo[idx].study_matches.toLocaleString(); 
+		studiesInfo[idx].study_matches = studiesInfo[idx].study_matches; 
 	}
 
 	
@@ -124,7 +124,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			 	contentType: 'application/json',
 			 	data: JSON.stringify(query),
 			 	success: (function(response){
-					this.model.set("totalPatients", parseInt(response).toLocaleString());
+					this.model.set("totalPatients", response);
 					this.model.set("spinning", false);
 					this.model.set("queryRan", true);
 					this.render();
@@ -176,7 +176,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 							studiesInfo[x].study_matches = cnt;
 							cnt = 1;
 						} else {
-							studiesInfo[x].study_matches = parseInt(cnt).toLocaleString();
+							studiesInfo[x].study_matches = cnt;
 						}
 						if (cnt > 0) {
 							sorted_found.push(studiesInfo[x]);
