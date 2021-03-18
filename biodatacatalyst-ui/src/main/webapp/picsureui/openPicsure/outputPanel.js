@@ -1,5 +1,5 @@
-define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json"],
-		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData){
+define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
+		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData, transportErrors){
 
 	
 	// build the studies display info
@@ -134,16 +134,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			 	success: function(response){
 			 		dataCallback(response);
 			 	},
-			 	/*error: function(response){
-					if (response.status === 401) {
-						history.pushState({}, "", "/psamaui/not_authorized");
-					} else {
-						response.responseText = "<h4>"
-							+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
-							+ "</h4>";
-				 		errorCallback(response.responseText);
-					}
-				}*/
+			 	error: transportErrors.handleAll
 			});
 		},
 		render: function(){
