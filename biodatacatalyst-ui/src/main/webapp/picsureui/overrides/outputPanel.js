@@ -10,7 +10,24 @@ define(["handlebars", "backbone"], function(HBS, BB){
 		 * This is a function that if defined replaces the normal render function
 		 * from outputPanel.
 		 */
-		renderOverride : undefined,
+		renderOverride : function(result){
+			var context = this.model.toJSON();
+			this.$el.html(this.template(Object.assign({},context , this.overrides)));
+			
+			if(result){
+				if(!this.initialQueryRun){
+					this.initialQueryRun = true;
+				}else if(parseInt(result) > 0){
+					//using 'show()' here makes the button show up as 'inline' and disrupts formatting.
+					$("#select-btn", this.$el).attr( "style", "display: block ");
+				}
+			}
+			
+			if(this.dataSelection){
+				this.dataSelection.setElement($("#concept-tree-div",this.$el));
+				this.dataSelection.render();
+			}
+		},
 		/*
 		 * If you want to replace the entire Backbone.js View that is used for
 		 * the output panel, define it here.
