@@ -11,6 +11,8 @@
   #studies-list div div ul {
     margin: 0px 4px;
     padding-bottom: 6px;
+    list-style-type: none;
+    margin-left: -11px;
   }  
   #studies-list li span {
     cursor: pointer;
@@ -53,11 +55,17 @@
   }
 
   #studies-list > div {
+    margin-left: 0px;
+    margin-right: 0px;
     border: 1px solid rgb(223, 238, 255);
     border-radius: 4px;
     cursor: default;
   }
 
+  #studies-list > div > div {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 </style>
 <div>
 <div id="patient-count-box">
@@ -70,20 +78,20 @@
 	<div id="studies-list">
 
 {{#each studies}}
-    <div>
-        <div title="{{name}}">
-          <span class="glyphicon glyphicon-chevron-down study-glyph"></span>
-          <span class="consent-grouping"
+    <div class="row">
+        <div title="{{name}}" class="row">
+          <span class="glyphicon glyphicon-chevron-down study-glyph col"></span>
+          <span class="consent-grouping col"
             tabindex="0"
             role="button"
             aria-expanded="true"
             aria-pressed="true"
             aria-label="{{name}} with {{study_matches}} participants. Use enter key to collapse or expand"
           >{{code}}</span>
-          <div aria-label="Request access to study" class="request-access label label-primary" tabindex="0" role="button" aria-pressed="false" data-href="{{request_access}}">Request Access</div>
-          <span class="study-count">{{study_matches}} participants</span>
+          <div aria-label="Request access to study" class="request-access label label-primary col" tabindex="0" role="button" aria-pressed="false" data-href="{{request_access}}">Request Access</div>
+          <span class="study-count col">{{study_matches}} participants</span>
         </div>
-        <div style="display:none" class="consent-list">
+        <div style="display:none" class="consent-list row">
           <ul>
   {{#each consents}}
             <li title="{{consent_group_name}}">
