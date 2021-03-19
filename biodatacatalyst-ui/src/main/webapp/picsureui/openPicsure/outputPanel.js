@@ -147,7 +147,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			});
 
 
-			// get a list of all study_concept paths
+			// get a list of all study concept paths
 			$.ajax({
 			 	url: window.location.origin + "/picsure/search/" + incomingQuery.resourceUUID,
 			 	type: 'POST',
@@ -213,6 +213,47 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				}).bind(this)
 			});
 
+
+			
+			// get a list of all _study_consent concept paths
+			var study_consent_concepts = [];
+			for (var code in studiesInfo) {
+				studiesInfo[code].consents.forEach((x) => { 
+					study_consent_concepts.push("\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\");
+				});
+			}
+			
+			// query for the studies consents counts
+			var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
+			queryStudies.query.crossCountFields = study_consent_concepts;
+			queryStudies.query.expectedResultType="CROSS_COUNT";
+
+			$.ajax({
+				url: window.location.origin + "/picsure/query/sync",
+				type: 'POST',
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				contentType: 'application/json',
+				data: JSON.stringify(queryStudies),
+				success: (function(response) {
+					// populate the study consent counts 
+					for (var code in studiesInfo) { 
+						console.dir(studiesInfo[code].consents);
+						studiesInfo[code].consents.forEach((x) => {
+							x.study_matches = response["\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\"];
+						});
+					}
+					this.render();
+				}).bind(this),
+				error: (function(response) {
+					for (var code in studiesInfo) { 
+						console.dir(studiesInfo[code].consents);
+						studiesInfo[code].consents.forEach((x) => {
+							x.study_matches = "(error)";
+						});
+					}
+					this.render();
+				}).bind(this)
+			});
 
 
 
