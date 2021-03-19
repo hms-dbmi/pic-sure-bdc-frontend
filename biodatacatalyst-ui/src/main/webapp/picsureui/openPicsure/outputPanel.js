@@ -192,8 +192,9 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 							}
 
 							// perform additional sort
-							sorted_found = _.sortBy(sorted_found, (a,b) => { return a.code; });							
-							sorted_unfound = _.sortBy(sorted_unfound, (a,b) => { return a.code; });							
+							var func_sort = function(a,b) { return a.code.localeCompare(b.code); };
+							sorted_found = _.sortBy(sorted_found, func_sort);
+							sorted_unfound = _.sortBy(sorted_unfound, func_sort);
 							var sorted_final = sorted_found.concat(sorted_unfound);
 							
 							this.model.set("studies",sorted_final);
@@ -237,7 +238,6 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				success: (function(response) {
 					// populate the study consent counts 
 					for (var code in studiesInfo) { 
-						console.dir(studiesInfo[code].consents);
 						studiesInfo[code].consents.forEach((x) => {
 							x.study_matches = response["\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\"];
 						});
@@ -246,7 +246,6 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				}).bind(this),
 				error: (function(response) {
 					for (var code in studiesInfo) { 
-						console.dir(studiesInfo[code].consents);
 						studiesInfo[code].consents.forEach((x) => {
 							x.study_matches = "(error)";
 						});
@@ -260,8 +259,6 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		},
 		render: function(){
 			var context = this.model.toJSON();
-			// reorder the studies
-			 context.studies
 			this.$el.html(this.template(Object.assign({}, context, overrides)));
 		}
 	});
