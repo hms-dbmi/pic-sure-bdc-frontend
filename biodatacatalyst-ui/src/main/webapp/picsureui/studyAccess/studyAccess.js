@@ -67,10 +67,10 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
 
                 // sort by "consent group" then "abbreviated name"
                 var funcSort = function (a, b) {
-                    if (a["abbreviated_name"] == b["abbreviated_name"]) {
-                        return (a["consent_group_name"] > b["consent_group_name"]);
+                	if (a["abbreviated_name"] == b["abbreviated_name"]) {
+                        return (a["study_identifier"].localeCompare(b["study_identifier"]));
                     } else {
-                        return (a["abbreviated_name"] > b["abbreviated_name"]);
+                        return (a["abbreviated_name"].localeCompare(b["abbreviated_name"]));
                     }
                 };
                 this.records.permitted.sort(funcSort);
