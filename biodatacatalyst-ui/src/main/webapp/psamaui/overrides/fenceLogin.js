@@ -46,10 +46,10 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                         history.pushState({}, "", "/psamaui/tos");
                     } else {
                         if (sessionStorage.redirection_url && sessionStorage.redirection_url !== 'undefined') {
-                            window.location = sessionStorage.redirection_url;
+                            history.pushState({}, "", sessionStorage.redirection_url);
                         }
                         else {
-                            window.location = "/picsureui/dataAccess";
+                            history.pushState({}, "", "/picsureui/dataAccess");
                         }
                     }
                 }.bind(this),
