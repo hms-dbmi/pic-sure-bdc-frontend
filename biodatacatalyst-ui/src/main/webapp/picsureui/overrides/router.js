@@ -1,7 +1,7 @@
 define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "text!../settings/settings.json", "filter/filterList",
-        "openPicsure/outputPanel", "picSure/queryBuilder"],
+        "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs"],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
-             outputPanel, queryBuilder){
+             outputPanel, queryBuilder, searchHelpTooltipTemplate){
         var displayDataAccess = function() {            
               $('#main-content').empty();
               var studyAccessView = new studyAccess.View;
@@ -29,7 +29,18 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     var query = queryBuilder.generateQuery({}, null, JSON.parse(settings).openAccessResourceId);
                     outputPanelView.update(query);
 
-                    filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView);
+                    var renderHelpCallback = function() {
+                        $('.show-help-modal').click(function() {
+                            $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate));
+                            $('#modal-window', this.$el).tooltip();
+                            $(".close").click(function(){
+                                $("#search-help-modal").hide();
+                            });
+                            $("#search-help-modal").show();
+                        });
+                    }
+
+                    filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView, renderHelpCallback);
                 }
             },
             defaultAction: displayDataAccess
