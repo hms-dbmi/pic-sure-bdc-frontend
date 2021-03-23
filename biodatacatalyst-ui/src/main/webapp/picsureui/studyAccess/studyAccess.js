@@ -130,22 +130,18 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         contentType: 'application/json',
                         data: JSON.stringify(query),
                         success: (function(response){
-                            $("#authorized-participants").html(parseInt(response).toLocaleString() + " participants");
+                            $("#authorized-participants").html(parseInt(response).toLocaleString() + " Participants");
                         }).bind(this),
                         statusCode: {
                             401: function(){
                             }
                         },
-                        error: function() {
-                            $("#authorized-participants").html("0 participants");
-                        }
+                        error: transportErrors.handleAll
                     });
                     spinner.medium(deferredParticipants, "#authorized-participants-spinner", "");
                 }
 
                 if (studyAccess.resources.open !== false) {
-                    // This logic is incorrect in the same way the query on the open access tab is incorrect.
-                    // Update as part of https://hms-dbmi.atlassian.net/browse/ALS-1876
                     var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
                     query.query.expectedResultType = "COUNT";
                     $.ajax({
@@ -161,9 +157,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             401: function(){
                             }
                         },
-                        error: function() {
-                            $("#open-participants").html("0 participants");
-                        }
+                        error: transportErrors.handleAll
                     });
                     spinner.medium(deferredParticipants, "#open-participants-spinner", "");
                 }
