@@ -118,6 +118,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 			 	contentType: 'application/json',
 			 	data: JSON.stringify(query),
+				dataType: "text",
 			 	success: (function(response){
 					this.model.set("totalPatients", response);
 					this.model.set("spinning", false);
