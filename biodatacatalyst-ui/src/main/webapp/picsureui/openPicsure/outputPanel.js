@@ -125,7 +125,12 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					this.model.set("queryRan", true);
 					this.render();
 			 	}).bind(this),
-				error: transportErrors.handleAll
+				error: function(response, message) {
+					transportErrors.handleAll(response, message);
+					this.model.set("spinning", false);
+					this.model.set("queryRan", true);
+					this.render();
+				}
 			});
 
 
