@@ -5,7 +5,16 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
         var loginTemplate = HBS.compile(loginTemplate);
 
         var handleNotAuthorizedResponse = function() {
-            history.pushState({}, "", "/psamaui/not_authorized");
+            try {
+                if (new Date().getTime()/1000 > JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp) {
+                    history.pushState({}, "", "/psamaui/logout");
+                } else {
+                    history.pushState({}, "", "/psamaui/not_authorized");
+                }
+            } catch (e) {
+                console.log("Error determining token expiry");
+                history.pushState({}, "", "/psamaui/not_authorized");
+            }
         };
 
         var sessionInit = function(data) {
@@ -37,10 +46,10 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                         history.pushState({}, "", "/psamaui/tos");
                     } else {
                         if (sessionStorage.redirection_url && sessionStorage.redirection_url !== 'undefined') {
-                            window.location = sessionStorage.redirection_url;
+                            history.pushState({}, "", sessionStorage.redirection_url);
                         }
                         else {
-                            window.location = "/picsureui/dataAccess";
+                            history.pushState({}, "", "/picsureui/dataAccess");
                         }
                     }
                 }.bind(this),

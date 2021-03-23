@@ -1,5 +1,5 @@
-define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json"],
-		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData){
+define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
+		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData, transportErrors){
 
 	
 	// build the studies display info
@@ -11,7 +11,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		temp.name = x.full_study_name;
 		temp.study_type = x.study_type;
 		temp.request_access = x.request_access;
-		temp.identifier = x.study_identifier; 
+		temp.identifier = x.study_identifier;
 
 		x.study_matches = x.clinical_sample_size;
 		var t = x.consent_group_name;
@@ -98,7 +98,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		update: function(incomingQuery){
 
 			// clear counts
-			for (var x in studiesInfo) { 
+			for (var x in studiesInfo) {
 				studiesInfo[x].study_matches = "--";
 			}
 			this.model.set("totalPatients",0);
@@ -118,32 +118,19 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 			 	contentType: 'application/json',
 			 	data: JSON.stringify(query),
+				dataType: "text",
 			 	success: (function(response){
 					this.model.set("totalPatients", response);
 					this.model.set("spinning", false);
 					this.model.set("queryRan", true);
 					this.render();
 			 	}).bind(this),
-			 	error: (function(response){
-					if (response.status === 401) {
-						history.pushState({}, "", "/psamaui/not_authorized");
-					} else {
-						this.model.set("spinning", false);
-        		                        this.model.set("queryRan", true);
-
-						// handle return of "< 10" response
-						if (response.responseText.indexOf("<") > -1) {
-							this.model.set("totalPatients", response.responseText);
-	               				        this.render();
-						} else {
-							response.responseText = "<h4>"
-							+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
-							+ "</h4>";
-	               				        this.render();
-							$("#patient-count").html(response.responseText);
-						}
-					}
-				}).bind(this)
+				error: function(response, message) {
+					transportErrors.handleAll(response, message);
+					this.model.set("spinning", false);
+					this.model.set("queryRan", true);
+					this.render();
+				}
 			});
 
 
@@ -176,7 +163,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 							// populate counts and sort
 							var sorted_found = [];
 							var sorted_unfound = [];
-							for (var x in studiesInfo) { 
+							for (var x in studiesInfo) {
 								var cnt = response[studiesInfo[x].study_concept];
 								if (cnt.indexOf("<") > -1) {
 									studiesInfo[x].study_matches = cnt;
@@ -196,12 +183,12 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 							sorted_found = _.sortBy(sorted_found, func_sort);
 							sorted_unfound = _.sortBy(sorted_unfound, func_sort);
 							var sorted_final = sorted_found.concat(sorted_unfound);
-							
+
 							this.model.set("studies",sorted_final);
 							this.render();
 						}).bind(this),
 						error: (function(response) {
-							for (var x in studiesInfo) { 
+							for (var x in studiesInfo) {
 								studiesInfo[x].study_matches = "(error)";
 							}
 							this.render();
@@ -215,15 +202,15 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			});
 
 
-			
+
 			// get a list of all _study_consent concept paths
 			var study_consent_concepts = [];
 			for (var code in studiesInfo) {
-				studiesInfo[code].consents.forEach((x) => { 
+				studiesInfo[code].consents.forEach((x) => {
 					study_consent_concepts.push("\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\");
 				});
 			}
-			
+
 			// query for the studies consents counts
 			var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
 			queryStudies.query.crossCountFields = study_consent_concepts;
@@ -236,8 +223,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				contentType: 'application/json',
 				data: JSON.stringify(queryStudies),
 				success: (function(response) {
-					// populate the study consent counts 
-					for (var code in studiesInfo) { 
+					// populate the study consent counts
+					for (var code in studiesInfo) {
 						studiesInfo[code].consents.forEach((x) => {
 							x.study_matches = response["\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\"];
 						});
@@ -245,7 +232,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					this.render();
 				}).bind(this),
 				error: (function(response) {
-					for (var code in studiesInfo) { 
+					for (var code in studiesInfo) {
 						studiesInfo[code].consents.forEach((x) => {
 							x.study_matches = "(error)";
 						});
