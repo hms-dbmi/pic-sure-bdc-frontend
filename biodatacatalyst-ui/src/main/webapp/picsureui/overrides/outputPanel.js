@@ -15,17 +15,19 @@ define(["handlebars", "backbone"], function(HBS, BB){
 			this.$el.html(this.template(Object.assign({},context , this.overrides)));
 			
 			if(result){
-				if(!this.initialQueryRun){
-					this.initialQueryRun = true;
+				//hide 'select data' button if this is the first query or if no patients were filtered out 
+				if(!this.initialQueryCount || this.initialQueryCount == parseInt(result)){
+					this.initialQueryCount = parseInt(result);
 				}else if(parseInt(result) > 0){
-					//using 'show()' here makes the button show up as 'inline' and disrupts formatting.
-					$("#select-btn", this.$el).attr( "style", "display: block ");
+					$("#select-btn", this.$el).show();
+					//have to rebind this function to render the data selection, so it only shows after a click.
+					if(this.dataSelection){
+						$("#select-btn", this.$el).click(function() {
+							this.dataSelection.setElement($("#concept-tree-div",this.$el));
+							this.dataSelection.render();
+						}.bind(this));
+					}
 				}
-			}
-			
-			if(this.dataSelection){
-				this.dataSelection.setElement($("#concept-tree-div",this.$el));
-				this.dataSelection.render();
 			}
 		},
 		/*
