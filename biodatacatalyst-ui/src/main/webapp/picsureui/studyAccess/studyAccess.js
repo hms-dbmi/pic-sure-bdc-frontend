@@ -151,7 +151,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         contentType: 'application/json',
                         data: JSON.stringify(query),
                         success: (function (response) {
-                            $("#open-participants").html(parseInt(response).toLocaleString() + " participants");
+                            $("#open-participants").html(parseInt(response).toLocaleString() + " Participants");
                         }).bind(this),
                         statusCode: {
                             401: function(){
