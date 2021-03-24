@@ -90,6 +90,10 @@
 }
 
 
+#select-btn {
+	display: none;
+}
+
 /* <StudyAccess styles> */
 #infgfx {
     background: #fff;
