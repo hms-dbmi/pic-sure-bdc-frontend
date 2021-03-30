@@ -15,7 +15,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 
 		x.study_matches = x.clinical_sample_size;
 		var t = x.consent_group_name;
-		if (t.lastIndexOf('(') === -1) {
+		if (t.lastIndexOf('(') === -1 && t.length > 10) {
 			x.short_title = '(withdrawn)';
 		} else {
 			x.short_title = t.substring(t.lastIndexOf("(")).replace('(','').replace(')','');
