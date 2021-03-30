@@ -40,6 +40,10 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                     var currentSession = JSON.parse(sessionStorage.getItem("session"));
                     currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
                     currentSession.queryScopes = meResponse[0].queryScopes;
+                    currentSession.privileges = meResponse[0].privileges;
+                    if (currentSession.privileges.length > 1) {
+                        currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
+                    }
                     sessionStorage.setItem("session", JSON.stringify(currentSession));
 
                     if (data.acceptedTOS !== 'true'){
