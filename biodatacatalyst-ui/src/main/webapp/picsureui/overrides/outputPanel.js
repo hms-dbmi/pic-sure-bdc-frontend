@@ -19,7 +19,7 @@ define(["handlebars", "backbone"], function(HBS, BB){
 				if(!this.initialQueryCount || this.initialQueryCount == parseInt(result)){
 					this.initialQueryCount = parseInt(result);
 				}else if(parseInt(result) > 0){
-					$("#select-btn", this.$el).show();
+					$("#select-btn", this.$el).css("display", "block");
 					//have to rebind this function to render the data selection, so it only shows after a click.
 					if(this.dataSelection){
 						$("#select-btn", this.$el).click(function() {
