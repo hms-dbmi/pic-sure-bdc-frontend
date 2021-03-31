@@ -29,7 +29,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
 
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
-                this.authorizedAccess = session.authorizedAccess && session.privileges.includes("FENCE_AUTHORIZED_ACCESS");
+                this.authorizedAccess = session.privileges && session.privileges.includes("FENCE_AUTHORIZED_ACCESS");
                 var validConsents = [];
                 if (session.queryTemplate) {
                     var temp = JSON.parse(session.queryTemplate);
