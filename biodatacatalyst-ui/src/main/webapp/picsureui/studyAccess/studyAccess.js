@@ -29,6 +29,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
 
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
+                this.authorizedAccess = session.authorizedAccess && session.privileges.includes("FENCE_AUTHORIZED_ACCESS");
                 var validConsents = [];
                 if (session.queryTemplate) {
                     var temp = JSON.parse(session.queryTemplate);
@@ -114,6 +115,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
                 this.records.open_participants_cnt = studyAccess.open_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
+                this.records.authorizedAccess = !!this.authorizedAccess;
 
                 this.$el.html(this.template(this.records));
 
