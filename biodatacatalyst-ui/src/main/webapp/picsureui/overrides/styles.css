@@ -14,6 +14,12 @@
     padding-top: 20px;
 }
 
+/* fix sizing issue with header buttons */
+.header-btn {
+    min-width: fit-content;
+}
+
+
 /* take out footer padding */
 #footer-content {
     padding-top: 0;
