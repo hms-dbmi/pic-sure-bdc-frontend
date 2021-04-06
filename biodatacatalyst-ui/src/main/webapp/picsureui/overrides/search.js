@@ -21,7 +21,7 @@ define([], function(){
 			var lastIndexSeparatorB = bValue.lastIndexOf("\\");
 			while(lastIndexTermB < lastIndexSeparatorB  && lastIndexSeparatorB >= 0){
 				bOrder +=1000;
-				lastIndexSeparatorB = aValue.substring(0, lastIndexSeparatorB).lastIndexOf("\\");
+				lastIndexSeparatorB = bValue.substring(0, lastIndexSeparatorB).lastIndexOf("\\");
 			}
 				
 	        return aOrder - bOrder;

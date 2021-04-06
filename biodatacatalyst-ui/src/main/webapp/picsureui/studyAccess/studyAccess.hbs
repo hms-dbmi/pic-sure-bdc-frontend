@@ -2,9 +2,15 @@
     <div id="infgfx-line"></div>
     <span class="col-md-6">
 		<div class="infgfx-content">
+
 			<div class="gfx-title clearfix" style="margin-right:0px;width:100%">
 				<div style="width:100%;font-size:25px;font-weight:bold">Authorized Access</div>
-				<button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/queryBuilder">Explore Now</button>
+				<button type="button" data-href="/picsureui/queryBuilder"
+                    {{#if authorizedAccess}}class="btn btn-primary btn-blue clickable-button"{{/if}}
+                    {{#unless authorizedAccess}}class="btn btn-primary btn-grey"{{/unless}}
+                    {{#unless authorizedAccess}}disabled="disabled"{{/unless}}>
+                    Explore Now
+                </button>
 			</div>
 			<div class="gfx-cohorts">{{auth_studies_cnt}} Studies</div>
 			<div class="gfx-participants" id="authorized-participants"></div>
