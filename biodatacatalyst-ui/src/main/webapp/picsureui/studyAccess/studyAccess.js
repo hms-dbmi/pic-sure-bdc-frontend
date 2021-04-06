@@ -143,7 +143,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             $("#authorized-participants-spinner").html("");
                         }
                     });
-                    spinner.medium(deferredParticipants, "#authorized-participants-spinner", "");
+                    spinner.medium(deferredParticipants, "#authorized-participants-spinner", "spinner1");
                 }
 
                 if (studyAccess.resources.open !== false) {
@@ -164,7 +164,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         },
                         error: transportErrors.handleAll
                     });
-                    spinner.medium(deferredParticipants, "#open-participants-spinner", "");
+                    spinner.medium(deferredParticipants, "#open-participants-spinner", "spinner2");
                 }
             }
         });
