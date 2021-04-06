@@ -29,6 +29,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
 
                 // extract the consent identifiers from the query template
                 var session = JSON.parse(sessionStorage.getItem("session"));
+                this.authorizedAccess = session.privileges && session.privileges.includes("FENCE_AUTHORIZED_ACCESS");
                 var validConsents = [];
                 if (session.queryTemplate) {
                     var temp = JSON.parse(session.queryTemplate);
@@ -114,6 +115,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
                 this.records.open_participants_cnt = studyAccess.open_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
+                this.records.authorizedAccess = !!this.authorizedAccess;
 
                 this.$el.html(this.template(this.records));
 
@@ -136,7 +138,10 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             401: function(){
                             }
                         },
-                        error: transportErrors.handleAll
+                        error: function () {
+                            $("#authorized-participants").html("0 Participants");
+                            $("#authorized-participants-spinner").html("");
+                        }
                     });
                     spinner.medium(deferredParticipants, "#authorized-participants-spinner", "");
                 }
@@ -144,7 +149,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 if (studyAccess.resources.open !== false) {
                     var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
                     query.query.expectedResultType = "COUNT";
-                    $.ajax({
+                    var deferredParticipants = $.ajax({
                         url: window.location.origin + "/picsure/query/sync",
                         type: 'POST',
                         headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},

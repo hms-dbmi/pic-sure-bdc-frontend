@@ -233,6 +233,11 @@
     background-color: #1a568c;
 }
 
+.btn-grey {
+    color: #333;
+    background-color: #f4f4f6;
+}
+
 .study-lst-btn1, .study-lst-btn2 {
     height: 2.5em;
     background: #f4f4f6;
