@@ -138,15 +138,18 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             401: function(){
                             }
                         },
-                        error: transportErrors.handleAll
+                        error: function () {
+                            $("#authorized-participants").html("0 Participants");
+                            $("#authorized-participants-spinner").html("");
+                        }
                     });
-                    spinner.medium(deferredParticipants, "#authorized-participants-spinner", "");
+                    spinner.medium(deferredParticipants, "#authorized-participants-spinner", "spinner1");
                 }
 
                 if (studyAccess.resources.open !== false) {
                     var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
                     query.query.expectedResultType = "COUNT";
-                    $.ajax({
+                    var deferredParticipants = $.ajax({
                         url: window.location.origin + "/picsure/query/sync",
                         type: 'POST',
                         headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
@@ -161,7 +164,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         },
                         error: transportErrors.handleAll
                     });
-                    spinner.medium(deferredParticipants, "#open-participants-spinner", "");
+                    spinner.medium(deferredParticipants, "#open-participants-spinner", "spinner2");
                 }
             }
         });

@@ -41,6 +41,10 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                     currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
                     currentSession.queryScopes = meResponse[0].queryScopes;
                     currentSession.privileges = meResponse[0].privileges;
+                    if (!currentSession.privileges || currentSession.privileges.length === 0) {
+                        history.pushState({}, "", "/picsureui/not_authorized");
+                        return;
+                    }
                     if (currentSession.privileges && currentSession.privileges.length > 1) {
                         currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
                     }
