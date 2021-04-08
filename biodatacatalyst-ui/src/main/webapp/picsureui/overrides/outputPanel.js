@@ -74,9 +74,12 @@ define(["handlebars", "backbone"], function(HBS, BB){
 				}).length == 0 &&  
 				_.filter(_.keys(query.query.numericFilters), function(concept) {
 				    return concept.includes(parsedSettings.harmonizedPath);
-				}).length  == 0 &&  
+				}).length  == 0 &&
 				_.filter(query.query.fields, function(concept) {
-				    return concept.includes(parsedSettings.harmonizedPath);
+					return concept.includes(parsedSettings.harmonizedPath);
+				}).length  == 0 &&
+				_.filter(query.query.requiredFields, function(concept) {
+					return concept.includes(parsedSettings.harmonizedPath);
 				}).length  == 0
 			){
 //				console.log("removing harmonized consents");
