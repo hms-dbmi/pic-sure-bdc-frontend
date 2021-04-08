@@ -1,6 +1,27 @@
 define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
 		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData, transportErrors){
 
+    var processAccessablity = function() {
+        // extract the consent identifiers that user has access to from the query template
+        var session = JSON.parse(sessionStorage.getItem("session"));
+        var validConsents = [];
+        if (session.queryTemplate) {
+            var temp = JSON.parse(session.queryTemplate);
+
+            if (temp && temp.categoryFilters && temp.categoryFilters["\\_consents\\"]) {
+                validConsents = temp.categoryFilters["\\_consents\\"];
+            }
+        }
+
+        for (var key in studiesInfo) {
+            studiesInfo[key].consents.forEach((x) => {
+                x.hasPermission = validConsents.includes(x.study_identifier + "." + x.consent_group_code);
+            });
+            studiesInfo[key].hasPermission = studiesInfo[key].consents.filter((x) => { return x.hasPermission}).length == studiesInfo[key].consents.length;
+        }
+    }
+
+
 	
 	// build the studies display info
 	studiesData = JSON.parse(studiesData).bio_data_catalyst;
@@ -24,7 +45,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		if (x.consent_group_code !== 'c0') temp.consents.push(x);
 	});
 
-	var outputModelDefaults = {
+    var outputModelDefaults = {
 			totalPatients : 0,
 			spinnerClasses: "spinner-medium spinner-medium-center ",
 			spinning: false,
@@ -52,8 +73,6 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 	var outputView = BB.View.extend({
 		initialize: function(){
 			this.template = HBS.compile(outputTemplate);
-			overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
-			overrides.update ? this.update = overrides.update.bind(this) : undefined;
 			HBS.registerHelper("outputPanel_obfuscate", function(count){
 				if(count < 10 && false){
 					return "< 10";
@@ -69,7 +88,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			"mouseover .request-access": "highlightConsent",
 			"mouseout .request-access": "unhighlightConsent",
 			"keypress .request-access": "keyRequestAccess",
-			"click .request-access": "requestAccess"
+			"click .request-access": "requestAccess",
+            "click .explore-access": "exploreAccess"
 		},
 		keyToggleConsentGroup: function(event) {
 			if (event.key === "Enter") this.toggleConsentGroup(event);
@@ -90,12 +110,22 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		keyRequestAccess: function(event) {
 			if (event.key === "Enter") this.requestAccess(event);
 		},
-		requestAccess: function(event) {
-			window.open(event.currentTarget.getAttribute("data-href"));
-		},
+        requestAccess: function(event) {
+            window.open(event.currentTarget.getAttribute("data-href"));
+        },
+        exploreAccess: function(event) {
+            console.log("Explore study: " + $(event.target).data("study"));
+            window.history.pushState({}, "", "picsureui/queryBuilder");
+        },
 		totalCount: 0,
 		tagName: "div",
 		update: function(incomingQuery){
+
+		    // run only one time to handle displaying of our access permissions
+		    if (processAccessablity) {
+		        processAccessablity();
+		        processAccessablity = false;
+            }
 
 			// clear counts
 			for (var x in studiesInfo) {

@@ -32,14 +32,27 @@
   }
 
   #studies-list .request-access:hover {
-    background: #777 !important;
+      background: #777 !important;
   }
+
+  #studies-list .explore-access {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #777;
+  }
+
   #studies-list .request-access {
-    float: right;
-    padding: 4px;
-    cursor: pointer;
-    margin: 2px;
-    background-color: #1a568c;
+      background-color: #1a568c;
+      border: 1px solid #000;
+  }
+
+  #studies-list .explore-access,
+  #studies-list .request-access {
+      float: right;
+      padding: 4px;
+      cursor: pointer;
+      margin: 2px;
+      width: 9em;
   }
 
   #studies-list .study-shown {
@@ -88,8 +101,12 @@
             aria-pressed="true"
             aria-label="{{name}} with {{study_matches}} participants. Use enter key to collapse or expand"
           >{{code}}</span>
-          <div aria-label="Request access to study" class="request-access label label-primary col" tabindex="0" role="button" aria-pressed="false" data-href="{{request_access}}">Request Access</div>
-          <span class="study-count col">{{study_matches}} participants</span>
+            {{#if hasPermission}}
+                <div aria-label="Explore the study" class="explore-access label label-primary col" tabindex="0" role="button" aria-pressed="false" data-study="{{identifier}}">Granted</div>
+            {{else}}
+                <div aria-label="Request access to study" class="request-access label label-primary col" tabindex="0" role="button" aria-pressed="false" data-href="{{request_access}}">Request Access</div>
+            {{/if}}
+            <span class="study-count col">{{study_matches}} participants</span>
         </div>
         <div style="display:none" class="consent-list row">
           <ul>
