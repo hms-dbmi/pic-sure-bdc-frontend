@@ -2,12 +2,6 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs"],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate){
-        var displayDataAccess = function() {            
-              $('#main-content').empty();
-              var studyAccessView = new studyAccess.View;
-              $('#main-content').append(studyAccessView.$el);
-              studyAccessView.render();
-        };
         return {
             routes : {
                 /**
@@ -17,8 +11,17 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                  * Ex:
                  * "picsureui/queryBuilder2" : function() { renderQueryBuilder2(); }
                  */
-                "picsureui/dataAccess" : displayDataAccess,
+                "picsureui/dataAccess" : function() {
+                    $(".header-btn.active").removeClass('active');
+                    $(".header-btn[data-href='/picsureui/dataAccess']").addClass('active');
+                    $('#main-content').empty();
+                    var studyAccessView = new studyAccess.View;
+                    $('#main-content').append(studyAccessView.$el);
+                    studyAccessView.render();
+                },
                 "picsureui/openAccess" : function() {
+                    $(".header-btn.active").removeClass('active');
+                    $(".header-btn[data-href='/picsureui/openAccess']").addClass('active');
                     $('#main-content').empty();
                     $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
 
@@ -38,7 +41,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                             });
                             $("#search-help-modal").show();
                         });
-                    }
+                    };
 
                     filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView, renderHelpCallback);
                 }
