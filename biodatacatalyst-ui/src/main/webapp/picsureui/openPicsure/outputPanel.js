@@ -209,9 +209,15 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 							}
 
 							// perform additional sort
-							var func_sort = function(a,b) { return a.code.localeCompare(b.code); };
-							sorted_found = _.sortBy(sorted_found, func_sort);
-							sorted_unfound = _.sortBy(sorted_unfound, func_sort);
+							var func_sort = function(a,b) {
+								let codeComparison = a.code.localeCompare(b.code, undefined, {sensitivity: 'base'});
+								if (codeComparison === 0) {
+									return a.identifier.localeCompare(b.identifier, undefined, {sensitivity: 'base'});
+								}
+								return codeComparison;
+							};
+							sorted_found.sort(func_sort);
+							sorted_unfound.sort(func_sort);
 							var sorted_final = sorted_found.concat(sorted_unfound);
 
 							this.model.set("studies",sorted_final);
