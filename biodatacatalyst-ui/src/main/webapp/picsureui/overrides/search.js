@@ -24,7 +24,8 @@ define([], function(){
 				lastIndexSeparatorB = bValue.substring(0, lastIndexSeparatorB).lastIndexOf("\\");
 			}
 				
-	        return aOrder - bOrder;
-	    }	
+	        	return aOrder - bOrder;
+	    	},
+		queryScopeUUID : '02e23f52-f354-4e8b-992c-d37c8b9ba140'		
 	};
 });
