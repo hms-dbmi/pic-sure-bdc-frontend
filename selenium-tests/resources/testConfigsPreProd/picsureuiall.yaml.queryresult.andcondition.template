@@ -5,10 +5,10 @@
  test: regression
  type: QueryBuilderTestPlan
  reporter: ConsoleReporter
- SearchTerm: "triglycerides"
- TextToSelect: "Blood mass concentration of triglycerides"
- PatientCount: 14
- SearchTermSecond: Vitamin D
- TextToSelectSecond: "VITAMIN D (IU)"
+ SearchTerm: "hematocrit"
+ TextToSelect: "age at measurement of hematocrit_vfr_bld_1"
+ PatientCount: 39
+ SearchTermSecond: Vitamin E 
+ TextToSelectSecond: "Dietary Vitamin E (IU)"
  NumericValueLess: 50
- NumericValueLessSecond: 500
+ NumericValueLessSecond: 5

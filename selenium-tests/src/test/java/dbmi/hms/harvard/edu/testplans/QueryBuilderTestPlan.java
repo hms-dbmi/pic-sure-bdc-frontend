@@ -1225,12 +1225,14 @@ public class QueryBuilderTestPlan extends Testplan {
 	
 		public void verifyDataaccessExploreOpenAccess(Reporter reporter) throws Exception, IllegalAccessException {
 			
-			driver.findElement(By.xpath(dataAccessExploreOpenAccess)).click();
+			driver.findElement(By.xpath(dataAccess)).click();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
+			driver.findElement(By.xpath(dataAccessExploreAuthorizedAccess)).click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			
 			try {
 				Assert.assertTrue(driver.findElements(By.xpath(SearchBoxField)).size() != 0,
-						"Data Access page loads properly");
+						"Open Data Access page loads properly");
 
 				SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 				LOGGER.info("---------------------------Clicking on ExploreNow loads Query Builder properly ----------------------------");

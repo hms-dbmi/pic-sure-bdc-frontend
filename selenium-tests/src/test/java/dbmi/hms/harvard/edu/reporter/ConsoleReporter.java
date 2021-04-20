@@ -31,7 +31,7 @@ public class ConsoleReporter extends Reporter {
 		resultLog.info("\n");
 		for (Map testResult : getTestResults()) {
 			String sTestPlanName = testResult.get("name").toString();
-			String TestCaseDescription=String.format("%-80s",sTestPlanName);
+			String TestCaseDescription=String.format("%-100s",sTestPlanName);
 			//String sTestPlanName = testResult.get("name").toString().format("%80s","0" );
 			String sTestPlanResult = testResult.get("TestResult").toString();
 			// Object[] args = new Object[] {testResult.get("name").toString() +
