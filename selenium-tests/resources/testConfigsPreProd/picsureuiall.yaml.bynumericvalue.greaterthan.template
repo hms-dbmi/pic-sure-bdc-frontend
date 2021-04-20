@@ -15,5 +15,5 @@
  expected: pass
  SearchTerm: "triglycerides"
  TextToSelect: "age at measurement of triglycerides_1"
- PatientCount: 46633
+ PatientCount: 49584
  NumericValueGreater: 7

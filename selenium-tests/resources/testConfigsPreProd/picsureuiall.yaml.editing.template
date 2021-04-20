@@ -15,6 +15,6 @@
  expected: pass
  SearchTerm: triglycerides
  TextToSelect: "Blood mass concentration of triglycerides"
- NumericValueLess: 150
- EditNumericValue: 15
- PatientCountAfterEditing: 3
+ NumericValueLess: 250
+ EditNumericValue: 25
+ PatientCountAfterEditing: 138

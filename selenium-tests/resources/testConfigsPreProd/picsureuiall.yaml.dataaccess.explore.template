@@ -1,4 +1,4 @@
- name: This test verify that clicking Explore button opens Query Builder page.
+ name: Verify on clicking Explore button from open Access section opens up  OpenAccess page
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
  url: https://ec2-54-86-40-196.compute-1.amazonaws.com/picsureui/

@@ -13,5 +13,5 @@
  expected: pass
  SearchTerm: triglycerides
  TextToSelect: "Blood mass concentration of triglycerides"
- PatientCount: 46579
+ PatientCount: 49523
  NumericValueLessDecimal: 882.5

@@ -7,8 +7,8 @@
  reporter: ConsoleReporter
  SearchTerm: "triglycerides"
  TextToSelect: "Blood mass concentration of triglycerides"
- PatientCount: 60
- SearchTermSecond: mean systolic
- TextToSelectSecond: "Mean Systolic BP"
+ PatientCount: 14
+ SearchTermSecond: Vitamin D
+ TextToSelectSecond: "VITAMIN D (IU)"
  NumericValueLess: 50
- NumericValueLessSecond: 150
+ NumericValueLessSecond: 500

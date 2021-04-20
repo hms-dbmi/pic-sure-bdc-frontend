@@ -8,8 +8,8 @@
  SearchTerm: "triglycerides"
  TextToSelect: "Blood mass concentration of triglycerides"
  PatientCount: 483
- SearchTermSecond: mean systolic
- TextToSelectSecond: "Mean Systolic BP"
+ SearchTermSecond: vitamin D
+ TextToSelectSecond: "VITAMIN D (IU)"
  NumericValueLess: 50
  NumericValueLessSecond: 150
  EditNumericValue: 55

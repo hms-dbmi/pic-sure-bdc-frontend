@@ -1,4 +1,4 @@
- name: This test verify that Data Access/Dasboard loads properly
+ name: This test verify that Data Access/Dashboard loads properly
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
  url: https://ec2-54-86-40-196.compute-1.amazonaws.com/picsureui/
