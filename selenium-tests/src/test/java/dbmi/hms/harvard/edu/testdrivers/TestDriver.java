@@ -165,7 +165,6 @@ public class TestDriver {
 
 	}
 
-
 @Test (priority=7)
 
 	public void verify_QueryBuilder_ANDCondition() throws Exception {
@@ -480,7 +479,7 @@ public class TestDriver {
 
 	}
 
-	@Test (priority=30)
+@Test (priority=32)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");
