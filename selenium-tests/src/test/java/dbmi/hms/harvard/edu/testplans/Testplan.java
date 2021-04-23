@@ -274,6 +274,11 @@ public abstract class Testplan {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void verifyQueryScopeStudyOpenAccess(Reporter reporter) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

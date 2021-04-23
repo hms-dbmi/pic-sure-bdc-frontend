@@ -69,6 +69,8 @@ public class QueryBuilderTestPlan extends Testplan {
 	private String FractalisType;
 	private String SearchBoxField ="//input[@placeholder='Search...']";
 	private By SearchBox = By.xpath(".//*[@id='filter-list']/div/div/div[1]/div[1]/div[2]/input");
+	
+	private By StudiesTab = By.xpath("//li[@data-toggle='tooltip']");
 	private By SearchBoxTwo = By.xpath(".//*[@id='filter-list']/div[2]/div/div[1]/div[1]/div[2]/input");
 	private By SearchBoxAutocompleteListBox = By
 			.xpath("//div[@class='tab-pane active']//div[@class='search-result-list']");
@@ -1361,6 +1363,62 @@ public void verifyAuthorizedAccessPageload(Reporter reporter)
 
 	driver.navigate().refresh();
 
+}
+
+
+public void verifyQueryScopeStudyOpenAccess(Reporter reporter) throws Exception {
+	
+	String ExpStudycountAuthorized = (String) testPlan.get("AuthStudycount");
+	String ExpStudycountOpenAccess = (String) testPlan.get("OpenAccessStudycount");
+	String TextToSearch = (String) testPlan.get("SearchTerm");
+	
+	driver.findElement(By.xpath(dataAccess)).click();
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	driver.findElement(By.xpath(dataAccessExploreAuthorizedAccess)).click();
+//	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	wait.until(ExpectedConditions.presenceOfElementLocated(SearchBox));
+	WebElement textBoxElement = driver.findElement(SearchBox);
+	textBoxElement.sendKeys(TextToSearch);
+	String selectAll = Keys.chord(Keys.ENTER, "");
+	driver.findElement(SearchBox).sendKeys(selectAll);
+	Thread.sleep(4000);
+	List<WebElement> ActualAuthorizedStudy = driver.findElements(StudiesTab);
+	int ActualAuthorizedStudyCount = ActualAuthorizedStudy.size();
+	System.out.println("Actual...."+ActualAuthorizedStudyCount);
+	
+	driver.findElement(By.xpath(dataAccess)).click();
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	driver.findElement(By.xpath(dataAccessExploreOpenAccess)).click();
+	Thread.sleep(5000);;
+	
+	WebElement textBoxElementOpen = driver.findElement(SearchBox);
+	textBoxElementOpen.sendKeys(TextToSearch);
+	String selectAllOpen = Keys.chord(Keys.ENTER, "");
+	driver.findElement(SearchBox).sendKeys(selectAllOpen);
+	Thread.sleep(4000);
+	List<WebElement> ActualOpenAccessStudy = driver.findElements(StudiesTab);
+	int ActualOpenAccessStudyCount = ActualOpenAccessStudy.size();
+	System.out.println("Actual...."+ActualOpenAccessStudyCount);
+	int ExpStudycountOpenAccessConv=Integer.parseInt(ExpStudycountOpenAccess);  
+	
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+	try {
+		Assert.assertTrue(ActualOpenAccessStudyCount==ExpStudycountOpenAccessConv, "Open Access Query scope looks good");
+		
+
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		LOGGER.info("---------------------------Open Access Query scope looks good----------------------------");
+
+	}
+
+	catch (AssertionError error) {
+		LOGGER.error(error);
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+		LOGGER.info("---------------------------Open Access Query scope is having issue----------------------------");
+
+	}
+		
 }
 
 

@@ -1,0 +1,11 @@
+ name: This test case verify that query scope works fine for openaccess
+ browser: chrome
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ SearchTerm: "gender"
+ TextToSelect: "age at measurement of hematocrit_vfr_bld_1"
+ AuthStudycount: 3
+ OpenAccessStudycount: 24
