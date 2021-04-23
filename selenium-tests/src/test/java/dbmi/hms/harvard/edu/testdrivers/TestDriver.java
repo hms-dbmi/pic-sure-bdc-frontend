@@ -117,6 +117,370 @@ public class TestDriver {
 
 	}
 
+@Test (priority=3)
+
+	public void verify_QueryBuilder_ByNoValue() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNoValue is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.novalue"));
+		testPlan.verifyQueryBuilderNoValue(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNoValue is completed-------------------------");
+
+	}
+
+@Test(priority=4)
+
+	public void verify_QueryBuilder_ByNumericValue_LessThan() throws Throwable {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericValueLessthan is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.lessthan"));
+		testPlan.verifyQueryBuilderByNumericLessThan(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericValueLessthan is completed-------------------------");
+
+	}
+
+ 
+@Test (priority=5)
+
+	public void verify_QueryBuilder_ByNumericValue_GreaterThan() throws Throwable {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericValueGreaterThan is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.greaterthan"));
+		testPlan.verifyQueryBuilderByNumericGreaterThan(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericValueGreaterThan is completed-------------------------");
+
+	}
+
+@Test (priority=6)
+	public void verify_QueryBuilder_ByNumericValue_Between() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericValueBetween is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.inbetween"));
+		testPlan.verifyQueryBuilderByNumericValueBetween(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericValueBetween is completed-------------------------");
+
+	}
+
+@Test (priority=7)
+
+	public void verify_QueryBuilder_ANDCondition() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderANDCondition is running-------------------------");
+
+		readFile(configProperties.getProperty("verify.queryresultandcondition"));
+		testPlan.verifyQueryBuilderANDCondition(reporter);
+
+		
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderANDCondition is completed-------------------------");
+
+	}
+
+@Test (priority=8)
+
+	public void verify_QueryBuilder_Deletion() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderDeletion is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.deletion"));
+		testPlan.verifyQueryBuilderDeletion(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderDeletion is completed-------------------------");
+
+	}
+
+	
+@Test (priority=9)
+
+		public void verify_QueryBuilder_BackButton() throws Exception {
+			LOGGER.info(
+					"---------------------------------The test case verifyQueryBuilder Back Button Functionality-------------------------");
+			readFile(configProperties.getProperty("verify.backbutton.functionality"));
+			testPlan.verifyQueryBuilderBack(reporter);
+			LOGGER.info(
+					"------------------------The test case verifyQueryBuilder Back Button Functionality is done-------------------------");
+
+		}
+
+@Test (priority=10)
+
+	public void verify_QueryBuilder_Editing() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderEditing is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.editing"));
+		testPlan.verifyQueryBuilderEditing(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderEditing is completed-------------------------");
+	}
+
+@Test(priority = 11)
+
+	public void verify_QueryBuilder_SearchInvalidData() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderSearchInvalidData is running-------------------------");
+
+		readFile(configProperties.getProperty("verify.queryresult.invaliddata"));
+		testPlan.verifyQueryBuilderSearchInvalidData(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderSearchInvalidData is completed--------------(priority = 13)-----------");
+
+	}
+
+@Test(priority = 12)
+
+	public void verify_QueryBuilder_Search_InCaseSensitivity() throws Exception {
+		
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderSearchInCaseSensitivity is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.caseinsensitive"));
+		testPlan.verifyQueryBuilderSearchInCaseSensitivity(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderSearchInCaseSensitivity is completed-------------------------");
+
+	}
+
+//@Test (priority = 13)
+
+		public void verify_Downloading_ofData() throws Exception {
+			LOGGER.info(
+					"---------------------------------The test case verifyDownloading is running-------------------------");
+			readFile(configProperties.getProperty("verify.queryresult.downloading.data"));
+			testPlan.verifyDownloading(reporter);
+			LOGGER.info(
+					"---------------------------------The test case verifyDownloading is completed-------------------------");
+
+		}
+	//@Test (priority = 14)
+			 //dependsOnMethods={"verifyDownloadingofData"})
+
+		public void verify_TheLoadedData() throws Exception {
+		 
+		 readFile(configProperties.getProperty("verify.queryresult.downloading.data"));
+		 
+			LOGGER.info(
+					"---------------------------------The test case verifyTheLoadedData is running-------------------------");
+
+			testPlan.verifyTheLoadedData(reporter);
+			LOGGER.info(
+					"---------------------------------The test case verifyTheLoadedData is completed-------------------------");
+
+		}
+		
+		
+		//@Test (priority = 15)dependsOnMethods={"verifyDownloadingofData"})
+
+		public void verify_TheLoadedData_ForMultipleConcetps() throws Exception {
+			 
+			 readFile(configProperties.getProperty("verify.queryresult.verify.multiple.concepts.downloadeddata"));
+			 
+				LOGGER.info(
+						"---------------------------------The test case verify TheLoadedData For MultipleConcetps with AND condition is running-------------------------");
+
+				testPlan.verifyTheLoadedDataforMultipleConceptsAnd(reporter);
+				LOGGER.info(
+						"---------------------------------The test case verify TheLoadedData For MultipleConcetps with AND condition  is completed-------------------------");
+
+			}
+		
+@Test (priority = 16)
+		public void verifypresenceOfANDLabel() throws Exception {
+			 
+
+			 
+				LOGGER.info(
+						"---------------------------------The test case verify presence of AND LABEL  is running-------------------------");
+				readFile(configProperties.getProperty("verify.presenceof.andlabel"));
+				testPlan.verifyAndLabel(reporter);
+				LOGGER.info(
+						"---------------------------------The test case verify presence of AND LABEL  is completed-------------------------");
+
+			}
+@Test (priority=17)
+
+			public void verifyQueryBuilder_ByNumericValue_Decimal() throws Exception {
+				LOGGER.info(
+						"---------------------------------The test case verifyQueryBuilderByNumericValueDecimal is running-------------------------");
+				readFile(configProperties.getProperty("verify.queryresult.bynumeric.decimalvalue"));
+				testPlan.verifyQueryBuilderByNumericdecimalvalues(reporter);
+				LOGGER.info(
+						"---------------------------------The test case verifyQueryBuilderByNumericValueDecimal is completed-------------------------");
+
+			}
+
+@Test(priority=18)
+
+			public void verify_QueryBuilder_ByNumericValue_OutOfRangeValidation() throws Throwable {
+				LOGGER.info(
+						"---------------------------------The test case verify QueryBuilderByNumericValue validation -------------------------");
+				readFile(configProperties.getProperty("verify.validation.outofrange"));
+				testPlan.verifyQueryBuilderByNumericValidation(reporter);
+				LOGGER.info(
+						"---------------------------------The test case verify QueryBuilderByNumericValue is completed-------------------------");
+
+			}
+
+
+@Test (priority=19)
+
+	public void verify_QueryBuilder_ByNumeric_NoValue_Message() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericNoValueMessage is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.noinputvalue.message"));
+		testPlan.verifyQueryBuilderByNumericNoValueMessage(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericNoValueMessage is completed-------------------------");
+
+	}
+
+
+//@Test (priority=20)
+
+	public void verify_QueryBuilder_ByNumeric_InBtnValidation_ForTextBox() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericInBtnValidationForTextBox is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.between.validation.message"));
+		testPlan.verifyQueryBuilderByNumericInBtnValidationForTextBoxMessage(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderByNumericInBtnValidationForTextBox is completed-------------------------");
+
+	}
+
+//@Test (priority=21)
+
+
+	public void verify_QueryBuilder_Export_Manual_Selection_DataTree() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderExportManualSelectionFromDataTree is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.between.validation.message"));
+		testPlan.verifyQueryBuilderExportManualSelectionFromDataTree(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifyQueryBuilderExportManualSelectionFromDataTree is completed-------------------------");
+
+	}
+
+	//@Test (priority=22)
+
+	public void verify_QueryBuilder_Restrict_By_Value() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify Restrict By Value is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.lessthan"));
+		testPlan.verifyQueryBuilderRestrictByValue(reporter);
+		LOGGER.info(
+				"---------------------------------The test case  verify Restrict By Value is completed-------------------------");
+
+	}
+
+	//@Test (priority=23)
+
+	public void verify_SelectDataForExport() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify Restrict By Value is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.bynumeric.lessthan"));
+		testPlan.verifyQueryBuilderSelectDataForExport(reporter);
+		LOGGER.info(
+				"---------------------------------The test case The test case verify Restrict By Value is completed-------------------------");
+	}
+
+@Test (priority=24)
+
+	public void verify_userProfile() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify user Profile  is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.userprofile"));
+		testPlan.verifyUserProfile(reporter);
+		LOGGER.info(
+				"---------------------------------The test verify userProfile is completed-------------------------");
+
+	}
+
+	//@Test (priority=25)
+	public void verify_AutoBDCColumnReport() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case Auto BDC column  is running-------------------------");
+		readFile(configProperties.getProperty("verify.datareportbdccolumn"));
+		testPlan.verifyBDCAutoInclusionColumnReport(reporter);
+		LOGGER.info(
+				"---------------------------------The test auto BDC column is completed-------------------------");
+
+	}
+
+
+	@Test (priority=26)
+	public void verify_dataaccessdashboard() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case dataaccess page load  is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.dataaccess"));
+		testPlan.verifyDataaccessDashboard(reporter);
+		LOGGER.info(
+				"---------------------------------The test case dataaccess page load  is completed-------------------------");
+
+	}
+
+	
+	@Test (priority=27)
+	public void verify_dataaccessExploreButtonOpenAccess() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verifying Explore button  is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.dataaccess.explore"));
+		testPlan.verifyDataaccessExploreOpenAccess(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verifying Explore button  is completed-------------------------");
+
+	}
+
+	@Test (priority=28)
+	public void verify_helpcontactus() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case helpContactUS is running-------------------------");
+		readFile(configProperties.getProperty("verify.queryresult.helpcontactus"));
+		testPlan.verifyHelpContactusPageload(reporter);
+		LOGGER.info(
+				"---------------------------------The test case helpContactUS is completed-------------------------");
+
+	}
+
+
+	@Test (priority=29)
+	public void verify_authorized_access_page_dataexport() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify  Authorized page displays Data Export button is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.authorizedaccess.dataexport"));
+		testPlan.verifyAuthorizedAccessPageDataExport(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify  Authorized page displays Data Export button is completed-------------------------");
+
+	}
+
+
+	@Test (priority=30)
+	public void verify_authorized_access_page() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify  Authorized page loads is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.authorizedaccess.pageload"));
+		testPlan.verifyAuthorizedAccessPageload(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify  Authorized page loads is completed-------------------------");
+
+	}
+
+	
+	
+	@Test (priority=31)
+	public void verify_authorized_NoExportButton_default() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify  Authorized page doesn't have default Export Button  is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.authorizedaccess.pageload.noexportbutton"));
+		testPlan.verifyAuthorizedAccessdefaultNoExportButton(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify  Authorized page doesn't have default Export Button is completed-------------------------");
+
+	}
+	
+	
+	
 	@Test (priority=32)
 	public void verify_queryscope_study_openaccess() throws Exception {
 		LOGGER.info(
