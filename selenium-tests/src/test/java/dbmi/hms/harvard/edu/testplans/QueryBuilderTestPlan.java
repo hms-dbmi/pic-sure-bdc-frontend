@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Driver;
+import java.time.temporal.ValueRange;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -89,6 +90,7 @@ public class QueryBuilderTestPlan extends Testplan {
 	//private String dataAccessExploreNow = "//button[contains(text(),'Explore Now')]";
 	private String dataAccessExploreOpenAccess ="//button[@data-href='/picsureui/openAccess']";
 	private String dataAccessExploreAuthorizedAccess ="//button[@data-href='/picsureui/queryBuilder']";
+	private String dataAccessAuthorizationAccess ="//a[@id='query-builder-btn']";
 	private String helpTab = "//span[contains(text(),'Help')]";
 	private String contactus = "//a[contains(text(),'Contact Us')]";
 	private String closingButton ="//button[@class='close']";
@@ -291,8 +293,8 @@ public class QueryBuilderTestPlan extends Testplan {
 		AuthTypes authTypes = new AuthTypes();
 		wait = new WebDriverWait(driver, 30);
 		authTypes.doAuth(driver, testPlan);
-		Thread.sleep(5000);
-		driver.navigate().refresh();
+		Thread.sleep(7000);
+		//driver.navigate().refresh();
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(dataAccessExploreAuthorizedAccess)));
     //	driver.navigate().refresh();
 	//	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(dataAccessExploreAuthorizedAccess)));
@@ -604,22 +606,43 @@ public class QueryBuilderTestPlan extends Testplan {
 
 	
 	
-	public void verifyQueryBuilderByNumericGreaterThan(Reporter reporter) throws Exception {
+	public void verifyQueryResultMaxvalue(Reporter reporter) throws Exception {
 
-		String enterNumberGreater = (String) testPlan.get("NumericValueGreater");
+		String enterNumberGreaterLessMax = (String) testPlan.get("NumericValueGreaterLessthanMax");
+		driver.findElement(By.xpath(dataAccessAuthorizationAccess)).click();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
 				SearchBoxAutocompleteListBoxItems);
 
+		
 		Thread.sleep(3000);
 		Select dropdownByNumeric = new Select(driver
 				.findElement(By.xpath("//select[contains(@class,'form-control value-type-select value-operator')]")));
 		dropdownByNumeric.selectByIndex(2);
 		Thread.sleep(10000);
-		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumberGreater);
+		QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumberGreaterLessMax);
+		Thread.sleep(5000);
 		QueryBuilder.class.newInstance().doRunQuery(driver);
-		Thread.sleep(3000);
-		String patientCountActual = driver.findElement(patientCountValue).getText();
+		Thread.sleep(8000);
+		
+		/*WebElement range=driver.findElement(By.xpath("//div[@class='constrain-row row value-operator-range-row']/div[1]"));
+		String valueRange=range.getText();
+		//WebElement Valuerange=driver.findElement(By.xpath("xpathExpression");
+		
+		System.out.println("valuerangeString is "+valueRange);
+		String MaxValue = valueRange.substring(valueRange.length()-3);
+		int enterNumberGreater=Integer.parseInt(MaxValue)-1;
+		System.out.println("max value is " +enterNumberGreater);
+		String MaxValueLess=String.valueOf(enterNumberGreater); 
+		QueryBuilder.class.newInstance().enterByNumericValue(driver, MaxValueLess);
+		Thread.sleep(5000);
+		QueryBuilder.class.newInstance().doRunQuery(driver);
+		Thread.sleep(5000);
+		
 		System.out.println("patientCountActual is" + patientCountActual);
+		*
+		*/
+		String patientCountActual = driver.findElement(patientCountValue).getText();
 		String patientCountExpected = (String) testPlan.get("PatientCount");
 		System.out.println("patientCountExpected" + patientCountExpected);
 
@@ -1455,6 +1478,39 @@ public void verifyAuthorizedAccessPageDataExport(Reporter reporter)	throws  Exce
 
 }
 
+public void verifyQueryBuilderByNumericGreaterThan(Reporter reporter) throws Exception {
+
+	String enterNumberGreater = (String) testPlan.get("NumericValueGreater");
+	searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
+			SearchBoxAutocompleteListBoxItems);
+
+	Thread.sleep(3000);
+	Select dropdownByNumeric = new Select(driver
+			.findElement(By.xpath("//select[contains(@class,'form-control value-type-select value-operator')]")));
+	dropdownByNumeric.selectByIndex(2);
+	Thread.sleep(10000);
+	QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumberGreater);
+	QueryBuilder.class.newInstance().doRunQuery(driver);
+	Thread.sleep(3000);
+	String patientCountActual = driver.findElement(patientCountValue).getText();
+	System.out.println("patientCountActual is" + patientCountActual);
+	String patientCountExpected = (String) testPlan.get("PatientCount");
+	System.out.println("patientCountExpected" + patientCountExpected);
+
+	if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
+
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query result by numeric greater  than is working fine----------------------------");
+
+	} else {
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query result by numeric greater than has failed..issue----------------------------");
+	}
+
+	driver.navigate().refresh();
+}
 
 public void verifyAuthorizedAccessdefaultNoExportButton(Reporter reporter)	throws  Exception  {
 	driver.findElement(By.xpath(dataAccess)).click();
@@ -1581,7 +1637,7 @@ public void verifyQueryBuilderRestrictByValue(Reporter reporter) throws Exceptio
 		 * 
 		 * 
 		 */
-
+		
 		// driver.navigate().refresh();
 	}
 

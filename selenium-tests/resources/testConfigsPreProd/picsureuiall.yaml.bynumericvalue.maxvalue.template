@@ -1,0 +1,15 @@
+ name: Verify that by numeric value greater than works fine.
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: firefox
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ success: patientcountsubset1
+ successvalue: 46633
+ expected: pass
+ SearchTerm: "triglycerides"
+ TextToSelect: "age at measurement of triglycerides_1"
+ PatientCount: 1
+ NumericValueGreaterLessthanMax: 99

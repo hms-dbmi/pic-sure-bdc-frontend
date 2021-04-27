@@ -279,6 +279,11 @@ public abstract class Testplan {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void verifyQueryResultMaxvalue(Reporter reporter) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

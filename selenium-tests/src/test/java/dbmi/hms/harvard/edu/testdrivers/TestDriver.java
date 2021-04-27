@@ -492,8 +492,20 @@ public class TestDriver {
 
 	}
 
+	
+	@Test (priority=33)
+	public void verify_queryresult_nearmaxvalue() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify query result around max value  is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.queryresult.nearmaxvalue"));
+		testPlan.verifyQueryResultMaxvalue(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify that verify query result around max value  is completed-------------------------");
 
-@Test (priority=33)
+	}
+
+
+//@Test (priority=34)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");
