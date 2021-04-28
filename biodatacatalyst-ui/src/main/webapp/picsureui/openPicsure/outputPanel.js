@@ -5,6 +5,10 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 	var studyConcepts = [];
 	var conceptsLoaded = $.Deferred();
 
+	var generateStudiesInfoKey = function(abbreviatedName, studyIdentifier) {
+		return abbreviatedName + ' (' + studyIdentifier + ')';
+	}
+
 	var loadConcepts = function() {
 		$.ajax({
 			url: window.location.origin + "/picsure/search/" + JSON.parse(settings).openAccessResourceId,
@@ -15,6 +19,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			success:(function(response) {
 				// copy the study_concepts to the study records
 				studyConcepts = _.allKeys(response.results.phenotypes);
+				// i.e \\_studies_consents\\ORCHID\\
+				// not \\_studies_consents\\ORCHID\\consent-group\\ or \\_studies_consents\\
 				let studyKeys = _.filter(studyConcepts, x => {
 					return x.split("\\").length === 4;
 				});
@@ -25,7 +31,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 
 				studiesData = JSON.parse(studiesData).bio_data_catalyst;
 				studiesData.forEach((studyRecord) => {
-					var temp = studiesInfo[studyRecord.abbreviated_name + ' (' + studyRecord.study_identifier + ')'];
+					var temp = studiesInfo[generateStudiesInfoKey(studyRecord.abbreviated_name, studyRecord.study_identifier)];
 					if (temp) {
 						temp.name = studyRecord.full_study_name;
 						temp.study_type = studyRecord.study_type;
@@ -45,7 +51,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				});
 
 				for (var code in studiesInfo) {
-					studiesInfo[code].study_concept = _.find(studyConcepts, (x) => { return x.indexOf(studiesInfo[code].identifier) > -1 });
+					studiesInfo[code].study_concept = "\\_studies_consents\\" + code + "\\";
 				}
 				conceptsLoaded.resolve();
 			}).bind(this),
@@ -119,6 +125,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				for (var x in studiesInfo) {
 					var cnt = response[studiesInfo[x].study_concept];
 					if (cnt) {
+						// todo: this logic is no longer correct
 						if (cnt.indexOf("<") > -1) {
 							studiesInfo[x].study_matches = cnt;
 							cnt = 1;
@@ -151,6 +158,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				for (var code in studiesInfo) {
 					studiesInfo[code].consents.forEach((x) => {
 						// todo: remove consents if not found? or 0?
+						// yes
 						x.study_matches = response["\\_studies_consents\\" + x.abbreviated_name + ' (' + x.study_identifier + ')' + "\\" + x.short_title + "\\"];
 					});
 				}
