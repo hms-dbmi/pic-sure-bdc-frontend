@@ -1,7 +1,61 @@
 define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
 		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData, transportErrors){
 
-    var processAccessablity = function() {
+	var studiesInfo = {};
+	var studyConcepts = [];
+	var conceptsLoaded = $.Deferred();
+
+	var loadConcepts = function() {
+		$.ajax({
+			url: window.location.origin + "/picsure/search/" + JSON.parse(settings).openAccessResourceId,
+			type: 'POST',
+			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+			contentType: 'application/json',
+			data: JSON.stringify({"query":"\\_studies_consents\\"}),
+			success:(function(response) {
+				// copy the study_concepts to the study records
+				studyConcepts = _.allKeys(response.results.phenotypes);
+				let studyKeys = _.filter(studyConcepts, x => {
+					return x.split("\\").length === 4;
+				});
+				_.forEach(studyKeys, x => {
+					let studyName = x.split("\\")[2];
+					studiesInfo[studyName] = {code:studyName, name:"", study_matches: 0, consents:[]}
+				})
+
+				studiesData = JSON.parse(studiesData).bio_data_catalyst;
+				studiesData.forEach((studyRecord) => {
+					var temp = studiesInfo[studyRecord.abbreviated_name + ' (' + studyRecord.study_identifier + ')'];
+					if (temp) {
+						temp.name = studyRecord.full_study_name;
+						temp.study_type = studyRecord.study_type;
+						temp.request_access = studyRecord.request_access;
+						temp.identifier = studyRecord.study_identifier;
+
+						studyRecord.study_matches = studyRecord.clinical_sample_size;
+						var t = studyRecord.consent_group_name;
+						if (t.lastIndexOf('(') === -1 && t.length > 10) {
+							studyRecord.short_title = '(withdrawn)';
+						} else {
+							studyRecord.short_title = t.substring(t.lastIndexOf("(")).replace('(','').replace(')','');
+							temp.study_matches += studyRecord.clinical_sample_size;
+						}
+						if (studyRecord.consent_group_code !== 'c0') temp.consents.push(studyRecord);
+					}
+				});
+
+				for (var code in studiesInfo) {
+					studiesInfo[code].study_concept = _.find(studyConcepts, (x) => { return x.indexOf(studiesInfo[code].identifier) > -1 });
+				}
+				conceptsLoaded.resolve();
+			}).bind(this),
+			error: (function(response) {
+				alert("Could not get list of studies!");
+			}).bind(this)
+		});
+	}
+
+	var processAccessablity = function() {
         // extract the consent identifiers that user has access to from the query template
         var session = JSON.parse(sessionStorage.getItem("session"));
         var validConsents = [];
@@ -21,29 +75,95 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
         }
     }
 
-
-	
-	// build the studies display info
-	studiesData = JSON.parse(studiesData).bio_data_catalyst;
-	var studiesInfo = {};
-	_.uniq(studiesData.map((x) => { return x.abbreviated_name + ' (' + x.study_identifier + ')'; })).forEach((y) => { studiesInfo[y] = {code:y, name:"", study_matches: 0, consents:[]}; });
-	studiesData.forEach((x) => {
-		var temp = studiesInfo[x.abbreviated_name + ' (' + x.study_identifier + ')'];
-		temp.name = x.full_study_name;
-		temp.study_type = x.study_type;
-		temp.request_access = x.request_access;
-		temp.identifier = x.study_identifier;
-
-		x.study_matches = x.clinical_sample_size;
-		var t = x.consent_group_name;
-		if (t.lastIndexOf('(') === -1 && t.length > 10) {
-			x.short_title = '(withdrawn)';
-		} else {
-			x.short_title = t.substring(t.lastIndexOf("(")).replace('(','').replace(')','');
-			temp.study_matches += x.clinical_sample_size;
+    var doUpdate = function(incomingQuery) {
+		// run only one time to handle displaying of our access permissions
+		if (processAccessablity) {
+			processAccessablity();
+			processAccessablity = false;
 		}
-		if (x.consent_group_code !== 'c0') temp.consents.push(x);
-	});
+
+		// clear counts
+		for (var x in studiesInfo) {
+			studiesInfo[x].study_matches = "--";
+		}
+		this.model.set("totalPatients",0);
+		this.model.spinAll();
+		this.render();
+
+		// make safe deep copies of the incoming query so we don't modify it
+		var query = JSON.parse(JSON.stringify(incomingQuery));
+		query.resourceCredentials = {};
+		query.query.expectedResultType="COUNT";
+		this.model.set("query", query);
+
+		// query for the studies counts
+		var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
+		queryStudies.query.crossCountFields = studyConcepts;
+		queryStudies.query.expectedResultType="CROSS_COUNT";
+
+		$.ajax({
+			url: window.location.origin + "/picsure/query/sync",
+			type: 'POST',
+			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+			contentType: 'application/json',
+			data: JSON.stringify(queryStudies),
+			success: (function(response) {
+				this.model.set("totalPatients", response["\\_studies_consents\\"]);
+				this.model.set("spinning", false);
+				this.model.set("queryRan", true);
+				this.render();
+
+				// populate counts and sort
+				var sorted_found = [];
+				var sorted_unfound = [];
+				for (var x in studiesInfo) {
+					var cnt = response[studiesInfo[x].study_concept];
+					if (cnt) {
+						if (cnt.indexOf("<") > -1) {
+							studiesInfo[x].study_matches = cnt;
+							cnt = 1;
+						} else {
+							studiesInfo[x].study_matches = cnt;
+						}
+						if (cnt > 0) {
+							sorted_found.push(studiesInfo[x]);
+						} else {
+							sorted_unfound.push(studiesInfo[x]);
+						}
+					}
+				}
+
+				// perform additional sort
+				var func_sort = function(a,b) {
+					let codeComparison = a.code.localeCompare(b.code, undefined, {sensitivity: 'base'});
+					if (codeComparison === 0) {
+						return a.identifier.localeCompare(b.identifier, undefined, {sensitivity: 'base'});
+					}
+					return codeComparison;
+				};
+				sorted_found.sort(func_sort);
+				sorted_unfound.sort(func_sort);
+				var sorted_final = sorted_found.concat(sorted_unfound);
+
+				this.model.set("studies",sorted_final);
+
+				// populate the study consent counts
+				for (var code in studiesInfo) {
+					studiesInfo[code].consents.forEach((x) => {
+						// todo: remove consents if not found? or 0?
+						x.study_matches = response["\\_studies_consents\\" + x.abbreviated_name + ' (' + x.study_identifier + ')' + "\\" + x.short_title + "\\"];
+					});
+				}
+				this.render();
+			}).bind(this),
+			error: (function(response) {
+				for (var x in studiesInfo) {
+					studiesInfo[x].study_matches = "(error)";
+				}
+				this.render();
+			}).bind(this)
+		});
+	}
 
     var outputModelDefaults = {
 			totalPatients : 0,
@@ -80,6 +200,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					return count;
 				}
 			});
+			loadConcepts();
 		},
 		events:{
 			"click .study-glyph": "toggleConsentGroup",
@@ -119,160 +240,14 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
         },
 		totalCount: 0,
 		tagName: "div",
-		update: function(incomingQuery){
-
-		    // run only one time to handle displaying of our access permissions
-		    if (processAccessablity) {
-		        processAccessablity();
-		        processAccessablity = false;
-            }
-
-			// clear counts
-			for (var x in studiesInfo) {
-				studiesInfo[x].study_matches = "--";
+		update: function(incomingQuery) {
+			if (conceptsLoaded.state() === 'resolved') {
+				doUpdate.bind(this)(incomingQuery);
+			} else if (conceptsLoaded.state() === 'pending') {
+				conceptsLoaded.done(doUpdate.bind(this, incomingQuery));
+			} else {
+				// ???
 			}
-			this.model.set("totalPatients",0);
-			this.model.spinAll();
-			this.render();
-
-			// make safe deep copies of the incoming query so we don't modify it
-			var query = JSON.parse(JSON.stringify(incomingQuery));
-			query.resourceCredentials = {};
-			query.query.expectedResultType="COUNT";
-			this.model.set("query", query);
-
-			// query for total count
-			$.ajax({
-			 	url: window.location.origin + "/picsure/query/sync",
-			 	type: 'POST',
-			 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-			 	contentType: 'application/json',
-			 	data: JSON.stringify(query),
-				dataType: "text",
-			 	success: (function(response){
-					this.model.set("totalPatients", response);
-					this.model.set("spinning", false);
-					this.model.set("queryRan", true);
-					this.render();
-			 	}).bind(this),
-				error: function(response, message) {
-					transportErrors.handleAll(response, message);
-					this.model.set("spinning", false);
-					this.model.set("queryRan", true);
-					this.render();
-				}
-			});
-
-
-			// get a list of all study concept paths
-			$.ajax({
-			 	url: window.location.origin + "/picsure/search/" + incomingQuery.resourceUUID,
-			 	type: 'POST',
-			 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-			 	contentType: 'application/json',
-			 	data: JSON.stringify({"query":"\\_studies\\"}),
-				success:(function(response) {
-					// copy the study_concepts to the study records
-					var studyConcepts = _.allKeys(response.results.phenotypes);
-					for (var code in studiesInfo) {
-						studiesInfo[code].study_concept = _.find(studyConcepts, (x) => { return x.indexOf(studiesInfo[code].identifier) > -1 });
-					}
-
-					// query for the studies counts
-					var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
-					queryStudies.query.crossCountFields = _.allKeys(response.results.phenotypes);
-					queryStudies.query.expectedResultType="CROSS_COUNT";
-
-					$.ajax({
-					 	url: window.location.origin + "/picsure/query/sync",
-			 			type: 'POST',
-					 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-					 	contentType: 'application/json',
-					 	data: JSON.stringify(queryStudies),
-						success: (function(response) {
-							// populate counts and sort
-							var sorted_found = [];
-							var sorted_unfound = [];
-							for (var x in studiesInfo) {
-								var cnt = response[studiesInfo[x].study_concept];
-								if (cnt.indexOf("<") > -1) {
-									studiesInfo[x].study_matches = cnt;
-									cnt = 1;
-								} else {
-									studiesInfo[x].study_matches = cnt;
-								}
-								if (cnt > 0) {
-									sorted_found.push(studiesInfo[x]);
-								} else {
-									sorted_unfound.push(studiesInfo[x]);
-								}
-							}
-
-							// perform additional sort
-							var func_sort = function(a,b) { return a.code.localeCompare(b.code); };
-							sorted_found = _.sortBy(sorted_found, func_sort);
-							sorted_unfound = _.sortBy(sorted_unfound, func_sort);
-							var sorted_final = sorted_found.concat(sorted_unfound);
-
-							this.model.set("studies",sorted_final);
-							this.render();
-						}).bind(this),
-						error: (function(response) {
-							for (var x in studiesInfo) {
-								studiesInfo[x].study_matches = "(error)";
-							}
-							this.render();
-						}).bind(this)
-					});
-
-				}).bind(this),
-				error: (function(response) {
-					alert("Could not get list of studies!");
-				}).bind(this)
-			});
-
-
-
-			// get a list of all _study_consent concept paths
-			var study_consent_concepts = [];
-			for (var code in studiesInfo) {
-				studiesInfo[code].consents.forEach((x) => {
-					study_consent_concepts.push("\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\");
-				});
-			}
-
-			// query for the studies consents counts
-			var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
-			queryStudies.query.crossCountFields = study_consent_concepts;
-			queryStudies.query.expectedResultType="CROSS_COUNT";
-
-			$.ajax({
-				url: window.location.origin + "/picsure/query/sync",
-				type: 'POST',
-				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-				contentType: 'application/json',
-				data: JSON.stringify(queryStudies),
-				success: (function(response) {
-					// populate the study consent counts
-					for (var code in studiesInfo) {
-						studiesInfo[code].consents.forEach((x) => {
-							x.study_matches = response["\\_studies_consents\\" + x.study_identifier + "." + x.consent_group_code + "\\"];
-						});
-					}
-					this.render();
-				}).bind(this),
-				error: (function(response) {
-					for (var code in studiesInfo) {
-						studiesInfo[code].consents.forEach((x) => {
-							x.study_matches = "(error)";
-						});
-					}
-					this.render();
-				}).bind(this)
-			});
-
-
-
 		},
 		render: function(){
 			var context = this.model.toJSON();
