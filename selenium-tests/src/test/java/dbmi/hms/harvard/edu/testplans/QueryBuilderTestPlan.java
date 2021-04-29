@@ -1541,6 +1541,46 @@ public void verifyAuthorizedAccessdefaultNoExportButton(Reporter reporter)	throw
 
 }
 
+public void verifyOpenAccesspatientcountdiplsyaforQueryResultBetnOnetoNine(Reporter reporter) throws Exception, IllegalAccessException {
+	
+	driver.findElement(By.xpath(dataAccess)).click();
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	driver.findElement(By.xpath(dataAccessExploreOpenAccess)).click();
+	//driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	String enterNumberGreater = (String) testPlan.get("NumericValueGreater");
+	searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
+			SearchBoxAutocompleteListBoxItems);
+
+	Thread.sleep(3000);
+	Select dropdownByNumeric = new Select(driver
+			.findElement(By.xpath("//select[contains(@class,'form-control value-type-select value-operator')]")));
+	dropdownByNumeric.selectByIndex(2);
+	Thread.sleep(10000);
+	QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumberGreater);
+	QueryBuilder.class.newInstance().doRunQuery(driver);
+	Thread.sleep(3000);
+	String patientCountActual = driver.findElement(patientCountValue).getText();
+	System.out.println("patientCountActual is" + patientCountActual);
+	String patientCountExpected = (String) testPlan.get("PatientCount");
+	System.out.println("patientCountExpected" + patientCountExpected);
+
+	if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
+
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query result by numeric greater  than is working fine----------------------------");
+
+	} else {
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query result by numeric greater than has failed..issue----------------------------");
+	}
+
+	driver.navigate().refresh();
+	
+}
+
+
 
 
 

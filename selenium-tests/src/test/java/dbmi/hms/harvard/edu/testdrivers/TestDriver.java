@@ -504,8 +504,18 @@ public class TestDriver {
 
 	}
 
+	@Test (priority=34)
+	public void verify_queryresult_patientcount_lessthanten() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify if query result is between 1 to 9 it displays < 10  is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.openaccess.patientcountlessthan.tenfeature"));
+		testPlan.verifyOpenAccesspatientcountdiplsyaforQueryResultBetnOnetoNine(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify if query result is between 1 to 9 it displays < 10 is completed-------------------------");
 
-//@Test (priority=34)
+	}
+
+@Test (priority=35)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");

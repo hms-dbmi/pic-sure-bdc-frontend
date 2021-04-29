@@ -1,0 +1,11 @@
+ name: Verify if query result is between 1 to 9, patient count displayed as "< 10"
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ browser: firefox
+ url: http://34.202.235.238/
+ success: patientcountsubset1
+ successvalue: 21210
+ expected: pass
+ SearchTerm: "triglycerides"
+ TextToSelect: "age at measurement of triglycerides_1"
+ PatientCount: "< 10"
+ NumericValueGreater: 97
