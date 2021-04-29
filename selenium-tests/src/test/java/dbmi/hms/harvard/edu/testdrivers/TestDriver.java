@@ -117,7 +117,7 @@ public class TestDriver {
 
 	}
 
-@Test (priority=3)
+	@Test (priority=3)
 
 	public void verify_QueryBuilder_ByNoValue() throws Exception {
 		LOGGER.info(
@@ -515,7 +515,19 @@ public class TestDriver {
 
 	}
 
-@Test (priority=35)
+	
+	@Test (priority=35)
+	public void verify_granted_openaccess() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.granted.functionality.openaccess"));
+		testPlan.verifyGrantedFunctionalityOnOpenAccess(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page is completed-------------------------");
+
+	}
+
+@Test (priority=36)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");

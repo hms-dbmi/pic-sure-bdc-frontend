@@ -1582,6 +1582,43 @@ public void verifyOpenAccesspatientcountdiplsyaforQueryResultBetnOnetoNine(Repor
 
 
 
+public void verifyGrantedFunctionalityOnOpenAccess(Reporter reporter) throws Exception, IllegalAccessException {
+	
+	driver.findElement(By.xpath(dataAccess)).click();
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	driver.findElement(By.xpath(dataAccessExploreOpenAccess)).click();
+	//driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	Thread.sleep(6000);
+	driver.findElement(By.xpath("//div[@data-study='phs002299']")).click();
+	
+	
+	try {
+		Assert.assertTrue(driver
+				.findElements(By.xpath("//a[@class='col btn btn-default header-btn authorized-access-visible header-navigation active']"))
+				.size() != 0, "clicking on granted button opens AuthorizatonAccess");
+		// span[contains(text(),'with eRA Commons')]
+		
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		LOGGER.info("---------------------------clicking on granted button on openaccess opens AuthorizatonAccess----------------------------");
+
+	}
+
+	catch (AssertionError error) {
+		LOGGER.error(error);
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+		LOGGER.info("---------------------------clicking on granted button on openaccess does not open AuthorizatonAccess----------------------------");
+
+	}
+	
+    
+
+	driver.navigate().refresh();
+	
+}
+
+
+
+
 
 
 public void verifyQueryBuilderRestrictByValue(Reporter reporter) throws Exception {

@@ -289,6 +289,11 @@ public abstract class Testplan {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void verifyGrantedFunctionalityOnOpenAccess(Reporter reporter) throws Exception, IllegalAccessException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	
