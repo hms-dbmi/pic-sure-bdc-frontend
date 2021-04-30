@@ -114,7 +114,13 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			contentType: 'application/json',
 			data: JSON.stringify(queryStudies),
 			success: (function(response) {
-				this.model.set("totalPatients", response["\\_studies_consents\\"]);
+				let totalPatients = response["\\_studies_consents\\"];
+				if (totalPatients.includes(" \u00B1")) {
+					this.model.set("totalPatients", totalPatients.split(" ")[0]);
+					this.model.set("totalPatientsSuffix", totalPatients.split(" ")[1]);
+				} else {
+					this.model.set("totalPatients", totalPatients);
+				}
 				this.model.set("spinning", false);
 				this.model.set("queryRan", true);
 				this.render();
@@ -125,14 +131,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				for (var x in studiesInfo) {
 					var cnt = response[studiesInfo[x].study_concept];
 					if (cnt) {
-						// todo: this logic is no longer correct
-						if (cnt.indexOf("<") > -1) {
-							studiesInfo[x].study_matches = cnt;
-							cnt = 1;
-						} else {
-							studiesInfo[x].study_matches = cnt;
-						}
-						if (cnt > 0) {
+						studiesInfo[x].study_matches = cnt;
+						if (cnt.includes("<") || cnt.includes("\u00B1") || cnt > 0) {
 							sorted_found.push(studiesInfo[x]);
 						} else {
 							sorted_unfound.push(studiesInfo[x]);
@@ -201,13 +201,6 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 	var outputView = BB.View.extend({
 		initialize: function(){
 			this.template = HBS.compile(outputTemplate);
-			HBS.registerHelper("outputPanel_obfuscate", function(count){
-				if(count < 10 && false){
-					return "< 10";
-				} else {
-					return count;
-				}
-			});
 			loadConcepts();
 		},
 		events:{
