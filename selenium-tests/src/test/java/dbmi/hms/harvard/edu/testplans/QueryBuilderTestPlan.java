@@ -71,7 +71,7 @@ public class QueryBuilderTestPlan extends Testplan {
 	private String SearchBoxField ="//input[@placeholder='Search...']";
 	private By SearchBox = By.xpath(".//*[@id='filter-list']/div/div/div[1]/div[1]/div[2]/input");
 	
-	private By StudiesTab = By.xpath("//li[@data-toggle='tooltip']");
+	private By StudiesTab = By.xpath("//li[@data-toggle='tooltip']/a");
 	private By SearchBoxTwo = By.xpath(".//*[@id='filter-list']/div[2]/div/div[1]/div[1]/div[2]/input");
 	private By SearchBoxAutocompleteListBox = By
 			.xpath("//div[@class='tab-pane active']//div[@class='search-result-list']");
@@ -1619,6 +1619,45 @@ public void verifyGrantedFunctionalityOnOpenAccess(Reporter reporter) throws Exc
 
 
 
+public void verifyHoverOverSubjectTooltip(Reporter reporter) throws Exception {
+
+	String TextToSearch = (String) testPlan.get("SearchTerm");
+	String ExpectedTooltip=(String) testPlan.get("ExpectedTooltip");
+	
+	driver.findElement(By.xpath(dataAccess)).click();
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	driver.findElement(By.xpath(dataAccessExploreAuthorizedAccess)).click();
+//	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	wait.until(ExpectedConditions.presenceOfElementLocated(SearchBox));
+	WebElement textBoxElement = driver.findElement(SearchBox);
+	textBoxElement.sendKeys(TextToSearch);
+	String selectAll = Keys.chord(Keys.ENTER, "");
+	driver.findElement(SearchBox).sendKeys(selectAll);
+	Thread.sleep(4000);
+	List<WebElement> ActualAuthorizedStudy = driver.findElements(StudiesTab);
+	WebElement ele = ActualAuthorizedStudy.get(1);
+	String ActualToolTip=ele.getAttribute("title");
+	
+	if (ActualToolTip.equalsIgnoreCase(ExpectedTooltip)) {
+
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------The tool tip for subject is displaying in full length----------------------------");
+
+	} else {
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+
+		LOGGER.info(
+				"---------------------------The tool tip for subject is displaying is having issue----------------------------");
+
+	}
+
+	driver.navigate().refresh();
+
+	//System.out.println("Value of second study tab is" +ActualAuthorizedStudy.get(0);
+	
+//	System.out.println("Value of  study tab is" +FirstElement);
+}
 
 
 public void verifyQueryBuilderRestrictByValue(Reporter reporter) throws Exception {

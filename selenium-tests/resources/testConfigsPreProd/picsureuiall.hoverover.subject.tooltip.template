@@ -1,0 +1,6 @@
+ name: Verify that hover over subject tab displays tool tip having full name of subject.   
+ #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
+ url: http://34.202.235.238/
+ expected: pass
+ SearchTerm: gender
+ ExpectedTooltip: Genetic_Epidemiology_of_COPD_COPDGene_Funded_by_the_National_Heart_Lung_and_Blood_Institute_phs000179_

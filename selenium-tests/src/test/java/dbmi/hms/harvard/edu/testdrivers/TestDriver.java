@@ -525,9 +525,23 @@ public class TestDriver {
 		LOGGER.info(
 				"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page is completed-------------------------");
 
-	}
+	}	
 
-@Test (priority=36)
+	
+	@Test (priority=36)
+	public void verify_subject_tooltip() throws Exception {
+		LOGGER.info(
+				"---------------------------------The test case verify hovering over the study displays tool tip with the full name is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.subject.hoverover.tooltip"));
+		testPlan.verifyHoverOverSubjectTooltip(reporter);
+		LOGGER.info(
+				"---------------------------------The test case verify hovering over the study displays tool tip with the full name running is completed-------------------------");
+
+	}	
+
+	
+	
+@Test (priority=37)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");

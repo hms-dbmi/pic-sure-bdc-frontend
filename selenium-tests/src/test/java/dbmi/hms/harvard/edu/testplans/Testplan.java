@@ -294,6 +294,11 @@ public abstract class Testplan {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void verifyHoverOverSubjectTooltip(Reporter reporter) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	
