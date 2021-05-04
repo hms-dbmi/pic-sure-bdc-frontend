@@ -79,12 +79,31 @@
     margin-left: 0px;
     margin-right: 0px;
   }
+
+    .total-patients-count {
+        font-size: 5em;
+    }
+    .total-patients-suffix {
+        font-size: 2.5em;
+    }
+    #patient-count {
+        margin-bottom: 10px;
+    }
+    .total-participants-label {
+        margin-bottom: 10px;
+    }
+
 </style>
 <div>
 <div id="patient-count-box">
-	<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
-	<span id="patient-count" class="blue center large">{{#if queryRan}}{{#if countDisplayOverride}}{{> (countDisplayOverride) totalPatients}}{{else}}{{outputPanel_obfuscate totalPatients}}{{/if}}{{else}}-{{/if}}</span><br></br>
-	<span class="center medium">Total Participants</span><br></br>
+	<div class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</div>
+	<div id="patient-count" class="blue center">
+        {{#if queryRan}}
+            <span class="total-patients-count">{{totalPatients}}</span>
+            <span class="total-patients-suffix">{{totalPatientsSuffix}}</span>
+        {{/if}}
+    </div>
+	<div class="center medium total-participants-label">Total Participants</div>
 	<div class="container" id="pic-sure-instances">
 		<div id="select-spinner"></div>
 	</div>
