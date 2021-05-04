@@ -120,6 +120,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					this.model.set("totalPatientsSuffix", totalPatients.split(" ")[1]);
 				} else {
 					this.model.set("totalPatients", totalPatients);
+					this.model.set("totalPatientsSuffix", "");
 				}
 				this.model.set("spinning", false);
 				this.model.set("queryRan", true);
