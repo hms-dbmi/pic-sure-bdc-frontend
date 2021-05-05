@@ -10,7 +10,26 @@ define(["handlebars", "backbone"], function(HBS, BB){
 		 * This is a function that if defined replaces the normal render function
 		 * from outputPanel.
 		 */
-		renderOverride : undefined,
+		renderOverride : function(result){
+			var context = this.model.toJSON();
+			this.$el.html(this.template(Object.assign({},context , this.overrides)));
+			
+			if(result){
+				//hide 'select data' button if this is the first query or if no patients were filtered out 
+				if(!this.initialQueryCount || this.initialQueryCount == parseInt(result)){
+					this.initialQueryCount = parseInt(result);
+				}else if(parseInt(result) > 0){
+					$("#select-btn", this.$el).css("display", "block");
+					//have to rebind this function to render the data selection, so it only shows after a click.
+					if(this.dataSelection){
+						$("#select-btn", this.$el).click(function() {
+							this.dataSelection.setElement($("#concept-tree-div",this.$el));
+							this.dataSelection.render();
+						}.bind(this));
+					}
+				}
+			}
+		},
 		/*
 		 * If you want to replace the entire Backbone.js View that is used for
 		 * the output panel, define it here.
@@ -55,9 +74,12 @@ define(["handlebars", "backbone"], function(HBS, BB){
 				}).length == 0 &&  
 				_.filter(_.keys(query.query.numericFilters), function(concept) {
 				    return concept.includes(parsedSettings.harmonizedPath);
-				}).length  == 0 &&  
+				}).length  == 0 &&
 				_.filter(query.query.fields, function(concept) {
-				    return concept.includes(parsedSettings.harmonizedPath);
+					return concept.includes(parsedSettings.harmonizedPath);
+				}).length  == 0 &&
+				_.filter(query.query.requiredFields, function(concept) {
+					return concept.includes(parsedSettings.harmonizedPath);
 				}).length  == 0
 			){
 //				console.log("removing harmonized consents");

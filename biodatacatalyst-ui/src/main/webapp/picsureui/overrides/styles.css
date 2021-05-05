@@ -85,6 +85,14 @@
     position: relative;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
+
+#select-btn {
+	display: none;
+}
 
 /* <StudyAccess styles> */
 #infgfx {
@@ -197,28 +205,23 @@
     border-bottom: 1px solid #aaa;
 }
 
-#studies-access table thead tr th,
-#studies-access table tbody tr td:nth-child(2),
-#studies-access table tbody tr td:nth-child(3),
-#studies-access table tbody tr td:nth-child(6),
-#studies-access table tbody tr td:nth-child(7),
-#studies-access table tbody tr td:nth-child(8),
-#studies-access table tbody tr td:nth-child(9),
-#studies-access table tbody tr td:nth-child(10),
-#studies-access table tbody tr td:nth-child(11) {
+#studies-access table tr > :nth-child(2),
+#studies-access table tr > :nth-child(3),
+#studies-access table tr > :nth-child(6),
+#studies-access table tr > :nth-child(7),
+#studies-access table tr > :nth-child(8),
+#studies-access table tr > :nth-child(9),
+#studies-access table tr > :nth-child(10),
+#studies-access table tr > :nth-child(11) {
     text-align: center;
 }
 
-#studies-access table thead tr th:nth-child(4) {
-    text-align: left;
-}
-
-#studies-access table thead tr th:nth-child(3),
-#studies-access table thead tr th:nth-child(5),
-#studies-access table thead tr th:nth-child(6),
-#studies-access table thead tr th:nth-child(7),
-#studies-access table thead tr th:nth-child(8),
-#studies-access table tbody tr td:nth-child(10) {
+#studies-access table tr > :nth-child(3),
+#studies-access table tr > :nth-child(5),
+#studies-access table tr > :nth-child(6),
+#studies-access table tr > :nth-child(7),
+#studies-access table tr > :nth-child(8),
+#studies-access table tr > :nth-child(10) {
     width: 1%;
 }
 
@@ -228,6 +231,11 @@
 
 .btn-blue {
     background-color: #1a568c;
+}
+
+.btn-grey {
+    color: #333;
+    background-color: #f4f4f6;
 }
 
 .study-lst-btn1, .study-lst-btn2 {
