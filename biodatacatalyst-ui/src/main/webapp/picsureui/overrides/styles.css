@@ -253,3 +253,6 @@
 }
 /* </StudyAccess styles> */
 
+.search-help-modal h5 {
+    font-weight: bold;
+}
