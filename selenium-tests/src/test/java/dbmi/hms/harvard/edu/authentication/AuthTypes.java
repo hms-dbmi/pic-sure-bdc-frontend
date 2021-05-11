@@ -18,6 +18,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 
 public class AuthTypes {
 	private static WebDriverWait wait;
@@ -52,7 +53,7 @@ public class AuthTypes {
 		}
 	}
 
-	private void doEraCommonLogin(WebDriver driver, Map testPlan) throws InterruptedException {
+	private void doEraCommonLogin(WebDriver driver, Map testPlan) throws InterruptedException, IOException {
 		
 try {
 			
@@ -65,20 +66,33 @@ try {
 				
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 40);
-			
+			File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'eRA Commons')]"))).click();
+			
+			Thread.sleep(5000);
+			FileUtils.copyFile(file, new File("screensusername.png"));
 			
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(usernamebox))).sendKeys(username);
 			
+			FileUtils.copyFile(file, new File("screenpassword.png"));
+					
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(passwordbox))).sendKeys(password);
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(signinButton))).click();
 			
-			// Javascript executor
+			
+			/*// Javascript executor
 		      ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
 		      
 		      wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
+			*/
 			
+			Actions actions = new Actions(driver);
+
+		      // Scroll Down using Actions class
+		      actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+		    
+		      wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 			
 			
