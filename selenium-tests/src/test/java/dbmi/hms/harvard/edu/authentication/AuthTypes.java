@@ -17,6 +17,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 
 public class AuthTypes {
 	private static WebDriverWait wait;
@@ -60,6 +61,7 @@ try {
 			String passwordbox = "//input[@id='PASSWORD']";
 			String signinButton = "//button[@type='submit']";
 			String yesAuthorize ="//button[@id='yes']";
+			String IAgree ="//input[@name='_eventId_proceed']";
 				
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 40);
@@ -71,6 +73,11 @@ try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(passwordbox))).sendKeys(password);
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(signinButton))).click();
+			
+			// Javascript executor
+		      ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		      
+		      wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 			
