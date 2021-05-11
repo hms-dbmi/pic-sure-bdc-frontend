@@ -67,8 +67,9 @@ try {
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 40);
 			File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'eRA Commons')]"))).click();
+			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'eRA Commons')]"))).click();
 			
+			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("span.fence-inner-span"))).click();
 			Thread.sleep(5000);
 			FileUtils.copyFile(file, new File("screensusername.png"));
 			
