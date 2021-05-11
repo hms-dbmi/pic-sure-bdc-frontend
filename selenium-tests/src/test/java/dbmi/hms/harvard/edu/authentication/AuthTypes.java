@@ -13,11 +13,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.JavascriptExecutor;
+//import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 
 public class AuthTypes {
@@ -80,20 +79,12 @@ try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(passwordbox))).sendKeys(password);
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(signinButton))).click();
-			
-			
-			/*// Javascript executor
-		      ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
-		      
-		      wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
-			*/
-			
+						
 			Actions actions = new Actions(driver);
-
-		      // Scroll Down using Actions class
-		      actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+	    
+			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
 		    
-		      wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
+		     wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 			
 			
