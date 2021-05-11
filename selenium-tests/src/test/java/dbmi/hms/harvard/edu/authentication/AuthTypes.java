@@ -66,10 +66,23 @@ try {
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 40);
 			File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+			
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class='fence-login-btn']"))).click();
+			
+			/*Actions era = new Actions(driver);
+		    WebElement element = driver.findElement(By.xpath("//a[@class='fence-login-btn']"));
+		    era.click(element);
+			Thread.sleep(5000);*/
+			
+					//wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("span.fence-inner-span")));
 			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'eRA Commons')]"))).click();
 			
-			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("span.fence-inner-span"))).click();
-			Thread.sleep(5000);
+			
+			//a[@class='fence-login-btn']
+			
+			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='/docs/configuration']"))).click();
+			//Actions a= new Actions(driver);
+			
 			FileUtils.copyFile(file, new File("screensusername.png"));
 			
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(usernamebox))).sendKeys(username);
