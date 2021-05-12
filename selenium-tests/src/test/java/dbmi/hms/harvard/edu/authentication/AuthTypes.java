@@ -16,8 +16,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.JavascriptExecutor;
-//import org.openqa.selenium.Keys;
+//import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 
 public class AuthTypes {
 	private static WebDriverWait wait;
@@ -69,19 +69,6 @@ try {
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class='fence-login-btn']"))).click();
 			
-			/*Actions era = new Actions(driver);
-		    WebElement element = driver.findElement(By.xpath("//a[@class='fence-login-btn']"));
-		    era.click(element);
-			Thread.sleep(5000);*/
-			
-					//wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("span.fence-inner-span")));
-			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'eRA Commons')]"))).click();
-			
-			
-			//a[@class='fence-login-btn']
-			
-			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='/docs/configuration']"))).click();
-			//Actions a= new Actions(driver);
 			
 			FileUtils.copyFile(file, new File("screensusername.png"));
 			
@@ -95,7 +82,7 @@ try {
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(signinButton))).click();
 						
-		/*	Actions actions = new Actions(driver);
+			/*Actions actions = new Actions(driver);
 	    
 			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
 		*/    
@@ -103,13 +90,14 @@ try {
 		    
 		    File IAgreeScreen = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 				
-		    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		    //((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
 		    FileUtils.copyFile(IAgreeScreen, new File("IAgree.png"));
 		    
 		    
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 					
 			//actions.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).perform();
+
 			
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
