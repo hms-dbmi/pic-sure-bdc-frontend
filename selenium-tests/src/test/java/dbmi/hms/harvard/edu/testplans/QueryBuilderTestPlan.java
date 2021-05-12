@@ -285,16 +285,17 @@ public class QueryBuilderTestPlan extends Testplan {
 
 		}
 		
-	    
+	    //driver.navigate().refresh();
 	}
 
 	public void verifySuccessfulLoginPicsureUILaunch(Reporter reporter) throws InterruptedException, Exception {
 		
 		AuthTypes authTypes = new AuthTypes();
+		//Thread.sleep(5000);
 		wait = new WebDriverWait(driver, 30);
 		authTypes.doAuth(driver, testPlan);
 		Thread.sleep(7000);
-		//driver.navigate().refresh();
+		driver.navigate().refresh();
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(dataAccessExploreAuthorizedAccess)));
     //	driver.navigate().refresh();
 	//	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(dataAccessExploreAuthorizedAccess)));
