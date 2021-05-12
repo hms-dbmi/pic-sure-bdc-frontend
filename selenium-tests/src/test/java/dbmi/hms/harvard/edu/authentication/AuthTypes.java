@@ -16,8 +16,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-//import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.JavascriptExecutor;
+//import org.openqa.selenium.Keys;
 
 public class AuthTypes {
 	private static WebDriverWait wait;
@@ -87,20 +87,29 @@ try {
 			
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(usernamebox))).sendKeys(username);
 			
-			FileUtils.copyFile(file, new File("screenpassword.png"));
+			File filePass = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+			
+			FileUtils.copyFile(filePass, new File("screenpassword.png"));
 					
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(passwordbox))).sendKeys(password);
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(signinButton))).click();
 						
-			Actions actions = new Actions(driver);
+		/*	Actions actions = new Actions(driver);
 	    
 			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+		*/    
+		    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();
 		    
-		     wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();  
+		    File IAgreeScreen = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+				
+		    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		    FileUtils.copyFile(IAgreeScreen, new File("IAgree.png"));
+		    
+		    
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
-			
-			
+					
+			//actions.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).perform();
 			
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
