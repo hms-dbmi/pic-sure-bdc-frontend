@@ -1,5 +1,5 @@
 define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
-		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesData, transportErrors){
+		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesDataJson, transportErrors){
 
 	var studiesInfo = {};
 	var studyConcepts = [];
@@ -29,7 +29,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					studiesInfo[studyName] = {code:studyName, name:"", study_matches: 0, consents:[]}
 				})
 
-				studiesData = JSON.parse(studiesData).bio_data_catalyst;
+				let studiesData = JSON.parse(studiesDataJson).bio_data_catalyst;
 				studiesData.forEach((studyRecord) => {
 					var temp = studiesInfo[generateStudiesInfoKey(studyRecord.abbreviated_name, studyRecord.study_identifier)];
 					if (temp) {
