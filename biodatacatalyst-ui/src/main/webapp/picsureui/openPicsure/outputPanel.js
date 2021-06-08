@@ -1,5 +1,7 @@
-define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs","picSure/resourceMeta", "backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
-		function($, settings, outputTemplate, resourceMeta, BB, HBS, overrides, studiesDataJson, transportErrors){
+define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs",
+		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
+		function($, settings, outputTemplate,
+				 BB, HBS, overrides, studiesDataJson, transportErrors){
 
 	var studiesInfo = {};
 	var studyConcepts = [];
@@ -177,16 +179,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			studies: studiesInfo,
 			resources : {}
 	};
-	
-	_.each(resourceMeta, (resource) => {
-		outputModelDefaults.resources[resource.id] = {
-				id: resource.id,
-				name: resource.name,
-				patientCount: 0,
-				spinnerClasses: "spinner-center ",
-				spinning: false
-		};
-	});
+
 	var outputModel = BB.Model.extend({
 		defaults: outputModelDefaults,
 		spinAll: function(){
@@ -238,7 +231,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
         },
 		totalCount: 0,
 		tagName: "div",
-		update: function(incomingQuery) {
+		runQuery: function(incomingQuery) {
 			if (conceptsLoaded.state() === 'resolved') {
 				doUpdate.bind(this)(incomingQuery);
 			} else if (conceptsLoaded.state() === 'pending') {
