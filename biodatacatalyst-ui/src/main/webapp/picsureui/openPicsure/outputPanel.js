@@ -53,6 +53,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				for (var code in studiesInfo) {
 					studiesInfo[code].study_concept = "\\_studies_consents\\" + code + "\\";
 				}
+
+				processAccessablity();
 				conceptsLoaded.resolve();
 			}).bind(this),
 			error: (function(response) {
@@ -82,12 +84,6 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
     }
 
     var doUpdate = function(incomingQuery) {
-		// run only one time to handle displaying of our access permissions
-		if (processAccessablity) {
-			processAccessablity();
-			processAccessablity = false;
-		}
-
 		// clear counts
 		for (var x in studiesInfo) {
 			studiesInfo[x].study_matches = "--";
