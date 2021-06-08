@@ -1,4 +1,21 @@
-define(["handlebars", "backbone"], function(HBS, BB){
+define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, settings){
+
+	var outputModelDefaults = {
+		totalPatients : 0,
+		spinnerClasses: "spinner-medium spinner-medium-center ",
+		spinning: false,
+		resources : {}
+	};
+
+	/*_.each(resourceMeta, (resource) => {
+		outputModelDefaults.resources[resource.id] = {
+			id: resource.id,
+			name: resource.name,
+			patientCount: 0,
+			spinnerClasses: "spinner-center ",
+			spinning: false
+		};
+	});*/
 	return {
 		/*
 		 * This should be a function that returns the name of a Handlebars partial
@@ -39,7 +56,13 @@ define(["handlebars", "backbone"], function(HBS, BB){
 		 * If you want to replace the entire Backbone.js Model that is used for
 		 * the output panel, define it here.
 		 */
-		modelOverride : undefined,
+		modelOverride : BB.Model.extend({
+			defaults: outputModelDefaults,
+			spinAll: function(){
+				this.set('spinning', true);
+				this.set('queryRan', false);
+			}
+		}),
 		/*
 		 * In case you want to change the update logic, but not the rendering or
 		 * anything else, you can define a function that takes an incomingQuery
@@ -62,28 +85,23 @@ define(["handlebars", "backbone"], function(HBS, BB){
 		 * A function to ensure the correct consents are sent
 		 */
 		updateConsentFilters : function(query, settings) {
-			
-			
-			console.log("update consent filters for query "  + query)
-			
-			parsedSettings = JSON.parse(settings);
-			
+			console.log("update consent filters for query "  + query);			
 			
 			if(_.filter(_.keys(query.query.categoryFilters), function(concept) {
-				    return concept.includes(parsedSettings.harmonizedPath);
+				    return concept.includes(settings.harmonizedPath);
 				}).length == 0 &&  
 				_.filter(_.keys(query.query.numericFilters), function(concept) {
-				    return concept.includes(parsedSettings.harmonizedPath);
+				    return concept.includes(settings.harmonizedPath);
 				}).length  == 0 &&
 				_.filter(query.query.fields, function(concept) {
-					return concept.includes(parsedSettings.harmonizedPath);
+					return concept.includes(settings.harmonizedPath);
 				}).length  == 0 &&
 				_.filter(query.query.requiredFields, function(concept) {
-					return concept.includes(parsedSettings.harmonizedPath);
+					return concept.includes(settings.harmonizedPath);
 				}).length  == 0
 			){
 //				console.log("removing harmonized consents");
-				query.query.categoryFilters[parsedSettings.harmonizedConsentPath] = undefined;
+				query.query.categoryFilters[settings.harmonizedConsentPath] = undefined;
 			}
 			
 			
@@ -99,9 +117,34 @@ define(["handlebars", "backbone"], function(HBS, BB){
 			
 			if(!topmedPresent){
 //				console.log("removing Topmed consents");
-				query.query.categoryFilters[parsedSettings.topmedConsentPath] = undefined;
+				query.query.categoryFilters[settings.topmedConsentPath] = undefined;
 			}
 			
-	    }
+	    },
+
+		/*
+		 * The new hook for overriding all custom query logic
+		 */
+		runQuery: function(defaultOutput, incomingQuery, defaultDataCallback, defaultErrorCallback){
+
+			var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy
+
+			//BDC requires appropriate consent filters to be supplied
+			this.updateConsentFilters(query, settings);
+
+			defaultOutput.model.baseQuery = query;
+			$.ajax({
+				url: window.location.origin + "/picsure/query/sync",
+				type: 'POST',
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				contentType: 'application/json',
+				data: JSON.stringify(query),
+				success: function(response, textStatus, request){
+					defaultDataCallback(response, request.getResponseHeader("resultId"));
+					defaultOutput.render(response);
+				}, //.bind(this),
+				error: defaultErrorCallback
+			});
+		}
 	};
 });
