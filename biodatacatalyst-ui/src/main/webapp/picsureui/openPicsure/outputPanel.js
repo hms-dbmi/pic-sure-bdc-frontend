@@ -231,7 +231,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
         },
 		totalCount: 0,
 		tagName: "div",
-		update: function(incomingQuery) {
+		runQuery: function(incomingQuery) {
 			if (conceptsLoaded.state() === 'resolved') {
 				doUpdate.bind(this)(incomingQuery);
 			} else if (conceptsLoaded.state() === 'pending') {
