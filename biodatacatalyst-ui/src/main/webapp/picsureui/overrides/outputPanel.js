@@ -7,15 +7,6 @@ define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, setting
 		resources : {}
 	};
 
-	/*_.each(resourceMeta, (resource) => {
-		outputModelDefaults.resources[resource.id] = {
-			id: resource.id,
-			name: resource.name,
-			patientCount: 0,
-			spinnerClasses: "spinner-center ",
-			spinning: false
-		};
-	});*/
 	return {
 		/*
 		 * This should be a function that returns the name of a Handlebars partial
