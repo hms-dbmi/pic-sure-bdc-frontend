@@ -1,9 +1,9 @@
 define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json",
         "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner", "text!../settings/settings.json",
-        "overrides/outputPanel"],
+        "overrides/outputPanel", "picSure/search"],
     function($, BB, HBS, studyAccessTemplate, studyAccessConfiguration,
              transportErrors, queryBuilder, picSureSettings, spinner, settingsJson,
-             outputPanelOverrides){
+             outputPanelOverrides, search){
 
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
@@ -111,13 +111,14 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
             render: function() {
                 // get counts for studies and participants
                 this.records.auth_studies_cnt = studyAccess.auth_cnts.studies;
-                this.records.open_studies_cnt = studyAccess.open_cnts.studies;
+                this.records.open_studies_cnt = "-";
                 this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
                 this.records.open_participants_cnt = studyAccess.open_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
                 this.records.authorizedAccess = !!this.authorizedAccess;
 
                 this.$el.html(this.template(this.records));
+
 
                 // query for participant counts of authorized and open access resources
                 if (studyAccess.resources.auth) {
@@ -147,24 +148,31 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 }
 
                 if (studyAccess.resources.open !== false) {
-                    var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
-                    query.query.expectedResultType = "COUNT";
-                    var deferredParticipants = $.ajax({
-                        url: window.location.origin + "/picsure/query/sync",
-                        type: 'POST',
-                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                        contentType: 'application/json',
-                        data: JSON.stringify(query),
-                        success: (function (response) {
-                            $("#open-participants").html(parseInt(response).toLocaleString() + " Participants");
-                        }).bind(this),
-                        statusCode: {
-                            401: function(){
-                            }
+                    search.execute("\\_studies\\",
+                        function(response) {
+                            let openStudies = response.suggestions.length;
+                            $('#open-studies-count').html(openStudies + " Studies");
+
+                            var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
+                            query.query.expectedResultType = "COUNT";
+                            var deferredParticipants = $.ajax({
+                                url: window.location.origin + "/picsure/query/sync",
+                                type: 'POST',
+                                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                                contentType: 'application/json',
+                                data: JSON.stringify(query),
+                                success: (function (response) {
+                                    $("#open-participants").html(parseInt(response).toLocaleString() + " Participants");
+                                }).bind(this),
+                                statusCode: {
+                                    401: function(){
+                                    }
+                                },
+                                error: transportErrors.handleAll
+                            });
+                            spinner.medium(deferredParticipants, "#open-participants-spinner", "spinner2");
                         },
-                        error: transportErrors.handleAll
-                    });
-                    spinner.medium(deferredParticipants, "#open-participants-spinner", "spinner2");
+                        studyAccess.resources.open);
                 }
             }
         });
