@@ -111,7 +111,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
             render: function() {
                 // get counts for studies and participants
                 this.records.auth_studies_cnt = studyAccess.auth_cnts.studies;
-                this.records.open_studies_cnt = "-";
                 this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
                 this.records.open_participants_cnt = studyAccess.open_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
