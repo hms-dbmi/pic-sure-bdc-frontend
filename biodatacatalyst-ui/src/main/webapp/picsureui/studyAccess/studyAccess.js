@@ -1,8 +1,8 @@
 define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json",
-        "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner", "text!../settings/settings.json",
+        "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner", "picSure/settings",
         "overrides/outputPanel", "picSure/search"],
     function($, BB, HBS, studyAccessTemplate, studyAccessConfiguration,
-             transportErrors, queryBuilder, picSureSettings, spinner, settingsJson,
+             transportErrors, queryBuilder, picSureSettings, spinner, settings,
              outputPanelOverrides, search){
 
         var studyAccess = {
@@ -124,7 +124,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                     var query = queryBuilder.createQuery({}, studyAccess.resources.auth);
                     query.query.expectedResultType = "COUNT";
                     if (outputPanelOverrides.updateConsentFilters)
-                        outputPanelOverrides.updateConsentFilters(query, settingsJson);
+                        outputPanelOverrides.updateConsentFilters(query, settings);
                     var deferredParticipants = $.ajax({
                         url: window.location.origin + "/picsure/query/sync",
                         type: 'POST',
