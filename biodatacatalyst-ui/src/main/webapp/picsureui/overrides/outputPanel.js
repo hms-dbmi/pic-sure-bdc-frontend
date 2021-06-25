@@ -1,12 +1,5 @@
 define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, settings){
 
-	var outputModelDefaults = {
-		totalPatients : 0,
-		spinnerClasses: "spinner-medium spinner-medium-center ",
-		spinning: false,
-		resources : {}
-	};
-
 	return {
 		/*
 		 * This should be a function that returns the name of a Handlebars partial
@@ -47,13 +40,7 @@ define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, setting
 		 * If you want to replace the entire Backbone.js Model that is used for
 		 * the output panel, define it here.
 		 */
-		modelOverride : BB.Model.extend({
-			defaults: outputModelDefaults,
-			spinAll: function(){
-				this.set('spinning', true);
-				this.set('queryRan', false);
-			}
-		}),
+		modelOverride : undefined,
 		/*
 		 * In case you want to change the update logic, but not the rendering or
 		 * anything else, you can define a function that takes an incomingQuery
@@ -117,7 +104,7 @@ define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, setting
 		 * The new hook for overriding all custom query logic
 		 */
 		runQuery: function(defaultOutput, incomingQuery, defaultDataCallback, defaultErrorCallback){
-
+			defaultOutput.queryRunning();
 			var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy
 
 			//BDC requires appropriate consent filters to be supplied
