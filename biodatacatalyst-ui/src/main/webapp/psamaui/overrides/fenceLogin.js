@@ -1,4 +1,4 @@
-define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
+define(['picSure/psamaSettings', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
         'common/session', 'picSure/settings', 'common/transportErrors', 'util/notification', 'common/searchParser'],
     function(psamaSettings, $, HBS, loginTemplate,
              session, picSureSettings, transportErrors, notification, searchParser){

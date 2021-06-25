@@ -31,7 +31,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     $('#query-results').append(outputPanelView.$el);
 
                     var query = queryBuilder.generateQuery({}, null, JSON.parse(settings).openAccessResourceId);
-                    outputPanelView.update(query);
+                    outputPanelView.runQuery(query);
 
                     var renderHelpCallback = function() {
                         $('.show-help-modal').click(function() {

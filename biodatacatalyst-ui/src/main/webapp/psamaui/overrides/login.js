@@ -1,4 +1,4 @@
-define(["psamaSettings/settings", "psamaui/overrides/fenceLogin"], function(settings, fenceLogin){
+define(["picSure/psamaSettings", "psamaui/overrides/fenceLogin"], function(settings, fenceLogin){
 	return {
 		/*
 		 * This allows you to build any authorization logic you wish.
