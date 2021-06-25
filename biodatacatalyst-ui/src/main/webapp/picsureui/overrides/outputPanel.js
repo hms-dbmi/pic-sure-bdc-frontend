@@ -120,6 +120,7 @@ define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
 				data: JSON.stringify(query),
 				success: function(response, textStatus, request){
 					defaultDataCallback(response, request.getResponseHeader("resultId"));
+					defaultOutput.render(response);
 				}, //.bind(this),
 				error: function(response){
 					if (!transportErrors.handleAll(response, "Error while processing query")) {
