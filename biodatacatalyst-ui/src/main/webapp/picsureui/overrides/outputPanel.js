@@ -1,4 +1,5 @@
-define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, settings){
+define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
+	function(HBS, BB, settings, transportErrors){
 
 	return {
 		/*
@@ -119,9 +120,12 @@ define(["handlebars", "backbone", "picSure/settings"], function(HBS, BB, setting
 				data: JSON.stringify(query),
 				success: function(response, textStatus, request){
 					defaultDataCallback(response, request.getResponseHeader("resultId"));
-					defaultOutput.render(response);
 				}, //.bind(this),
-				error: defaultErrorCallback
+				error: function(response){
+					if (!transportErrors.handleAll(response, "Error while processing query")) {
+						history.pushState({}, "Unexpected Error", "/picsureui/unexpected_error");
+					}
+				}
 			});
 		}
 	};
