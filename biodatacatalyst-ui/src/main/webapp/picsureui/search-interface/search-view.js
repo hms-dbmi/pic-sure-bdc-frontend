@@ -19,23 +19,34 @@ define(["jquery","backbone","handlebars",
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			this.render();
+			this.studiesData = JSON.parse(studiesDataJson);
 			let response = JSON.parse(tagSearchResponseJson);
-			let studiesData = JSON.parse(studiesDataJson);
-			let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
+			let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
+			let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
+			let findStudyAbbreviationFromId = this.findStudyAbbreviationFromId.bind(this);
+
 			$('#tag-filters').html(HBS.compile(tagFilterViewTemplate)(
 				{
-					tags:_.filter(response.results.tags, function(tag){return ! studyRegex.test(tag.tag);}),
+					tags:_.filter(response.results.tags, function(tag){return ! studyVersionRegex.test(tag.tag);}),
 					hasRequiredTags:true,
 					hasExcludedTags:true,
 					requiredTags:["cardio"],
 					excludedTags:["plasma"],
-					studyTags:_.filter(response.results.tags, function(tag){return studyRegex.test(tag.tag);})
+					studyTags:_.map(
+						_.filter(response.results.tags, function(tag){
+							return studyRegex.test(tag.tag);
+						}), function(tag){
+							return {
+								study_id: tag,
+								abbreviation: findStudyAbbreviationFromId(tag.tag)
+							};
+						})
 				}));
 			$('#search-results').html(HBS.compile(searchResultsViewTemplate)(
 				_.map(response.results.searchResults, function(result){
 					let metadata = result.result.metadata;
 					return {
-						abbreviation: _.find(studiesData.bio_data_catalyst, function(studyData){ return studyData.study_identifier === metadata.study_id.split('.')[0];}).abbreviated_name,
+						abbreviation: findStudyAbbreviationFromId(metadata.study_id),
 						study_id: metadata.study_id,
 						table_id: metadata.dataTableId,
 						variable_id: metadata.varId,
@@ -43,6 +54,12 @@ define(["jquery","backbone","handlebars",
 					}
 				})
 			));
+		},
+		findStudyAbbreviationFromId: function(study_id){
+			return _.find(this.studiesData.bio_data_catalyst, 
+							function(studyData){ 
+								return studyData.study_identifier === study_id.split('.')[0].toLowerCase();
+							}).abbreviated_name;
 		},
 		events: {
 
