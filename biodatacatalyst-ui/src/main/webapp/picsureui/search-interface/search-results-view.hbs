@@ -1,0 +1,26 @@
+<style>
+	.search-result {
+		border: solid;
+		border-radius: 1em;
+		padding:3px;
+	}
+	.search-result-icons {
+		float:right;
+	}
+	.search-result span.col {
+		padding:3px;
+	}
+</style>
+
+<span class='row'>12 variables match your search</span>
+{{#each results}}
+  <div class='search-result row'>
+  	<span class='col'>{{this.studyName}}<br>{{this.studyAccession}} </span>
+  	<span class='col'> {{this.variableDescription}} </span>
+  	<span class='search-result-icons col'>
+  		<i class="fa fa-info-circle"></i> 
+  		<i class="fa fa-filter"></i> 
+  		<i class="fa fa-database"></i>
+  	</span>
+  </div>
+{{/each}}

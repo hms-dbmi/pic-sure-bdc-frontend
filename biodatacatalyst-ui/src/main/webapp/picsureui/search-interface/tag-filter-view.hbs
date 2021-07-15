@@ -1,0 +1,35 @@
+<style>
+	.hover-control{
+		display:none;
+	}
+</style>
+{{#if hasRequiredTags}}
+	<div class='row'><span>Required Tags:</span>
+		{{#each requiredTags}}
+			<span class="badge required-tag" id="tag-{{this}}">{{this}}<i class="hover-control fa fa-remove"></i> </span>
+		{{/each}}
+	</div>
+{{/if}}
+{{#if hasExcludedTags}}
+	<div class='row'><span>Excluded Tags:</span>
+		{{#each excludedTags}}
+			<span class="badge excluded-tag" id="tag-{{this}}">{{this}}<i class="hover-control fa fa-remove"></i> </span>
+		{{/each}}
+	</div>
+{{/if}}
+<div>
+	<div class='row'>Refine results using tag based filters:</div>
+	<div class='row'>
+		{{#each tags}}
+			<span class="badge" id="tag-{{this}}">{{this}}<i class="hover-control fa fa-plus-circle"></i><i class="hover-control fa fa-minus-circle"></i> </span>
+		{{/each}}
+	</div>
+</div>
+<div>
+	<div class='row'>Refine results using study based filters:</div>
+	<div class='row'>
+		{{#each studyTags}}
+			<span class="badge" id="tag-{{this}}">{{this}}<i class="hover-control fa fa-plus-circle"></i><i class="hover-control fa fa-minus-circle"></i> </span>
+		{{/each}}
+	</div>
+</div>
