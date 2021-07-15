@@ -1,7 +1,11 @@
-define(["jquery","backbone","handlebars","text!search-interface/search-view.hbs","text!search-interface/tag-filter-view.hbs","text!search-interface/search-results-view.hbs",
-	"picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList",
-			"text!filter/searchHelpTooltip.hbs"],
-		function($, BB, HBS, searchViewTemplate, tagFilterViewTemplate, searchResultsViewTemplate, queryBuilder, filter, ontology, overrides, searchHelpTooltipTemplate){
+define(["jquery","backbone","handlebars",
+	"text!search-interface/search-view.hbs","text!search-interface/tag-filter-view.hbs",
+	"text!search-interface/search-results-view.hbs",
+	"text!search-interface/tag-search-response.json"],
+		function($, BB, HBS, 
+			searchViewTemplate, 
+			tagFilterViewTemplate, 
+			searchResultsViewTemplate){
 
 	var SearchView = BB.View.extend({
 		initialize: function(opts){
