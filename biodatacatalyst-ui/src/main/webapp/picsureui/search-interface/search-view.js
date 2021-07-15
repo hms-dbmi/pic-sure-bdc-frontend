@@ -5,7 +5,8 @@ define(["jquery","backbone","handlebars",
 		function($, BB, HBS, 
 			searchViewTemplate, 
 			tagFilterViewTemplate, 
-			searchResultsViewTemplate){
+			searchResultsViewTemplate,
+			tagSearchResponseJson){
 
 	var SearchView = BB.View.extend({
 		initialize: function(opts){
@@ -16,14 +17,17 @@ define(["jquery","backbone","handlebars",
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			this.render();
+			response = JSON.parse(tagSearchResponseJson);
+
+			let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 			$('#tag-filters').html(HBS.compile(tagFilterViewTemplate)(
 				{
-					tags:["heart","lungs","asthma","pressure","blood"],
+					tags:_.filter(response.results.tags, function(tag){return ! studyRegex.test(tag.tag);}),
 					hasRequiredTags:true,
 					hasExcludedTags:true,
 					requiredTags:["cardio"],
 					excludedTags:["plasma"],
-					studyTags:["FHS","ARIC","CHS","COPDgene"]
+					studyTags:_.filter(response.results.tags, function(tag){return studyRegex.test(tag.tag);})
 				}));
 			$('#search-results').html(HBS.compile(searchResultsViewTemplate)(
 				{results:[
