@@ -13,10 +13,10 @@
 </style>
 
 <span class='row'>12 variables match your search</span>
-{{#each results}}
+{{#each this}}
   <div class='search-result row'>
-  	<span class='col'>{{this.studyName}}<br>{{this.studyAccession}} </span>
-  	<span class='col'> {{this.variableDescription}} </span>
+  	<span class='col'>{{this.abbreviation}}<br>{{this.study_id}} </span>
+  	<span class='col'> {{this.description}} </span>
   	<span class='search-result-icons col'>
   		<i class="fa fa-info-circle"></i> 
   		<i class="fa fa-filter"></i> 
