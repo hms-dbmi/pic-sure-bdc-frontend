@@ -9,7 +9,7 @@ function(BB, HBS, searchResultsViewTemplate){
 		},
 		events: {},
 		render: function(){
-			$('#search-results').html(HBS.compile(searchResultsViewTemplate)(
+			this.$el.html(HBS.compile(searchResultsViewTemplate)(
 				_.map(this.response.results.searchResults, function(result){
 					let metadata = result.result.metadata;
 					return {

@@ -4,14 +4,41 @@ function(BB, HBS, tagFilterViewTemplate){
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let findStudyAbbreviationFromId;
 
+	let TagFilterModel = BB.Model.extend({
+		defaults:{
+			requiredTags:[],
+			excludedTags:[],
+			hasRequiredTags: false,
+			hasExcludedTags: false
+		}
+	});
+
 	let TagFilterView = BB.View.extend({
 		initialize: function(opts){
 			this.response = opts.tagSearchResponse;
 			findStudyAbbreviationFromId = opts.findStudyAbbreviationFromId;
+			this.model = new TagFilterModel();
 		},
-		events: {},
+		events: {
+			'mouseover .badge': 'showTagControls',
+			'mouseout .badge': 'hideTagControls',
+			'click .requireTag': 'requireTag',
+			'click .excludeTag': 'excludeTag'
+		},
+		showTagControls: function(event){
+			$('.hover-control', event.target).show();
+		},
+		hideTagControls: function(event){
+			$('.hover-control', event.target).hide();
+		},
+		requireTag: function(event){
+			console.log(event);
+		},
+		excludeTag: function(event){
+			console.log(event);
+		},
 		render: function(){
-			$('#tag-filters').html(HBS.compile(tagFilterViewTemplate)(
+			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
 					tags:_.filter(this.response.results.tags, function(tag){return ! studyVersionRegex.test(tag.tag);}),
 					hasRequiredTags:true,

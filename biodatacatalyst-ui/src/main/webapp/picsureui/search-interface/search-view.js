@@ -21,15 +21,19 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			let response = JSON.parse(tagSearchResponseJson);
 			let findStudyAbbreviationFromId = this.findStudyAbbreviationFromId.bind(this);
 
+			this.render();
 			this.tagFilterView = new tagFilterView({
 				tagSearchResponse:response, 
-				findStudyAbbreviationFromId: findStudyAbbreviationFromId
+				findStudyAbbreviationFromId: findStudyAbbreviationFromId,
+				el : $('#tag-filters')
 			});
 			this.searchResultsView = new searchResultsView({
 				tagSearchResponse:response, 
-				findStudyAbbreviationFromId: findStudyAbbreviationFromId
+				findStudyAbbreviationFromId: findStudyAbbreviationFromId,
+				el : $('#search-results')
 			});
-			this.render();
+			this.tagFilterView.render();
+			this.searchResultsView.render();
 			
 		},
 		findStudyAbbreviationFromId: function(study_id){
@@ -43,8 +47,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		},
 		render: function(){
 			$('#filter-list').html(this.searchViewTemplate());
-			this.tagFilterView.render();
-			this.searchResultsView.render();
 		}
 	});
 
