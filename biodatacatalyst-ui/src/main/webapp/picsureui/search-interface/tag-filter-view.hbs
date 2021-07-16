@@ -1,37 +1,92 @@
 <style>
-	.hover-control{
-		display:none;
+	.hover-control {
 		pointer-events:none;
+		text-align: center; padding: 0em 0.3em;
+		border-radius:.5em;
+		display:none;
+		background:white;
 	}
-
+	.tag-badge {
+		background:#e3eefd;
+		color:black;
+		border:solid;
+		border-width:2px;
+		margin:3px;
+	}
+	.study-badge {
+		background:#b1d6ef;
+		color:black;
+		border:solid;
+		border-width:2px;
+		margin:3px;
+	}
+	.require-tag-btn {
+		color:green;
+	}
+	.exclude-tag-btn {
+		color:red;
+	}
+	.remove-tag-btn {
+		color:red;
+	}
+	.section-label {
+	
+	}
+	.section {
+		background:white;
+		border:solid;
+		border-radius:1em;
+	}
 </style>
-{{#if hasRequiredTags}}
-	<div class='row'><span>Required Tags:</span>
-		{{#each requiredTags}}
-			<span class="badge required-tag" id="tag-{{this}}"> {{this}} <i class="hover-control fa fa-remove"></i></span>
-		{{/each}}
+{{#if hasActiveTags}}
+	<div class='section'>
+		{{#if hasRequiredTags}}
+			<div class='row'><span>Required Tags:</span>
+				{{#each requiredTags}}
+					<div class="badge {{colorClass this.tag}}">
+						<span class="required-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 
+							<span data-tag="{{this.tag}}" data-action="removeRequiredTag" class="remove-tag-btn hover-control">X</span>
+						</span>
+					</div>
+				{{/each}}
+			</div>
+		{{/if}}
+		{{#if hasExcludedTags}}
+			<div class='row'><span>Excluded Tags:</span>
+				{{#each excludedTags}}
+					<div class="badge {{colorClass this.tag}}">
+						<span class="excluded-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 
+							<span data-tag="{{this.tag}}" data-action="removeExcludedTag" class="remove-tag-btn hover-control">X</span>
+						</span>
+					</div>
+				{{/each}}
+			</div>
+		{{/if}}
 	</div>
 {{/if}}
-{{#if hasExcludedTags}}
-	<div class='row'><span>Excluded Tags:</span>
-		{{#each excludedTags}}
-			<span class="badge excluded-tag" id="tag-{{this}}"> {{this}} <i class="hover-control fa fa-remove"></i></span>
-		{{/each}}
-	</div>
-{{/if}}
-<div>
-	<div class='row'>Refine results using tag based filters:</div>
+<div class='section'>
+	<div class='row section-label'>Refine results using tag based filters:</div>
 	<div class='row'>
 		{{#each tags}}
-			<span class="badge" id="tag-{{this.tag}}"> {{this.tag}} <span class="hover-control fa fa-plus-circle"></span><span class="badge hover-control fa fa-minus-circle"></span></span>
+			<div class="badge {{colorClass this.tag}}">
+				<span id="tag-{{this.tag}}"> {{this.tag}} 
+					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
+					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+				</span>
+			</div>
 		{{/each}}
 	</div>
 </div>
-<div>
+<div class='section'>
 	<div class='row'>Refine results using study based filters:</div>
 	<div class='row'>
 		{{#each studyTags}}
-			<span class="badge" id="tag-{{this.study_id}}"> {{this.abbreviation}} <i class="hover-control fa fa-plus-circle"></i><i class="hover-control fa fa-minus-circle"></i></span>
+			<div class="badge {{colorClass this.tag}}">
+				<span id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 
+					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
+					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+				</span>
+			</div>
 		{{/each}}
 	</div>
 </div>
