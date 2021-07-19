@@ -11,7 +11,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 	var SearchView = BB.View.extend({
 		initialize: function(opts){
-			$('#filter-list').html("");
 			this.filters = [];
 			this.resourceUUID = opts.resourceUUID;
 			this.outputPanelView = opts.outputPanelView;
@@ -43,16 +42,19 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 							}).abbreviated_name;
 		},
 		events: {
-
+			'click' : 'clickHandling'
+		},
+		clickHandling: function(event){
+			console.log(event);
 		},
 		render: function(){
-			$('#filter-list').html(this.searchViewTemplate());
+			this.$el.html(this.searchViewTemplate());
 		}
 	});
 
 	var filterList = {
 		init : function(resourceUUID, outputPanelView, queryTemplate){
-			new SearchView({resourceUUID: resourceUUID, outputPanelView: outputPanelView, queryTemplate:queryTemplate})
+			new SearchView({resourceUUID: resourceUUID, outputPanelView: outputPanelView, queryTemplate:queryTemplate, el : $('#filter-list')})
 		}
 	};
 
