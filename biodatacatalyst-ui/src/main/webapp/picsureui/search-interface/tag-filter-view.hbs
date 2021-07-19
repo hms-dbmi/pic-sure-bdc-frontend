@@ -30,12 +30,20 @@
 		color:red;
 	}
 	.section-label {
-	
+		background:lightgray;
+		border-top:solid;
+		border-right:solid;
+		border-left:solid;
+		border-top-left-radius:1em;
+		border-top-right-radius:1em;
 	}
-	.section {
+	.section-body {
 		background:white;
-		border:solid;
-		border-radius:1em;
+		border-bottom:solid;
+		border-right:solid;
+		border-left:solid;
+		border-bottom-left-radius:1em;
+		border-bottom-right-radius:1em;
 	}
 </style>
 {{#if hasActiveTags}}
@@ -65,8 +73,11 @@
 	</div>
 {{/if}}
 <div class='section'>
-	<div class='row section-label'>Refine results using tag based filters:</div>
-	<div class='row'>
+	<div class='row section-label'>
+	Refine results using tag based filters<br>
+	Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that have variables which match your search term
+	</div>
+	<div class='row section-body unused-tags'>
 		{{#each tags}}
 			<div class="badge {{colorClass this.tag}}">
 				<span id="tag-{{this.tag}}"> {{this.tag}} 
@@ -75,11 +86,17 @@
 				</span>
 			</div>
 		{{/each}}
+		<br>
+		{{#if tagsLimited}}
+			<span id="show-all-tags-btn"> <span class="glyphicon glyphicon-chevron-down"></span> View more tags</span>
+		{{else}}
+			<span id="show-fewer-tags-btn"> <span class="glyphicon glyphicon-chevron-up"></span> View fewer tags</span>
+		{{/if}}
 	</div>
 </div>
 <div class='section'>
-	<div class='row'>Refine results using study based filters:</div>
-	<div class='row'>
+	<div class='row section-label'>Refine results using study based filters:</div>
+	<div class='row section-body'>
 		{{#each studyTags}}
 			<div class="badge {{colorClass this.tag}}">
 				<span id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 

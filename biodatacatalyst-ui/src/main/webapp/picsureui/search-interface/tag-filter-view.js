@@ -3,6 +3,7 @@ function(BB, HBS, tagFilterViewTemplate){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let findStudyAbbreviationFromId;
+	let defaultTagLimit = 12;
 
 	let TagFilterModel = BB.Model.extend({
 		defaults:{
@@ -14,6 +15,7 @@ function(BB, HBS, tagFilterViewTemplate){
 			this.set('requiredTags', new BB.Collection);
 			this.set('excludedTags', new BB.Collection);
 			this.set('unusedTags', new BB.Collection);
+			this.set('tagLimit', defaultTagLimit);
 			HBS.registerHelper("aliasIfStudy", function(tag){
 				if(studyVersionRegex.test(tag)){
 					return findStudyAbbreviationFromId(tag);
@@ -55,7 +57,17 @@ function(BB, HBS, tagFilterViewTemplate){
 			'click .exclude-tag-btn': 'excludeTag',
 			'click .remove-required-tag-btn': 'removeRequiredTag',
 			'click .remove-excluded-tag-btn': 'removeExcludedTag',
-			'click .badge': 'clickTag'
+			'click .badge': 'clickTag',
+			'click #show-all-tags-btn': 'showAllTags',
+			'click #show-fewer-tags-btn': 'showFewerTags'
+		},
+		showAllTags: function(event){
+			this.model.set('tagLimit', 1000000);
+			this.render();
+		},
+		showFewerTags: function(event){
+			this.model.set('tagLimit', defaultTagLimit);
+			this.render();
 		},
 		showTagControls: function(event){
 			$('.hover-control', event.target).show();
@@ -124,7 +136,10 @@ function(BB, HBS, tagFilterViewTemplate){
 				{
 					tags:_.filter(unusedTags, function(tag){
 						return ! studyVersionRegex.test(tag.get('tag'));
-					}).map(function(tag){return tag.toJSON();}),
+					}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit')),
+					tagsTotal: this.model.get("unusedTags").size(),
+					tagsShown: Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()),
+					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
 					hasExcludedTags:this.model.hasExcludedTags(),
 					hasActiveTags: this.model.hasExcludedTags() || this.model.hasRequiredTags(),
