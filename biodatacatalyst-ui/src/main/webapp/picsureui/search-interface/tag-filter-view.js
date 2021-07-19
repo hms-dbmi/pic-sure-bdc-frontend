@@ -41,6 +41,10 @@ function(BB, HBS, tagFilterViewTemplate){
 		},
 		hasExcludedTags: function(){
 			return this.get('excludedTags').length>0;
+		},
+		setUnusedTags: function(tags) {
+			this.set('unusedTags', new BB.Collection);
+			this.get('unusedTags').add(tags);
 		}
 	});
 
@@ -49,6 +53,7 @@ function(BB, HBS, tagFilterViewTemplate){
 			this.response = opts.tagSearchResponse;
 			findStudyAbbreviationFromId = opts.findStudyAbbreviationFromId;
 			this.model = new TagFilterModel(opts.tagSearchResponse);
+			this.onTagChange = opts.onTagChange;
 		},
 		events: {
 			'mouseover .badge': 'showTagControls',
@@ -102,6 +107,7 @@ function(BB, HBS, tagFilterViewTemplate){
 			unusedTags.remove(targetTag);
 			requiredTags.add(targetTag);
 			this.render();
+			this.onTagChange();
 		},
 		excludeTag: function(tag){
 			var unusedTags = this.model.get('unusedTags');
@@ -111,6 +117,7 @@ function(BB, HBS, tagFilterViewTemplate){
 			unusedTags.remove(targetTag);
 			excludedTags.add(targetTag);
 			this.render();
+			this.onTagChange();
 		},
 		removeRequiredTag: function(tag){
 			var unusedTags = this.model.get('unusedTags');
@@ -120,6 +127,7 @@ function(BB, HBS, tagFilterViewTemplate){
 			requiredTags.remove(targetTag);
 			unusedTags.add(targetTag);
 			this.render();
+			this.onTagChange();
 		},
 		removeExcludedTag: function(tag){
 			var unusedTags = this.model.get('unusedTags');
@@ -129,6 +137,11 @@ function(BB, HBS, tagFilterViewTemplate){
 			excludedTags.remove(targetTag);
 			unusedTags.add(targetTag);
 			this.render();
+			this.onTagChange();
+		},
+		updateTags: function(response) {
+			this.response = response;
+			this.model.setUnusedTags(response.results.tags);
 		},
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();

@@ -24,7 +24,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.tagFilterView = new tagFilterView({
 				tagSearchResponse:response, 
 				findStudyAbbreviationFromId: findStudyAbbreviationFromId,
-				el : $('#tag-filters')
+				el : $('#tag-filters'),
+				onTagChange: this.submitSearch.bind(this)
 			});
 			this.searchResultsView = new searchResultsView({
 				tagSearchResponse:response, 
@@ -42,10 +43,38 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 							}).abbreviated_name;
 		},
 		events: {
-			'click' : 'clickHandling'
+			"click #search-button": "submitSearch"
 		},
-		clickHandling: function(event){
-			console.log(event);
+		updateTags: function(response) {
+			this.tagFilterView.updateTags(response);
+			this.tagFilterView.render();
+		},
+		submitSearch: function() {
+			this.searchTerm = $('#search-box').val();
+			this.requiredTags = $('.selected-required-tag').map(function(x) {
+				return $(this).data('tag');
+			}).toArray();
+			this.excludedTags = $('.excluded').map(function(x) {
+				return $(this).data('tag');
+			}).toArray();
+			$.ajax({
+				url: window.location.origin + "/jaxrs-service/rest/pic-sure/search",
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({query: {
+						searchTerm: this.searchTerm,
+						includedTags: this.requiredTags,
+						excludedTags: this.excludedTags,
+						returnTags: true,
+						returnAllResults: false
+					}}),
+				success: function(response){
+					this.updateTags(response);
+				}.bind(this),
+				error: function(response){
+					console.log(response);
+				}.bind(this)
+			});
 		},
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
