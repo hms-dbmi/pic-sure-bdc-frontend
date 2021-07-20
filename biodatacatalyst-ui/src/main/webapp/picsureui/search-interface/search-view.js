@@ -54,7 +54,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.requiredTags = $('.selected-required-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
-			this.excludedTags = $('.excluded').map(function(x) {
+			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
 			$.ajax({
