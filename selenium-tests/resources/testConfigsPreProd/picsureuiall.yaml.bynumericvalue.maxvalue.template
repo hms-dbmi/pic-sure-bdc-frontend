@@ -1,4 +1,4 @@
- name: Verify that by numeric value greater than works fine.
+ name: Verify that by query builder retrieves patient count at  Max value
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: firefox
  url: http://34.202.235.238/
@@ -6,10 +6,8 @@
  test: regression
  type: QueryBuilderTestPlan
  reporter: ConsoleReporter
- success: patientcountsubset1
- successvalue: 46633
  expected: pass
- SearchTerm: "triglycerides"
- TextToSelect: "age at measurement of triglycerides_1"
+ SearchTerm: labs_chlorideh
+ TextToSelect: "labs_chlorideh_5"
  PatientCount: 1
- NumericValueGreaterLessthanMax: 99
+ NumericValueGreaterLessthanMax: 118

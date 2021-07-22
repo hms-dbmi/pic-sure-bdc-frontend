@@ -13,7 +13,7 @@
  success: patientcountsubset1
  successvalue: 46633
  expected: pass
- SearchTerm: "triglycerides"
- TextToSelect: "age at measurement of triglycerides_1"
- PatientCount: 49584
- NumericValueGreater: 7
+ SearchTerm: "vitamin E without"
+ TextToSelect: "DERIVED FIELD: NUTRIENT VALUE - VITAMIN E WITHOUT VITAMIN PILLS, (IU)"
+ PatientCount: 73 
+ NumericValueGreater: 15

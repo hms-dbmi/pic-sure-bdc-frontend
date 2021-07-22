@@ -1,0 +1,14 @@
+ name: This test case verify that openaccess displays no match filter criteria as ZERO patient
+ browser: chrome
+ url: http://34.202.235.238/
+ #authmethod: ADMINLOGIN
+ test: regression
+ type: QueryBuilderTestPlan
+ reporter: ConsoleReporter
+ SearchTerm: "lymphocyte"
+ TextToSelect: "age at measurement of lymphocyte_ncnc_bld_1"
+ PatientCount: 0
+ SearchTermSecond: Vitamin E
+ TextToSelectSecond: "Dietary Vitamin E (IU)"
+ NumericValueLess: 25
+ NumericValueLessSecond: 10

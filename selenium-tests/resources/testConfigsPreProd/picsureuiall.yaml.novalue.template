@@ -11,6 +11,6 @@
  expected: pass
  #SearchTerm: "HDL cholesterol"
  #TextToSelect: "Draw time"
- SearchTerm: "Hematocrit"
- TextToSelect: "age at measurement of hematocrit_vfr_bld_1"
- PatientCount: 177450
+ SearchTerm: "Vitamin D"
+ TextToSelect: "DERIVED FIELD: NUTRIENT VALUE - VITAMIN D, (IU)"
+ PatientCount: "4757"

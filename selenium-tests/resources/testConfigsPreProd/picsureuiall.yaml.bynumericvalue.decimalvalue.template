@@ -11,7 +11,7 @@
  subset2:
  success: patientcountsubset1
  expected: pass
- SearchTerm: triglycerides
- TextToSelect: "Blood mass concentration of triglycerides"
- PatientCount: 49523
- NumericValueLessDecimal: 882.5
+ SearchTerm: SERUM CONCENTRATION OF CHLORIDE
+ TextToSelect: "SERUM CONCENTRATION OF CHLORIDE mEq/L"
+ PatientCount: 5700
+ NumericValueLessDecimal: 115.5

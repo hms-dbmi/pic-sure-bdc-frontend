@@ -2,18 +2,13 @@
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
  browser: chrome
  url: http://34.202.235.238/
- #authmethod: ADMINLOGIN
- username: admin
- password: admin
  test: regression
  type: QueryBuilderTestPlan
  reporter: ConsoleReporter
- subset1: \demographics\SEX\female
- subset2:
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: "vitamin E without"
- TextToSelect: "DERIVED FIELD: NUTRIENT VALUE - VITAMIN E WITHOUT VITAMIN PILLS, (IU)"
- PatientCount:  555 
- NumericValueLess: 15
+ SearchTerm: "triglycerides"
+ TextToSelect: "Blood mass concentration of triglycerides"
+ ExpectedPatientCount:  49579 
+ NumericValueLess: 2110

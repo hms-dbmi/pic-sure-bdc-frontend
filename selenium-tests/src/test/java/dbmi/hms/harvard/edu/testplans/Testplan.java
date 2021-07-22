@@ -299,6 +299,16 @@ public abstract class Testplan {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void verifyZeroPatientCounts(Reporter reporter) throws InterruptedException, Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void verifypatientcountObfuscation(Reporter reporter) throws InterruptedException, Exception, Throwable {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

@@ -141,8 +141,7 @@ public class TestDriver {
 
 	}
 
- 
-@Test (priority=5)
+ @Test (priority=5)
 
 	public void verify_QueryBuilder_ByNumericValue_GreaterThan() throws Throwable {
 		LOGGER.info(
@@ -153,6 +152,7 @@ public class TestDriver {
 				"---------------------------------The test case verifyQueryBuilderByNumericValueGreaterThan is completed-------------------------");
 
 	}
+
 
 @Test (priority=6)
 	public void verify_QueryBuilder_ByNumericValue_Between() throws Exception {
@@ -515,33 +515,57 @@ public class TestDriver {
 
 	}
 
-	
-	@Test (priority=35)
-	public void verify_granted_openaccess() throws Exception {
+
+		
+
+@Test (priority=35)
+	public void verify_zero_count() throws Exception {
 		LOGGER.info(
-				"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page running-------------------------");
-		readFile(configProperties.getProperty("verify.bdc.granted.functionality.openaccess"));
-		testPlan.verifyGrantedFunctionalityOnOpenAccess(reporter);
+				"---------------------------------The test case verify  query builder shows with NO searched criteria matching  displays ZERO count is running-------------------------");
+		readFile(configProperties.getProperty("verify.bdc.querybuilder.zero.patients"));
+		testPlan.verifyZeroPatientCounts(reporter);
 		LOGGER.info(
-				"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page is completed-------------------------");
+				"---------------------------------The test case verify  query builder shows with NO searched criteria matching  displays ZERO count is completed-------------------------");
 
 	}	
-
 	
-	@Test (priority=36)
-	public void verify_subject_tooltip() throws Exception {
+@Test (priority=36)
+	public void verify_obfuscation() throws Throwable {
 		LOGGER.info(
 				"---------------------------------The test case verify hovering over the study displays tool tip with the full name is running-------------------------");
-		readFile(configProperties.getProperty("verify.bdc.subject.hoverover.tooltip"));
-		testPlan.verifyHoverOverSubjectTooltip(reporter);
+		readFile(configProperties.getProperty("verify.bdc.openaccess.obfuscation"));
+		testPlan.verifypatientcountObfuscation(reporter);
 		LOGGER.info(
 				"---------------------------------The test case verify hovering over the study displays tool tip with the full name running is completed-------------------------");
 
 	}	
+	
+	
+//@Test (priority=37)
+public void verify_granted_openaccess() throws Exception {
+	LOGGER.info(
+			"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page running-------------------------");
+	readFile(configProperties.getProperty("verify.bdc.granted.functionality.openaccess"));
+	testPlan.verifyGrantedFunctionalityOnOpenAccess(reporter);
+	LOGGER.info(
+			"---------------------------------The test case verify if granted button next to subject is clicked  it opens Authorization page is completed-------------------------");
+
+}	
+
+@Test (priority=38)
+public void verify_subject_tooltip() throws Exception {
+	LOGGER.info(
+			"---------------------------------The test case verify hovering over the study displays tool tip with the full name is running-------------------------");
+	readFile(configProperties.getProperty("verify.bdc.subject.hoverover.tooltip"));
+	testPlan.verifyHoverOverSubjectTooltip(reporter);
+	LOGGER.info(
+			"---------------------------------The test case verify hovering over the study displays tool tip with the full name running is completed-------------------------");
+
+}	
+
 
 	
-	
-@Test (priority=37)
+@Test (priority=39)
 	public void verify_logout() throws Exception {
 		LOGGER.info(
 				"---------------------------------The test case logout is running-------------------------");
@@ -551,7 +575,6 @@ public class TestDriver {
 				"---------------------------------The test case logout is completed-------------------------");
 
 	}
-
 
 	@AfterClass
 	public void closeApplication() {

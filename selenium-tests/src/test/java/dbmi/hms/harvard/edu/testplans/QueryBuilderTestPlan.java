@@ -396,8 +396,11 @@ public class QueryBuilderTestPlan extends Testplan {
 		System.out.println("patientCountActual is" + patientCountActual);
 		String patientCountExpected = (String) testPlan.get("PatientCount");
 		System.out.println("patientCountExpected" + patientCountExpected);
-
-		if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
+		
+		String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+		System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+		
+		if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {
 
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 			LOGGER.info(
@@ -439,10 +442,14 @@ public class QueryBuilderTestPlan extends Testplan {
 		String patientCountActual = driver.findElement(patientCountValue).getText();
 		System.out.println("patientCountActual is" + patientCountActual);
 		String patientCountExpected = (String) testPlan.get("PatientCount");
-		System.out.println("patientCountExpected" + patientCountExpected);
+		String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+		System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+		
+		if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {
+		/*System.out.println("patientCountExpected" + patientCountExpected);
 
 		if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
-
+*/
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 			LOGGER.info(
 					"---------------------------Query Builder functionality for AND condition multiple search result combination is  working fine----------------------------");
@@ -587,10 +594,14 @@ public class QueryBuilderTestPlan extends Testplan {
 		String patientCountActual = driver.findElement(patientCountValue).getText();
 		System.out.println("patientCountActual is" + patientCountActual);
 		String patientCountExpected = (String) testPlan.get("PatientCount");
-		System.out.println("patientCountExpected" + patientCountExpected);
+		String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+		System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+		
+		if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {
+		/*System.out.println("patientCountExpected" + patientCountExpected);
 
 		if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
-
+*/
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 			LOGGER.info(
 					"---------------------------Query result by numeric less than is working fine----------------------------");
@@ -645,10 +656,14 @@ public class QueryBuilderTestPlan extends Testplan {
 		*/
 		String patientCountActual = driver.findElement(patientCountValue).getText();
 		String patientCountExpected = (String) testPlan.get("PatientCount");
-		System.out.println("patientCountExpected" + patientCountExpected);
+		/*System.out.println("patientCountExpected" + patientCountExpected);
 
 		if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
-
+*/
+		String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+		System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+		
+		if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 			LOGGER.info(
 					"---------------------------Query result by numeric greater  than is working fine----------------------------");
@@ -681,10 +696,15 @@ public class QueryBuilderTestPlan extends Testplan {
 		String patientCountActual = driver.findElement(By.xpath("//*[@id='patient-count']")).getText();
 		System.out.println("patientCountActual is" + patientCountActual);
 		String patientCountExpected = (String) testPlan.get("PatientCount");
-		System.out.println("patientCountExpected" + patientCountExpected);
+/*		System.out.println("patientCountExpected" + patientCountExpected);
 
 		if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
-			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+*/			
+		
+		String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+		System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+		
+		if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 
 			LOGGER.info(
 					"---------------------------Query result by numeric in between than works fine----------------------------");
@@ -770,6 +790,9 @@ public class QueryBuilderTestPlan extends Testplan {
 		String enterNumber = (String) testPlan.get("NumericValueLess");
 		String editNumericValue = (String) testPlan.get("EditNumericValue");
 		String patientCountEditedExpected = (String) testPlan.get("PatientCountAfterEditing");
+		String patientCountExpectedEditedValue = patientCountEditedExpected.replaceAll("Â","");  
+		System.out.println("patientCountExpectedEditedreplaced" + patientCountExpectedEditedValue);
+
 		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
 				SearchBoxAutocompleteListBoxItems);
 
@@ -788,7 +811,7 @@ public class QueryBuilderTestPlan extends Testplan {
 		QueryBuilder.class.newInstance().doRunQuery(driver);
 		Thread.sleep(3000);
 		String patientCountActualAfterEditing = driver.findElement(patientCountValue).getText();
-		if (patientCountActualAfterEditing.equalsIgnoreCase(patientCountEditedExpected)) {
+		if (patientCountActualAfterEditing.equalsIgnoreCase(patientCountExpectedEditedValue)) {
 			SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
 			System.out.println("Query Builder - Editing functionality is working fine");
 			LOGGER.info(
@@ -1659,6 +1682,102 @@ public void verifyHoverOverSubjectTooltip(Reporter reporter) throws Exception {
 	
 //	System.out.println("Value of  study tab is" +FirstElement);
 }
+
+public void verifypatientcountObfuscation(Reporter reporter)
+		throws InterruptedException, Exception, Throwable {
+
+	String enterNumber = (String) testPlan.get("NumericValueLess");
+	searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
+			SearchBoxAutocompleteListBoxItems);
+	Thread.sleep(5000);
+	QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
+	QueryBuilder.class.newInstance().doRunQuery(driver);
+	Thread.sleep(3000);
+	String patientCountActual = driver.findElement(patientCountValue).getText();
+	//String patientCountActualRemove=patientCountActual.Remove(patientCountActual.Length)-3);
+	
+	//String patientCountActualRemove=patientCountActual.substring(patientCountActual.length()-3);
+	
+	String patientCountActualRemove=patientCountActual.substring(0, patientCountActual.length()-3);
+	System.out.println("patientCountActual is" + patientCountActualRemove);
+	int patientCountActualValue=Integer.parseInt(patientCountActualRemove.trim());  	
+	String patientCountExpected = (String) testPlan.get("ExpectedPatientCount");
+	int patientCountExpectedValue=Integer.parseInt(patientCountExpected.trim());
+	
+	/*String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+	System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+	*/
+	//if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {
+	/*System.out.println("patientCountExpected" + patientCountExpected);
+
+	if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
+*/
+	
+	if (Math.abs(patientCountActualValue - patientCountExpectedValue) <=3){
+		
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		
+		System.out.println("******************** passed");
+		LOGGER.info(
+				"---------------------------Query result by numeric less than is working fine----------------------------");
+
+	} else {
+
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query result by numeric less than has  failed..issue----------------------------");
+	}
+
+	driver.navigate().refresh();
+}
+
+public void verifyZeroPatientCounts(Reporter reporter) throws InterruptedException, Exception {
+
+	String enterNumber = (String) testPlan.get("NumericValueLess");
+	String enterNumberSecond = (String) testPlan.get("NumericValueLessSecond");
+		searchAndSelectConceptTerm(SearchBox, "SearchTerm", "TextToSelect", SearchBoxAutocompleteListBox,
+			SearchBoxAutocompleteListBoxItems);
+	Thread.sleep(4000);
+
+	QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumber);
+	QueryBuilder.class.newInstance().doRunQuery(driver);
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+	System.out.println("Selecting........................Second Box");
+	searchAndSelectConceptTerm(SearchBoxTwo, "SearchTermSecond", "TextToSelectSecond", SearchBoxAutocompleteListBox,
+			SearchBoxAutocompleteListBoxItems);
+	QueryBuilder.class.newInstance().enterByNumericValue(driver, enterNumberSecond);
+	QueryBuilder.class.newInstance().doRunQuery(driver);
+	
+	Thread.sleep(5000);
+
+	String patientCountActual = driver.findElement(patientCountValue).getText();
+	System.out.println("patientCountActual is" + patientCountActual);
+	String patientCountExpected = (String) testPlan.get("PatientCount");
+	String patientCountExpectedValue = patientCountExpected.replaceAll("Â","");  
+	System.out.println("patientCountExpectedreplaced" + patientCountExpectedValue);
+	
+	if (patientCountActual.equalsIgnoreCase(patientCountExpectedValue)) {
+	/*System.out.println("patientCountExpected" + patientCountExpected);
+
+	if (patientCountActual.equalsIgnoreCase(patientCountExpected)) {
+*/
+		SummaryStatisticsResults.class.newInstance().doAssertResultTrue(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query Builder functionality for AND condition multiple search result combination is  working fine----------------------------");
+
+	} else {
+
+		SummaryStatisticsResults.class.newInstance().doAssertResultFalse(driver, testPlan, reporter);
+		LOGGER.info(
+				"---------------------------Query Builder  functionlity is  having issue with AND condition----------------------------");
+
+	}
+
+	driver.navigate().refresh();
+
+}
+
 
 
 public void verifyQueryBuilderRestrictByValue(Reporter reporter) throws Exception {
