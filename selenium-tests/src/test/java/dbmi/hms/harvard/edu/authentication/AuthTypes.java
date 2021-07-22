@@ -86,12 +86,12 @@ try {
 	    
 			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
 		*/    
-		    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();
+	/*	    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(IAgree))).click();
 		    
 		    File IAgreeScreen = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-				
+	*/			
 		    //((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
-		    FileUtils.copyFile(IAgreeScreen, new File("IAgree.png"));
+	//	    FileUtils.copyFile(IAgreeScreen, new File("IAgree.png"));
 		    
 		    
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
