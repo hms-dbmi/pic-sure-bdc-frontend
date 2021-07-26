@@ -30,6 +30,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView = new searchResultsView({
 				tagSearchResponse:response, 
 				findStudyAbbreviationFromId: findStudyAbbreviationFromId,
+				tagFilterView: this.tagFilterView,
 				el : $('#search-results')
 			});
 			this.tagFilterView.render();

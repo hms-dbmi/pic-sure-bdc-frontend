@@ -2,7 +2,16 @@
     Study Name: {{studyDescription}}
 </div>
 <div class="study-accession">
-    Study Accession: {{studyAccession}}
+    Study Accession:
+    <div class="badge {{colorClass this.tag}}">
+        <span id="tag-{{studyAccession}}"> {{studyAccession}}
+            <span data-tag="{{studyAccession}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
+            <span data-tag="{{studyAccession}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+        </span>
+    </div>
+</div>
+<div class="dataset-name">
+    Dataset Name: {{datasetName}}
 </div>
 <div class="dataset-description">
     Dataset Description: {{datasetDescription}}

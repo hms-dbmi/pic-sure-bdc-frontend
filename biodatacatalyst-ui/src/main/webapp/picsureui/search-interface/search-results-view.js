@@ -1,7 +1,7 @@
 define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!options/modal.hbs",
-		"text!search-interface/data-table-info-template.hbs"],
+		"search-interface/data-table-info-view"],
 function(BB, HBS, searchResultsViewTemplate, modalTemplate,
-		 dataTableInfoTemplate){
+		 dataTableInfoView){
 	let findStudyAbbreviationFromId;
 
 	let StudyResultsView = BB.View.extend({
@@ -9,7 +9,7 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			this.response = opts.tagSearchResponse;
 			findStudyAbbreviationFromId = opts.findStudyAbbreviationFromId;
 			this.modalTemplate = HBS.compile(modalTemplate);
-			this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
+			this.tagFilterView = opts.tagFilterView;
 		},
 		events: {
 			"click .fa-info-circle": "infoClickHandler"
@@ -30,11 +30,17 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 					}
 					$("#modal-window").html(this.modalTemplate({title: ""}));
 					$("#modalDialog").show();
-					$(".modal-body").html(this.dataTableInfoTemplate({
-						studyDescription: response.metadata.study_description,
-						studyAccession: this.generateStudyAccession(response),
-						datasetDescription: response.metadata.description
-					}));
+
+					this.dataTableInfoView = new dataTableInfoView({
+						data: {
+							studyDescription: response.metadata.study_description,
+							studyAccession: this.generateStudyAccession(response),
+							datasetDescription: response.metadata.description
+						},
+						tagFilterView: this.tagFilterView,
+						el: $(".modal-body")
+					});
+					this.dataTableInfoView.render();
 					$('.close').click(function() {$("#modalDialog").hide();});
 				}.bind(this),
 				error: function(response){

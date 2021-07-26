@@ -103,6 +103,9 @@ function(BB, HBS, tagFilterViewTemplate){
 			var unusedTags = this.model.get('unusedTags');
 			var requiredTags = this.model.get('requiredTags');
 			var targetTag = unusedTags.findWhere({tag: tag});
+			if (targetTag === undefined) {
+				targetTag = {tag: tag, score: 0}
+			}
 
 			unusedTags.remove(targetTag);
 			requiredTags.add(targetTag);
@@ -113,6 +116,9 @@ function(BB, HBS, tagFilterViewTemplate){
 			var unusedTags = this.model.get('unusedTags');
 			var excludedTags = this.model.get('excludedTags');
 			var targetTag = unusedTags.findWhere({tag: tag});
+			if (targetTag === undefined) {
+				targetTag = {tag: tag, score: 0}
+			}
 
 			unusedTags.remove(targetTag);
 			excludedTags.add(targetTag);
