@@ -62,6 +62,7 @@ try {
 			String signinButton = "//button[@type='submit']";
 			String yesAuthorize ="//button[@id='yes']";
 			String IAgree ="//input[@name='_eventId_proceed']";
+			String grant="//input[@value='Grant']";
 				
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 40);
@@ -94,6 +95,9 @@ try {
 	//	    FileUtils.copyFile(IAgreeScreen, new File("IAgree.png"));
 		    
 		    
+			
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(grant))).click();
+			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 					
 			//actions.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).perform();
