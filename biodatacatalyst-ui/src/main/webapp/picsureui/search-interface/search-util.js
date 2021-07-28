@@ -11,7 +11,7 @@ define(["jquery","text!studyAccess/studies-data.json"],
                 if (study) {
                     return study.abbreviated_name;
                 }
-                return "";
+                return study_id;
             },
         };
     });

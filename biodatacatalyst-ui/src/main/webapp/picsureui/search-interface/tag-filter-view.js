@@ -58,28 +58,6 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 			});
 			return tagBtnClicked;
 		},
-		requireTag: function(tag){
-			var unusedTags = this.model.get('unusedTags');
-			var targetTag = unusedTags.findWhere({tag: tag});
-
-			if (targetTag === undefined) {
-				targetTag = {tag: tag, score: 0}
-			} else {
-				unusedTags.remove(targetTag);
-			}
-			this.model.get('requiredTags').add(targetTag);
-		},
-		excludeTag: function(tag){
-			var unusedTags = this.model.get('unusedTags');
-			var targetTag = unusedTags.findWhere({tag: tag});
-
-			if (targetTag === undefined) {
-				targetTag = {tag: tag, score: 0}
-			} else {
-				unusedTags.remove(targetTag);
-			}
-			this.model.get('excludedTags').add(targetTag);
-		},
 		updateTags: function(response) {
 			this.response = response;
 			this.model.setUnusedTags(response.results.tags);

@@ -40,22 +40,30 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 return this.get('excludedTags').length>0;
             },
             requireTag: function(tag){
+                let tagName = searchUtil.findStudyAbbreviationFromId(tag);
+                if (this.get('requiredTags').findWhere({tag: tagName})) {
+                    return;
+                }
                 var unusedTags = this.get('unusedTags');
-                var targetTag = unusedTags.findWhere({tag: tag});
+                var targetTag = unusedTags.findWhere({tag: tagName});
 
                 if (targetTag === undefined) {
-                    targetTag = {tag: tag, score: 0}
+                    targetTag = {tag: tagName, score: 0}
                 } else {
                     unusedTags.remove(targetTag);
                 }
                 this.get('requiredTags').add(targetTag);
             },
             excludeTag: function(tag){
+                let tagName = searchUtil.findStudyAbbreviationFromId(tag);
+                if (this.get('excludedTags').findWhere({tag: tagName})) {
+                    return;
+                }
                 var unusedTags = this.get('unusedTags');
-                var targetTag = unusedTags.findWhere({tag: tag});
+                var targetTag = unusedTags.findWhere({tag: tagName});
 
                 if (targetTag === undefined) {
-                    targetTag = {tag: tag, score: 0}
+                    targetTag = {tag: tagName, score: 0}
                 } else {
                     unusedTags.remove(targetTag);
                 }
