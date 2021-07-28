@@ -1,11 +1,12 @@
-define(["jquery","backbone","handlebars", "text!search-interface/data-table-info-template.hbs"],
-    function($, BB, HBS, dataTableInfoTemplate){
+define(["jquery","backbone","handlebars", "text!search-interface/data-table-info-template.hbs",
+        "search-interface/tag-filter-model"],
+    function($, BB, HBS, dataTableInfoTemplate,
+             tagFilterModel){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
                 this.data = opts.data;
-                this.tagFilterView = opts.tagFilterView;
             },
             events: {
                 'mouseover .badge': 'showTagControls',
@@ -24,17 +25,24 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
             hideTagControls: function(event){
                 $('.hover-control', event.target).hide();
             },
-            requireTag: function(tag){
-                this.tagFilterView.requireTag(tag);
-            },
-            excludeTag: function(tag){
-                this.tagFilterView.excludeTag(tag);
-            },
             clickTag: function(event){
-                this.tagFilterView.clickTag(event)
+                let tagBtnClicked = this.resolveTagButtonForClick(event);
+                if(tagBtnClicked){
+                    tagFilterModel[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
+                }
             },
             resolveTagButtonForClick: function(event){
-                this.tagFilterView.resolveTagButtonForClick(event);
+                let clickIsInsideTagBtn = function(event, tagBtn){
+                    let clickXRelativeToTagBtn = (event.offsetX - (tagBtn.offsetLeft - event.target.offsetLeft));
+                    return clickXRelativeToTagBtn > 0 && (clickXRelativeToTagBtn - tagBtn.offsetWidth) < tagBtn.offsetWidth;
+                }
+                let tagBtnClicked;
+                _.each($('.hover-control', event.target), tagBtn=>{
+                    if(clickIsInsideTagBtn(event, tagBtn)){
+                        tagBtnClicked = tagBtn;
+                    }
+                });
+                return tagBtnClicked;
             },
             render: function(){
                 this.$el.html(this.dataTableInfoTemplate(this.data));

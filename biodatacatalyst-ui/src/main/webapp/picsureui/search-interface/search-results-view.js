@@ -1,15 +1,12 @@
 define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!options/modal.hbs",
-		"search-interface/data-table-info-view"],
+		"search-interface/data-table-info-view", "search-interface/search-util"],
 function(BB, HBS, searchResultsViewTemplate, modalTemplate,
-		 dataTableInfoView){
-	let findStudyAbbreviationFromId;
+		 dataTableInfoView, searchUtil){
 
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
 			this.response = opts.tagSearchResponse;
-			findStudyAbbreviationFromId = opts.findStudyAbbreviationFromId;
 			this.modalTemplate = HBS.compile(modalTemplate);
-			this.tagFilterView = opts.tagFilterView;
 		},
 		events: {
 			"click .fa-info-circle": "infoClickHandler"
@@ -37,7 +34,6 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 							studyAccession: this.generateStudyAccession(response),
 							datasetDescription: response.metadata.description
 						},
-						tagFilterView: this.tagFilterView,
 						el: $(".modal-body")
 					});
 					this.dataTableInfoView.render();
@@ -59,7 +55,7 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			let results = _.map(this.response.results.searchResults, function(result){
 				let metadata = result.result.metadata;
 				return {
-					abbreviation: findStudyAbbreviationFromId(metadata.study_id),
+					abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.study_id),
 					study_id: metadata.study_id,
 					table_id: metadata.dataTableId,
 					variable_id: metadata.varId,
