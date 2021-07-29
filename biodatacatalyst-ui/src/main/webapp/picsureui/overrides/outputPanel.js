@@ -106,12 +106,13 @@ define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
 		 */
 		runQuery: function(defaultOutput, incomingQuery, defaultDataCallback, defaultErrorCallback){
 			defaultOutput.queryRunning();
-			var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy
+			
+			defaultOutput.model.baseQuery = JSON.parse(JSON.stringify(incomingQuery));  //store base query with all consent filters
+			var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy for filtering out consents
 
 			//BDC requires appropriate consent filters to be supplied
 			this.updateConsentFilters(query, settings);
-
-			defaultOutput.model.baseQuery = query;
+			
 			$.ajax({
 				url: window.location.origin + "/picsure/query/sync",
 				type: 'POST',
