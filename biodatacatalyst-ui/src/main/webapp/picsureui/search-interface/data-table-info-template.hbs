@@ -1,18 +1,53 @@
-<div class="study-description">
-    Study Name: {{studyDescription}}
-</div>
-<div class="study-accession">
-    Study Accession:
-    <div class="badge {{colorClass this.tag}}">
-        <span id="tag-{{studyAccession}}"> {{studyAccession}}
-            <span data-tag="{{studyAccession}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
-            <span data-tag="{{studyAccession}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+<div class="study-info">
+    <div class="study-description">
+        Study Name: {{studyDescription}}
+    </div>
+    <div class="study-accession">
+        Study Accession: {{studyAccession}}
+        <div class="badge {{colorClass this.tag}}">
+        <span id="tag-{{studyAccessionTagId}}"> {{studyAccessionTagName}}
+            <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
+            <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
         </span>
+        </div>
     </div>
 </div>
-<div class="dataset-name">
-    Dataset Name: {{datasetName}}
+
+<div class="dataset-info">
+    <div class="dataset-name">
+        Dataset Name: {{variableMetadata.dataTableName}}
+    </div>
+    <div class="dataset-accession">
+        Dataset Accession: {{variableMetadata.dataTableId}}
+        <i class="fa fa-filter"></i>
+        <i class="fa fa-database"></i>
+    </div>
+    <div class="dataset-description">
+        Dataset Description: {{variableMetadata.dataTableDescription}}
+    </div>
 </div>
-<div class="dataset-description">
-    Dataset Description: {{datasetDescription}}
+
+<div class="variable-info">
+    {{#if variableId}}
+        <div>
+            Variable Accession: {{variableId}}
+            <i class="fa fa-filter"></i>
+            <i class="fa fa-database"></i>
+        </div>
+    {{/if}}
+    {{#if variableMetadata.description}}
+        <div>Variable Description: {{variableMetadata.description}}</div>
+    {{/if}}
+    {{#if variableMetadata.name}}
+        <div>Variable Name: {{variableMetadata.name}}</div>
+    {{/if}}
+    {{#if variableMetadata.type}}
+        <div>Variable Type: {{variableMetadata.type}}</div>
+    {{/if}}
+    {{#if variableMetadata.var_report_description}}
+        <div>Variable Report Description: {{variableMetadata.var_report_description}}</div>
+    {{/if}}
+    {{#if variableMetadata.var_report_comment}}
+        <div>Variable Report Comment: {{variableMetadata.var_report_comment}}</div>
+    {{/if}}
 </div>

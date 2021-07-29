@@ -39,8 +39,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
             hasExcludedTags: function(){
                 return this.get('excludedTags').length>0;
             },
-            requireTag: function(tag){
-                let tagName = searchUtil.findStudyAbbreviationFromId(tag);
+            requireTag: function(tagName){
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
                     return;
                 }
@@ -54,8 +53,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 }
                 this.get('requiredTags').add(targetTag);
             },
-            excludeTag: function(tag){
-                let tagName = searchUtil.findStudyAbbreviationFromId(tag);
+            excludeTag: function(tagName){
                 if (this.get('excludedTags').findWhere({tag: tagName})) {
                     return;
                 }
