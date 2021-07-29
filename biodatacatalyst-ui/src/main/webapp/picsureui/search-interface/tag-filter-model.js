@@ -40,6 +40,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 return this.get('excludedTags').length>0;
             },
             requireTag: function(tagName){
+                this.removeExcludedTag(tagName);
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
                     return;
                 }
@@ -54,6 +55,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.get('requiredTags').add(targetTag);
             },
             excludeTag: function(tagName){
+                this.removeRequiredTag(tagName);
                 if (this.get('excludedTags').findWhere({tag: tagName})) {
                     return;
                 }
