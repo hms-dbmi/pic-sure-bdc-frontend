@@ -63,7 +63,9 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 					study_id: metadata.study_id,
 					table_id: metadata.dataTableId,
 					variable_id: metadata.varId,
-					description: metadata.description
+					name: metadata.name,
+					description: metadata.description,
+					dataTableDescription: metadata.dataTableDescription
 				}
 			});
 			this.$el.html(HBS.compile(searchResultsViewTemplate)(

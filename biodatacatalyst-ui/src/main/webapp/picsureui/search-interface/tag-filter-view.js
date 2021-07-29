@@ -23,7 +23,7 @@ function(BB, HBS, tagFilterViewTemplate){
 				return tag;
 			});
 			HBS.registerHelper("colorClass", function(tag){
-				if(studyVersionRegex.test(tag)){
+				if(studyRegex.test(tag)){
 					return 'study-badge';
 				}
 				return 'tag-badge';
@@ -41,6 +41,11 @@ function(BB, HBS, tagFilterViewTemplate){
 		},
 		hasExcludedTags: function(){
 			return this.get('excludedTags').length>0;
+		},
+		hasInactiveStudyTags: function(){
+			return this.get("unusedTags").filter(function(tag){
+				return studyVersionRegex.test(tag.get('tag'));
+			}).length>0;
 		},
 		setUnusedTags: function(tags) {
 			this.set('unusedTags', new BB.Collection);
@@ -161,6 +166,7 @@ function(BB, HBS, tagFilterViewTemplate){
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
 					hasExcludedTags:this.model.hasExcludedTags(),
+					hasInactiveStudyTags:this.model.hasInactiveStudyTags(),
 					hasActiveTags: this.model.hasExcludedTags() || this.model.hasRequiredTags(),
 					requiredTags:this.model.get("requiredTags").map(function(tag){return tag.toJSON();}),
 					excludedTags:this.model.get("excludedTags").map(function(tag){return tag.toJSON();}),

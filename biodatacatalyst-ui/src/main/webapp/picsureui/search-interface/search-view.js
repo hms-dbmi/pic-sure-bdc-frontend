@@ -45,10 +45,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			if (study) {
 				return study.abbreviated_name;
 			}
-			return "";
+			return study_id;
 		},
 		events: {
-			"click #search-button": "submitSearch"
+			"click #search-button": "submitSearch",
+			"keypress #search-box": "handleSearchKeypress"
 		},
 		updateTags: function(response) {
 			this.tagFilterView.updateTags(response);
@@ -82,6 +83,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					console.log(response);
 				}.bind(this)
 			});
+		},
+		handleSearchKeypress: function(event){
+			if(event.keyCode===13){
+				this.submitSearch();
+			}
 		},
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
