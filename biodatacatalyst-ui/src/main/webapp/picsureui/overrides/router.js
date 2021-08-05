@@ -44,7 +44,8 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                         });
                     }
 
-                    filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView, renderHelpCallback);
+                    
+                    filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView, undefined, renderHelpCallback);
                 }
             },
             defaultAction: displayDataAccess
