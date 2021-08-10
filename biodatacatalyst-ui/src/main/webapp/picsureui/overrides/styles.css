@@ -272,3 +272,36 @@
 .dataset-info {
     padding-bottom: 20px;
 }
+
+.filter-modal-container {
+    border-radius: 8px;
+    background-color: #1a568c;
+    height: auto;
+    width: 80%;
+    margin: auto;
+}
+
+.select-filter-type-container {
+    border-radius: 8px;
+    float: left;
+    width: 200px;
+    background-color: #ffffff;
+    margin: 20px;
+    padding: 20px;
+}
+.value-container {
+    border-radius: 8px;
+    float: left;
+    width: 200px;
+    background-color: #ffffff;
+    margin: 20px;
+    padding: 20px;
+}
+.button-container {
+    border-radius: 8px;
+    float: left;
+    width: 200px;
+    background-color: #ffffff;
+    margin: 20px;
+    padding: 20px;
+}
