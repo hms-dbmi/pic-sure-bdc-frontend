@@ -1,0 +1,27 @@
+<div class="filter-modal-container">
+    <div class="row">
+        <div class="select-filter-type-container col">
+            <select id="select-filter-type">
+                <option value="any">Any Value</option>
+                <option value="lessThan">Less than or equal to</option>
+                <option value="greaterThan">Greater than or equal to</option>
+                <option value="between">Between</option>
+            </select>
+        </div>
+
+        <div class="value-container">
+            <div class="min-value-container col" style="display: none;">
+                <div class="min-value">Min: {{variableMetadata.logical_min}}</div>
+                <input id="min-value-input" type="number"/>
+            </div>
+            <div class="max-value-container col" style="display: none;">
+                <div class="max-value">Max: {{variableMetadata.logical_max}}</div>
+                <input id="max-value-input" type="number" />
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button>Add Filter to Query</button>
+        </div>
+    </div>
+</div>

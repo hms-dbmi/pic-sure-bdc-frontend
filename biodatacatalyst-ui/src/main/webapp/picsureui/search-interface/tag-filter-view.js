@@ -1,8 +1,7 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs"],
-function(BB, HBS, tagFilterViewTemplate){
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model"],
+function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
-	let findStudyAbbreviationFromId;
 	let defaultTagLimit = 12;
 
 	let TagFilterModel = BB.Model.extend({
@@ -56,9 +55,14 @@ function(BB, HBS, tagFilterViewTemplate){
 	let TagFilterView = BB.View.extend({
 		initialize: function(opts){
 			this.response = opts.tagSearchResponse;
-			findStudyAbbreviationFromId = opts.findStudyAbbreviationFromId;
-			this.model = new TagFilterModel(opts.tagSearchResponse);
+			this.model = TagFilterModel;
 			this.onTagChange = opts.onTagChange;
+			this.model.get('requiredTags').bind('change add remove', function () {
+				this.modelChanged();
+			}.bind(this));
+			this.model.get('excludedTags').bind('change add remove', function () {
+				this.modelChanged();
+			}.bind(this));
 		},
 		events: {
 			'mouseover .badge': 'showTagControls',
@@ -73,11 +77,9 @@ function(BB, HBS, tagFilterViewTemplate){
 		},
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);
-			this.render();
 		},
 		showFewerTags: function(event){
 			this.model.set('tagLimit', defaultTagLimit);
-			this.render();
 		},
 		showTagControls: function(event){
 			$('.hover-control', event.target).show();
@@ -88,7 +90,7 @@ function(BB, HBS, tagFilterViewTemplate){
 		clickTag: function(event){
 			let tagBtnClicked = this.resolveTagButtonForClick(event);
 			if(tagBtnClicked){
-				this[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
+				this.model[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
 			}
 		},
 		resolveTagButtonForClick: function(event){
@@ -105,57 +107,16 @@ function(BB, HBS, tagFilterViewTemplate){
 			});
 			return tagBtnClicked;
 		},
-		requireTag: function(tag){
-			var unusedTags = this.model.get('unusedTags');
-			var requiredTags = this.model.get('requiredTags');
-			var targetTag = unusedTags.findWhere({tag: tag});
-			if (targetTag === undefined) {
-				targetTag = {tag: tag, score: 0}
-			}
-
-			unusedTags.remove(targetTag);
-			requiredTags.add(targetTag);
-			this.render();
-			this.onTagChange();
-		},
-		excludeTag: function(tag){
-			var unusedTags = this.model.get('unusedTags');
-			var excludedTags = this.model.get('excludedTags');
-			var targetTag = unusedTags.findWhere({tag: tag});
-			if (targetTag === undefined) {
-				targetTag = {tag: tag, score: 0}
-			}
-
-			unusedTags.remove(targetTag);
-			excludedTags.add(targetTag);
-			this.render();
-			this.onTagChange();
-		},
-		removeRequiredTag: function(tag){
-			var unusedTags = this.model.get('unusedTags');
-			var requiredTags = this.model.get('requiredTags');
-			var targetTag = requiredTags.findWhere({tag: tag});
-
-			requiredTags.remove(targetTag);
-			unusedTags.add(targetTag);
-			this.render();
-			this.onTagChange();
-		},
-		removeExcludedTag: function(tag){
-			var unusedTags = this.model.get('unusedTags');
-			var excludedTags = this.model.get('excludedTags');
-			var targetTag = excludedTags.findWhere({tag: tag});
-
-			excludedTags.remove(targetTag);
-			unusedTags.add(targetTag);
-			this.render();
-			this.onTagChange();
-		},
 		updateTags: function(response) {
 			this.response = response;
 			this.model.setUnusedTags(response.results.tags);
 		},
+		modelChanged: function() {
+			this.render();
+			this.onTagChange();
+		},
 		render: function(){
+			console.log("rendering tags");
 			let unusedTags = this.model.get("unusedTags").toArray();
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{

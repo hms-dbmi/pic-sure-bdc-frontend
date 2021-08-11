@@ -2,12 +2,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"text!search-interface/search-view.hbs",
 	"text!search-interface/search-results-view.hbs",
 	"text!search-interface/tag-search-response.json",
-	"text!studyAccess/studies-data.json"],
+	"search-interface/search-util"],
 		function($, BB, HBS, tagFilterView, searchResultsView,
 			searchViewTemplate,
 			searchResultsViewTemplate,
 			tagSearchResponseJson,
-			studiesDataJson){
+			searchUtil){
 
 	var SearchView = BB.View.extend({
 		initialize: function(opts){
@@ -16,20 +16,16 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.outputPanelView = opts.outputPanelView;
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
-			this.studiesData = JSON.parse(studiesDataJson);
 			let response = JSON.parse(tagSearchResponseJson);
-			let findStudyAbbreviationFromId = this.findStudyAbbreviationFromId.bind(this);
 
 			this.render();
 			this.tagFilterView = new tagFilterView({
-				tagSearchResponse:response, 
-				findStudyAbbreviationFromId: findStudyAbbreviationFromId,
+				tagSearchResponse:response,
 				el : $('#tag-filters'),
 				onTagChange: this.submitSearch.bind(this)
 			});
 			this.searchResultsView = new searchResultsView({
-				tagSearchResponse:response, 
-				findStudyAbbreviationFromId: findStudyAbbreviationFromId,
+				tagSearchResponse:response,
 				tagFilterView: this.tagFilterView,
 				el : $('#search-results')
 			});
