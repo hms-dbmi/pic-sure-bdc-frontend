@@ -47,8 +47,9 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 		},
 		resolveTagButtonForClick: function(event){
 			let clickIsInsideTagBtn = function(event, tagBtn){
-				let clickXRelativeToTagBtn = (event.offsetX - (tagBtn.offsetLeft - event.target.offsetLeft));
-				return clickXRelativeToTagBtn > 0 && (clickXRelativeToTagBtn - tagBtn.offsetWidth) < tagBtn.offsetWidth;
+				let clientRect = tagBtn.getClientRects()[0];
+				let relativeX = event.clientX - clientRect.x;
+				return relativeX >= 0 && relativeX <= clientRect.width;
 			}
 			let tagBtnClicked;
 			_.each($('.hover-control', event.target), tagBtn=>{
@@ -79,6 +80,7 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
 					hasExcludedTags:this.model.hasExcludedTags(),
+					hasInactiveStudyTags:this.model.hasInactiveStudyTags(),
 					hasActiveTags: this.model.hasExcludedTags() || this.model.hasRequiredTags(),
 					requiredTags:this.model.get("requiredTags").map(function(tag){return tag.toJSON();}),
 					excludedTags:this.model.get("excludedTags").map(function(tag){return tag.toJSON();}),

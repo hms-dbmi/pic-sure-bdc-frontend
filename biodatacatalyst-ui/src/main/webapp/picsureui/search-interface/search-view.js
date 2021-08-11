@@ -33,8 +33,19 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.render();
 			
 		},
+		findStudyAbbreviationFromId: function(study_id){
+			let study = _.find(this.studiesData.bio_data_catalyst,
+				function(studyData){
+					return studyData.study_identifier === study_id.split('.')[0].toLowerCase();
+				});
+			if (study) {
+				return study.abbreviated_name;
+			}
+			return study_id;
+		},
 		events: {
-			"click #search-button": "submitSearch"
+			"click #search-button": "submitSearch",
+			"keypress #search-box": "handleSearchKeypress"
 		},
 		updateTags: function(response) {
 			this.tagFilterView.updateTags(response);
@@ -68,6 +79,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					console.log(response);
 				}.bind(this)
 			});
+		},
+		handleSearchKeypress: function(event){
+			if(event.keyCode===13){
+				this.submitSearch();
+			}
 		},
 		render: function(){
 			this.$el.html(this.searchViewTemplate());

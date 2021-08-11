@@ -123,6 +123,8 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 					study_id: metadata.study_id,
 					table_id: metadata.dataTableId,
 					variable_id: metadata.varId,
+					name: metadata.name,
+					dataTableDescription: metadata.dataTableDescription,
 					description: metadata.description,
 					result_index: i
 				}

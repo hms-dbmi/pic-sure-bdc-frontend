@@ -3,6 +3,7 @@
 		border: solid;
 		border-radius: 1em;
 		padding:3px;
+		overflow:hidden;
 	}
 	.search-result-icons {
 		float:right;
@@ -16,13 +17,16 @@
 	.search-result:nth-child(odd) {
 		background:white;
 	}
+	.dt-short-description {
+		overflow:hidden;
+	}
 </style>
 
 <span class='row'>{{variableCount}} variables match your search</span>
 {{#each results}}
   <div class='search-result row'>
   	<span class='col'>{{this.abbreviation}}<br>{{this.study_id}} </span>
-  	<span class='col'> {{this.description}} </span>
+  	<span class='col'>[{{this.name}}] {{this.description}} </span>
   	<span class='search-result-icons col'>
   		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-info-circle" title="Variable Information"></i>
   		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-filter"></i>

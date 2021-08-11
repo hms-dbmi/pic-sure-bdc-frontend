@@ -39,6 +39,11 @@ define(["backbone", "handlebars", "search-interface/search-util"],
             hasExcludedTags: function(){
                 return this.get('excludedTags').length>0;
             },
+            hasInactiveStudyTags: function(){
+                return this.get("unusedTags").filter(function(tag){
+                        return studyVersionRegex.test(tag.get('tag'));
+                }).length>0;
+            },
             requireTag: function(tagName){
                 this.removeExcludedTag(tagName);
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
@@ -90,8 +95,12 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.set('excludedTags', excludedTags);
             },
             setUnusedTags: function(tags) {
+                tags = _.filter(tags,(tag)=>{
+                    return this.get('requiredTags').findWhere({tag:tag.tag}) === undefined;
+                });
                 this.set('unusedTags', new BB.Collection);
                 this.get('unusedTags').add(tags);
+                this.get('unusedTags').remove(this.get('requiredTags').models);
             }
         });
         return new TagFilterModel();
