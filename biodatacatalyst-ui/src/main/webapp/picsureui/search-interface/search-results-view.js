@@ -124,7 +124,7 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 					table_id: metadata.dataTableId,
 					variable_id: metadata.varId,
 					name: metadata.name,
-					dataTableDescription: metadata.dataTableDescription
+					dataTableDescription: metadata.dataTableDescription,
 					description: metadata.description,
 					result_index: i
 				}

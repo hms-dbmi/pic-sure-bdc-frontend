@@ -4,54 +4,6 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let defaultTagLimit = 12;
 
-	let TagFilterModel = BB.Model.extend({
-		defaults:{
-			requiredTags: new BB.Collection,
-			excludedTags: new BB.Collection,
-			unusedTags: new BB.Collection
-		},
-		initialize: function(opts){
-			this.set('requiredTags', new BB.Collection);
-			this.set('excludedTags', new BB.Collection);
-			this.set('unusedTags', new BB.Collection);
-			this.set('tagLimit', defaultTagLimit);
-			HBS.registerHelper("aliasIfStudy", function(tag){
-				if(studyVersionRegex.test(tag)){
-					return findStudyAbbreviationFromId(tag);
-				}
-				return tag;
-			});
-			HBS.registerHelper("colorClass", function(tag){
-				if(studyRegex.test(tag)){
-					return 'study-badge';
-				}
-				return 'tag-badge';
-			});
-			let tagComparator = function(a, b){
-				return b.get('score') - a.get('score');
-			};
-			this.get('requiredTags').comparator = tagComparator;
-			this.get('excludedTags').comparator = tagComparator;
-			this.get('unusedTags').comparator = tagComparator;
-			this.get('unusedTags').add(opts.results.tags);
-		},
-		hasRequiredTags: function(){
-			return this.get('requiredTags').length>0;
-		},
-		hasExcludedTags: function(){
-			return this.get('excludedTags').length>0;
-		},
-		hasInactiveStudyTags: function(){
-			return this.get("unusedTags").filter(function(tag){
-				return studyVersionRegex.test(tag.get('tag'));
-			}).length>0;
-		},
-		setUnusedTags: function(tags) {
-			this.set('unusedTags', new BB.Collection);
-			this.get('unusedTags').add(tags);
-		}
-	});
-
 	let TagFilterView = BB.View.extend({
 		initialize: function(opts){
 			this.response = opts.tagSearchResponse;
