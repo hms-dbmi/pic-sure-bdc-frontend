@@ -93,8 +93,9 @@ function(BB, HBS, tagFilterViewTemplate){
 		},
 		resolveTagButtonForClick: function(event){
 			let clickIsInsideTagBtn = function(event, tagBtn){
-				let clickXRelativeToTagBtn = (event.offsetX - (tagBtn.offsetLeft - event.target.offsetLeft));
-				return clickXRelativeToTagBtn > 0 && (clickXRelativeToTagBtn - tagBtn.offsetWidth) < tagBtn.offsetWidth;
+				let clientRect = tagBtn.getClientRects()[0];
+				let relativeX = event.clientX - clientRect.x;
+				return relativeX >= 0 && relativeX <= clientRect.width;
 			}
 			let tagBtnClicked;
 			_.each($('.hover-control', event.target), tagBtn=>{
