@@ -9,12 +9,12 @@
 
         <div class="value-container" style="display: none;">
             {{#each variableValues}}
-                <input type="checkbox" value="{{this}}"/>{{this}} <br/>
+                <input class="categorical-filter-input" type="checkbox" value="{{this}}"/>{{this}} <br/>
             {{/each}}
         </div>
 
         <div class="button-container">
-            <button>Add Filter to Query</button>
+            <button id="add-filter-button">Add Filter to Query</button>
         </div>
     </div>
 </div>

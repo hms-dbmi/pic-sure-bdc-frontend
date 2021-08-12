@@ -274,7 +274,8 @@
 }
 
 .filter-modal-container {
-    border-radius: 8px;
+    border-radius: 2px;
+    border-color: #000000;
     background-color: #1a568c;
     height: auto;
     width: 80%;
@@ -282,7 +283,8 @@
 }
 
 .select-filter-type-container {
-    border-radius: 8px;
+    border-radius: 2px;
+    border-color: #000000;
     float: left;
     width: 200px;
     background-color: #ffffff;
@@ -290,7 +292,8 @@
     padding: 20px;
 }
 .value-container {
-    border-radius: 8px;
+    border-radius: 2px;
+    border-color: #000000;
     float: left;
     width: 200px;
     background-color: #ffffff;
@@ -298,10 +301,21 @@
     padding: 20px;
 }
 .button-container {
-    border-radius: 8px;
+    border-radius: 2px;
+    border-color: #000000;
     float: left;
     width: 200px;
     background-color: #ffffff;
     margin: 20px;
     padding: 20px;
+}
+
+#filter-list-panel {
+    line-height: 1;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgrey;
+    padding: 40px 0px;
+    background-color: rgb(223, 238, 255);
+    border-radius: 4px;
 }

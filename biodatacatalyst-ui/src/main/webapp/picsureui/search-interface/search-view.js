@@ -2,12 +2,14 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"text!search-interface/search-view.hbs",
 	"text!search-interface/search-results-view.hbs",
 	"text!search-interface/tag-search-response.json",
-	"search-interface/search-util"],
+	"search-interface/search-util",
+	"search-interface/filter-list-view"],
 		function($, BB, HBS, tagFilterView, searchResultsView,
 			searchViewTemplate,
 			searchResultsViewTemplate,
 			tagSearchResponseJson,
-			searchUtil){
+			searchUtil,
+			filterListView){
 
 	var SearchView = BB.View.extend({
 		initialize: function(opts){
@@ -29,6 +31,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				tagFilterView: this.tagFilterView,
 				el : $('#search-results')
 			});
+			this.filterListView = new filterListView({
+				el : $('#filter-list-panel')
+			});
+
 			this.tagFilterView.render();
 			this.searchResultsView.render();
 			
