@@ -27,8 +27,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 switch (filterType) {
                     case "any":
                         filterModel.addRequiredFilter(
-                            this.data.variableId,
-                            "\\" + this.data.studyAccession + "\\" + this.data.variableMetadata.dataTableId + "\\" + this.data.variableId
+                            this.data.searchResult,
                         );
                         break;
                     case "restrict":
@@ -36,8 +35,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                             return $(this).val();
                         }).toArray();
                         filterModel.addCategoryFilter(
-                            this.data.variableId,
-                            "\\" + this.data.studyAccession + "\\" + this.data.variableMetadata.dataTableId + "\\" + this.data.variableId,
+                            this.data.searchResult,
                             values
                         );
                         break;

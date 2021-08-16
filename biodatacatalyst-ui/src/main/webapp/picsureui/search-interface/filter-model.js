@@ -8,30 +8,34 @@ define(["backbone", "handlebars"],
             initialize: function(opts){
                 this.set('activeFilters', new BB.Collection);
             },
-            addCategoryFilter: function(variableId, category, values) {
+            addCategoryFilter: function(searchResult, values) {
                 this.get('activeFilters').add({
                     type: 'category',
-                    variableId: variableId,
-                    category: category,
-                    values: values
+                    searchResult: searchResult,
+                    category: this.generateCategory(searchResult),
+                    values: values,
+                    searchResult: searchResult
                 });
             },
-            addNumericFilter: function(variableId, category, min, max) {
+            addNumericFilter: function(searchResult, min, max) {
                 this.get('activeFilters').add({
                     type: 'numeric',
-                    variableId: variableId,
-                    category: category,
+                    searchResult: searchResult,
+                    category: this.generateCategory(searchResult),
                     min: min,
                     max: max
                 });
             },
-            addRequiredFilter: function(variableId, category) {
+            addRequiredFilter: function(searchResult) {
                 this.get('activeFilters').add({
                     type: 'required',
-                    variableId: variableId,
-                    category: category
+                    searchResult: searchResult,
+                    category: this.generateCategory(searchResult),
                 });
-            }
+            },
+            generateCategory: function(searchResult) {
+                return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\" + searchResult.result.metadata.varId;
+            },
         });
         return new FilterModel();
     });

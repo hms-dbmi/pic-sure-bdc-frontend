@@ -1,5 +1,5 @@
-define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-view.hbs"],
-    function($, BB, HBS, filterModalViewTemplate){
+define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-view.hbs", "search-interface/filter-model"],
+    function($, BB, HBS, filterModalViewTemplate, filterModel){
 
         var View = BB.View.extend({
             initialize: function(opts){
@@ -7,7 +7,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                 this.data = opts.data;
             },
             events: {
-                "change #select-filter-type": "changeFilterType"
+                "change #select-filter-type": "changeFilterType",
+                "click #add-filter-button": "addFilter"
             },
             changeFilterType: function(event) {
                 let $selectEl = $(event.target);
@@ -28,6 +29,37 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                     case "between":
                         $('.min-value-container').show();
                         $('.max-value-container').show();
+                        break;
+                }
+            },
+            addFilter: function(event) {
+                let filterType = $('#select-filter-type').val();
+                switch (filterType) {
+                    case "any":
+                        filterModel.addRequiredFilter(
+                            this.data.searchResult
+                        );
+                        break;
+                    case "greaterThan":
+                        filterModel.addNumericFilter(
+                            this.data.searchResult,
+                            $('#min-value-input').val(),
+                            null
+                        );
+                        break;
+                    case "lessThan":
+                        filterModel.addNumericFilter(
+                            this.data.searchResult,
+                            null,
+                            $('#max-value-input').val()
+                        );
+                        break;
+                    case "between":
+                        filterModel.addNumericFilter(
+                            this.data.searchResult,
+                            $('#min-value-input').val(),
+                            $('#max-value-input').val()
+                        );
                         break;
                 }
             },

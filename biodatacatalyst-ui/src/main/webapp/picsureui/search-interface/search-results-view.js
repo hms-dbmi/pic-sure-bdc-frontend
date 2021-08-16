@@ -59,51 +59,35 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			let dataTableId = $(event.target).data('data-table-id');
 			let variableId = $(event.target).data('variable-id');
 			let resultIndex = $(event.target).data('result-index');
-			$.ajax({
-				url: window.location.origin + "/jaxrs-service/rest/pic-sure/query/sync",
-				type: 'POST',
-				contentType: 'application/json',
-				data: JSON.stringify({query: {id: dataTableId, entityType: "DATA_TABLE"}}),
-				success: function(response){
-					let variableDescription = response.variables[variableId].metadata.description;
-					if ($("#modal-window").length === 0) {
-						$('#main-content').append('<div id="modal-window"></div>');
-					}
-					$("#modal-window").html(this.modalTemplate({title: ""}));
-					$("#modalDialog").show();
-					// todo: more info
-					$(".modal-header").append('<h3>' + variableDescription + '</h3>');
-					$('.close').click(function() {$("#modalDialog").hide();});
 
-					let variableValues = this.response.results.searchResults[resultIndex].result.values;
+			let searchResult = this.response.results.searchResults[resultIndex];
 
-					let filterViewData = {
-						studyDescription: response.metadata.study_description,
-							studyAccession: this.generateStudyAccession(response),
-							studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.study_id),
-							studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.study_id),
-							variableId: variableId,
-							variableMetadata: response.variables[variableId].metadata,
-							variableValues: variableValues
-					}
+			if ($("#modal-window").length === 0) {
+				$('#main-content').append('<div id="modal-window"></div>');
+			}
+			$("#modal-window").html(this.modalTemplate({title: ""}));
+			$("#modalDialog").show();
+			// todo: more info
+			$(".modal-header").append('<h3>' + searchResult.result.metadata.description + '</h3>');
+			$('.close').click(function() {$("#modalDialog").hide();});
 
-					if (!_.isEmpty(variableValues)) {
-						this.filterModalView = new categoricalFilterModalView({
-							data: filterViewData,
-							el: $(".modal-body")
-						});
-					} else {
-						this.filterModalView = new filterModalView({
-							data: filterViewData,
-							el: $(".modal-body")
-						});
-					}
-					this.filterModalView.render();
-				}.bind(this),
-				error: function(response){
-					console.log(response);
-				}.bind(this)
-			});
+
+			let filterViewData = {
+				searchResult: searchResult
+			}
+
+			if (!_.isEmpty(searchResult.result.values)) {
+				this.filterModalView = new categoricalFilterModalView({
+					data: filterViewData,
+					el: $(".modal-body")
+				});
+			} else {
+				this.filterModalView = new filterModalView({
+					data: filterViewData,
+					el: $(".modal-body")
+				});
+			}
+			this.filterModalView.render();
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.study_id;
