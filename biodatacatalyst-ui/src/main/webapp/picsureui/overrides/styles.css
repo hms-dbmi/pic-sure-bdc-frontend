@@ -256,3 +256,25 @@
 .search-help-modal h5 {
     font-weight: bold;
 }
+
+
+#user-profile button {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #ffffff;
+}
+
+#user-profile button:hover, #user-profile button:focus {
+    background-color: #20639d;
+    border-color: #20639d;
+    color: #ffffff;
+}
+
+#user-profile .badge-primary,
+#user-profile .badge-warning,
+#user-profile .badge-danger {
+    font-size: 14px;
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
