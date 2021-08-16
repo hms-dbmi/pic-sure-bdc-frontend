@@ -6,3 +6,5 @@
 target/
 bin/
 *.iml
+*token.txt
+*.ipynb_checkpoints*
