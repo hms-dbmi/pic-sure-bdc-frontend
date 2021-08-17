@@ -1,4 +1,17 @@
 /* Add your style overrides here */
+
+#main-content {
+    width: 95%;
+    position: relative;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    padding-bottom: 2em;
+}
+
+#query-results {
+    margin-bottom: 20px;
+}
+
 .advanced-search-btn {
   display: none;	
 }

@@ -16,8 +16,6 @@ define([],function(){
 			 *  "common/login" : "path/in/src/main/javascript/newLogin"
 			 */
 			// "header/header" : "overrides/floatheader/floatheader"
-
-			"filter/filterList" : "search-interface/search-view"
 		}
 	});	
 });

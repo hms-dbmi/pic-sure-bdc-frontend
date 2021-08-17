@@ -1,21 +1,15 @@
 define(["jquery","backbone","handlebars","search-interface/tag-filter-view","search-interface/search-results-view",
 	"text!search-interface/search-view.hbs",
 	"text!search-interface/search-results-view.hbs",
-	"text!search-interface/tag-search-response.json",
-	"search-interface/search-util",
-	"search-interface/filter-list-view"],
+	"text!search-interface/tag-search-response.json"],
 		function($, BB, HBS, tagFilterView, searchResultsView,
 			searchViewTemplate,
 			searchResultsViewTemplate,
-			tagSearchResponseJson,
-			searchUtil,
-			filterListView){
+			tagSearchResponseJson){
 
 	var SearchView = BB.View.extend({
 		initialize: function(opts){
 			this.filters = [];
-			this.resourceUUID = opts.resourceUUID;
-			this.outputPanelView = opts.outputPanelView;
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			let response = JSON.parse(tagSearchResponseJson);
@@ -30,9 +24,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				tagSearchResponse:response,
 				tagFilterView: this.tagFilterView,
 				el : $('#search-results')
-			});
-			this.filterListView = new filterListView({
-				el : $('#filter-list-panel')
 			});
 
 			this.tagFilterView.render();
@@ -96,11 +87,5 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		}
 	});
 
-	var filterList = {
-		init : function(resourceUUID, outputPanelView, queryTemplate){
-			new SearchView({resourceUUID: resourceUUID, outputPanelView: outputPanelView, queryTemplate:queryTemplate, el : $('#filter-list')})
-		}
-	};
-
-	return filterList;
+	return SearchView;
 });

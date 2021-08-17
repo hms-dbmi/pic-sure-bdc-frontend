@@ -1,0 +1,22 @@
+{{#if analyticsId}}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{analyticsId}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '{{analyticsId}}');
+    </script>
+{{/if}}
+
+<div id="query-builder" class="col-md-9">
+    <div class="container" id="filter-list"></div>
+</div>
+<div class="col-md-3">
+    <div id="query-results"></div>
+
+    <div id="filter-list-panel">
+
+    </div>
+</div>

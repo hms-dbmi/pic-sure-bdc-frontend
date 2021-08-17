@@ -1,4 +1,4 @@
-define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
+define(["handlebars", "backbone", "picSure/settings", "biodatacatalyst-ui/src/main/webapp/picsureui/common/transportErrors"],
 	function(HBS, BB, settings, transportErrors){
 
 	return {
