@@ -6,3 +6,7 @@
 target/
 bin/
 *.iml
+*token.txt
+*.ipynb_checkpoints*
+**_pycache**
+*Patient_Count_Per_Consents.csv
