@@ -31,7 +31,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                         );
                         break;
                     case "restrict":
-                        let values = $('.categorical-filter-input').map(function(x) {
+                        let values = $('.categorical-filter-input:checked').map(function(x) {
                             return $(this).val();
                         }).toArray();
                         filterModel.addCategoryFilter(
@@ -40,6 +40,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                         );
                         break;
                 }
+                $('.close').click();
             },
             render: function(){
                 this.$el.html(this.categoricalFilterModalViewTemplate(this.data));

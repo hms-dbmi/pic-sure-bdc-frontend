@@ -33,6 +33,12 @@ define(["backbone", "handlebars"],
                     category: this.generateCategory(searchResult),
                 });
             },
+            removeByIndex: function(index) {
+                this.get('activeFilters').remove(this.get('activeFilters').at(index));
+            },
+            getByIndex: function(index) {
+                return this.get('activeFilters').at(index).attributes;
+            },
             generateCategory: function(searchResult) {
                 return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\" + searchResult.result.metadata.varId;
             },

@@ -332,3 +332,20 @@
     background-color: rgb(223, 238, 255);
     border-radius: 4px;
 }
+
+.filter-container {
+    padding: 5px;
+}
+
+.filter-container:not(:first-of-type) {
+    border-top-width: 1px;
+    border-top-color: #000;
+    border-top-style: solid;
+}
+
+.remove-filter {
+    float: right;
+}
+.edit-filter {
+    float: right;
+}

@@ -62,6 +62,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                         );
                         break;
                 }
+                $('.close').click();
             },
             render: function(){
                 this.$el.html(this.filterModalViewTemplate(this.data));

@@ -56,8 +56,6 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			});
 		},
 		filterClickHandler: function(event) {
-			let dataTableId = $(event.target).data('data-table-id');
-			let variableId = $(event.target).data('variable-id');
 			let resultIndex = $(event.target).data('result-index');
 
 			let searchResult = this.response.results.searchResults[resultIndex];
