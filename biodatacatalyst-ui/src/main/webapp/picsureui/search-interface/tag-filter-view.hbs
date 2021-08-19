@@ -48,7 +48,7 @@
 			<div class='row'><span>Required Tags:</span>
 				{{#each requiredTags}}
 					<div class="badge {{colorClass this.tag}}">
-						<span class="required-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 
+						<span class="required-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
 							<span data-tag="{{this.tag}}" data-action="removeRequiredTag" class="selected-required-tag remove-tag-btn hover-control">X</span>
 						</span>
 					</div>
@@ -59,7 +59,7 @@
 			<div class='row'><span>Excluded Tags:</span>
 				{{#each excludedTags}}
 					<div class="badge {{colorClass this.tag}}">
-						<span class="excluded-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 
+						<span class="excluded-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
 							<span data-tag="{{this.tag}}" data-action="removeExcludedTag" class="selected-excluded-tag remove-tag-btn hover-control">X</span>
 						</span>
 					</div>
@@ -76,7 +76,7 @@
 	<div class='row section-body unused-tags'>
 		{{#each tags}}
 			<div class="badge {{colorClass this.tag}}">
-				<span id="tag-{{this.tag}}"> {{this.tag}} 
+				<span id="tag-{{this.tag}}"> {{this.tag}} ({{this.score}})
 					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
 					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
 				</span>
@@ -96,7 +96,7 @@
 	<div class='row section-body'>
 		{{#each studyTags}}
 			<div class="badge {{colorClass this.tag}}">
-				<span id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} 
+				<span id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
 					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
 					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
 				</span>

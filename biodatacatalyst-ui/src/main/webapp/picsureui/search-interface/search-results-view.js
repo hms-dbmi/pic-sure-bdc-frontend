@@ -7,7 +7,6 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
-			this.response = opts.tagSearchResponse;
 			this.modalTemplate = HBS.compile(modalTemplate);
 		},
 		events: {
@@ -98,25 +97,27 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			return studyId.split('.')[0].toUpperCase();
 		},
 		render: function(){
-			let results = _.map(this.response.results.searchResults, function(result, i){
-				let metadata = result.result.metadata;
-				return {
-					abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.study_id),
-					study_id: metadata.study_id,
-					table_id: metadata.dataTableId,
-					variable_id: metadata.varId,
-					name: metadata.name,
-					dataTableDescription: metadata.dataTableDescription,
-					description: metadata.description,
-					result_index: i
-				}
-			});
-			this.$el.html(HBS.compile(searchResultsViewTemplate)(
-				{
-					"results": results,
-					"variableCount": this.response.results.numResults
-				}
-			));
+			if (this.response) {
+				let results = _.map(this.response.results.searchResults, function(result, i){
+					let metadata = result.result.metadata;
+					return {
+						abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.study_id),
+						study_id: metadata.study_id,
+						table_id: metadata.dataTableId,
+						variable_id: metadata.varId,
+						name: metadata.name,
+						dataTableDescription: metadata.dataTableDescription,
+						description: metadata.description,
+						result_index: i
+					}
+				});
+				this.$el.html(HBS.compile(searchResultsViewTemplate)(
+					{
+						"results": results,
+						"variableCount": this.response.results.numResults
+					}
+				));
+			}
 		}
 	});
 	return StudyResultsView;

@@ -29,9 +29,11 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 		},
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);
+			this.render();
 		},
 		showFewerTags: function(event){
 			this.model.set('tagLimit', defaultTagLimit);
+			this.render();
 		},
 		showTagControls: function(event){
 			$('.hover-control', event.target).show();
@@ -68,13 +70,13 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 			this.onTagChange();
 		},
 		render: function(){
-			console.log("rendering tags");
 			let unusedTags = this.model.get("unusedTags").toArray();
+			let tags = _.filter(unusedTags, function(tag){
+				return ! studyVersionRegex.test(tag.get('tag'));
+			}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit'));
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
-					tags:_.filter(unusedTags, function(tag){
-						return ! studyVersionRegex.test(tag.get('tag'));
-					}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit')),
+					tags: tags,
 					tagsTotal: this.model.get("unusedTags").size(),
 					tagsShown: Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()),
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
