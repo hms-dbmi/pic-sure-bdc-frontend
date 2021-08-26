@@ -5,6 +5,7 @@ import PicSureHpdsLib
 import PicSureClient
 
 from typing import List
+import math
 
 
 def get_multiIndex_variablesDict(variablesDict: pd.DataFrame) -> pd.DataFrame:
@@ -77,6 +78,7 @@ def joining_variablesDict_onCol(variablesDict: pd.DataFrame,
     return variablesDict_joined
 
 def get_full_consent_vals(to_validate, patient_ref_file):
+    # Uses a user-defined list of phs codes to find the full consent value (ie phsXXXXXX.c1)
     full_phs = []
     if len(to_validate) > 0:
         for phs in to_validate:
@@ -86,6 +88,7 @@ def get_full_consent_vals(to_validate, patient_ref_file):
     return full_phs
 
 def compare_datadict_indices(d1, d2, comparison, to_validate=[]):
+    # Compares the concept paths in d2 to d1 to find differences. 
     d1_ind = list(d1.index)
     d2_ind = list(d2.index)
     if comparison==1:
@@ -106,3 +109,125 @@ def compare_datadict_indices(d1, d2, comparison, to_validate=[]):
         for i in wrong:
             print(i)
     return wrong
+
+def compare_datadicts(integ, prod, to_validate, full_phs, harmonized, topmed, patient_ref_file):
+    print("Initializing variables and getting counts...")
+    # Initialize variables used in function
+    columns = ['min', 'max', 
+           'patientCount', 'observationCount', 
+           'categorical', 'HpdsDataType', 
+           'categoryValues', 'description'] # Names of columns in data dictionary
+    
+    genome_vars = ['Variant_consequence_calculated', 
+               'Gene_with_variant', 
+               'Variant_class', 'Variant_frequency_as_text', 
+               'Variant_severity']
+    genome_keys = ['patientCount', 'observationCount']
+    
+    # Get the expected differences in patient counts for each group
+    diff_total = patient_ref_file[patient_ref_file['consent'].isin(full_phs)].sum()['patient_count']
+    if len(harmonized)>0:
+        harmonized_diff_total = patient_ref_file[patient_ref_file['consent'].isin(harmonized)].sum()['patient_count']
+    else:
+        harmonized_diff_total = 0
+    if len(topmed)>0:
+        topmed_diff_total = patient_ref_file[patient_ref_file['consent'].isin(topmed)].sum()['patient_count']
+    else:
+        topmed_diff_total = 0
+    
+    integration = list(integ.index)
+    to_check = {}
+    
+    print("Comparing data dictionaries...")
+    # Begin comparing data dictionaries
+    for integ_key in integration:
+        # Skip the concept paths in integration and not in production (user defined)
+        if any(phs in integ_key for phs in to_validate):
+            continue
+        # Skip harmonized concept paths if harmonized study was added
+        if harmonized_diff_total > 0 and '\\DCC Harmonized data set\\' in integ_key:
+            continue
+            '''NOTE: This can be improved - we would know the expected difference between production and integration, so 
+            we could check this. It is more complicated. We will do this later.'''
+            
+        
+        mini_list = []
+        # Iterate through columns of data dictionary and test if match
+        for i in columns:
+            
+            # Account for instances where min and max could be nan
+            if i in ['min', 'max']:
+                # If both are nan, they match and pass test
+                if math.isnan(integ.loc[integ_key][i]) and math.isnan(prod.loc[integ_key][i]):
+                    test = True
+                # If both are numbers, test if the numbers are the same
+                else:
+                    test = integ.loc[integ_key][i] == prod.loc[integ_key][i]
+            
+            # Patient and observation counts of genomic variables are recorded differently
+            elif i in genome_keys:
+                if integ_key in genome_vars:
+                    test = math.isnan(integ.loc[integ_key][i]) == math.isnan(prod.loc[integ_key][i])
+                else:
+                    test = integ.loc[integ_key][i] == prod.loc[integ_key][i]
+            
+            # Account for all other rows
+            else:
+                test = integ.loc[integ_key][i] == prod.loc[integ_key][i]
+            
+            # Record each column that doesn't pass validation
+            if test == False:
+                mini_list.append(i)
+        if len(mini_list) > 0:
+            to_check[integ_key] = mini_list
+    print("Finished comparison.")
+    print("Results:")
+    
+    # View the results
+    # First display the results that were not any consent concept paths
+    if len(to_check) == 0:
+        print("Data dictionaries match completely.")
+        return(to_check)
+    for key in to_check.keys():
+        # Major consent concept paths
+        if key in ['\\_consents\\', '\\_Parent Study Accession with Subject ID\\', '\\_parent_consents\\']:
+            for obs in to_check[key]:
+                if integ.loc[key][obs]-diff_total != prod.loc[key][obs] and obs != 'categoryValues':
+                    print(key, obs, 'does not pass validation.')
+                    print(obs)
+                    print('\tExpected difference:', diff_total)
+                    print("\tIntegration value:", integ.loc[key][obs])
+                    print("\tProduction value:", prod.loc[key][obs])
+                else:
+                    print(key, obs, 'passes validation.')
+        # Harmonized consents concept path
+        if key == '\\_harmonized_consent\\':
+            for obs in to_check[key]:
+                if integ.loc[key][obs]-harmonized_diff_total != prod.loc[key][obs] and obs != 'categoryValues':
+                    print(key, obs, 'does not pass validation.')
+                    print(obs)
+                    print('\tExpected difference:', harmonized_diff_total)
+                    print("\tIntegration value:", integ.loc[key][obs])
+                    print("\tProduction value:", prod.loc[key][obs])
+                else:
+                    print(key, obs, 'passes validation.')
+        # Topmed consents concept path
+        if key == '\\_topmed_consent\\':
+            for obs in to_check[key]:
+                if integ.loc[key][obs]-topmed_diff_total != prod.loc[key][obs] and obs != 'categoryValues':
+                    print(key, obs, 'does not pass validation.')
+                    print('\tExpected difference:', topmed_diff_total)
+                    print("\tIntegration value:", integ.loc[key][obs])
+                    print("\tProduction value:", prod.loc[key][obs])
+                else:
+                    print(key, obs, 'passes validation.')
+        # All other results
+        else:
+            print("\nConcept path that differs in data dictionaries:")
+            print(key)
+            print("\nColumns that do not match:")
+            for obs in to_check[key]:
+                print(obs)
+                print("\tIntegration value:", integ.loc[key][obs])
+                print("\tProduction value:", prod.loc[key][obs])
+    return to_check
