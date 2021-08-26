@@ -76,3 +76,33 @@ def joining_variablesDict_onCol(variablesDict: pd.DataFrame,
         .set_index(variablesDict_index_names)
     return variablesDict_joined
 
+def get_full_consent_vals(to_validate, patient_ref_file):
+    full_phs = []
+    if len(to_validate) > 0:
+        for phs in to_validate:
+            for full in list(patient_ref_file['consent']):
+                if phs in full and ".c0" not in full:
+                    full_phs.append(full)
+    return full_phs
+
+def compare_datadict_indices(d1, d2, comparison, to_validate=[]):
+    d1_ind = list(d1.index)
+    d2_ind = list(d2.index)
+    if comparison==1:
+        d1_name = 'integration'
+        d2_name = 'production'
+    elif comparison==2:
+        d1_name = 'production'
+        d2_name = 'integration'
+    diff = list(set(d1_ind)-set(d2_ind))
+    wrong = []
+    for i in diff:
+        if (len(to_validate)==0) or (len(to_validate)>0 and not any(study in i for study in to_validate)):
+            wrong.append(i)
+    if len(wrong)<1:
+        print("All concepts in", d2_name, "are in", d1_name)
+    else:
+        print("The following concepts are in", d1_name, "but not in", d2_name, ':')
+        for i in wrong:
+            print(i)
+    return wrong
