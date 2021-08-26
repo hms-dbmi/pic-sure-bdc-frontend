@@ -45,7 +45,6 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                             $("#search-help-modal").show();
                         });
                     }
-
                     filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView, renderHelpCallback);
                 },
                 "picsureui/queryBuilder(/)" : function() {
