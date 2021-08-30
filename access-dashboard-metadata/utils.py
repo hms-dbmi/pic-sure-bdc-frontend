@@ -7,6 +7,9 @@ import PicSureClient
 from typing import List
 import math
 
+import json
+import requests
+
 
 def get_multiIndex_variablesDict(variablesDict: pd.DataFrame) -> pd.DataFrame:
 
@@ -188,39 +191,17 @@ def compare_datadicts(integ, prod, to_validate, full_phs, harmonized, topmed, pa
     if len(to_check) == 0:
         print("Data dictionaries match completely.")
         return(to_check)
+    
     for key in to_check.keys():
         # Major consent concept paths
         if key in ['\\_consents\\', '\\_Parent Study Accession with Subject ID\\', '\\_parent_consents\\']:
-            for obs in to_check[key]:
-                if integ.loc[key][obs]-diff_total != prod.loc[key][obs] and obs != 'categoryValues':
-                    print(key, obs, 'does not pass validation.')
-                    print(obs)
-                    print('\tExpected difference:', diff_total)
-                    print("\tIntegration value:", integ.loc[key][obs])
-                    print("\tProduction value:", prod.loc[key][obs])
-                else:
-                    print(key, obs, 'passes validation.')
-        # Harmonized consents concept path
+            print_results(to_check, diff_total, integ, prod, key)
+        # Ha#rmonized consents concept path
         if key == '\\_harmonized_consent\\':
-            for obs in to_check[key]:
-                if integ.loc[key][obs]-harmonized_diff_total != prod.loc[key][obs] and obs != 'categoryValues':
-                    print(key, obs, 'does not pass validation.')
-                    print(obs)
-                    print('\tExpected difference:', harmonized_diff_total)
-                    print("\tIntegration value:", integ.loc[key][obs])
-                    print("\tProduction value:", prod.loc[key][obs])
-                else:
-                    print(key, obs, 'passes validation.')
+            print_results(to_check, harmonized_diff_total, integ, prod, key)
         # Topmed consents concept path
         if key == '\\_topmed_consent\\':
-            for obs in to_check[key]:
-                if integ.loc[key][obs]-topmed_diff_total != prod.loc[key][obs] and obs != 'categoryValues':
-                    print(key, obs, 'does not pass validation.')
-                    print('\tExpected difference:', topmed_diff_total)
-                    print("\tIntegration value:", integ.loc[key][obs])
-                    print("\tProduction value:", prod.loc[key][obs])
-                else:
-                    print(key, obs, 'passes validation.')
+            print_results(to_check, topmed_diff_total, integ, prod, key)
         # All other results
         else:
             print("\nConcept path that differs in data dictionaries:")
@@ -231,3 +212,31 @@ def compare_datadicts(integ, prod, to_validate, full_phs, harmonized, topmed, pa
                 print("\tIntegration value:", integ.loc[key][obs])
                 print("\tProduction value:", prod.loc[key][obs])
     return to_check
+
+def print_results(to_check, diff_total, integ, prod, key):
+    for obs in to_check[key]:
+        if integ.loc[key][obs]-diff_total != prod.loc[key][obs] and obs != 'categoryValues':
+            print(key, obs, 'does not pass validation.')
+            print('\tExpected difference:', diff_total)
+            print("\tIntegration value:", integ.loc[key][obs])
+            print("\tProduction value:", prod.loc[key][obs])
+        else:
+            print(key, obs, 'passes validation.')
+
+def get_topmed_and_harmonized_consents(to_validate):
+    url = 'https://biodatacatalyst.integration.hms.harvard.edu/picsureui/studyAccess/studies-data.json'
+    r = requests.get(url)
+    open('integration_studies-data.json', 'wb').write(r.content)
+    
+    y = open('integration_studies-data.json', 'r')
+    studies_data_json = json.loads(y.read())
+    
+    to_validate_topmed = []
+    to_validate_harmonized = []
+    for i in studies_data_json['bio_data_catalyst']:
+        if i['study_identifier'] in to_validate:
+            if i['study_type'] == 'TOPMED' and i['study_identifier'] not in to_validate_topmed:
+                to_validate_topmed.append(i['study_identifier'])
+            if i['is_harmonized'] == 'Y' and i['study_identifier'] not in to_validate_harmonized:
+                to_validate_harmonized.append(i['study_identifier'])
+    return to_validate_topmed, to_validate_harmonized
