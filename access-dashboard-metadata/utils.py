@@ -116,15 +116,9 @@ def compare_datadict_indices(d1, d2, comparison, to_validate=[]):
 def compare_datadicts(integ, prod, to_validate, full_phs, harmonized, topmed, patient_ref_file):
     print("Initializing variables and getting counts...")
     # Initialize variables used in function
-    columns = ['min', 'max', 
-           'patientCount', 'observationCount', 
-           'categorical', 'HpdsDataType', 
-           'categoryValues', 'description'] # Names of columns in data dictionary
+    columns = ['min', 'max', 'patientCount', 'observationCount', 'categorical', 'HpdsDataType', 'categoryValues', 'description'] # Names of columns in data dictionary
     
-    genome_vars = ['Variant_consequence_calculated', 
-               'Gene_with_variant', 
-               'Variant_class', 'Variant_frequency_as_text', 
-               'Variant_severity']
+    genome_vars = ['Variant_consequence_calculated', 'Gene_with_variant', 'Variant_class', 'Variant_frequency_as_text', 'Variant_severity']
     genome_keys = ['patientCount', 'observationCount']
     
     # Get the expected differences in patient counts for each group
