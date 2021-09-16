@@ -44,6 +44,14 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
             },
             render: function(){
                 this.$el.html(this.categoricalFilterModalViewTemplate(this.data));
+                if(this.data.filter!==undefined){
+                    this.$("#select-filter-type").val(this.data.filter.filterType);
+                    this.changeFilterType({target:this.$("#select-filter-type")[0]});
+                    _.each(this.data.filter.values, (value)=>{
+                        $('.categorical-filter-input[value='+value+']').attr("checked","true");
+                    });
+                }
+
             }
         });
 

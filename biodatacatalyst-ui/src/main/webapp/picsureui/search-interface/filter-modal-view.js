@@ -66,6 +66,12 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
             },
             render: function(){
                 this.$el.html(this.filterModalViewTemplate(this.data));
+                 if(this.data.filter!==undefined){
+                    this.$("#select-filter-type").val(this.data.filter.filterType);
+                    this.changeFilterType({target:this.$("#select-filter-type")[0]});
+                    this.$('#max-value-input').val(this.data.filter.max);
+                    this.$('#min-value-input').val(this.data.filter.min);
+                }
             }
         });
 

@@ -1,11 +1,12 @@
 define(["jquery","backbone","handlebars", "text!search-interface/data-table-info-template.hbs",
-        "search-interface/tag-filter-model"],
+        "search-interface/tag-filter-model", "text!options/modal.hbs"],
     function($, BB, HBS, dataTableInfoTemplate,
-             tagFilterModel){
+             tagFilterModel, modalTemplate){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
+                this.modalTemplate = HBS.compile(modalTemplate);
                 this.data = opts.data;
             },
             events: {
@@ -17,7 +18,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 'click .remove-excluded-tag-btn': 'removeExcludedTag',
                 'click .badge': 'clickTag',
                 'click #show-all-tags-btn': 'showAllTags',
-                'click #show-fewer-tags-btn': 'showFewerTags'
+                'click #show-fewer-tags-btn': 'showFewerTags',
+                'click .fa-filter': 'filterClickHandler'
             },
             showTagControls: function(event){
                 $('.hover-control', event.target).show();
@@ -30,6 +32,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 if(tagBtnClicked){
                     tagFilterModel[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
                 }
+            },
+            filterClickHandler: function(event) {
+                console.log(this.data);
             },
             resolveTagButtonForClick: function(event){
                 let clickIsInsideTagBtn = function(event, tagBtn){

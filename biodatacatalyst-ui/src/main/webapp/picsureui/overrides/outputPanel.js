@@ -1,4 +1,4 @@
-define(["handlebars", "backbone", "picSure/settings", "biodatacatalyst-ui/src/main/webapp/picsureui/common/transportErrors"],
+define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
 	function(HBS, BB, settings, transportErrors){
 
 	return {
@@ -80,7 +80,7 @@ define(["handlebars", "backbone", "picSure/settings", "biodatacatalyst-ui/src/ma
 				}).length  == 0
 			){
 //				console.log("removing harmonized consents");
-				query.query.categoryFilters[settings.harmonizedConsentPath] = undefined;
+				delete query.query.categoryFilters[settings.harmonizedConsentPath];
 			}
 			
 			
@@ -96,7 +96,7 @@ define(["handlebars", "backbone", "picSure/settings", "biodatacatalyst-ui/src/ma
 			
 			if(!topmedPresent){
 //				console.log("removing Topmed consents");
-				query.query.categoryFilters[settings.topmedConsentPath] = undefined;
+				delete query.query.categoryFilters[settings.topmedConsentPath];
 			}
 			
 	    },

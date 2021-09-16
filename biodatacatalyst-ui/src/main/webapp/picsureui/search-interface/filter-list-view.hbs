@@ -2,7 +2,11 @@
     <div class="filter-container">
         <i class="fa fa-times-circle remove-filter" data-index="{{@index}}"></i>
         <i class="fa fa-pencil-square-o edit-filter" data-index="{{@index}}"></i>
-        <div class="filter">Filter: {{this.searchResult.result.metadata.description}} ({{this.searchResult.result.metadata.varId}})</div>
+        <div class="filter">
+        <p>{{this.searchResult.result.metadata.varId}}</p>
+        <p>{{this.searchResult.result.metadata.description}}</p>
+        <p>{{this.searchResult.result.metadata.HPDS_PATH}}</p>
+        </div>
         <div class="value">Value: {{getFilterTypeDescription this}}</div>
         <div class="study">Study: {{this.searchResult.result.metadata.study_id}}</div>
     </div>

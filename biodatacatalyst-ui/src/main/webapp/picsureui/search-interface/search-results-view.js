@@ -1,22 +1,25 @@
 define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!options/modal.hbs",
 		"search-interface/data-table-info-view", "search-interface/search-util", "search-interface/filter-modal-view",
-		"search-interface/categorical-filter-modal-view"],
+		"search-interface/categorical-filter-modal-view", "search-interface/filter-model", "search-interface/modal"],
 function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 		 dataTableInfoView, searchUtil, filterModalView,
-		 categoricalFilterModalView){
+		 categoricalFilterModalView, filterModel, modal){
 
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
 			this.modalTemplate = HBS.compile(modalTemplate);
 		},
 		events: {
-			"click .fa-info-circle": "infoClickHandler",
+			"click .search-result": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler"
 		},
 		updateResponse: function(response) {
 			this.response = response;
 		},
 		infoClickHandler: function(event) {
+			if(event.target.classList.contains('fa')){
+				return;
+			}
 			let dataTableId = $(event.target).data('data-table-id');
 			let variableId = $(event.target).data('variable-id');
 			$.ajax({
@@ -26,16 +29,11 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 				data: JSON.stringify({query: {id: dataTableId, entityType: "DATA_TABLE"}}),
 				success: function(response){
 					if ($("#modal-window").length === 0) {
-						$('#main-content').append('<div id="modal-window"></div>');
+						$('#main-content').append('<div tabindex="-1" id="modal-window"></div>');
 					}
-					$("#modal-window").html(this.modalTemplate({title: ""}));
-					$("#modalDialog").show();
-					$(".modal-header").html('<i class="fa fa-times close-variable-info"></i>' +
-						'<i class="fa fa-database"></i>' +
-						'<i class="fa fa-filter"></i>'
-					);
-					$('.close-variable-info').click(function() {$("#modalDialog").hide();});
-
+					$("#modal-window").html(this.modalTemplate({title: _.find(this.response.results.searchResults, function(result){return result.result.varId===variableId;}.bind(this)).result.metadata.HPDS_PATH}));
+					$("#modalDialog").modal({keyboard:true});
+					
 					this.dataTableInfoView = new dataTableInfoView({
 						data: {
 							studyDescription: response.metadata.study_description,
@@ -43,7 +41,8 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 							studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.study_id),
 							studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.study_id),
 							variableId: variableId,
-							variableMetadata: response.variables[variableId].metadata
+							variableMetadata: response.variables[variableId].metadata,
+							searchResult: this.response
 						},
 						el: $(".modal-body")
 					});
@@ -63,14 +62,16 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 				$('#main-content').append('<div id="modal-window"></div>');
 			}
 			$("#modal-window").html(this.modalTemplate({title: ""}));
-			$("#modalDialog").show();
+			$("#modalDialog").modal({keyboard:true});
 			// todo: more info
 			$(".modal-header").append('<h3>' + searchResult.result.metadata.description + '</h3>');
 			$('.close').click(function() {$("#modalDialog").hide();});
 
+			let filter = filterModel.getByVarId(searchResult.result.varId);
 
 			let filterViewData = {
-				searchResult: searchResult
+				searchResult: searchResult,
+				filter: filter ? filter.toJSON() : undefined
 			}
 
 			if (!_.isEmpty(searchResult.result.values)) {

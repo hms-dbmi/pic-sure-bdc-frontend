@@ -5,6 +5,8 @@
 		border-radius:.5em;
 		display:none;
 		background:white;
+		border:solid;
+		border-width:1px;
 	}
 	.tag-badge {
 		background:#e3eefd;
@@ -12,6 +14,7 @@
 		border:solid;
 		border-width:2px;
 		margin:3px;
+		font-size:1em;
 	}
 	.study-badge {
 		background:#b1d6ef;
@@ -19,15 +22,25 @@
 		border:solid;
 		border-width:2px;
 		margin:3px;
+		font-size:1em;
+	}
+	#tag-filters .tag-badge {
+		width:98%;
+	}
+	#tag-filters .study-badge {
+		width:98%;
 	}
 	.require-tag-btn {
 		color:green;
+		float:right;
 	}
 	.exclude-tag-btn {
 		color:red;
+		float:left;
 	}
 	.remove-tag-btn {
 		color:red;
+		float:right;
 	}
 	.section-label {
 		background:lightgray;
@@ -68,6 +81,21 @@
 		{{/if}}
 	</div>
 {{/if}}
+{{#if hasInactiveStudyTags}}
+<div class='section'>
+	<div class='row section-label'>Refine results using study based filters:</div>
+	<div class='row section-body'>
+		{{#each studyTags}}
+			<div class="badge {{colorClass this.tag}}">
+				<span id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
+					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
+					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+				</span>
+			</div>
+		{{/each}}
+	</div>
+</div>
+{{/if}}
 <div class='section'>
 	<div class='row section-label'>
 	Refine results using tag based filters<br>
@@ -90,18 +118,3 @@
 		{{/if}}
 	</div>
 </div>
-{{#if hasInactiveStudyTags}}
-<div class='section'>
-	<div class='row section-label'>Refine results using study based filters:</div>
-	<div class='row section-body'>
-		{{#each studyTags}}
-			<div class="badge {{colorClass this.tag}}">
-				<span id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
-					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
-					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
-				</span>
-			</div>
-		{{/each}}
-	</div>
-</div>
-{{/if}}

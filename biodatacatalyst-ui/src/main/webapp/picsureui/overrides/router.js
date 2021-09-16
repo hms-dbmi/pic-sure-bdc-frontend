@@ -69,6 +69,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                         el : $('#filter-list')
                     });
                     let filterListView = new FilterListView({
+                        outputPanelView : outputPanelView,
                         el : $('#filter-list-panel')
                     });
                     filterListView.render();

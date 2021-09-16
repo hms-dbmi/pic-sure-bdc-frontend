@@ -1,7 +1,7 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
-        "text!options/modal.hbs", "search-interface/filter-modal-view", "search-interface/categorical-filter-modal-view"],
+        "text!options/modal.hbs", "search-interface/filter-modal-view", "search-interface/categorical-filter-modal-view", "picSure/queryBuilder","search-interface/modal"],
     function($, BB, HBS, filterListViewTemplate, filterModel,
-        modalTemplate, filterModalView, categoricalFilterModalView){
+        modalTemplate, filterModalView, categoricalFilterModalView, queryBuilder, modal){
 
         var View = BB.View.extend({
             initialize: function(opts){
@@ -12,6 +12,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 filterModel.get('activeFilters').bind('change add remove', function () {
                     this.modelChanged();
                 }.bind(this));
+                this.outputPanelView = opts.outputPanelView;
             },
             events: {
                 "click .remove-filter": "removeFilterHandler",
@@ -23,21 +24,21 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
             getFilterTypeDescription: function(filter){
                 switch (filter.type) {
                     case 'category':
-                        return "Equals [" + filter.values.join(", ") + "]";
+                        return "Include only participants with values in [" + filter.values.join(", ") + "]";
                         break;
                     case 'numeric':
                         if (filter.min && filter.max) {
-                            return "Between " + filter.min + " and " + filter.max;
+                            return "Include only participants with values between " + filter.min + " and " + filter.max;
                         }
                         if (filter.min) {
-                            return "Greater Than  " + filter.min;
+                            return "Include only participants with values greater than  " + filter.min;
                         }
                         if (filter.max) {
-                            return "Less than " + filter.max;
+                            return "Include only participants with values less than " + filter.max;
                         }
                         break;
                     case 'required':
-                        return "Contains value";
+                        return "Include only participants with a value ";
                         break;
                 }
             },
@@ -62,23 +63,29 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
 
                 let filterViewData = {
-                    searchResult: searchResult
+                    searchResult: searchResult,
+                    filter: filter
                 }
 
-                if (!_.isEmpty(searchResult.result.values)) {
+                if (searchResult.result.is_categorical) {
                     this.filterModalView = new categoricalFilterModalView({
-                        data: filterViewData,
-                        el: $(".modal-body")
+                        el: $('.modal-body'),
+                        data: filterViewData
                     });
+
                 } else {
                     this.filterModalView = new filterModalView({
-                        data: filterViewData,
-                        el: $(".modal-body")
+                        el: $('.modal-body'),
+                        data: filterViewData
                     });
                 }
                 this.filterModalView.render();
             },
             render: function(){
+                if(filterModel.get('activeFilters').size()>0){
+                    let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+                    this.outputPanelView.runQuery(query);
+                }
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})
                 }));

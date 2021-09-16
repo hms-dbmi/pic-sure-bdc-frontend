@@ -6,7 +6,7 @@
         padding:3px;
 		overflow:hidden;
 	}
-    .search-result:first-of-type {
+  .search-result:first-of-type {
         border-top: 1px solid;
     }
 	.search-result-icons {
@@ -24,17 +24,20 @@
 	.dt-short-description {
 		overflow:hidden;
 	}
+	.search-result-action-btn {
+		font-size:1.5em;
+		padding-left:.25em;
+	}
 </style>
 
 <span class='row'>{{variableCount}} variables match your search</span>
 {{#each results}}
-  <div class='search-result row'>
-  	<span class='col'>{{this.abbreviation}}<br>{{this.study_id}} </span>
-  	<span class='col'>[{{this.name}}] {{this.description}} </span>
+  <div class='search-result row' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">
+  	<span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">{{this.abbreviation}}<br>{{this.study_id}} </span>
+  	<span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">[{{this.name}}] {{this.description}} </span>
   	<span class='search-result-icons col'>
-  		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-info-circle" title="Variable Information"></i>
-  		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-filter"></i>
-  		<i class="fa fa-database"></i>
+  		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-filter search-result-action-btn"></i>
+  		<i class="fa fa-database search-result-action-btn"></i>
   	</span>
   </div>
 {{/each}}
