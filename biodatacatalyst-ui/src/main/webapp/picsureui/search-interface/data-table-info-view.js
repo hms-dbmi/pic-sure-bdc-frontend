@@ -1,10 +1,11 @@
 define(["jquery","backbone","handlebars", "text!search-interface/data-table-info-template.hbs",
         "search-interface/tag-filter-model", "text!options/modal.hbs", "search-interface/variable-info-cache",
         "search-interface/filter-model","search-interface/categorical-filter-modal-view",
-        "search-interface/filter-modal-view"],
+        "search-interface/filter-modal-view", "search-interface/modal"],
     function($, BB, HBS, dataTableInfoTemplate,
              tagFilterModel, modalTemplate, variableInfoCache,
-             filterModel, categoricalFilterModalView, filterModalView){
+             filterModel, categoricalFilterModalView, filterModalView,
+             modal){
 
         var View = BB.View.extend({
             initialize: function(opts){
