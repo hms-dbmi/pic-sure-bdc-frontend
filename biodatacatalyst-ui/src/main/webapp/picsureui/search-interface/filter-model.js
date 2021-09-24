@@ -26,7 +26,7 @@ define(["backbone", "handlebars"],
             addNumericFilter: function(searchResult, min, max) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
                 if(existingFilterForVariable!==undefined){
-                    this.get('activeFilters').remove(existingFilterForVariable);
+                    this.get('activeFilters').remove(existingFilterForVariable, {silent:true});
                 }
                 this.get('activeFilters').add({
                     type: 'numeric',
