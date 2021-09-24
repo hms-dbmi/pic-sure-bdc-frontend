@@ -40,6 +40,8 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.get('unusedTags').add(this.get('excludedTags').models);
                 this.get('requiredTags').reset();
                 this.get('excludedTags').reset();
+                this.get('requiredTags').add(this.get('impliedTags').models, {silent:true});
+                this.get('unusedTags').remove(this.get('impliedTags').models, {silent:true});
                 this.set(this.defaults, options);
             },
             resetPagination: function(options){
