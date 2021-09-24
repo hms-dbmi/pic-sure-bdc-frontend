@@ -34,16 +34,6 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 				contentType: 'application/json',
 				data: JSON.stringify({query: {id: dataTableId, entityType: "DATA_TABLE"}}),
 				success: function(response){
-					if ($("#modal-window").length === 0) {
-						$('#main-content').append('<div tabindex="-1" id="modal-window"></div>');
-					}
-					$("#modal-window").html(this.modalTemplate({
-						title: _.find(tagFilterModel.get("searchResults").results.searchResults,
-						    function(result){
-						    	return result.result.varId===variableId;
-						    }.bind(this)).result.metadata.HPDS_PATH}));
-					$("#modalDialog").modal({keyboard:true});
-					
 					variableInfoCache[variableId] = {
 							studyDescription: response.metadata.study_description,
 							studyAccession: this.generateStudyAccession(response),
@@ -57,6 +47,7 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 						el: $(".modal-body")
 					});
 					this.dataTableInfoView.render();
+					modal.displayModal(this.dataTableInfoView, response.metadata.description);
 				}.bind(this),
 				error: function(response){
 					console.log(response);
@@ -67,18 +58,6 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			let resultIndex = $(event.target).data('result-index');
 
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
-
-			if ($("#modal-window").length === 0) {
-				$('#main-content').append('<div id="modal-window"></div>');
-			}
-			$("#modal-window").html(this.modalTemplate({title: ""}));
-			$("#modalDialog").modal({keyboard:true});
-			// todo: more info
-			$(".modal-header").append('<h3>' + searchResult.result.metadata.description + '</h3>');
-			$('.close').click(function() {
-			    $('.modal.in').modal('hide');
-                $("modal-backdrop").hide();
-			});
 
 			let filter = filterModel.getByVarId(searchResult.result.varId);
 
@@ -112,8 +91,8 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 									variableId: searchResult.result.varId,
 									variableMetadata: response.variables[searchResult.result.varId].metadata
 								};
-							
-					this.filterModalView.render();
+
+					modal.displayModal(this.filterModalView, searchResult.result.metadata['description']);
 				}.bind(this),
 				error: function(response){
 					console.log(response);

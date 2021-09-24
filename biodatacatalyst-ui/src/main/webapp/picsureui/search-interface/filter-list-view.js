@@ -53,18 +53,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 let filter = filterModel.getByIndex($(event.target).data('index'));
                 let searchResult = filter.searchResult;
 
-                if ($("#modal-window").length === 0) {
-                    $('#main-content').append('<div id="modal-window"></div>');
-                }
-                $("#modal-window").html(HBS.compile(modalTemplate)({title: ""}));
-                $("#modalDialog").show();
-                // todo: more info
-                $(".modal-header").append('<h3>' + searchResult.result.metadata.description + '</h3>');
-                $('.close').click(function() {
-                    $("#modalDialog").hide();
-                    $(".modal-backdrop").hide();
-                });
-
                 let filterViewData = {
                     searchResult: searchResult,
                     filter: filter
@@ -82,7 +70,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         data: filterViewData
                     });
                 }
-                this.filterModalView.render();
+
+                modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
             },
             render: function(){
                 let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");

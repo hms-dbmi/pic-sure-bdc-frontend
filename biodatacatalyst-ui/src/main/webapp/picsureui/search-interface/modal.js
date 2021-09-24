@@ -3,25 +3,27 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 	let Modal = BB.View.extend({
 		initialize: function(opts){
 			this.render();
+			this.title="";
 		},
 		events: {
 
 		},
 		render: function(){
-			// if ($("#modal-window").length === 0) {
-   //                  $('#header').append('<div id="modal-window"></div>');
-   //          }
-   //          this.setElement($("#modal-window"));
+			if ($("#modal-window").length === 0) {
+                $('#main-content').append('<div id="modal-window"></div>');
+            }
 
-   //          $("#modal-window").html(HBS.compile(modalTemplate)({title: ""}));
-   //          $("#modal-window").modal({keyboard:true});
-   //          $("#modal-window").modal('hide');
+            $("#modal-window").html(HBS.compile(modalTemplate)({title: this.title}));
+            $('.close').click(function() {
+                $("#modalDialog").hide();
+                $(".modal-backdrop").hide();
+            });
+            $("#modalDialog").show();
 		},
 		displayModal: function(view, title){
+			this.title = title;
 			this.render();
-			$("#modal-window").modal('show');
-			this.$(".modal-title").html(title);
-			view.setElement(this.$(".modal-body"));
+			view.setElement($(".modal-body"));
 			view.render();
 		}
 	});

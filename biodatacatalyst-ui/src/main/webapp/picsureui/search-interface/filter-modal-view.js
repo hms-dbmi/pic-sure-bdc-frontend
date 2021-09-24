@@ -1,5 +1,5 @@
-define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-view.hbs", "search-interface/filter-model"],
-    function($, BB, HBS, filterModalViewTemplate, filterModel){
+define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings"],
+    function($, BB, HBS, filterModalViewTemplate, filterModel, search, settings){
 
         var View = BB.View.extend({
             initialize: function(opts){
@@ -7,30 +7,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                 this.data = opts.data;
             },
             events: {
-                "change #select-filter-type": "changeFilterType",
                 "click #add-filter-button": "addFilter"
-            },
-            changeFilterType: function(event) {
-                let $selectEl = $(event.target);
-                let selectedValue = $selectEl.val();
-                switch (selectedValue) {
-                    case "any":
-                        $('.min-value-container').hide();
-                        $('.max-value-container').hide();
-                        break;
-                    case "lessThan":
-                        $('.min-value-container').hide();
-                        $('.max-value-container').show();
-                        break;
-                    case "greaterThan":
-                        $('.min-value-container').show();
-                        $('.max-value-container').hide();
-                        break;
-                    case "between":
-                        $('.min-value-container').show();
-                        $('.max-value-container').show();
-                        break;
-                }
             },
             addFilter: function(event) {
                 filterModel.addNumericFilter(
@@ -41,13 +18,26 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                 $('.close').click();
             },
             render: function(){
-                this.$el.html(this.filterModalViewTemplate(this.data));
-                 if(this.data.filter!==undefined){
-                    this.$("#select-filter-type").val(this.data.filter.filterType);
-                    this.changeFilterType({target:this.$("#select-filter-type")[0]});
-                    this.$('#max-value-input').val(this.data.filter.max);
-                    this.$('#min-value-input').val(this.data.filter.min);
-                }
+                search.dictionary(
+                    this.data.searchResult.result.metadata.HPDS_PATH, 
+                    function(searchResponse){
+                        let concept = _.values(searchResponse.results.phenotypes)[0];
+                        this.data.min = concept.min;
+                        this.data.max = concept.max;
+                        this.$el.html(this.filterModalViewTemplate(this.data));
+                        if(this.data.filter!==undefined){
+                            this.$("#select-filter-type").val(this.data.filter.filterType);
+                            this.$('#max-value-input').val(this.data.filter.max);
+                            this.$('#min-value-input').val(this.data.filter.min);
+                        } else {
+                            this.$('#max-value-input').val(concept.max);
+                            this.$('#min-value-input').val(concept.min);
+                        }
+                    }.bind(this), 
+                    function(){
+                        console.log(arguments);
+                    }, 
+                    settings.picSureResourceId)
             }
         });
 
