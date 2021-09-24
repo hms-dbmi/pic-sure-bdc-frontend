@@ -16,7 +16,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
             },
             events: {
                 "click .remove-filter": "removeFilterHandler",
-                "click .edit-filter": "editFilterHandler"
+                "click .edit-filter": "editFilterHandler",
+                "click .variable-info": "editFilterHandler"
             },
             modelChanged: function () {
                 this.render();
@@ -38,7 +39,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         }
                         break;
                     case 'required':
-                        return "Include only participants with a value ";
+                        return "Include only participants with a recorded value";
                         break;
                 }
             },
@@ -59,8 +60,10 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 $("#modalDialog").show();
                 // todo: more info
                 $(".modal-header").append('<h3>' + searchResult.result.metadata.description + '</h3>');
-                $('.close').click(function() {$("#modalDialog").hide();});
-
+                $('.close').click(function() {
+                    $("#modalDialog").hide();
+                    $(".modal-backdrop").hide();
+                });
 
                 let filterViewData = {
                     searchResult: searchResult,
@@ -82,10 +85,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 this.filterModalView.render();
             },
             render: function(){
-                if(filterModel.get('activeFilters').size()>0){
-                    let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
-                    this.outputPanelView.runQuery(query);
-                }
+                let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+                this.outputPanelView.runQuery(query);
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})
                 }));

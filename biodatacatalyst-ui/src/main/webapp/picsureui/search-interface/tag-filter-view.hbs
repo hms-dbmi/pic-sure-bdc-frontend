@@ -47,12 +47,14 @@
 		border-top:solid;
 		border-right:solid;
 		border-left:solid;
+		border-width:1px;
 	}
 	.section-body {
 		background:white;
 		border-bottom:solid;
 		border-right:solid;
 		border-left:solid;
+		border-width:1px;
 	}
 </style>
 {{#if hasActiveTags}}
@@ -66,7 +68,7 @@
 						</span>
 					</div>
 				{{/each}}
-			</div>
+			</div> 
 		{{/if}}
 		{{#if hasExcludedTags}}
 			<div class='row'><span>Excluded Tags:</span>
@@ -80,6 +82,7 @@
 			</div>
 		{{/if}}
 	</div>
+<br>
 {{/if}}
 {{#if hasInactiveStudyTags}}
 <div class='section'>
@@ -95,6 +98,7 @@
 		{{/each}}
 	</div>
 </div>
+<br>
 {{/if}}
 <div class='section'>
 	<div class='row section-label'>

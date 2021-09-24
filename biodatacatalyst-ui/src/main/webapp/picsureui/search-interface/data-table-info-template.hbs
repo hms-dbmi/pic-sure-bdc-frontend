@@ -19,8 +19,8 @@
     </div>
     <div class="dataset-accession">
         Dataset Accession: {{variableMetadata.dataTableId}}
-        <i data-target="datatable" data-datatable-id="{{variableMetadata.dataTableId}}" class="fa fa-filter search-result-action-btn"></i>
-        <i data-target="datatable" data-datatable-id="{{variableMetadata.dataTableId}}" class="fa fa-database search-result-action-btn"></i>
+        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" class="fa fa-filter search-result-action-btn"></i>
+        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" class="fa fa-database search-result-action-btn"></i>
     </div>
     <div class="dataset-description">
         Dataset Description: {{variableMetadata.dataTableDescription}}
@@ -31,8 +31,8 @@
     {{#if variableId}}
         <div>
             Variable Accession: {{variableId}}
-            <i data-target="variable" data-datatable-id="{{variableId}}" class="fa fa-filter search-result-action-btn"></i>
-            <i data-target="variable" data-datatable-id="{{variableId}}" class="fa fa-database search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" class="fa fa-filter search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" class="fa fa-database search-result-action-btn"></i>
         </div>
     {{/if}}
     {{#if variableMetadata.description}}

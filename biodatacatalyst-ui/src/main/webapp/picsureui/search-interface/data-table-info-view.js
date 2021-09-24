@@ -1,13 +1,16 @@
 define(["jquery","backbone","handlebars", "text!search-interface/data-table-info-template.hbs",
-        "search-interface/tag-filter-model", "text!options/modal.hbs"],
+        "search-interface/tag-filter-model", "text!options/modal.hbs", "search-interface/variable-info-cache",
+        "search-interface/filter-model","search-interface/categorical-filter-modal-view",
+        "search-interface/filter-modal-view"],
     function($, BB, HBS, dataTableInfoTemplate,
-             tagFilterModel, modalTemplate){
+             tagFilterModel, modalTemplate, variableInfoCache,
+             filterModel, categoricalFilterModalView, filterModalView){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
                 this.modalTemplate = HBS.compile(modalTemplate);
-                this.data = opts.data;
+                this.varId = opts.varId;
             },
             events: {
                 'mouseover .badge': 'showTagControls',
@@ -34,7 +37,40 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 }
             },
             filterClickHandler: function(event) {
-                console.log(this.data);
+                let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults, 
+                    function(variable){return variable.result.varId===event.target.dataset['id'];});
+
+                if ($("#modal-window").length === 0) {
+                    $('#main-content').append('<div id="modal-window"></div>');
+                }
+                $("#modal-window").html(this.modalTemplate({title: ""}));
+                $("#modalDialog").modal({keyboard:true});
+                // todo: more info
+                $(".modal-header").append('<h3>' + searchResult.result.metadata.description + '</h3>');
+                $('.close').click(function() {
+                    $('.modal.in').modal('hide');
+                    $(".modal-backdrop").hide();
+                });
+
+                let filter = filterModel.getByVarId(searchResult.result.varId);
+
+                let filterViewData = {
+                    searchResult: searchResult,
+                    filter: filter ? filter.toJSON() : undefined
+                }
+
+                if (!_.isEmpty(searchResult.result.values)) {
+                    this.filterModalView = new categoricalFilterModalView({
+                        data: filterViewData,
+                        el: $(".modal-body")
+                    });
+                } else {
+                    this.filterModalView = new filterModalView({
+                        data: filterViewData,
+                        el: $(".modal-body")
+                    });
+                }
+                this.filterModalView.render();
             },
             resolveTagButtonForClick: function(event){
                 let clickIsInsideTagBtn = function(event, tagBtn){
@@ -50,7 +86,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 return tagBtnClicked;
             },
             render: function(){
-                this.$el.html(this.dataTableInfoTemplate(this.data));
+                this.$el.html(this.dataTableInfoTemplate(variableInfoCache[this.varId]));
             }
         });
 

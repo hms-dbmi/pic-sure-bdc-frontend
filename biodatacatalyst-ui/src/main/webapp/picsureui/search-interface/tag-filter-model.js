@@ -7,12 +7,14 @@ define(["backbone", "handlebars", "search-interface/search-util"],
             defaults:{
                 requiredTags: new BB.Collection,
                 excludedTags: new BB.Collection,
-                unusedTags: new BB.Collection
+                unusedTags: new BB.Collection,
+                impliedTags: new BB.Collection,
+                term:"",
+                currentPage: 1,
+                limit:10,
+                searchResults: undefined
             },
             initialize: function(opts){
-                this.set('requiredTags', new BB.Collection);
-                this.set('excludedTags', new BB.Collection);
-                this.set('unusedTags', new BB.Collection);
                 this.set('tagLimit', defaultTagLimit);
                 HBS.registerHelper("aliasIfStudy", function(tag){
                     if(studyVersionRegex.test(tag)){
@@ -32,6 +34,16 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.get('requiredTags').comparator = tagComparator;
                 this.get('excludedTags').comparator = tagComparator;
                 this.get('unusedTags').comparator = tagComparator;
+            },
+            reset: function(options){
+                this.get('unusedTags').add(this.get('requiredTags').models);
+                this.get('unusedTags').add(this.get('excludedTags').models);
+                this.get('requiredTags').reset();
+                this.get('excludedTags').reset();
+                this.set(this.defaults, options);
+            },
+            resetPagination: function(options){
+                this.set("currentPage", 1, options);
             },
             hasRequiredTags: function(){
                 return this.get('requiredTags').length>0;
@@ -94,13 +106,12 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.set('unusedTags', unusedTags);
                 this.set('excludedTags', excludedTags);
             },
-            setUnusedTags: function(tags) {
+            setUnusedTags: function(tags, options) {
                 tags = _.filter(tags,(tag)=>{
                     return this.get('requiredTags').findWhere({tag:tag.tag}) === undefined;
                 });
-                this.set('unusedTags', new BB.Collection);
-                this.get('unusedTags').add(tags);
-                this.get('unusedTags').remove(this.get('requiredTags').models);
+                this.get('unusedTags').set(tags, options);
+                this.get('unusedTags').remove(this.get('requiredTags').models, options);
             }
         });
         return new TagFilterModel();

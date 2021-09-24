@@ -1,8 +1,10 @@
-define(["jquery","backbone","handlebars","search-interface/tag-filter-view","search-interface/search-results-view",
+define(["jquery","backbone","handlebars","search-interface/tag-filter-view","search-interface/tag-filter-model",
+	"search-interface/search-results-view",
 	"text!search-interface/search-view.hbs",
 	"text!search-interface/search-results-view.hbs",
 	"text!search-interface/tag-search-response.json"],
-		function($, BB, HBS, tagFilterView, searchResultsView,
+		function($, BB, HBS, tagFilterView, tagFilterModel,
+			searchResultsView,
 			searchViewTemplate,
 			searchResultsViewTemplate,
 			tagSearchResponseJson){
@@ -28,7 +30,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 			this.tagFilterView.render();
 			this.searchResultsView.render();
-			
+			tagFilterModel.bind('change', this.submitSearch.bind(this));
 		},
 		findStudyAbbreviationFromId: function(study_id){
 			let study = _.find(this.studiesData.bio_data_catalyst,
@@ -52,6 +54,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		},
 		submitSearch: function() {
 			this.searchTerm = $('#search-box').val();
+			if(tagFilterModel.get("term")!==this.searchTerm){
+				tagFilterModel.reset({silent:true});
+				tagFilterModel.set("term", this.searchTerm);
+			}
 			this.requiredTags = $('.selected-required-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
@@ -67,7 +73,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 						includedTags: this.requiredTags,
 						excludedTags: this.excludedTags,
 						returnTags: true,
-						returnAllResults: false
+						offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
+						limit: tagFilterModel.get("limit")
 					}}),
 				success: function(response){
 					this.updateTags(response);

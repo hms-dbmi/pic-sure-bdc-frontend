@@ -28,6 +28,17 @@
 		font-size:1.5em;
 		padding-left:.25em;
 	}
+	a.disabled{
+    pointer-events: none;
+    color: black;
+    background: white;
+    border: solid;
+    border-radius: .25em;
+    border-width: 1px;
+    min-width: 1em;
+    text-align: center;
+    display: inline-block;
+	}
 </style>
 
 <span class='row'>{{variableCount}} variables match your search</span>
@@ -41,3 +52,8 @@
   	</span>
   </div>
 {{/each}}
+<div class='search-result-pages row'>
+	{{#each pages}}
+		<span class='page-link'><a {{#if isActive}}class="disabled"{{/if}} id='page-{{pageNumber}}'>{{pageNumber}}</a></span>
+	{{/each}}
+</div>

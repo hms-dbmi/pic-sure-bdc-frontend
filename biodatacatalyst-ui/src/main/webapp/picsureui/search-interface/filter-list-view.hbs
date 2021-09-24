@@ -1,13 +1,23 @@
+<style>
+    .filter-container {
+        border:solid;
+        border-width:1px;
+        margin:.5em;
+        border-radius:.5em;
+    }
+    .filter-list-action-btn {
+        font-size: 1.5em;
+    }
+</style>
 {{#each activeFilters}}
     <div class="filter-container">
-        <i class="fa fa-times-circle remove-filter" data-index="{{@index}}"></i>
-        <i class="fa fa-pencil-square-o edit-filter" data-index="{{@index}}"></i>
+        <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>
+        <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" data-index="{{@index}}"></i>
         <div class="filter">
         <p>{{this.searchResult.result.metadata.varId}}</p>
         <p>{{this.searchResult.result.metadata.description}}</p>
-        <p>{{this.searchResult.result.metadata.HPDS_PATH}}</p>
         </div>
-        <div class="value">Value: {{getFilterTypeDescription this}}</div>
-        <div class="study">Study: {{this.searchResult.result.metadata.study_id}}</div>
+        <p class="value">Value: {{getFilterTypeDescription this}}</p>
+        <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
     </div>
 {{/each}}

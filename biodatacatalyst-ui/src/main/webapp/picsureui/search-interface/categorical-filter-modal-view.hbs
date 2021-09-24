@@ -1,13 +1,6 @@
 <div class="filter-modal-container">
     <div class="row">
-        <div class="select-filter-type-container col">
-            <select id="select-filter-type">
-                <option value="any">Any Value</option>
-                <option value="restrict">Restrict by Value</option>
-            </select>
-        </div>
-
-        <div class="value-container" style="display: none;">
+        <div class="value-container">
             {{#each searchResult.result.values}}
                 <input class="categorical-filter-input" type="checkbox" value="{{this}}"/>{{this}} <br/>
             {{/each}}

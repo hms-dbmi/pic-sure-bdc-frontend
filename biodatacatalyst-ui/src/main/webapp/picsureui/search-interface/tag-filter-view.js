@@ -1,31 +1,42 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model"],
-function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model"],
+function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let defaultTagLimit = 12;
 
 	let TagFilterView = BB.View.extend({
 		initialize: function(opts){
-			this.response = opts.tagSearchResponse;
-			this.model = TagFilterModel;
+			this.model = tagFilterModel;
 			this.onTagChange = opts.onTagChange;
-			this.model.get('requiredTags').bind('change add remove', function () {
-				this.modelChanged();
-			}.bind(this));
-			this.model.get('excludedTags').bind('change add remove', function () {
-				this.modelChanged();
-			}.bind(this));
+			this.model.get('requiredTags').bind('change add remove', this.modelChanged.bind(this));
+			this.model.get('excludedTags').bind('change add remove', this.modelChanged.bind(this));
+			filterModel.get("activeFilters").bind('change add remove', this.queryUpdated.bind(this));
 		},
 		events: {
 			'mouseover .badge': 'showTagControls',
 			'mouseout .badge': 'hideTagControls',
-			'click .require-tag-btn': 'requireTag',
-			'click .exclude-tag-btn': 'excludeTag',
-			'click .remove-required-tag-btn': 'removeRequiredTag',
-			'click .remove-excluded-tag-btn': 'removeExcludedTag',
 			'click .badge': 'clickTag',
 			'click #show-all-tags-btn': 'showAllTags',
 			'click #show-fewer-tags-btn': 'showFewerTags'
+		},
+		queryUpdated: function(model, collection, opts){
+			var studiesInScope = _.map(filterModel.get('activeFilters').models, 
+				function(model){
+					return  model.toJSON().searchResult.result.metadata.study_id.split('\.')[0];
+				});
+			if(studiesInScope.length > 0){
+				var studyTag = this.model.get("unusedTags").findWhere({tag:studiesInScope[0].toUpperCase()});
+				if(studyTag !== undefined){
+					this.model.get("unusedTags").remove(studyTag);
+					this.model.get("requiredTags").add(studyTag);
+					this.model.get("impliedTags").add(studyTag);
+				}
+			} else {
+				this.model.get("requiredTags").remove(this.model.get("impliedTags").models);
+				this.model.get("unusedTags").add(this.model.get("impliedTags").models);
+				this.model.get("impliedTags").reset(null);
+			}
+			this.modelChanged();
 		},
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);
@@ -42,6 +53,7 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 			$('.hover-control', event.target).hide();
 		},
 		clickTag: function(event){
+			tagFilterModel.resetPagination({silent:true});
 			let tagBtnClicked = this.resolveTagButtonForClick(event);
 			if(tagBtnClicked){
 				this.model[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
@@ -62,11 +74,11 @@ function(BB, HBS, tagFilterViewTemplate, TagFilterModel){
 			return tagBtnClicked;
 		},
 		updateTags: function(response) {
-			this.response = response;
-			this.model.setUnusedTags(response.results.tags);
+			this.model.setUnusedTags(response.results.tags, {silent: true});
 		},
 		modelChanged: function() {
 			this.render();
+			tagFilterModel.resetPagination({silent:true});
 			this.onTagChange();
 		},
 		render: function(){

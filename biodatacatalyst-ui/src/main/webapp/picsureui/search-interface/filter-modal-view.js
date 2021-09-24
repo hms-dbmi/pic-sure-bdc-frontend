@@ -33,35 +33,11 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                 }
             },
             addFilter: function(event) {
-                let filterType = $('#select-filter-type').val();
-                switch (filterType) {
-                    case "any":
-                        filterModel.addRequiredFilter(
-                            this.data.searchResult
-                        );
-                        break;
-                    case "greaterThan":
-                        filterModel.addNumericFilter(
-                            this.data.searchResult,
-                            $('#min-value-input').val(),
-                            null
-                        );
-                        break;
-                    case "lessThan":
-                        filterModel.addNumericFilter(
-                            this.data.searchResult,
-                            null,
-                            $('#max-value-input').val()
-                        );
-                        break;
-                    case "between":
-                        filterModel.addNumericFilter(
-                            this.data.searchResult,
-                            $('#min-value-input').val(),
-                            $('#max-value-input').val()
-                        );
-                        break;
-                }
+                filterModel.addNumericFilter(
+                    this.data.searchResult,
+                    $('#min-value-input').val(),
+                    $('#max-value-input').val()
+                );
                 $('.close').click();
             },
             render: function(){
