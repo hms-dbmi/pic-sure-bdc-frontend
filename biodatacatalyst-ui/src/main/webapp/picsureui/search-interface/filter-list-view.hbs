@@ -1,4 +1,9 @@
 <style>
+    .focused-filter-container {
+    border-top: 1px solid;
+        border-width:4px !important;
+        border-color:red !important;
+    }
     .filter-container {
         border:solid;
         border-width:1px;
@@ -9,6 +14,7 @@
         font-size: 1.5em;
     }
 </style>
+<div id="filter-list" tabindex=0>
 {{#each activeFilters}}
     <div class="filter-container">
         <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>
@@ -21,3 +27,4 @@
         <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
     </div>
 {{/each}}
+</div>

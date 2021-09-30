@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model"],
-function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel){
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "search-interface/keyboard-nav"],
+function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let defaultTagLimit = 12;
@@ -11,13 +11,126 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel){
 			this.model.get('requiredTags').bind('change add remove', this.modelChanged.bind(this));
 			this.model.get('excludedTags').bind('change add remove', this.modelChanged.bind(this));
 			filterModel.get("activeFilters").bind('change add remove', this.queryUpdated.bind(this));
+			keyboardNav.addNavigableView("tagFilters",this);
+			this.on({
+				'keynav-arrowup document': this.previousTag,
+				'keynav-arrowdown document': this.nextTag,
+				'keynav-arrowright document': this.requireTag,
+				'keynav-arrowleft document': this.excludeTag,
+				'keynav-enter document': this.unuseTag
+			});
 		},
 		events: {
 			'mouseover .badge': 'showTagControls',
 			'mouseout .badge': 'hideTagControls',
 			'click .badge': 'clickTag',
 			'click #show-all-tags-btn': 'showAllTags',
-			'click #show-fewer-tags-btn': 'showFewerTags'
+			'click #show-fewer-tags-btn': 'showFewerTags',
+			'focus #active-tags-section-div': 'activeTagFocus',
+			'blur #active-tags-section-div': 'activeTagBlur',
+			'focus #study-tags-section-div': 'studyTagFocus',
+			'blur #study-tags-section-div': 'studyTagBlur',
+			'focus #tags-section-div': 'tagFocus',
+			'blur #tags-section-div': 'tagBlur'
+		},
+		requireTag: function(event){
+			let focusedTag = $('.focused-tag-badge')[0];
+			if(focusedTag){
+				this.model.requireTag(focusedTag.firstElementChild.id.split('-')[1]);				
+			}
+		},
+		excludeTag: function(event){
+			let focusedTag = $('.focused-tag-badge')[0];
+			if(focusedTag){
+				this.model.excludeTag(focusedTag.firstElementChild.id.split('-')[1]);
+			}
+		},
+		unuseTag: function(event){
+			let focusedTag = $('.focused-tag-badge')[0];
+			if(focusedTag){
+				this.model.removeExcludedTag(focusedTag.firstElementChild.id.split('-')[1]);
+				this.model.removeRequiredTag(focusedTag.firstElementChild.id.split('-')[1]);
+			}
+		},
+		previousTag: function(event){
+			let tags = this.$(this.model.get("focusedSection") + " .section-body .badge");
+			let focusedTag = 1;
+			for(var x = 0;x < tags.length;x++){
+				if($(tags[x]).hasClass('focused-tag-badge')){
+					focusedTag = x;
+					$('.focused-tag-badge .hover-control').hide();
+					$(tags[x]).removeClass('focused-tag-badge');
+				}
+			}
+			if(focusedTag===0){
+				focusedTag = tags.length;
+			}
+			$(tags[focusedTag - 1]).addClass('focused-tag-badge');
+			$('.focused-tag-badge .hover-control').show();
+		},
+		nextTag: function(event){
+			let tags = this.$(this.model.get("focusedSection") + " .section-body .badge");
+			let focusedTag = -1;
+			for(var x = 0;x < tags.length;x++){
+				if($(tags[x]).hasClass('focused-tag-badge')){
+					focusedTag = x;					
+					$('.focused-tag-badge .hover-control').hide();
+					$(tags[x]).removeClass('focused-tag-badge');
+				}
+			}
+			$(tags[(focusedTag + 1) % tags.length]).addClass('focused-tag-badge');
+			$('.focused-tag-badge .hover-control').show();
+		},
+		studyTagKeypress: function(event){
+			console.log(event);
+			switch(event.key){
+				case 'a':{  
+					this.model.decrementTagFocus();
+					this.render();
+					break;
+				}
+				case 'z':{
+					this.model.incrementTagFocus();
+					this.render();
+					break;
+				}
+				default: {
+					console.log(event.keyCode);
+				}
+			}
+		},
+		activeTagFocus: function(){
+			this.model.set('focusedSection', '#active-tags-section-div', {silent:true});
+			this.nextTag();
+			keyboardNav.setCurrentView("tagFilters");
+		},
+		activeTagBlur: function(){
+			this.model.set('focusedSection', undefined, {silent:true});
+			$('.focused-tag-badge .hover-control').hide();
+			this.$("#active-tags-section-div  .section-body .focused-tag-badge").removeClass('focused-tag-badge');
+			keyboardNav.setCurrentView(undefined);
+		},
+		tagFocus: function(){
+			this.model.set('focusedSection', '#tags-section-div', {silent:true});
+			this.nextTag();
+			keyboardNav.setCurrentView("tagFilters");
+		},
+		tagBlur: function(){
+			this.model.set('focusedSection', undefined, {silent:true});
+			$('.focused-tag-badge .hover-control').hide();
+			this.$("#tags-section-div  .section-body .focused-tag-badge").removeClass('focused-tag-badge');
+			keyboardNav.setCurrentView(undefined);
+		},
+		studyTagFocus: function(){
+			this.model.set('focusedSection', '#study-tags-section-div', {silent:true});
+			this.nextTag();
+			keyboardNav.setCurrentView("tagFilters");
+		},
+		studyTagBlur: function(){
+			this.model.set('focusedSection', undefined, {silent:true});
+			$('.focused-tag-badge .hover-control').hide();
+			this.$("#study-tags-section-div  .section-body .focused-tag-badge").removeClass('focused-tag-badge');
+			keyboardNav.setCurrentView(undefined);
 		},
 		queryUpdated: function(model, collection, opts){
 			var studiesInScope = _.map(filterModel.get('activeFilters').models, 
@@ -86,24 +199,32 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel){
 			let tags = _.filter(unusedTags, function(tag){
 				return ! studyVersionRegex.test(tag.get('tag'));
 			}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit'));
+			this.model.set('numTags', Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()))
+			this.model.set('focusedTag', this.model.get('numTags') * 1000000);
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
 					tags: tags,
 					tagsTotal: this.model.get("unusedTags").size(),
-					tagsShown: Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()),
+					tagsShown: this.model.get('numTags'),
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
 					hasExcludedTags:this.model.hasExcludedTags(),
 					hasInactiveStudyTags:this.model.hasInactiveStudyTags(),
 					hasActiveTags: this.model.hasExcludedTags() || this.model.hasRequiredTags(),
-					requiredTags:this.model.get("requiredTags").map(function(tag){return tag.toJSON();}),
+					requiredTags:this.model.get("requiredTags").map(function(tag){
+						return tag.toJSON();
+					}),
 					excludedTags:this.model.get("excludedTags").map(function(tag){return tag.toJSON();}),
 					studyTags:
 						_.filter(unusedTags, function(tag){
 							return studyRegex.test(tag.get('tag'));
-						}).map(function(tag){return tag.toJSON();})
+						}).map(function(tag){
+							return tag.toJSON();
+						})
 				})
 			);
+			$('.study-badge-'+this.model.get('focusedTag')).addClass('focused-tag-badge');
+			$('.tag-badge-'+this.model.get('focusedTag')).addClass('focused-tag-badge');
 		}
 	});
 	return TagFilterView;

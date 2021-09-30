@@ -23,7 +23,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 'click .badge': 'clickTag',
                 'click #show-all-tags-btn': 'showAllTags',
                 'click #show-fewer-tags-btn': 'showFewerTags',
-                'click .fa-filter': 'filterClickHandler'
+                'click .fa-filter': 'filterClickHandler',
+                'keypress .fa-filter': 'filterKeypressHandler'
             },
             showTagControls: function(event){
                 $('.hover-control', event.target).show();
@@ -61,6 +62,11 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 }
                 this.filterModalView.render();
                 modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
+            },
+            filterKeypressHandler: function(event){
+                if(event.key.toLowerCase()==='enter'||event.key.toLowerCase()===' '){
+                    this.filterClickHandler(event);
+                }
             },
             resolveTagButtonForClick: function(event){
                 let clickIsInsideTagBtn = function(event, tagBtn){

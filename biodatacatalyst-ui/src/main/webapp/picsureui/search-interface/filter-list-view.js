@@ -1,7 +1,9 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
-        "text!options/modal.hbs", "search-interface/filter-modal-view", "search-interface/categorical-filter-modal-view", "picSure/queryBuilder","search-interface/modal"],
+        "text!options/modal.hbs", "search-interface/filter-modal-view", "search-interface/categorical-filter-modal-view", 
+        "picSure/queryBuilder","search-interface/modal", "search-interface/keyboard-nav"],
     function($, BB, HBS, filterListViewTemplate, filterModel,
-        modalTemplate, filterModalView, categoricalFilterModalView, queryBuilder, modal){
+        modalTemplate, filterModalView, categoricalFilterModalView, 
+        queryBuilder, modal, keyboardNav){
 
         var View = BB.View.extend({
             initialize: function(opts){
@@ -13,11 +15,58 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     this.modelChanged();
                 }.bind(this));
                 this.outputPanelView = opts.outputPanelView;
+                keyboardNav.addNavigableView("filterList",this);
+                this.on({
+                    'keynav-arrowup document': this.previousFilter,
+                    'keynav-arrowdown document': this.nextFilter,
+                    'keynav-arrowright document': this.editFilter,
+                    'keynav-arrowleft document': this.removeFilter
+                });
             },
             events: {
                 "click .remove-filter": "removeFilterHandler",
                 "click .edit-filter": "editFilterHandler",
-                "click .variable-info": "editFilterHandler"
+                "click .variable-info": "editFilterHandler",
+                'focus #filter-list': 'filtersFocus',
+                'blur #filter-list': 'filtersBlur'
+            },
+            filtersFocus: function () {
+                this.nextFilter();
+                keyboardNav.setCurrentView("filterList");
+            },
+            filtersBlur: function () {
+                this.$(".focused-filter-container").removeClass('focused-filter-container');
+            },
+            previousFilter: function(event){
+                let filters = this.$(".filter-container");
+                let focusedFilter = 1;
+                for(var x = 0;x < filters.length;x++){
+                    if($(filters[x]).hasClass('focused-filter-container')){
+                        focusedFilter = x;
+                        $(filters[x]).removeClass('focused-filter-container')
+                    }
+                }
+                if(focusedFilter===0){
+                    focusedFilter = filters.length;
+                }
+                $(filters[focusedFilter - 1]).addClass('focused-filter-container');
+            },
+            nextFilter: function(event){
+                let filters = this.$(".filter-container");
+                let focusedFilter = -1;
+                for(var x = 0;x < filters.length;x++){
+                    if($(filters[x]).hasClass('focused-filter-container')){
+                        focusedFilter = x;
+                        $(filters[x]).removeClass('focused-filter-container')
+                    }
+                }
+                $(filters[(focusedFilter + 1) % filters.length]).addClass('focused-filter-container');
+            },
+            editFilter: function(event){
+                $('.focused-filter-container .edit-filter').click();
+            },
+            removeFilter: function(event){
+                $('.focused-filter-container .remove-filter').click();
             },
             modelChanged: function () {
                 this.render();

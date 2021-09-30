@@ -14,18 +14,23 @@
 </style>
 
 <div class="row">
-    <div id="tag-filters" class="col-md-3">
-
+    <div class="row">
+		<div id="search-controls" class="col">
+	        <label for='search-box' class='col'>Search</label>
+	        <input id='search-box' class='form-control col' placeholder="Search studies or variables"></input>
+	        <a id="search-button" href='#' class='btn btn-default col'>Search</a>
+	        <a id='genomic-filter-btn' href='#' class='btn btn-default col'>Genomic Filtering</a>
+	    </div>
     </div>
-    <div class="col-md-9">
-        <div id="search-controls" class="row">
-            <input id='search-box' class='form-control col' placeholder="Search studies or variables"></input>
-            <button id="search-button" class='btn btn-default col'>Search</button>
-            <a id='genomic-filter-btn' class='btn btn-default col'>Genomic Filtering</a>
+    <hr>
+    <div class="row">
+	    <div id="tag-filters" class="col-md-3">
 
-        </div>
-        <div id="search-results">
+	    </div>
+	    <div class="col-md-9">
+	        <div id="search-results">
 
-        </div>
+	        </div>
+    	</div>
     </div>
 </div>

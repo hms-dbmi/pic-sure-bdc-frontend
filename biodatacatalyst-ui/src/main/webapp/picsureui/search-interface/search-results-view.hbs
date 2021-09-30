@@ -1,14 +1,19 @@
 <style>
+	.focused-search-result {
+    border-top: 1px solid;
+		border-width:4px !important;
+		border-color:red !important;
+	}
 	.search-result {
-        border-right: 1px solid;
-        border-bottom: 1px solid;
-        border-left: 1px solid;
-        padding:3px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    padding:3px;
 		overflow:hidden;
 	}
   .search-result:first-of-type {
-        border-top: 1px solid;
-    }
+    border-top: 1px solid;
+  }
 	.search-result-icons {
 		float:right;
 	}
@@ -40,7 +45,8 @@
     display: inline-block;
 	}
 </style>
-
+<div id='search-results-div' tabindex=0>
+{{#if results}}
 <span class='row'>{{variableCount}} variables match your search</span>
 {{#each results}}
   <div class='search-result row' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">
@@ -54,6 +60,8 @@
 {{/each}}
 <div class='search-result-pages row'>
 	{{#each pages}}
-		<span class='page-link'><a {{#if isActive}}class="disabled"{{/if}} id='page-{{pageNumber}}'>{{pageNumber}}</a></span>
+		<span id='page-link-{{pageNumber}}' class='page-link' data-page='{{pageNumber}}'><a {{#if isActive}}class="disabled"{{/if}} id='page-{{pageNumber}}'>{{pageNumber}}</a></span>
 	{{/each}}
+</div>
+{{/if}}
 </div>

@@ -3,12 +3,18 @@ define(["backbone", "handlebars", "search-interface/search-util"],
         let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
         let defaultTagLimit = 12;
 
+        let TagCollection = BB.Collection.extend({
+            comparator:function(a){
+                    return -a.get('score');
+            }
+        });
+
         let TagFilterModel = BB.Model.extend({
             defaults:{
-                requiredTags: new BB.Collection,
-                excludedTags: new BB.Collection,
-                unusedTags: new BB.Collection,
-                impliedTags: new BB.Collection,
+                requiredTags: new TagCollection,
+                excludedTags: new TagCollection,
+                unusedTags: new TagCollection,
+                impliedTags: new TagCollection,
                 term:"",
                 currentPage: 1,
                 limit:10,
@@ -16,6 +22,9 @@ define(["backbone", "handlebars", "search-interface/search-util"],
             },
             initialize: function(opts){
                 this.set('tagLimit', defaultTagLimit);
+                this.set('focusedTag', 0);
+                this.set('focusedSection', undefined);
+                this.set('numTags', 0);
                 HBS.registerHelper("aliasIfStudy", function(tag){
                     if(studyVersionRegex.test(tag)){
                         return searchUtil.findStudyAbbreviationFromId(tag);
@@ -28,12 +37,6 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                     }
                     return 'tag-badge';
                 });
-                let tagComparator = function(a, b){
-                    return b.get('score') - a.get('score');
-                };
-                this.get('requiredTags').comparator = tagComparator;
-                this.get('excludedTags').comparator = tagComparator;
-                this.get('unusedTags').comparator = tagComparator;
             },
             reset: function(options){
                 this.get('unusedTags').add(this.get('requiredTags').models);
@@ -43,6 +46,12 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.get('requiredTags').add(this.get('impliedTags').models, {silent:true});
                 this.get('unusedTags').remove(this.get('impliedTags').models, {silent:true});
                 this.set(this.defaults, options);
+            },
+            decrementTagFocus: function(){
+                this.set("focusedTag", this.get("focusedTag") - 1);
+            },
+            incrementTagFocus: function(){
+                this.set("focusedTag", this.get("focusedTag") + 1);
             },
             resetPagination: function(options){
                 this.set("currentPage", 1, options);

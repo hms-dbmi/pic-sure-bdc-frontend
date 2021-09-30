@@ -4,7 +4,7 @@
     </div>
     <div class="study-accession">
         Study Accession: {{studyAccession}}
-        <div class="badge {{colorClass this.tag}}">
+        <div class="badge {{colorClass this.tag}}" tabindex=1000000>
         <span id="tag-{{studyAccessionTagId}}"> {{studyAccessionTagName}}
             <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
             <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
@@ -19,20 +19,22 @@
     </div>
     <div class="dataset-accession">
         Dataset Accession: {{variableMetadata.dataTableId}}
-        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" class="fa fa-filter search-result-action-btn"></i>
-        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" class="fa fa-database search-result-action-btn"></i>
+        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" tabindex=1000002 class="fa fa-filter search-result-action-btn"></i>
+        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" tabindex=1000003 class="fa fa-database search-result-action-btn"></i>
     </div>
+    {{#if variableMetadata.dataTableDescription}}
     <div class="dataset-description">
         Dataset Description: {{variableMetadata.dataTableDescription}}
     </div>
+    {{/if}}
 </div>
 
 <div class="variable-info">
     {{#if variableId}}
         <div>
             Variable Accession: {{variableId}}
-            <i data-target="variable" data-id="{{variableId}}" class="fa fa-filter search-result-action-btn"></i>
-            <i data-target="variable" data-id="{{variableId}}" class="fa fa-database search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" tabindex=1000004 class="fa fa-filter search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" tabindex=1000005 class="fa fa-database search-result-action-btn"></i>
         </div>
     {{/if}}
     {{#if variableMetadata.description}}

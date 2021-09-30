@@ -8,6 +8,10 @@
 		border:solid;
 		border-width:1px;
 	}
+	.focused-tag-badge {
+		border-width:4px !important;
+		border-color:red !important;
+	}
 	.tag-badge {
 		background:#e3eefd;
 		color:black;
@@ -58,34 +62,38 @@
 	}
 </style>
 {{#if hasActiveTags}}
-	<div class='section'>
-		{{#if hasRequiredTags}}
-			<div class='row'><span>Required Tags:</span>
-				{{#each requiredTags}}
-					<div class="badge {{colorClass this.tag}}">
-						<span class="required-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
-							<span data-tag="{{this.tag}}" data-action="removeRequiredTag" class="selected-required-tag remove-tag-btn hover-control">X</span>
-						</span>
+	<div id='active-tags-section-div' class='section' tabindex=0>
+		<div class='row section-label'>Active tag filters:</div>
+			<div class='row section-body'>
+				{{#if hasRequiredTags}}
+					<div class='row'><span>Required Tags:</span>
+						{{#each requiredTags}}
+							<div class="badge {{colorClass this.tag}}">
+								<span class="required-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
+									<span data-tag="{{this.tag}}" data-action="removeRequiredTag" class="selected-required-tag remove-tag-btn hover-control">X</span>
+								</span>
+							</div>
+						{{/each}}
+					</div> 
+				{{/if}}
+				{{#if hasExcludedTags}}
+					<div class='row'><span>Excluded Tags:</span>
+						{{#each excludedTags}}
+							<div class="badge {{colorClass this.tag}}">
+								<span class="excluded-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
+									<span data-tag="{{this.tag}}" data-action="removeExcludedTag" class="selected-excluded-tag remove-tag-btn hover-control">X</span>
+								</span>
+							</div>
+						{{/each}}
 					</div>
-				{{/each}}
-			</div> 
-		{{/if}}
-		{{#if hasExcludedTags}}
-			<div class='row'><span>Excluded Tags:</span>
-				{{#each excludedTags}}
-					<div class="badge {{colorClass this.tag}}">
-						<span class="excluded-tag" id="tag-{{this.tag}}"> {{aliasIfStudy this.tag}} ({{this.score}})
-							<span data-tag="{{this.tag}}" data-action="removeExcludedTag" class="selected-excluded-tag remove-tag-btn hover-control">X</span>
-						</span>
-					</div>
-				{{/each}}
+				{{/if}}
 			</div>
-		{{/if}}
+		</div>
 	</div>
 <br>
 {{/if}}
 {{#if hasInactiveStudyTags}}
-<div class='section'>
+<div id='study-tags-section-div' class='section' tabindex=0>
 	<div class='row section-label'>Refine results using study based filters:</div>
 	<div class='row section-body'>
 		{{#each studyTags}}
@@ -100,7 +108,8 @@
 </div>
 <br>
 {{/if}}
-<div class='section'>
+{{#if this.tagsShown}}
+<div id='tags-section-div' class='section' tabindex=0>
 	<div class='row section-label'>
 	Refine results using tag based filters<br>
 	Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that have variables which match your search term
@@ -122,3 +131,4 @@
 		{{/if}}
 	</div>
 </div>
+{{/if}}
