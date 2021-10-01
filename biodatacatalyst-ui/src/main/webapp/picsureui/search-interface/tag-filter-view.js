@@ -66,6 +66,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				focusedTag = tags.length;
 			}
 			$(tags[focusedTag - 1]).addClass('focused-tag-badge');
+			$(this.model.get('focusedSection')).attr('aria-activedescendant',$('.focused-tag-badge')[0].firstElementChild.id);
 			$('.focused-tag-badge .hover-control').show();
 		},
 		nextTag: function(event){
@@ -79,6 +80,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				}
 			}
 			$(tags[(focusedTag + 1) % tags.length]).addClass('focused-tag-badge');
+			$(this.model.get('focusedSection')).attr('aria-activedescendant',$('.focused-tag-badge')[0].firstElementChild.id);
 			$('.focused-tag-badge .hover-control').show();
 		},
 		studyTagKeypress: function(event){

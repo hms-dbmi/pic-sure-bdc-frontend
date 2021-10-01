@@ -1,9 +1,9 @@
-define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!options/modal.hbs",
-		"search-interface/data-table-info-view", "search-interface/search-util", "search-interface/filter-modal-view",
+define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!search-interface/search-results-list.hbs", 
+		"text!options/modal.hbs", "search-interface/data-table-info-view", "search-interface/search-util", "search-interface/filter-modal-view",
 		"search-interface/categorical-filter-modal-view", "search-interface/filter-model", "search-interface/tag-filter-model", 
 		"search-interface/modal", "search-interface/variable-info-cache", "search-interface/keyboard-nav"],
-function(BB, HBS, searchResultsViewTemplate, modalTemplate,
-		 dataTableInfoView, searchUtil, filterModalView,
+function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate, 
+		 modalTemplate, dataTableInfoView, searchUtil, filterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel, 
 		 modal, variableInfoCache, keyboardNav){
 
@@ -31,20 +31,15 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			if(nextPageLink){
 				tagFilterModel.set("currentPage", nextPageLink.dataset["page"]);
 			}
-			this.nextSearchResult();
-			this.regainFocus = true;
 		},
 		previousPage: function(){
 			let previousPageLink = document.getElementById('page-link-' + tagFilterModel.get("currentPage")).previousSibling.previousSibling;
 			if(previousPageLink){
 				tagFilterModel.set("currentPage", previousPageLink.dataset["page"]);
 			}
-			this.previousSearchResult();
-			this.regainFocus = true;
 		},
 		pageLinkHandler: function(event){
 			tagFilterModel.set("currentPage", event.target.innerText);
-			this.regainFocus = true;
 		},
 		updateResponse: function(response) {
 			tagFilterModel.set("searchResults",response);
@@ -108,7 +103,9 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 						el: $(".modal-body")
 					});
 					this.dataTableInfoView.render();
-					modal.displayModal(this.dataTableInfoView, response.metadata.description);
+					modal.displayModal(this.dataTableInfoView, response.metadata.description,  ()=>{
+						$('#search-results-div').focus();
+					});
 				}.bind(this),
 				error: function(response){
 					console.log(response);
@@ -183,6 +180,10 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 			return studyId.split('.')[0].toUpperCase();
 		},
 		render: function(){
+			if($('#search-results-div')[0]===undefined){
+				this.$el.html(HBS.compile(searchResultsViewTemplate));
+			}
+
 			if (tagFilterModel.get("searchResults")) {
 				let results = _.map(tagFilterModel.get("searchResults").results.searchResults, function(result, i){
 					let metadata = result.result.metadata;
@@ -206,16 +207,13 @@ function(BB, HBS, searchResultsViewTemplate, modalTemplate,
 						isActive : tagFilterModel.get("currentPage") == pageNumber
 					});
 				}
-				this.$el.html(HBS.compile(searchResultsViewTemplate)(
+				$('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
 					{
 						"results": results,
 						"variableCount": tagFilterModel.get("searchResults").results.numResults,
 						"pages": pages
 					}
 				));
-			}
-			if(this.regainFocus){
-				setTimeout($('#search-results-div')[0].focus.bind($('#search-results-div')[0]), 100);
 			}
 		}
 	});

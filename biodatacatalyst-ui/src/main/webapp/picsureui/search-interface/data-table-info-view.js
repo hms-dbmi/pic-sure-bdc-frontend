@@ -64,7 +64,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                 modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
             },
             filterKeypressHandler: function(event){
-                if(event.key.toLowerCase()==='enter'||event.key.toLowerCase()===' '){
+                if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
                     this.filterClickHandler(event);
                 }
             },

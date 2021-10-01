@@ -22,9 +22,12 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
                 $(".modal-backdrop").hide();
             });
 		},
-		displayModal: function(view, title){
+		displayModal: function(view, title, dismissalAction){
 			this.render();
 	        $("#modalDialog").modal({keyboard:true});
+			if(dismissalAction){
+				$('#modalDialog').on('hidden.bs.modal', dismissalAction);
+			}
             $('.close').attr('tabindex', 1100000);
 			this.title = title;
 			view.setElement($(".modal-body"));

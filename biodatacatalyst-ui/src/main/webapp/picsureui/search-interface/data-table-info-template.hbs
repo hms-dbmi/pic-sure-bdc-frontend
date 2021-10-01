@@ -1,40 +1,11 @@
-<div class="study-info">
-    <div class="study-description">
-        Study Name: {{studyDescription}}
-    </div>
-    <div class="study-accession">
-        Study Accession: {{studyAccession}}
-        <div class="badge {{colorClass this.tag}}" tabindex=1000000>
-        <span id="tag-{{studyAccessionTagId}}"> {{studyAccessionTagName}}
-            <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
-            <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
-        </span>
-        </div>
-    </div>
-</div>
 
-<div class="dataset-info">
-    <div class="dataset-name">
-        Dataset Name: {{variableMetadata.dataTableName}}
-    </div>
-    <div class="dataset-accession">
-        Dataset Accession: {{variableMetadata.dataTableId}}
-        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" tabindex=1000002 class="fa fa-filter search-result-action-btn"></i>
-        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" tabindex=1000003 class="fa fa-database search-result-action-btn"></i>
-    </div>
-    {{#if variableMetadata.dataTableDescription}}
-    <div class="dataset-description">
-        Dataset Description: {{variableMetadata.dataTableDescription}}
-    </div>
-    {{/if}}
-</div>
 
 <div class="variable-info">
     {{#if variableId}}
         <div>
             Variable Accession: {{variableId}}
-            <i data-target="variable" data-id="{{variableId}}" tabindex=1000004 class="fa fa-filter search-result-action-btn"></i>
-            <i data-target="variable" data-id="{{variableId}}" tabindex=1000005 class="fa fa-database search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" tabindex=1000000 class="fa fa-filter search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" tabindex=1000001 class="fa fa-database search-result-action-btn"></i>
         </div>
     {{/if}}
     {{#if variableMetadata.description}}
@@ -53,3 +24,35 @@
         <div>Variable Report Comment: {{variableMetadata.var_report_comment}}</div>
     {{/if}}
 </div>
+<hr>
+<div class="dataset-info">
+    <div class="dataset-name">
+        Dataset Name: {{variableMetadata.dataTableName}}
+    </div>
+    <div class="dataset-accession">
+        Dataset Accession: {{variableMetadata.dataTableId}}
+        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" tabindex=1000002 class="fa fa-filter search-result-action-btn"></i>
+        <i data-target="datatable" data-id="{{variableMetadata.dataTableId}}" tabindex=1000003 class="fa fa-database search-result-action-btn"></i>
+    </div>
+    {{#if variableMetadata.dataTableDescription}}
+    <div class="dataset-description">
+        Dataset Description: {{variableMetadata.dataTableDescription}}
+    </div>
+    {{/if}}
+</div>
+<hr>
+<div class="study-info">
+    <div class="study-description">
+        Study Name: {{studyDescription}}
+    </div>
+    <div class="study-accession">
+        Study Accession: {{studyAccession}}
+        <div class="badge {{colorClass this.tag}}" tabindex=1000004>
+        <span id="tag-{{studyAccessionTagId}}"> {{studyAccessionTagName}}
+            <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
+            <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+        </span>
+        </div>
+    </div>
+</div>
+
