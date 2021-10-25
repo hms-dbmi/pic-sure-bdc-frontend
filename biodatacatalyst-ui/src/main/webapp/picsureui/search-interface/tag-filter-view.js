@@ -1,7 +1,9 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "search-interface/keyboard-nav"],
-function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav){
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "search-interface/keyboard-nav", "search-interface/search-util"],
+function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
+	let tableRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d$');
+	let tableVersionRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d');
 	let defaultTagLimit = 12;
 
 	let TagFilterView = BB.View.extend({
@@ -68,6 +70,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			$(tags[focusedTag - 1]).addClass('focused-tag-badge');
 			$(this.model.get('focusedSection')).attr('aria-activedescendant',$('.focused-tag-badge')[0].firstElementChild.id);
 			$('.focused-tag-badge .hover-control').show();
+			searchUtil.ensureElementIsInView($('.focused-tag-badge')[0]);
 		},
 		nextTag: function(event){
 			let tags = this.$(this.model.get("focusedSection") + " .section-body .badge");
@@ -82,6 +85,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			$(tags[(focusedTag + 1) % tags.length]).addClass('focused-tag-badge');
 			$(this.model.get('focusedSection')).attr('aria-activedescendant',$('.focused-tag-badge')[0].firstElementChild.id);
 			$('.focused-tag-badge .hover-control').show();
+			searchUtil.ensureElementIsInView($('.focused-tag-badge')[0]);
 		},
 		studyTagKeypress: function(event){
 			console.log(event);
@@ -199,13 +203,16 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();
 			let tags = _.filter(unusedTags, function(tag){
-				return ! studyVersionRegex.test(tag.get('tag'));
+				return ! studyVersionRegex.test(tag.get('tag')) && ! tableVersionRegex.test(tag.get('tag'));
 			}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit'));
 			this.model.set('numTags', Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()))
 			this.model.set('focusedTag', this.model.get('numTags') * 1000000);
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
 					tags: tags,
+					searchTerm: $('#search-box').val(),
+					numSearchResults: this.model.get("searchResults") ? this.model.get("searchResults").results.numResults : 0,
+					numActiveTags: this.model.get("requiredTags").size() + this.model.get("excludedTags").size(),
 					tagsTotal: this.model.get("unusedTags").size(),
 					tagsShown: this.model.get('numTags'),
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,

@@ -47,8 +47,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			"keypress #search-box": "handleSearchKeypress"
 		},
 		updateTags: function(response) {
-			this.tagFilterView.updateTags(response);
-			this.tagFilterView.render();
+			if(!tagFilterModel.changed.currentPage){
+				this.tagFilterView.updateTags(response);
+				this.tagFilterView.render();
+			}
 			this.searchResultsView.updateResponse(response);
 			this.searchResultsView.render();
 		},
@@ -91,6 +93,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		},
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
+			if($('title') === undefined){
+				$('head').append("<title></title>");
+			}
+			$('title').html("BioData Catalyst Powered by PIC-SURE : Authorized Access Query Builder");
 		}
 	});
 

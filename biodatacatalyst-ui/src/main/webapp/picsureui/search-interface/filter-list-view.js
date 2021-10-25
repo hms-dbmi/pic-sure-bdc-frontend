@@ -1,9 +1,9 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
-        "text!options/modal.hbs", "search-interface/filter-modal-view", "search-interface/categorical-filter-modal-view", 
-        "picSure/queryBuilder","search-interface/modal", "search-interface/keyboard-nav"],
+        "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
+        "picSure/queryBuilder","search-interface/modal", "search-interface/keyboard-nav", "search-interface/search-util"],
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView, 
-        queryBuilder, modal, keyboardNav){
+        queryBuilder, modal, keyboardNav, searchUtil){
 
         var View = BB.View.extend({
             initialize: function(opts){
@@ -37,30 +37,43 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
             filtersBlur: function () {
                 this.$(".focused-filter-container").removeClass('focused-filter-container');
             },
-            previousFilter: function(event){
-                let filters = this.$(".filter-container");
-                let focusedFilter = 1;
+            findAndFreeFocusedFilter: function(focusedFilter, filters){
+                for(var x = 0;x < filters.length;x++){
+                    if($(filters[x]).hasClass('focused-fitler-container')){
+                        focusedFilter = x;
+                        $(filters[x]).removeClass('focused-fitler-container')
+                    }
+                }
+                return focusedFilter;
+            },
+            adjustFocusedFilter: function(adjustment, filters){
+                let focusedFilter = adjustment;
                 for(var x = 0;x < filters.length;x++){
                     if($(filters[x]).hasClass('focused-filter-container')){
                         focusedFilter = x;
                         $(filters[x]).removeClass('focused-filter-container')
                     }
                 }
-                if(focusedFilter===0){
-                    focusedFilter = filters.length;
+                focusedFilter = focusedFilter - adjustment;
+                if(focusedFilter===-1){
+                    focusedFilter = filters.length-1;
                 }
-                $(filters[focusedFilter - 1]).addClass('focused-filter-container');
+                if(focusedFilter===filters.length){
+                    focusedFilter=0;
+                }
+                if(filters[focusedFilter]){
+                    $(filters[focusedFilter]).addClass('focused-filter-container');
+                    $("#filter-list").attr("aria-activedescendant", filters[focusedFilter].id);
+                    searchUtil.ensureElementIsInView(filters[focusedFilter]);
+                }
+            },
+            previousFilter: function(event){
+                let filters = this.$(".filter-container");
+                let focusedFilter = this.adjustFocusedFilter(1, filters);
             },
             nextFilter: function(event){
                 let filters = this.$(".filter-container");
-                let focusedFilter = -1;
-                for(var x = 0;x < filters.length;x++){
-                    if($(filters[x]).hasClass('focused-filter-container')){
-                        focusedFilter = x;
-                        $(filters[x]).removeClass('focused-filter-container')
-                    }
-                }
-                $(filters[(focusedFilter + 1) % filters.length]).addClass('focused-filter-container');
+                let focusedFilter = this.adjustFocusedFilter(-1, filters);
             },
             editFilter: function(event){
                 $('.focused-filter-container .edit-filter').click();
@@ -103,24 +116,23 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 let searchResult = filter.searchResult;
 
                 let filterViewData = {
-                    searchResult: searchResult,
-                    filter: filter
+                    el: $('.modal-body'),
+                    data: {
+                        searchResult: searchResult,
+                        filter: filter
+                    }
                 }
 
                 if (searchResult.result.is_categorical) {
-                    this.filterModalView = new categoricalFilterModalView({
-                        el: $('.modal-body'),
-                        data: filterViewData
-                    });
+                    this.filterModalView = new categoricalFilterModalView(filterViewData);
 
                 } else {
-                    this.filterModalView = new filterModalView({
-                        el: $('.modal-body'),
-                        data: filterViewData
-                    });
+                    this.filterModalView = new filterModalView(filterViewData);
                 }
 
-                modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
+                modal.displayModal(this.filterModalView, searchResult.result.metadata.description, ()=>{
+                    $('#filter-list').focus();
+                });
             },
             render: function(){
                 let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");

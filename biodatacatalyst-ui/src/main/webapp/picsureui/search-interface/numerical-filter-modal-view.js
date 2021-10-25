@@ -1,4 +1,4 @@
-define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings"],
+define(["jquery","backbone","handlebars", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings"],
     function($, BB, HBS, filterModalViewTemplate, filterModel, search, settings){
 
         var View = BB.View.extend({
@@ -26,7 +26,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-modal-vi
                         this.data.max = concept.max;
                         this.$el.html(this.filterModalViewTemplate(this.data));
                         if(this.data.filter!==undefined){
-                            this.$("#select-filter-type").val(this.data.filter.filterType);
                             this.$('#max-value-input').val(this.data.filter.max);
                             this.$('#min-value-input').val(this.data.filter.min);
                         } else {

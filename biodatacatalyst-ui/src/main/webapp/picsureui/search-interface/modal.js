@@ -1,5 +1,5 @@
-define(["handlebars","jquery","backbone","text!options/modal.hbs"],
-	function(HBS,$,BB,modalTemplate){
+define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-interface/keyboard-nav"],
+	function(HBS,$,BB,modalTemplate, keyboardNav){
 	let Modal = BB.View.extend({
 		initialize: function(opts){
 			this.title="";
@@ -13,7 +13,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 		},
 		render: function(){
 			if ($("#modal-window").length === 0) {
-                $('#main-content').append('<div id="modal-window"></div>');
+                $('#main-content').append('<div id="modal-window" aria-modal="true"></div>');
             }
 
             $("#modal-window").html(HBS.compile(modalTemplate)({title: this.title}));
@@ -24,6 +24,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 		},
 		displayModal: function(view, title, dismissalAction){
 			this.render();
+
 	        $("#modalDialog").modal({keyboard:true});
 			if(dismissalAction){
 				$('#modalDialog').on('hidden.bs.modal', dismissalAction);

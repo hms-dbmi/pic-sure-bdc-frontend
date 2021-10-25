@@ -10,7 +10,7 @@
 	}
 	.focused-tag-badge {
 		border-width:4px !important;
-		border-color:red !important;
+		border-color:#a73039 !important;
 	}
 	.tag-badge {
 		background:#e3eefd;
@@ -39,11 +39,11 @@
 		float:right;
 	}
 	.exclude-tag-btn {
-		color:red;
+		color:#a73039;
 		float:left;
 	}
 	.remove-tag-btn {
-		color:red;
+		color:#a73039;
 		float:right;
 	}
 	.section-label {
@@ -62,14 +62,21 @@
 	}
 </style>
 {{#if hasActiveTags}}
-	<div id='active-tags-section-div' role='region' class='section' tabindex=0 aria-label="You are in the active tag filters region. Use up and down arrows to move between active tag filters. Use the enter button to remove a filtered tag.">
+	<div id='active-tags-section-div' role='region' class='section' tabindex=0 aria-label='You are in the active tag filters region. 
+	Currently {{numActiveTags}} tags are being used to filter search results for your search term "{{searchTerm}}". Currently {{numSearchResults}} search results are displayed in the results region.
+	{{#if hasRequiredTags}} The results are filtered by requiring the following tags: 
+		{{#each requiredTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
+	{{/if}}
+	{{#if hasExcludedTags}} The results are filtered by excluding the following tags: 
+		{{#each excludedTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
+	{{/if}} Use up and down arrows to move between active tag filters.'>
 		<div class='row section-label'>Active tag filters:</div>
 			<div class='row section-body'>
 				{{#if hasRequiredTags}}
 					<div class='row'><span>Required Tags:</span>
 						{{#each requiredTags}}
 							<div class="badge {{colorClass this.tag}}">
-								<span class="required-tag" id="tag-{{this.tag}}" aria-label="Tag {{this.tag}} is associated with {{this.score}} search results. Press enter to no longer require search results to have this tag."> {{aliasIfStudy this.tag}} ({{this.score}})
+								<span class="required-tag" id="tag-{{this.tag}}" aria-label="Tag {{ariaAliasIfStudy this.tag}}is associated with {{this.score}} search results. Press enter to no longer require search results to have this tag."> {{aliasIfStudy this.tag}} ({{this.score}})
 									<span data-tag="{{this.tag}}" data-action="removeRequiredTag" class="selected-required-tag remove-tag-btn hover-control">X</span>
 								</span>
 							</div>
@@ -80,7 +87,7 @@
 					<div class='row'><span>Excluded Tags:</span>
 						{{#each excludedTags}}
 							<div class="badge {{colorClass this.tag}}">
-								<span class="excluded-tag" id="tag-{{this.tag}}" aria-label="Tag {{this.tag}} is associated with {{this.score}} search results. Press enter to no longer exclude search results having this tag."> {{aliasIfStudy this.tag}} ({{this.score}})
+								<span class="excluded-tag" id="tag-{{this.tag}}" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press enter to no longer exclude search results having this tag."> {{aliasIfStudy this.tag}} ({{this.score}})
 									<span data-tag="{{this.tag}}" data-action="removeExcludedTag" class="selected-excluded-tag remove-tag-btn hover-control">X</span>
 								</span>
 							</div>
@@ -93,12 +100,12 @@
 <br>
 {{/if}}
 {{#if hasInactiveStudyTags}}
-<div id='study-tags-section-div' role='region' class='section' tabindex=0 aria-label="You are in the study tag filters region. Use up and down arrows to move between study tag filters. Use the right arrow to include only search results marked with the currently focused study tag. Use the left arrow to exclude all search results marked with the currently focused study tag.">
+<div id='study-tags-section-div' role='region' class='section' tabindex=0 aria-label="You are in the study tag filters region. Use up and down arrows to move between study tag filters.">
 	<div class='row section-label'>Refine results using study based filters:</div>
 	<div class='row section-body'>
 		{{#each studyTags}}
 			<div class="badge {{colorClass this.tag}}">
-				<span id="tag-{{this.tag}}" aria-label="Study {{this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag."> {{aliasIfStudy this.tag}} ({{this.score}})
+				<span id="tag-{{this.tag}}" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag."> {{aliasIfStudy this.tag}} ({{this.score}})
 					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
 					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
 				</span>
@@ -109,7 +116,7 @@
 <br>
 {{/if}}
 {{#if this.tagsShown}}
-<div id='tags-section-div' role='region' class='section' tabindex=0 aria-label="You are in the tag filters region. Use up and down arrows to move between tag filters. Use the right arrow to include only search results marked with the currently focused tag. Use the left arrow to exclude all search results marked with the currently focused tag.">
+<div id='tags-section-div' role='region' class='section' tabindex=0 aria-label="You are in the tag filters region. Use up and down arrows to move between tag filters.">
 	<div class='row section-label'>
 	Refine results using tag based filters<br>
 	Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that have variables which match your search term
@@ -117,7 +124,7 @@
 	<div class='row section-body unused-tags'>
 		{{#each tags}}
 			<div class="badge {{colorClass this.tag}}">
-				<span id="tag-{{this.tag}}" aria-label="Tag {{this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag."> {{this.tag}} ({{this.score}})
+				<span id="tag-{{this.tag}}" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag."> {{this.tag}} ({{this.score}})
 					<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span> 
 					<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
 				</span>

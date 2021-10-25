@@ -12,6 +12,13 @@ define(["jquery","text!studyAccess/studies-data.json"],
                     return study.abbreviated_name;
                 }
                 return study_id;
+            },
+            ensureElementIsInView: function(element){
+                var elementBounds = element.getBoundingClientRect();
+                var viewportLowerBound = $('.row.footer-row')[0].getBoundingClientRect().top;
+                if ( ! (elementBounds.top >= 0 && elementBounds.bottom <= viewportLowerBound)) {
+                    element.scrollIntoView();
+                }
             }
         };
     });

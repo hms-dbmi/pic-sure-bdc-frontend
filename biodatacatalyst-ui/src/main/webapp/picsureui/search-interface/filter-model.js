@@ -11,17 +11,17 @@ define(["backbone", "handlebars"],
             addCategoryFilter: function(searchResult, values) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
                 if(existingFilterForVariable!==undefined){
-                    existingFilterForVariable.set("values", values);
-                }else{
-                    this.get('activeFilters').add({
-                        type: 'category',
-                        searchResult: searchResult,
-                        category: this.generateCategory(searchResult),
-                        values: values,
-                        searchResult: searchResult,
-                        filterType: "restrict"
-                    });
+                    this.get('activeFilters').remove(existingFilterForVariable, {silent:true});
                 }
+                this.get('activeFilters').add({
+                    type: 'category',
+                    searchResult: searchResult,
+                    category: this.generateCategory(searchResult),
+                    values: values,
+                    searchResult: searchResult,
+                    filterType: "restrict"
+                });
+                
             },
             addNumericFilter: function(searchResult, min, max) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);

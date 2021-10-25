@@ -31,6 +31,12 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                     }
                     return tag;
                 });
+                HBS.registerHelper("ariaAliasIfStudy", function(tag){
+                    if(studyVersionRegex.test(tag)){
+                        return "Study " + searchUtil.findStudyAbbreviationFromId(tag).split('').join('.');
+                    }
+                    return tag;
+                });
                 HBS.registerHelper("colorClass", function(tag){
                     if(studyVersionRegex.test(tag)){
                         return 'study-badge';

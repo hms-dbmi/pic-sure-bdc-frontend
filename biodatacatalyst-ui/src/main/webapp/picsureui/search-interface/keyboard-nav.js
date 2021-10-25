@@ -36,11 +36,15 @@ define(['jquery'],function($){
 	let setCurrentView = function(name){
 		currentView = name;
 	}
+	let getCurrentView = function(){
+		return currentView;
+	}
 
 	document.onkeydown = handleKeypress;
 
 	return {
 		addNavigableView : addNavigableView,
-		setCurrentView : setCurrentView
+		setCurrentView : setCurrentView,
+		getCurrentView : getCurrentView
 	}
 });
