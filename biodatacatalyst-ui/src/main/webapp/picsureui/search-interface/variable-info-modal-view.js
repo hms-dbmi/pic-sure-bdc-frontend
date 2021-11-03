@@ -1,10 +1,12 @@
-define(["jquery","backbone","handlebars", "text!search-interface/data-table-info-template.hbs",
+define(["jquery","backbone","handlebars", "text!search-interface/variable-info-modal-template.hbs",
         "search-interface/tag-filter-model", "text!options/modal.hbs", "search-interface/variable-info-cache",
         "search-interface/filter-model","search-interface/categorical-filter-modal-view",
-        "search-interface/numerical-filter-modal-view", "search-interface/modal"],
+        "search-interface/numerical-filter-modal-view", "search-interface/datatable-filter-modal-view", 
+        "search-interface/modal"],
     function($, BB, HBS, dataTableInfoTemplate,
              tagFilterModel, modalTemplate, variableInfoCache,
-             filterModel, categoricalFilterModalView, filterModalView,
+             filterModel, categoricalFilterModalView, 
+             numericalFilterModalView, datatableFilterModalView,
              modal){
 
         var View = BB.View.extend({
@@ -61,8 +63,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                             el: $(".modal-body")
                         });
                     } else {
-                        this.filterModalView = new filterModalView({
-                            data: filterViewData,
+                        this.filterModalView = new numericalFilterModalView({
+                            data: filterViewData,  
                             el: $(".modal-body")
                         });
                     }
@@ -77,22 +79,22 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({query: {
-                                searchTerm: this.searchTerm,
-                                includedTags: this.requiredTags,
-                                excludedTags: this.excludedTags,
-                                returnTags: true,
-                                offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
-                                limit: tagFilterModel.get("limit")
-                            }}),
+                                searchTerm: "",
+                                includedTags: [event.target.dataset.id],
+                                excludedTags: [],
+                                returnTags: false,
+                                offset: 0,
+                                limit: 100000
+                        }}),
                         success: function(response){
                             let filterViewData = {
                                 dtId: event.target.dataset.id,
                                 filter: filter ? filter.toJSON() : undefined,
-                                //dtVariables: 
-                            }
+                                dtVariables: response.results.searchResults
+                            };
                             this.filterModalView = new datatableFilterModalView({
-                                data: filterViewData,
-                                el: $(".modal-body")
+                                model: filterViewData,
+                                el: $(".modal-body"),
                             });
                             this.filterModalView.render();
                             modal.displayModal(this.filterModalView, "Dataset : " + searchResult.result.metadata.dataTableName);
@@ -125,7 +127,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/data-table-info
                         el: $(".modal-body")
                     });
                 } else {
-                    this.filterModalView = new filterModalView({
+                    this.filterModalView = new numericalfilterModalView({
                         data: filterViewData,
                         el: $(".modal-body")
                     });

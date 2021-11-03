@@ -1,5 +1,5 @@
 define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!search-interface/search-results-list.hbs", 
-		"text!options/modal.hbs", "search-interface/data-table-info-view", "search-interface/search-util", 
+		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util", 
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
 		"search-interface/filter-model", "search-interface/tag-filter-model", 
 		"search-interface/modal", "search-interface/variable-info-cache", "search-interface/keyboard-nav"],

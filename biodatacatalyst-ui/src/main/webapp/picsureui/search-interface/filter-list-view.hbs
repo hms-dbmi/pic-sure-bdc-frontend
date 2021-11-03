@@ -16,15 +16,33 @@
 </style>
 <div id="filter-list" tabindex=0 aria-activedescendent="">
 {{#each activeFilters}}
-    <div class="filter-container" id="{{this.searchResult.result.metadata.varId}}">
-        <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>
-        <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" data-index="{{@index}}"></i>
-        <div class="filter">
-        <p>{{this.searchResult.result.metadata.varId}}</p>
-        <p>{{this.searchResult.result.metadata.description}}</p>
+    {{#if datatable}}
+        <div class="filter-container" id="{{this.searchResult.result.metadata.dtId}}">
+            <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>
+            <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" data-index="{{@index}}"></i>
+            <div class="filter">
+            <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
+            {{#if this.searchResult.result.metadata.dataTableId}}
+                <p>Datatable ID: {{this.searchResult.result.metadata.dataTableId}}</p>
+            {{/if}}
+            {{#if this.searchResult.result.metadata.dataTableName}}
+                <p>Datatable Name: {{this.searchResult.result.metadata.dataTableName}}</p>
+            {{/if}}
+            </div>
+            <p class="value">{{variables.length}} variables selected. Participants with any value recorded for any of these variables will be included if they match all other defined filters</p>
         </div>
-        <p class="value">Value: {{getFilterTypeDescription this}}</p>
-        <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
-    </div>
+
+    {{else}}
+        <div class="filter-container" id="{{this.searchResult.result.metadata.varId}}">
+            <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>
+            <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" data-index="{{@index}}"></i>
+            <div class="filter">
+            <p>{{this.searchResult.result.metadata.varId}}</p>
+            <p>{{this.searchResult.result.metadata.description}}</p>
+            </div>
+            <p class="value">Value: {{getFilterTypeDescription this}}</p>
+            <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
+        </div>
+    {{/if}}
 {{/each}}
 </div>

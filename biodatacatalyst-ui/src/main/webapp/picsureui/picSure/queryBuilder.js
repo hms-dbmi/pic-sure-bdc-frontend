@@ -52,6 +52,11 @@ define(["underscore"],
 				query.query.categoryFilters[filter.searchResult.result.metadata.HPDS_PATH]=filter.values;
 			}else if(filter.type==="numeric"){
 				query.query.numericFilters[filter.searchResult.result.metadata.HPDS_PATH]={min:filter.min, max:filter.max};
+			}else if(filter.type==="datatable"){
+				if(query.query.anyRecordOf===undefined){
+					query.query.anyRecordOf = [];
+				}
+				query.query.anyRecordOf = query.query.anyRecordOf.concat(_.map(filter.variables, (variable)=>{return variable[6];}));
 			}
 		});
 
