@@ -1,21 +1,110 @@
-define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "search-interface/keyboard-nav", "search-interface/filter-model"],
-	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel){
+define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "search-interface/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
+	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
 	let DatatableFilterModalView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatableFilterModal",this);
+			this.on({
+				'keynav-arrowup document': this.previousVariable,
+				'keynav-arrowdown document': this.nextVariable,
+				'keynav-arrowright document': this.nextPage,
+				'keynav-arrowleft document': this.previousPage
+			});
 		},
 		events: {
 			"click #add-filter-button":"addFilterToQuery",
-			'click input[type="checkbox"]':"checkboxToggled"
+			'click input[type="checkbox"]':"checkboxToggled",
+			'click #select-all':'selectAll',
+			'click #deselect-all':'deselectAll',
+			'focus #vcfData': 'vcfDataFocus',
+			'blur #vcfData': 'vcfDataBlur'
 		},
-		checkboxToggled: function(){
-			let target = _.find(this.data,(variable)=>{
-	    		return event.target.id.substring(12) === variable[1];
+		data: function(){
+			return $('#vcfData').DataTable().rows( {order:'index', search:'applied'} ).data();
+		},
+		nextPage: function(){
+		    $('#vcfData').DataTable().page( 'next' ).draw( 'page' );
+			$('#aria-live').html("Now on page " + ($('#vcfData').DataTable().page() + 1) + " of the results region.");
+		},
+		previousPage: function(){
+			$('#vcfData').DataTable().page( 'previous' ).draw( 'page' );
+			$('#aria-live').html("Now on page " + ($('#vcfData').DataTable().page() + 1) + " of the results region.");
+		},
+		previousVariable: function(event){
+			let variables = this.$("#vcfData tr");
+			let focusedVariable = this.adjustFocusedVariable(1, variables);
+		},
+		nextVariable: function(event){
+			let variables = this.$("#vcfData tr");
+			let focusedVariable = this.adjustFocusedVariable(-1, variables);
+		},
+		adjustFocusedVariable: function(adjustment, variables){
+			let focusedVariable = adjustment;
+			for(var x = 1;x < variables.length;x++){
+				if($(variables[x]).hasClass('focused-variable')){
+					focusedVariable = x;
+					$(variables[x]).removeClass('focused-variable')
+				}
+			}
+			focusedVariable = focusedVariable - adjustment;
+			if(focusedVariable===0){
+				focusedVariable = variables.length-1;
+			}
+			if(focusedVariable===variables.length){
+				focusedVariable=1;
+			}
+			$(variables[focusedVariable]).addClass('focused-variable');
+            $("#vcfData").attr("aria-activedescendant", variables[focusedVariable].id);
+
+			searchUtil.ensureElementIsInView(variables[focusedVariable]);
+		},
+		vcfDataFocus: function(event){
+			keyboardNav.setCurrentView("datatableFilterModal");
+		},
+		vcfDataBlur: function(){
+			keyboardNav.setCurrentView(undefined);
+			this.$("#vcfData.focused-variable").removeClass('focused-variable');
+		},
+		selectAll: function(){
+			_.each(this.data(),
+				(row)=>{
+					row[0]=true;
+					let variableId = row[1];
+					let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === variableId;});
+					dataRow[0] = true;
+					let checkbox = $('input[data-varid="' + variableId +'"]')[0];
+					if(checkbox!==undefined){
+						checkbox.checked = true;
+					}
+				});
+		},
+		deselectAll: function(){
+			_.each(this.data(),
+				(row)=>{
+					row[0]=false;
+					let variableId = row[1];
+					let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === variableId;});
+					dataRow[0] = false;
+					let checkbox = $('input[data-varid="' + variableId +'"]')[0];
+					if(checkbox!==undefined){
+						checkbox.checked = false;
+					}
+				});
+		},
+		checkboxToggled: function(event){
+			let target = _.find(this.data(),(variable)=>{
+	    		return event.target.dataset['varid'] === variable[1];
 	    	});
-	    	target[0] = !target[0];
+	    	let valueToSet = !target[0];
+	    	_.each(this.data(),
+				(row)=>{
+					if(row[1]===target[1]){
+						row[0]=valueToSet;
+					}
+				});
+	    	target[0] = valueToSet;
 		},
 		addFilterToQuery: function(){
-			let selectedVariables = _.filter(this.data, (variable)=>{
+			let selectedVariables = _.filter(this.data(), (variable)=>{
 				return variable[0];
 			});
 			console.log(selectedVariables);
@@ -27,33 +116,18 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			});
             $('.close').click();
 		},
-		nextPage: function(){
-			let nextPageLink = document.getElementById('page-link-' + tagFilterModel.get("currentPage")).nextElementSibling;
-			if(nextPageLink){
-				tagFilterModel.set("currentPage", nextPageLink.dataset["page"]);
-			}
-			$('#aria-live').html("Now on page " + tagFilterModel.get("currentPage") + " of the results region.");
-		},
-		previousPage: function(){
-			let previousPageLink = document.getElementById('page-link-' + tagFilterModel.get("currentPage")).previousElementSibling;
-			if(previousPageLink){
-				tagFilterModel.set("currentPage", previousPageLink.dataset["page"]);
-			}
-			$('#aria-live').html("Now on page " + tagFilterModel.get("currentPage") + " of the results region.");
-		},
 		render: function(){
 			this.$el.html(HBS.compile(datatableFilterModalTemplate)());
 			$('.modal-dialog').width('90%');
 			$('#datatable-modal-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='vcfData' class='display stripe' ></table>");
-			let tabcounter = 1000000;
 			let toggleable = true;
 			let existingFilter = filterModel.getByDatatableId(this.model.dtId);
-			this.data = _.map(this.model.dtVariables,function(variable){
+			let data = _.map(this.model.dtVariables,function(variable){
                 	return [
                 		existingFilter ? 
                 			(_.find(existingFilter.get('variables'), (conceptPath)=>{
                 			return conceptPath.includes(variable.result.varId);
-                			}) !== undefined ? true : false) : true,
+                			}) !== undefined ? true : false) : false,
                 		variable.result.varId,
                 		variable.result.metadata.name,
                 		variable.result.metadata.description,
@@ -63,7 +137,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 	];
                 });
             $('#vcfData').DataTable( {
-                data: this.data,
+                data: data,
                 columns: [
                 	{title:'Selected'},
                 	{title:'Variable ID'},
@@ -84,7 +158,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                     },
                     {
                     	render: function(data,type,row,meta){
-                    		return '<input type="checkbox" id="dt-checkbox-'+row[1]+'" checked='+data+'></input>';
+                    		return '<input type="checkbox" tabindex="-1" data-varid="'+row[1]+'" checked='+data+'></input>';
                     	},
                     	targets:0
                     }
@@ -92,23 +166,47 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
         		order: [[ 1, 'asc' ]],
                 deferRender: true,
                 drawCallback: function(){
-                	if(existingFilter !== undefined){
-	                	_.each($('input[type="checkbox"]'), (checkbox)=>{
-	                		if(_.find(existingFilter.get('variables'), (conceptPath)=>{
-	                			return conceptPath.includes(checkbox.id.substring(12));
+            		let x = 0;
+            		_.each($('input[type="checkbox"]'), (checkbox)=>{
+            			let varId = checkbox.dataset['varid'];
+                		if(existingFilter !== undefined){
+                			if(_.find(existingFilter.get('variables'), (conceptPath)=>{
+                				return conceptPath.includes(varId);
 							}) === undefined){
 							    checkbox.checked = false;	
 							}
-	                	});
-                	}
+            			}
+						let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === varId;});
+						if(dataRow[0]){
+							$('input[data-varid="' + varId +'"]')[0].checked = true;
+						}else{
+							$('input[data-varid="' + varId +'"]')[0].checked = false;
+						}
+						checkbox.parentElement.parentElement.id = "table_" + x;
+						x++;
+                	});
+	                this.setTabIndices();
                     this.delegateEvents();
                 }.bind(this)
             } );
+            $('<div id="datatable-selection-buttons"><button id="select-all">Select All</button><button id="deselect-all">Deselect All</button></div>').insertBefore('#vcfData_filter');
+            this.setTabIndices();
+		},
+		setTabIndices: function(){
+		    let tabcounter = 1000001;
+	        $('.dataTables_length select').attr('tabindex', tabcounter++);
+            $('.dataTables_filter input').attr('tabindex', tabcounter++);
+            $('#select-all').attr('tabindex', tabcounter++);
+            $('#deselect-all').attr('tabindex', tabcounter++);
+            
+            _.each($('.sorting', this.$el), function(sortHeader){
+            	sortHeader.setAttribute('tabindex', tabcounter++);
+            });
             _.each($('select', this.$el), function(checkbox){
             	checkbox.setAttribute('tabindex', tabcounter++);
             });
-            _.each($('input[type="search"]', this.$el), function(checkbox){
-            	checkbox.setAttribute('tabindex', tabcounter++);
+            _.each($('.paginate_button'), function(pagebutton){
+            	pagebutton.setAttribute('tabindex', -1);
             });
             $('#vcfData').attr('tabindex', tabcounter++);
             $('#add-filter-button').attr('tabindex', tabcounter++);
