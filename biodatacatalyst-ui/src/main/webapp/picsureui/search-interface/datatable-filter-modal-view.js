@@ -154,16 +154,18 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 columnDefs: [
                     {  
                         targets: [1,2,3,4,5],
-                        className: 'dt-center'
+                        className: 'dt-center',
+                        type:'string'
                     },
                     {
                     	render: function(data,type,row,meta){
-                    		return '<input type="checkbox" tabindex="-1" data-varid="'+row[1]+'" checked='+data+'></input>';
+                    		return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
                     	},
-                    	targets:0
+                    	type:'string',
+                    	targets: 0
                     }
                   ],
-        		order: [[ 1, 'asc' ]],
+        		order: [[0,'asc'],[ 1, 'asc' ]],
                 deferRender: true,
                 drawCallback: function(){
             		let x = 0;

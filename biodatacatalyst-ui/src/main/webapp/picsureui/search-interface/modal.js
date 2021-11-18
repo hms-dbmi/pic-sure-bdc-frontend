@@ -23,6 +23,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-inter
             });
 		},
 		displayModal: function(view, title, dismissalAction){
+			this.title = title;
 			this.render();
 
 	        $("#modalDialog").modal({keyboard:true});
@@ -30,7 +31,6 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-inter
 				$('#modalDialog').on('hidden.bs.modal', dismissalAction);
 			}
             $('.close').attr('tabindex', 1100000);
-			this.title = title;
 			view.setElement($(".modal-body"));
 			view.render();
 		},

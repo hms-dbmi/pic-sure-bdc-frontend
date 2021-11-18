@@ -1,8 +1,10 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
         "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
+        "search-interface/datatable-filter-modal-view", 
         "picSure/queryBuilder","search-interface/modal", "search-interface/keyboard-nav", "search-interface/search-util"],
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView, 
+        datatableFilterModalView,
         queryBuilder, modal, keyboardNav, searchUtil){
 
         var View = BB.View.extend({
@@ -113,26 +115,59 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
             },
             editFilterHandler: function(event) {
                 let filter = filterModel.getByIndex($(event.target).data('index'));
-                let searchResult = filter.searchResult;
 
-                let filterViewData = {
-                    el: $('.modal-body'),
-                    data: {
-                        searchResult: searchResult,
-                        filter: filter
-                    }
-                }
-
-                if (searchResult.result.is_categorical) {
-                    this.filterModalView = new categoricalFilterModalView(filterViewData);
-
+                if(filter.type==='datatable'){
+                    $.ajax({
+                        url: window.location.origin + "/jaxrs-service/rest/pic-sure/search",
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({query: {
+                                searchTerm: "",
+                                includedTags: [filter.dtId],
+                                excludedTags: [],
+                                returnTags: false,
+                                offset: 0,
+                                limit: 100000
+                        }}),
+                        success: function(response){
+                            let filterViewData = {
+                                dtId: filter.dtId,
+                                filter: filter,
+                                dtVariables: response.results.searchResults
+                            };
+                            this.filterModalView = new datatableFilterModalView({
+                                model: filterViewData,
+                                el: $(".modal-body"),
+                            });
+                            this.filterModalView.render();
+                            modal.displayModal(this.filterModalView, "Dataset : " + filter.searchResult.result.metadata.dataTableName);
+                        }.bind(this),
+                        error: function(response){
+                            console.log(response);
+                        }.bind(this)
+                    });
                 } else {
-                    this.filterModalView = new filterModalView(filterViewData);
-                }
+                    let searchResult = filter.searchResult;
 
-                modal.displayModal(this.filterModalView, searchResult.result.metadata.description, ()=>{
-                    $('#filter-list').focus();
-                });
+                    let filterViewData = {
+                        el: $('.modal-body'),
+                        data: {
+                            searchResult: searchResult,
+                            filter: filter
+                        }
+                    }
+
+                    if (searchResult.result.is_categorical) {
+                        this.filterModalView = new categoricalFilterModalView(filterViewData);
+
+                    } else {
+                        this.filterModalView = new filterModalView(filterViewData);
+                    }
+
+                    modal.displayModal(this.filterModalView, searchResult.result.metadata.description, ()=>{
+                        $('#filter-list').focus();
+                    });                    
+                }
             },
             render: function(){
                 let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
