@@ -4,7 +4,7 @@ define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs
 		"search-interface/filter-model", "search-interface/tag-filter-model", 
 		"search-interface/modal", "search-interface/variable-info-cache", "search-interface/keyboard-nav"],
 function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate, 
-		 modalTemplate, dataTableInfoView, searchUtil, filterModalView,
+		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel, 
 		 modal, variableInfoCache, keyboardNav){
 
@@ -155,7 +155,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			if (!_.isEmpty(searchResult.result.values)) {
 				this.filterModalView = new categoricalFilterModalView(filterViewData);
 			} else {
-				this.filterModalView = new filterModalView(filterViewData);
+				this.filterModalView = new numericFilterModalView(filterViewData);
 			}
 			this.retrieveDataTableMeta(searchResult.result.dtId, function(response){
 				this.cacheVariableInfo(response, searchResult.result.varId);
