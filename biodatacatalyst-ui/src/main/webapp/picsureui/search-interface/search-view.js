@@ -10,6 +10,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			tagSearchResponseJson){
 
 	var SearchView = BB.View.extend({
+		
 		initialize: function(opts){
 			this.filters = [];
 			this.queryTemplate = opts.queryTemplate;
@@ -32,6 +33,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.render();
 			tagFilterModel.bind('change', this.submitSearch.bind(this));
 		},
+
 		findStudyAbbreviationFromId: function(study_id){
 			let study = _.find(this.studiesData.bio_data_catalyst,
 				function(studyData){
@@ -42,10 +44,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			}
 			return study_id;
 		},
+
 		events: {
 			"click #search-button": "submitSearch",
 			"keypress #search-box": "handleSearchKeypress"
 		},
+
 		updateTags: function(response) {
 			if(!tagFilterModel.changed.currentPage){
 				this.tagFilterView.updateTags(response);
@@ -54,6 +58,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.updateResponse(response);
 			this.searchResultsView.render();
 		},
+
 		submitSearch: function() {
 			this.searchTerm = $('#search-box').val();
 			if(tagFilterModel.get("term")!==this.searchTerm){
@@ -86,11 +91,13 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				}.bind(this)
 			});
 		},
+
 		handleSearchKeypress: function(event){
 			if(event.keyCode===13){
 				this.submitSearch();
 			}
 		},
+
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
 			if($('title') === undefined){

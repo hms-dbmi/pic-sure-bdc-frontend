@@ -22,6 +22,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		events: {
 			"click .search-result": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
+			"click .fa-database": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-div': 'resultsFocus',
 			'blur #search-results-div': 'resultsBlur',
@@ -163,6 +164,13 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
+		},
+		databaseClickHandler: function(event) {
+			let resultIndex = $(event.target).data('result-index');
+
+			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
+
+			filterModel.addExportField(searchResult);
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.study_id;

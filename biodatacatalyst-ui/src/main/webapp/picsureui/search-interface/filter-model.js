@@ -4,9 +4,11 @@ define(["backbone", "handlebars"],
         let FilterModel = BB.Model.extend({
             defaults:{
                 activeFilters: new BB.Collection,
+                exportFields: new BB.Collection,
             },
             initialize: function(opts){
                 this.set('activeFilters', new BB.Collection);
+                this.set('exportFields', new BB.Collection);
                 HBS.registerHelper("filter_type_is", function(type, context){
                     return context.type===type;
                 });
@@ -65,6 +67,9 @@ define(["backbone", "handlebars"],
                     datatable: true,
                     searchResult: datatableSelections.searchResult
                 });
+            },
+            addExportField: function(searchResult){
+                this.get('exportFields').add(searchResult);
             },
             removeByIndex: function(index) {
                 this.get('activeFilters').remove(this.get('activeFilters').at(index));

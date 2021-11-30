@@ -3,6 +3,10 @@ define(["jquery","text!studyAccess/studies-data.json"],
         let studiesData = JSON.parse(studiesDataJson);
 
         return {
+
+            /*
+                This function looks up the study abbreviation for a given study id
+            */
             findStudyAbbreviationFromId: function(study_id){
                 let study = _.find(studiesData.bio_data_catalyst,
                     function(studyData){
@@ -13,6 +17,11 @@ define(["jquery","text!studyAccess/studies-data.json"],
                 }
                 return study_id;
             },
+
+            /*
+                This function detects if the passed in element is in the current viewport and 
+                if it is not scrolls the element into view.
+            */
             ensureElementIsInView: function(element){
                 var elementBounds = element.getBoundingClientRect();
                 var viewportLowerBound = $('.row.footer-row')[0].getBoundingClientRect().top;

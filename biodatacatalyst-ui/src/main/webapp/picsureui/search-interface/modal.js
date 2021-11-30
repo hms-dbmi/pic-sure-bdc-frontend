@@ -8,9 +8,11 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-inter
 			});
 			this.createTabLoop();
 		},
+
 		events: {
 
 		},
+
 		render: function(){
 			if ($("#modal-window").length === 0) {
                 $('#main-content').append('<div id="modal-window" aria-modal="true"></div>');
@@ -22,6 +24,14 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-inter
                 $(".modal-backdrop").hide();
             });
 		},
+
+		/*
+			This function displays the Backbone.View passed in as the first argument. The
+			second argument sets the title of the modal. The third is a callback which will
+			be fired when the modal is dismissed. This dismissalAction enables chained modals
+			where a modal can fire another modal and when that second modal is dismissed the
+			prior modal can be displayed.
+		*/
 		displayModal: function(view, title, dismissalAction){
 			this.title = title;
 			this.render();
@@ -34,6 +44,12 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-inter
 			view.setElement($(".modal-body"));
 			view.render();
 		},
+
+		/*
+			This function contains tab navigation to the modal to prevent focusing on
+			elements that are behind the modal. This is a requirement of 
+			https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal
+		*/
 		createTabLoop: function() {
             document.addEventListener('keydown', function(e) {
                 let isTabPressed = e.key === 'Tab' || e.keyCode === 9;
@@ -54,6 +70,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-inter
                     }
                 }
             });
+            // TODO : What?
             $('[tabindex="1000000"]').focus();
             $('.close').focus();
         }
