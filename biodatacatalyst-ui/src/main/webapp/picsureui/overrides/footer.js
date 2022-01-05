@@ -8,6 +8,27 @@ define(["handlebars", "text!overrides/footer.hbs"], function(HBS, template){
 		
 		
 		render : function(){
+			let title  = window.location.pathname.split("/");
+			title = title[title.length-1];
+			switch(title) {
+				case "dataAccess":
+					title = "Data Access";
+					break;
+				case "openAccess":
+					title = "Open Access";
+					break;
+				case "queryBuilder":
+					title = "Authorized Builder";
+					break;
+				default:
+					title = "";
+					break;
+			}
+			title = "BioData Catalyst Powered by PIC-SURE: " + title;
+			if(!$('title').length){
+				$('head').append("<title></title>");
+			}
+			$('title').html(title);
 			this.$el.html(HBS.compile(template)());
 		}
 	};
