@@ -100,10 +100,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
-			if($('title') === undefined){
-				$('head').append("<title></title>");
-			}
-			$('title').html("BioData Catalyst Powered by PIC-SURE : Authorized Access Query Builder");
 		}
 	});
 
