@@ -9,7 +9,7 @@ define(["handlebars", "text!overrides/footer.hbs"], function(HBS, template){
 		
 		render : function(){
 			let title  = window.location.pathname.split("/");
-			title = title[title.length-1];
+			title = title[2]; // begins with empty string
 			switch(title) {
 				case "dataAccess":
 					title = "Data Access";
