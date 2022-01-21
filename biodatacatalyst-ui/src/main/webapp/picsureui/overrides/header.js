@@ -1,5 +1,19 @@
-define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"], function(keyboardNav, dropdown, menuNavControls) {
-	
+define([
+	"common/keyboard-nav",
+	"common/pic-dropdown",
+	"common/menu-nav-controls",
+	"search-interface/modal",
+	"header/userProfile",
+	"picSure/userFunctions",
+],function (
+	keyboardNav,
+	dropdown,
+	menuNavControls,
+	modal,
+	userProfile,
+	userFunctions,
+) {
+
 	let headerTabs = undefined;
 
 	/*
@@ -26,19 +40,27 @@ define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"]
 		selectedTab && selectedTab.classList.remove('selected');
 	}
 
+	let openUserProfileModal = (e) => {
+		keyboardNav.setCurrentView(undefined);
+		userFunctions.meWithToken(this, (user) => {
+			modal.displayModal(new userProfile(user), 'User Profile');
+		});
+	}
+
 	return {
 		/*
-		 * The path to a logo image incase you don't want the default PrecisionLink one.
-		 * 
-		 * This should be a String value.
-		 */
-		logoPath : undefined,
-		renderExt: function(view){
+			* The path to a logo image incase you don't want the default PrecisionLink one.
+			* 
+			* This should be a String value.
+			*/
+		logoPath: undefined,
+		renderExt: function (view) {
+			view.delegateEvents(_.extend(view.events, { "click #user-profile-btn": openUserProfileModal }));
 			dropdown.init(view, [
-				{'click #help-dropdown': dropdown.openDropdown}, 
-				{'focus #help-dropdown': dropdown.dropdownFocus},
-				{'focus #help-dropdown-toggle': dropdown.dropdownFocus},
-				{'blur #help-dropdown': dropdown.dropdownBlur}
+				{ 'click #help-dropdown': dropdown.openDropdown },
+				{ 'focus #help-dropdown': dropdown.dropdownFocus },
+				{ 'focus #help-dropdown-toggle': dropdown.dropdownFocus },
+				{ 'blur #help-dropdown': dropdown.dropdownBlur }
 			]);
 			menuNavControls.init(view);
 			headerTabs = view.el.querySelector('#header-tabs');
@@ -56,7 +78,7 @@ define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"]
 				'keynav-end': menuNavControls.endKeyPressed,
 				'keynav-letters': menuNavControls.letterKeyPressed,
 			});
-			if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']){
+			if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']) {
 				keyboardNav.addNavigableView("headerTabs", view);
 			}
 		},
