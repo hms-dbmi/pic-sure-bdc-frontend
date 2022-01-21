@@ -8,6 +8,7 @@ define(['jquery'],function($){
 		registered for the specific key which was pressed. 
 	*/
 	let handleKeypress = function(event){
+		console.debug("keypress: " + event.key);
 		if(currentView===undefined){
 			return;
 		}
@@ -28,9 +29,23 @@ define(['jquery'],function($){
 				return e.split("-")[1];
 			}
 		);
+		
 
-		if (eventsInScope.includes(event.key.toLowerCase())){
-			navigableViews[currentView].trigger("keynav-"+event.key.toLowerCase(), event);
+		if (eventsInScope.includes('letters')) {
+			eventsInScope = eventsInScope.filter(item => item !== 'letters');
+			const alpha = Array.from(Array(26)).map((e, i) => i + 97);
+			const alphabet = alpha.map((x) => String.fromCharCode(x));
+			eventsInScope = eventsInScope.concat(alphabet);
+		}
+
+		if (eventsInScope.includes(event.key.toLowerCase()) || (eventsInScope.includes('space') && event.key === ' ')) {
+			if (eventsInScope.includes('space') && event.key === ' ') {
+				navigableViews[currentView].trigger("keynav-space", event);
+			} else if (/^[a-z]{1}$/.test(event.key.toLowerCase())) {
+				navigableViews[currentView].trigger("keynav-letters", event);
+			} else {
+				navigableViews[currentView].trigger("keynav-"+event.key.toLowerCase(), event);
+			}
 			event.preventDefault();
 		}
 	}

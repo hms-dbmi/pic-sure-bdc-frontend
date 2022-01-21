@@ -1,51 +1,95 @@
+<style>
+    .selected {
+        border: 4px solid red;
+    }
+    .nav-dropdown-menu.open {
+        display: block;
+    }
+    .nav-dropdown-menu {
+        list-style-type: none;
+        color: rgb(51,51,51);
+        position: absolute;
+        top: 0%;
+        z-index: 1000;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+        display:none;
+    }
+    .nav-dropdown-menu > li > a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+    .nav-dropdown-menu > li > a:hover,
+    .nav-dropdown-menu > li > a:focus {
+        text-decoration: none;
+        color: #262626;
+        background-color: #f5f5f5;
+    }
+</style>
 <div class="row header-row">
-	<img class="logo-img" src="{{logoPath}}" tabindex=0 title="BioData Catalyst Powered by PIC-SURE">
+	<img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
 </div>
-<div class="row" style="margin-top: 6px">
-    <span class="col-md-1"></span>
-    {{#not_empty applications}}
-    <div class="col dropdown" id="applications-dropdown">
-        <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
-        <ul class="dropdown-menu" role="menu">
-        {{#each applications}}
-            <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
-        {{/each}}
-        </ul>
-    </div>
-    {{/not_empty}}
+<div class="row" style="margin-top: 6px" tabindex="-1">
+        <span class="col-md-1" role="separator"></span>
+    <div id="header-tabs" style="display: inline-block; width:auto" role="menubar" aria-label="tab menu" tabindex="0">
+        {{#not_empty applications}}
+        <div class="col dropdown" id="applications-dropdown" role="none">
+            <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
+            <ul class="dropdown-menu" role="menu">
+            {{#each applications}}
+                <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
+            {{/each}}
+            </ul>
+        </div>
+        {{/not_empty}}
 
-    {{#contains privileges "SUPER_ADMIN"}}
-        <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
-            <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
-            <ul class="dropdown-menu" role="menu">
-                <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
-                <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
-                <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
-                <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
-            </ul>
-        </div>
-    {{/contains}}
-    {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
-        <a class="col btn btn-default header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn">Authorized Access</a>
-    {{/contains}}
-    {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-        <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn">Open Access</a>
-        <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn">Data Access</a> 
-    {{/contains}}
-    {{#contains privileges 'ADMIN'}}
-        <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#">Users</a>
-    {{/contains}}
-    {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-        <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#">User Profile</a>
-        <div tabindex=0 class="col dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-            <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle">Help</span>
-            <ul class="dropdown-menu" role="menu">
-                {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
-                {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
-                {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
-            </ul>
-        </div>
-        <a href="#" id="logout-btn" class="col btn btn-default header-btn authenticated-visible">Log Out</a>
-    {{/contains}}
+        {{#contains privileges "SUPER_ADMIN"}}
+            <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
+                <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
+                    <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
+                    <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
+                    <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+                </ul>
+            </div>
+        {{/contains}}
+        {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
+            <a class="col btn btn-default header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" role="menuitem" tabindex="-1">Authorized Access</a>
+        {{/contains}}
+        {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
+            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" role="menuitem" tabindex="-1">Open Access</a>
+            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" role="menuitem" tabindex="-1">Data Access</a> 
+        {{/contains}}
+        {{#contains privileges 'ADMIN'}}
+            <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#" role="menuitem">Users</a>
+        {{/contains}}
+        {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
+            <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#" tabindex="-1">User Profile</a>
+            <div tabindex="-1" class="col nav-dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
+                <span class="col-md-12" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1">Help</span>
+                <ul class="nav-dropdown-menu" aria-labelledby="dropdownMenuLink" tabindex="-1" role="menu">
+                    {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
+                    {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                    {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
+                    {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
+                </ul>
+            </div>
+            <a href="#" id="logout-btn" class="col btn btn-default header-btn authenticated-visible" tabindex="-1">Log Out</a>
+        {{/contains}}
+    </div>
 </div>

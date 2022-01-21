@@ -2,7 +2,7 @@ define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs
 		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util", 
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
 		"search-interface/filter-model", "search-interface/tag-filter-model", 
-		"search-interface/modal", "search-interface/variable-info-cache", "search-interface/keyboard-nav"],
+		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav"],
 function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate, 
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel, 
