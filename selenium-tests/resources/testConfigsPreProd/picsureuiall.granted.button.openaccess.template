@@ -5,7 +5,5 @@
  success: patientcountsubset1
  successvalue: 21210
  expected: pass
- SearchTerm: "triglycerides"
- TextToSelect: "age at measurement of triglycerides_1"
- PatientCount: "< 10"
- NumericValueGreater: 97
+ SearchTerm: "ORCHID"
+ TextToSelect: "COVID19-ORCHID ( phs002299 )"

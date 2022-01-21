@@ -1,6 +1,6 @@
  name: This setup the environment for running the automation test scripts
  #Please update the browser name accordingly e.g. chrome,chromeheadless,firefox or firefoxheadless etc..
- #browser: firefoxheadless
+ #browser: firefox
  url:  https://preprod.picsure.biodatacatalyst.nhlbi.nih.gov/
  #url: https://preprod.picsure.biodatacatalyst.nhlbi.nih.gov/,https://biodatacatalyst.integration.hms.harvard.edu/picsureui/
  #Please update Authmethod according to Login type Eg for  Google - GOOGLELOGIN, ERACommon-ERACOMMON

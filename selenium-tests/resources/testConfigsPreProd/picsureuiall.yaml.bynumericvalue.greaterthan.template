@@ -14,6 +14,6 @@
  successvalue: 46633
  expected: pass
  SearchTerm: "vitamin E without"
- TextToSelect: "DERIVED FIELD: NUTRIENT VALUE - VITAMIN E WITHOUT VITAMIN PILLS, (IU)"
- PatientCount: 73 
+ TextToSelect: "Vitamin E without pills [IU] [Nutrients, exam 3]"
+ PatientCount: 586 
  NumericValueGreater: 15
