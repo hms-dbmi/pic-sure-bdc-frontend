@@ -55,6 +55,7 @@ define([
 			*/
 		logoPath: undefined,
 		renderExt: function (view) {
+			//Override the core UI click #user-profile-btn event
 			view.delegateEvents(_.extend(view.events, { "click #user-profile-btn": openUserProfileModal }));
 			dropdown.init(view, [
 				{ 'click #help-dropdown': dropdown.openDropdown },
