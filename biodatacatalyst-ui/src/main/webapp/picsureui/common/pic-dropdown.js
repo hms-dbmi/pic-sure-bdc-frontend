@@ -22,9 +22,6 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
         }
     }
 
-    /*
-        
-    */
     let dropdownFocus = (e) => {
         console.debug("subMenuFocus");
         const selectedTab = e.target.closest('.header-btn');
@@ -39,20 +36,14 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
     }
 
     let dropdownBlur = (e) => {
-        console.debug("subMenuBlur");
-        const selectedItems = getView().el.querySelectorAll(SECLECTED_CLASS);
-        selectedItems && selectedItems.forEach(item => item.classList.remove(SELECTED));
+        console.debug("subMenuBlur", e);
         closeDropdown(e);
     }
 
-    let openDropdown = (e) => {
-        console.debug("openDropdown", e.target);
-        if (e.target.nodeName === 'A') {
-            window.open(e.target.href, '_blank');
-            return;
-        }
-        let tab = e.target.nodeName === 'SPAN' ? e.target.parentElement : e.target;
-        let dropdown = tab.querySelector(NAV_DROPDOWN_MENU_CLASS);
+    let toggleDropdown = (e) => {
+        console.debug("toggleDropdown", e.target);
+        const tab = e.target.closest('.header-btn');
+        const dropdown = tab.querySelector(NAV_DROPDOWN_MENU_CLASS);
         if (dropdown.classList.contains(OPEN)) {
             dropdown.classList.remove(OPEN);
         } else {
@@ -61,11 +52,12 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
                 top: $(tab).parent().offset().top + $(tab).parent().outerHeight(), 
                 left: $(tab).offset().left
             });
+            getView().el.querySelector('#header-tabs').focus();
         }
     }
 
     let closeDropdown = (e) => {
-        console.debug("closeDropdown");
+        console.debug("closeDropdown", e);
         const dropdown = getView().el.querySelector(OPEN_NAV_DROPDOWN_CLASS);
         if (dropdown) {
             const selectedOption = dropdown.querySelector(SECLECTED_CLASS);
@@ -82,13 +74,19 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
         view = newView;
     }
 
+    let isOpen = () => {
+        const openDropdown = getView().el.querySelector(OPEN_NAV_DROPDOWN_CLASS);
+        return openDropdown !== null && openDropdown !== undefined;
+    }
+
     return {
         init: init,
         getView: getView,
         setView: setView,
         dropdownFocus: dropdownFocus,
         dropdownBlur: dropdownBlur,
-        openDropdown: openDropdown,
-        closeDropdown: closeDropdown
+        toggleDropdown: toggleDropdown,
+        closeDropdown: closeDropdown,
+        isOpen: isOpen
     };
 });

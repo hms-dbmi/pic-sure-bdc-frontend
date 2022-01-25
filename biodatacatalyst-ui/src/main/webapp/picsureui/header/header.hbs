@@ -1,4 +1,10 @@
 <style>
+    #help-dropdown {
+        padding: 0;
+    }
+    .dropdown-toggle {
+        padding: 6px 12px;
+    }
     .selected {
         border: 4px solid red;
     }
@@ -13,7 +19,7 @@
         z-index: 1000;
         float: left;
         min-width: 160px;
-        padding: 5px 0;
+        padding: 0;
         margin: 2px 0 0;
         font-size: 14px;
         text-align: left;
@@ -81,7 +87,7 @@
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
             <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#" tabindex="-1">User Profile</a>
             <div tabindex="-1" class="col nav-dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-                <span class="col-md-12" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1">Help</span>
+                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1">Help</div>
                 <ul class="nav-dropdown-menu" aria-labelledby="dropdownMenuLink" tabindex="-1" role="menu">
                     {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
                     {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
