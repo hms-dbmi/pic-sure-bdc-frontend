@@ -1,7 +1,7 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
         "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
         "search-interface/datatable-filter-modal-view", 
-        "picSure/queryBuilder","search-interface/modal", "search-interface/keyboard-nav", "search-interface/search-util"],
+        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util"],
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView, 
         datatableFilterModalView,

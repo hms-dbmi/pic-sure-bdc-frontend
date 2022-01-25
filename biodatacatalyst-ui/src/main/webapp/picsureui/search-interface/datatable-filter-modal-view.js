@@ -1,4 +1,4 @@
-define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "search-interface/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
+define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
 	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
 	let DatatableFilterModalView = BB.View.extend({
 		initialize: function(){
