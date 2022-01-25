@@ -41,7 +41,7 @@ define([
 			dropdown.closeDropdown(e);
 		}
 	}
-
+  
 	let openUserProfileModal = (e) => {
 		keyboardNav.setCurrentView(undefined);
 		userFunctions.meWithToken(this, (user) => {
@@ -79,6 +79,7 @@ define([
 				'keynav-end': menuNavControls.endKeyPressed,
 				'keynav-letters': menuNavControls.letterKeyPressed,
 			});
+      
 			if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']) {
 				keyboardNav.addNavigableView("headerTabs", view);
 			}
