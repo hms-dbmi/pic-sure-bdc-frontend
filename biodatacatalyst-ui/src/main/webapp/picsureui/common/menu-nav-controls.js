@@ -13,8 +13,10 @@ define(['common/pic-dropdown'], function (dropdown) {
     const SELECTED_HEADER_TAB_CLASS = HEADER_BTN_CLASS + SELECTED_CLASS;
     const SELECTED_DROPDOWN_ITEM_CLASS = DROPDOWN_CLASS + SELECTED_CLASS;
     const OPEN_NAV_DROPDOWN_CLASS = '.nav-dropdown-menu.' + OPEN;
+    const DROPDOWN_TOGGLE_CLASS = '.dropdown-toggle';
 
     let view = undefined;
+    let dropdownToggle = undefined;
 
     let setView = (newView) => {
         view = newView;
@@ -47,15 +49,15 @@ define(['common/pic-dropdown'], function (dropdown) {
          
         Note: The view needs to be defined before calling this function.
     */
-    let upKeyPressed = () => {
+    let upKeyPressed = (e) => {
         console.debug('nav-menu.js: upKeyPressed');
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab)) {
                 const selectedSubMenu = selectedTab.querySelector(NAV_DROPDOWN_MENU_CLASS);
                 if (selectedSubMenu) {
-                    const dropdownItems = getView().el.querySelectorAll(DROPDOWN_CLASS);
-                    !selectedSubMenu.classList.contains(OPEN) && selectedTab.click();
+                    const dropdownItems = selectedTab.querySelectorAll(DROPDOWN_CLASS);
+                    !selectedSubMenu.classList.contains(OPEN) && getDropdownToggle(selectedTab).click();
                     move(BACKWARD, dropdownItems);
                 }
             }
@@ -71,15 +73,15 @@ define(['common/pic-dropdown'], function (dropdown) {
 
         Note: The view needs to be defined before calling this function.
     */
-    let downKeyPressed = () => {
+    let downKeyPressed = (e) => {
         console.debug('nav-menu.js: downKeyPressed');
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab)) {
                 const selectedSubMenu = selectedTab.querySelector(NAV_DROPDOWN_MENU_CLASS);
                 if (selectedSubMenu) {
-                    const dropdownItems = getView().el.querySelectorAll(DROPDOWN_CLASS);
-                    !selectedSubMenu.classList.contains(OPEN) && selectedTab.click();
+                    const dropdownItems = selectedTab.querySelectorAll(DROPDOWN_CLASS);
+                    !selectedSubMenu.classList.contains(OPEN) && getDropdownToggle(selectedTab).click();
                     move(FORWARD, dropdownItems);
                 }
             }
@@ -130,7 +132,7 @@ define(['common/pic-dropdown'], function (dropdown) {
         
         Note: The view needs to be defined before calling this function.
     */
-    let selectItem = () => {
+    let selectItem = (e) => {
         console.debug('nav-menu.js: selectItem');
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
@@ -143,7 +145,7 @@ define(['common/pic-dropdown'], function (dropdown) {
                         selectedOption.getElementsByTagName('a')[0].click();
                     }
                 } else {
-                    selectedTab.click();
+                    getDropdownToggle(selectedTab).click();
                     selectedSubMenu.querySelector('.dropdown:first-child').classList.add(SELECTED);
                 }
             } else {
@@ -259,6 +261,19 @@ define(['common/pic-dropdown'], function (dropdown) {
     */
     let isDropdown = (el) => {
         return el && el.classList.contains('nav-dropdown');
+    }
+
+
+    let getDropdownToggle = (el) => {
+        if (el) {
+            const toggleEl = el.querySelector(DROPDOWN_TOGGLE_CLASS);
+            if (toggleEl) {
+                return toggleEl;
+            }
+            console.error('nav-menu.js: could not find dropdown toggle');
+        }
+        console.error('nav-menu.js: getDropdownToggle: element is undefined');
+        return null;
     }
 
     /*

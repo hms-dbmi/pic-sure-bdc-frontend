@@ -19,9 +19,10 @@ define([
 	/*
 		Sets the navigable view and adds the selection class to the active tab.
 	*/
-	let tabsFocus = () => {
+	let tabsFocus = (e) => {
+		console.debug("tabsFocus", e.target);
 		keyboardNav.setCurrentView("headerTabs");
-		headerTabs.querySelector('.header-btn.active').classList.add('selected');
+		dropdown.isOpen() ? e.target.querySelector('.header-btn.nav-dropdown').classList.add('selected') : headerTabs.querySelector('.header-btn.active').classList.add('selected');
 	}
 
 	/*
@@ -32,12 +33,13 @@ define([
 		@param {e} The event that triggered the blur.
 	*/
 	let tabsBlur = (e) => {
-		if (headerTabs && !headerTabs.contains(e.target)) {
-			keyboardNav.setCurrentView(undefined);
-		}
-		dropdown.closeDropdown(e);
+		console.log("tabsBlur", e);
+		keyboardNav.setCurrentView(undefined);
 		const selectedTab = headerTabs.querySelector('.header-btn.selected');
 		selectedTab && selectedTab.classList.remove('selected');
+		if (!e.relatedTarget) {
+			dropdown.closeDropdown(e);
+		}
 	}
 
 	let openUserProfileModal = (e) => {
@@ -58,10 +60,8 @@ define([
 			//Override the core UI click #user-profile-btn event
 			view.delegateEvents(_.extend(view.events, { "click #user-profile-btn": openUserProfileModal }));
 			dropdown.init(view, [
-				{ 'click #help-dropdown': dropdown.openDropdown },
-				{ 'focus #help-dropdown': dropdown.dropdownFocus },
-				{ 'focus #help-dropdown-toggle': dropdown.dropdownFocus },
-				{ 'blur #help-dropdown': dropdown.dropdownBlur }
+				{'click #help-dropdown-toggle': dropdown.toggleDropdown}, 
+				{'blur .nav-dropdown-menu': dropdown.dropdownBlur}
 			]);
 			menuNavControls.init(view);
 			headerTabs = view.el.querySelector('#header-tabs');

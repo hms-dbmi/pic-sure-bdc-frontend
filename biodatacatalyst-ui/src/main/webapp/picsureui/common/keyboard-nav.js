@@ -46,7 +46,9 @@ define(['jquery'],function($){
 			} else {
 				navigableViews[currentView].trigger("keynav-"+event.key.toLowerCase(), event);
 			}
-			event.preventDefault();
+			if (!event.ctrlKey && !event.altKey && !event.metaKey) {
+				event.preventDefault();
+			}
 		}
 	}
 
