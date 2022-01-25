@@ -19,7 +19,7 @@ define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"]
 		@param {e} The event that triggered the blur.
 	*/
 	let tabsBlur = (e) => {
-		console.log("tabsBlur", e);
+		console.debug("tabsBlur", e);
 		keyboardNav.setCurrentView(undefined);
 		const selectedTab = headerTabs.querySelector('.header-btn.selected');
 		selectedTab && selectedTab.classList.remove('selected');
