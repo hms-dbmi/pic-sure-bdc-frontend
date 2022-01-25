@@ -1,5 +1,19 @@
-define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"], function(keyboardNav, dropdown, menuNavControls) {
-	
+define([
+	"common/keyboard-nav",
+	"common/pic-dropdown",
+	"common/menu-nav-controls",
+	"search-interface/modal",
+	"header/userProfile",
+	"picSure/userFunctions",
+],function (
+	keyboardNav,
+	dropdown,
+	menuNavControls,
+	modal,
+	userProfile,
+	userFunctions,
+) {
+
 	let headerTabs = undefined;
 
 	/*
@@ -28,14 +42,23 @@ define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"]
 		}
 	}
 
+	let openUserProfileModal = (e) => {
+		keyboardNav.setCurrentView(undefined);
+		userFunctions.meWithToken(this, (user) => {
+			modal.displayModal(new userProfile(user), 'User Profile');
+		});
+	}
+
 	return {
 		/*
-		 * The path to a logo image incase you don't want the default PrecisionLink one.
-		 * 
-		 * This should be a String value.
-		 */
-		logoPath : undefined,
-		renderExt: function(view){
+			* The path to a logo image incase you don't want the default PrecisionLink one.
+			* 
+			* This should be a String value.
+			*/
+		logoPath: undefined,
+		renderExt: function (view) {
+			//Override the core UI click #user-profile-btn event
+			view.delegateEvents(_.extend(view.events, { "click #user-profile-btn": openUserProfileModal }));
 			dropdown.init(view, [
 				{'click #help-dropdown-toggle': dropdown.toggleDropdown}, 
 				{'blur .nav-dropdown-menu': dropdown.dropdownBlur}
@@ -56,7 +79,7 @@ define(["common/keyboard-nav","common/pic-dropdown", "common/menu-nav-controls"]
 				'keynav-end': menuNavControls.endKeyPressed,
 				'keynav-letters': menuNavControls.letterKeyPressed,
 			});
-			if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']){
+			if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']) {
 				keyboardNav.addNavigableView("headerTabs", view);
 			}
 		},
