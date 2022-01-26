@@ -1,14 +1,14 @@
-define(['picSure/psamaSettings', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
+define(['jquery', 'handlebars', 'text!login/fence_login.hbs',
         'common/session', 'picSure/settings', 'common/transportErrors', 'util/notification', 'common/searchParser'],
-    function(psamaSettings, $, HBS, loginTemplate,
-             session, picSureSettings, transportErrors, notification, searchParser){
+    function($, HBS, loginTemplate,
+             session, settings, transportErrors, notification, searchParser){
         var loginTemplate = HBS.compile(loginTemplate);
 
         var sessionInit = function(data) {
             session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS);
             var queryTemplateRequest = function() {
                 return $.ajax({
-                    url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+                    url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
                     type: 'GET',
                     headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
                     contentType: 'application/json'
@@ -84,10 +84,10 @@ define(['picSure/psamaSettings', 'jquery', 'handlebars', 'text!login/fence_login
 
                     // Show the fence_login template, with the generated fenceLoginURL
                     $('#main-content').html(loginTemplate({
-                        fenceURL : psamaSettings.idp_provider_uri + "/user/oauth2/authorize"+
+                        fenceURL : settings.idp_provider_uri + "/user/oauth2/authorize"+
                             "?response_type=code"+
                             "&scope=user+openid"+
-                            "&client_id=" + psamaSettings.fence_client_id +
+                            "&client_id=" + settings.fence_client_id +
                             "&redirect_uri=" + window.location.protocol
                             + "//"+ window.location.hostname
                             + (window.location.port ? ":"+window.location.port : "")
