@@ -1,4 +1,4 @@
-define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "text!../settings/settings.json", "filter/filterList",
+define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "picSure/settings", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "output/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view"],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
@@ -26,13 +26,13 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     $(".header-btn.active").removeClass('active');
                     $(".header-btn[data-href='/picsureui/openAccess']").addClass('active');
                     $('#main-content').empty();
-                    $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+                    $('#main-content').append(HBS.compile(layoutTemplate)(settings));
 
                     var outputPanelView = new outputPanel.View({model: new outputPanel.Model()});
                     outputPanelView.render();
                     $('#query-results').append(outputPanelView.$el);
 
-                    var query = queryBuilder.generateQuery({}, null, JSON.parse(settings).openAccessResourceId);
+                    var query = queryBuilder.generateQuery({}, null, settings.openAccessResourceId);
                     outputPanelView.runQuery(query);
 
                     var renderHelpCallback = function() {
@@ -45,7 +45,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                             $("#search-help-modal").show();
                         });
                     }
-                    filterList.init(JSON.parse(settings).openAccessResourceId, outputPanelView, renderHelpCallback);
+                    filterList.init(settings.openAccessResourceId, outputPanelView, renderHelpCallback);
                 },
                 "picsureui/queryBuilder(/)" : function() {
                     $(".header-btn.active").removeClass('active');

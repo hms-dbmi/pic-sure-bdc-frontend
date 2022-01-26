@@ -1,4 +1,4 @@
-define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs",
+define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
 		function($, settings, outputTemplate,
 				 BB, HBS, overrides, studiesDataJson, transportErrors){
@@ -13,7 +13,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 
 	var loadConcepts = function() {
 		$.ajax({
-			url: window.location.origin + "/picsure/search/" + JSON.parse(settings).openAccessResourceId,
+			url: window.location.origin + "/picsure/search/" + settings.openAccessResourceId,
 			type: 'POST',
 			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 			contentType: 'application/json',
