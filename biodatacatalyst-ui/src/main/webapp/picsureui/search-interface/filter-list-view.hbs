@@ -13,6 +13,12 @@
     .filter-list-action-btn {
         font-size: 1.5em;
     }
+    .with-wrap {
+        overflow-wrap: break-word;
+    }
+    #genomic span{
+        font-weight: 500;
+    }
 </style>
 <div id="filter-list" tabindex=0 aria-activedescendent="">
 {{#each activeFilters}}
@@ -31,7 +37,12 @@
             </div>
             <p class="value">{{variables.length}} variables selected. Participants with any value recorded for any of these variables will be included if they match all other defined filters</p>
         </div>
-
+    {{else if genomic}}
+         <div class="filter-container with-wrap" id="genomic">
+            <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>
+            <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" data-index="{{@index}}"></i>
+            {{> genomic-filter-partial filters=genomicFilter}}
+         </div>
     {{else}}
         <div class="filter-container" id="{{this.searchResult.result.metadata.varId}}">
             <i class="fa fa-times-circle remove-filter filter-list-action-btn" data-index="{{@index}}"></i>

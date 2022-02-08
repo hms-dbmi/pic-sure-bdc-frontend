@@ -68,6 +68,17 @@ define(["backbone", "handlebars"],
                     searchResult: datatableSelections.searchResult
                 });
             },
+            addGenomicFilter: function(genomicFilter) {
+                let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{return filter.get('type')==='genomic';});
+                if(existingFilterForGenomic!==undefined){
+                    this.get('activeFilters').remove(existingFilterForGenomic);
+                }
+                this.get('activeFilters').add({
+                    type: 'genomic',
+                    genomic: true,
+                    genomicFilter: genomicFilter
+                });
+            },
             addExportField: function(searchResult){
                 this.get('exportFields').add(searchResult);
             },

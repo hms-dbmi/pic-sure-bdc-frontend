@@ -2,12 +2,18 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"search-interface/search-results-view",
 	"text!search-interface/search-view.hbs",
 	"text!search-interface/search-results-view.hbs",
-	"text!search-interface/tag-search-response.json"],
+	"text!search-interface/tag-search-response.json",
+	"search-interface/modal",
+	"search-interface/genomic-filter-view",
+],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
 			searchViewTemplate,
 			searchResultsViewTemplate,
-			tagSearchResponseJson){
+			tagSearchResponseJson,
+			modal,
+			genomicFilterView,
+		){
 
 	var SearchView = BB.View.extend({
 		
@@ -47,7 +53,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 		events: {
 			"click #search-button": "submitSearch",
-			"keypress #search-box": "handleSearchKeypress"
+			"keypress #search-box": "handleSearchKeypress",
+			"click #genomic-filter-btn": "openGenomicFilteringModal",
 		},
 
 		updateTags: function(response) {
@@ -89,6 +96,14 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				error: function(response){
 					console.log(response);
 				}.bind(this)
+			});
+		},
+
+		openGenomicFilteringModal: function() {
+			let genomicFilter = new genomicFilterView({el: $(".modal-body")});
+			genomicFilter.render()
+			modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
+				$('#filter-list').focus();
 			});
 		},
 

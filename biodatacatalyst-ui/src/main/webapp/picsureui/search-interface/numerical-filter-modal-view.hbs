@@ -1,16 +1,7 @@
 <div class="filter-modal-container">
     <div class="row">
         
-        <div class="value-container">
-            <div class="min-value-container col">
-                <div class="min-value">Min: {{min}}</div>
-                <input id="min-value-input" tabindex="1000000" type="number"/>
-            </div>
-            <div class="max-value-container col">
-                <div class="max-value">Max: {{max}}</div>
-                <input id="max-value-input" tabindex="1000001" type="number" />
-            </div>
-        </div>
+        {{> numerical-filter-partial min=min max=max}}
 
         <div class="button-container">
             <button id="add-filter-button" tabindex="1000002">Add Filter to Query</button>

@@ -1,0 +1,12 @@
+<h3>{{heading}}</h3>
+<div class="panel panel-default no-padding">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{searchContext}}</h4>
+    </div>
+    <div class="panel-body">
+        {{#each options}}
+        <input class="categorical-filter-input" type="checkbox" value="{{this}}"
+            tabindex="{{tabindex @index}}" />{{this}} <br />
+        {{/each}}
+    </div>
+</div>

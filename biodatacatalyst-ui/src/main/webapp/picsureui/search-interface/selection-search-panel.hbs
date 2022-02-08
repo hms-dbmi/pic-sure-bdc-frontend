@@ -1,0 +1,31 @@
+<div>
+    <h3 class="selection-heading">{{heading}}</h3>
+    <div class="selection-container row">
+        <div class="panel panel-default col-md-5 no-padding margin-right-20">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{searchContext}}</h4>
+            </div>
+            <input type="search" id="{{searchId}}" class="selection-search-box form-control" placeholder="{{placeholderText}}" />
+            <div class="panel-body select-box" tabindex="{{tabindex @index}}">
+                <div class="genomic-value-container selection-search-results">
+                    {{#each placeholder}}
+                    <input class="categorical-filter-input" type="checkbox" tabindex="-1" value="{{this}}"/>{{this}} <br />
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default col-md-5 no-padding margin-right-20">
+            <div class="panel-heading results-header">
+                <h4 class="panel-title">{{resultContext}}</h4>
+                <button id="{{searchId}}-selection-clear-button" class="btn btn-default">Clear</button>
+            </div>
+            <div class="panel-body select-box">
+                <div class="genomic-value-container selections">
+                    {{#each selectedResults}}
+                    <input class="categorical-filter-input" type="checkbox" tabindex="-1" value="{{this}}"/>{{this}} <br />
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

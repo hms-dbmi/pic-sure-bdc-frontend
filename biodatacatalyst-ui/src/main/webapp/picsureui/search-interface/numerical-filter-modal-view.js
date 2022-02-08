@@ -1,10 +1,12 @@
-define(["jquery","backbone","handlebars", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings"],
-    function($, BB, HBS, filterModalViewTemplate, filterModel, search, settings){
+define(["jquery","backbone","handlebars", "text!search-interface/numerical-filter-modal-partial.hbs", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings"],
+    function($, BB, HBS, partialTemplate, filterModalViewTemplate, filterModel, search, settings){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 this.filterModalViewTemplate = HBS.compile(filterModalViewTemplate);
+                this.partialTemplate = HBS.compile(partialTemplate);
                 this.data = opts.data;
+                HBS.registerPartial('numerical-filter-partial', this.partialTemplate);
             },
             events: {
                 "click #add-filter-button": "addFilter"
