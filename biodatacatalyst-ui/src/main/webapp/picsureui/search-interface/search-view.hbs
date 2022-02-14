@@ -15,19 +15,22 @@
 
 <div class="row">
     <div class="row">
-		<div id="search-controls" class="col">
+		<form id="search-controls" class="col">
 	        <label for='search-box' class='col'>Search</label>
-	        <input id='search-box' autocomplete="off" role='search' class='form-control col' 
+	        <input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
 	        aria-label="Type search terms here, use enter or the search button to submit search"
 	        title="Type search terms here, use enter or the search button to submit search"
-	        placeholder="Search studies or variables"></input>
+	        placeholder="Search studies or variables" required>
+				<input class="btn bg-transparent" value="" accesskey="r" type="reset"></input>
+			</input>
+    </button>
 	        <a id="search-button" href='#' class='btn btn-default col'
 	        aria-label="You are on the search button"
 	        >Search</a>
 	        <a id='genomic-filter-btn' href='#' class='btn btn-default col'
 	        aria-label="You are on the Genomic Filtering button"
 	        >Genomic Filtering</a>
-	    </div>
+	    </form>
     </div>
     <hr>
     <div class="row">
