@@ -148,7 +148,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         }.bind(this)
                     });
                 } else if (filter.type==='genomic') {
-                    let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter.genomicFilter});
+                    let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter});
 			        genomicFilter.render()
 			        modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 				        $('#filter-list').focus();

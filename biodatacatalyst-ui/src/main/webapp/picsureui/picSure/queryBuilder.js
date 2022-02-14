@@ -52,6 +52,12 @@ define(["underscore"],
 				query.query.categoryFilters[filter.searchResult.result.metadata.HPDS_PATH]=filter.values;
 			}else if(filter.type==="numeric"){
 				query.query.numericFilters[filter.searchResult.result.metadata.HPDS_PATH]={min:filter.min, max:filter.max};
+			}else if (filter.type==='genomic'){
+				if (query.query.variantInfoFilters.length && _.isEmpty(query.query.variantInfoFilters[0].categoryVariantInfoFilters)) {
+					query.query.variantInfoFilters[0].categoryVariantInfoFilters = filter.variantInfoFilters.categoryVariantInfoFilters;
+				} else {
+					query.query.variantInfoFilters.push(filter.variantInfoFilters);
+				}
 			}else if(filter.type==="datatable"){
 				if(query.query.anyRecordOf===undefined){
 					query.query.anyRecordOf = [];

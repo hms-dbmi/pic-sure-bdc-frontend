@@ -1,15 +1,17 @@
 <div id="genomic-filter-container" class="genomic-container">
     <div id="gene-search-container"></div>
     <div id="consequence-search-container"></div>
-    <section id="severity">
-        {{> selection-panel heading="Variant severity" searchContext="Select variant severity of interest" options=severityOptions}}
-    </section>
-    <section id="variant-class">
-        {{> selection-panel heading="Variant class" searchContext="Select variant class of interest" options=classOptions}}
-    </section>
-    <section id="frequency-text">
-        {{> selection-panel heading="Variant frequency" searchContext="Select variant frequency of interest" options=frequencyOptions}}
-    </section>
+    <div class="space-even">
+        <section id="severity">
+            {{> selection-panel heading="Variant severity" searchContext="Select variant severity of interest" options=severityOptions description=severityDescription }}
+        </section>
+        <section id="variant-class">
+            {{> selection-panel heading="Variant class" searchContext="Select variant class of interest" options=classOptions description=classDescription }}
+        </section>
+        <section id="frequency-text">
+            {{> selection-panel heading="Variant frequency" searchContext="Select variant frequency of interest" options=frequencyOptions description=frequencyDescription }}
+        </section>
+    </div>
     <section id="frequency-number" class="panel panel-default no-padding">
         <div class="panel-heading">
             <h4>Variant frequency in gnomAD</h4>
@@ -20,10 +22,10 @@
     </section>
     <section id="filters">
         <h4>Selected genomic filters</h4>
-        <div id="selected-filters" class="filter-container">
+        <div id="selected-filters" class="filter-container grey-border">
         </div>
     </section>
-    <section>
+    <section class="push-left">
         <button id="cancel-genomic-filters" class="btn-small btn btn-default">Cancel</button>
         <button id="clear-genomic-filters" class="btn-small btn btn-default">Clear</button>
         <button id="apply-genomic-filters" class="btn-small btn btn-primary">Apply genomic filter</button>

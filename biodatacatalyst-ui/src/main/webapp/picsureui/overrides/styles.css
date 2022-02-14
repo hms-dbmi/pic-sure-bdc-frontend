@@ -339,7 +339,7 @@
 
 .filter-container:not(:first-of-type) {
     border-top-width: 1px;
-    border-top-color: #000;
+    border-top-color: #aaa;
     border-top-style: solid;
 }
 
@@ -433,3 +433,43 @@ input[type="search"]::-webkit-search-decoration {
     display: block;
 }
 
+#frequency-number {
+    display: none;
+}
+
+.filter-container span {
+    font-weight: 600;
+}
+
+.space-out {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.space-out i {
+    margin-left: 5px;
+}
+
+.space-even {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.push-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.push-left button {
+    margin-left: 10px;
+}
+
+.push-left button:last-child {
+    margin-right: 10px;
+}

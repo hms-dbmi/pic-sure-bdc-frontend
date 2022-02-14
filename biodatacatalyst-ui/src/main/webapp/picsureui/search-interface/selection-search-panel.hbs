@@ -1,9 +1,10 @@
 <div>
     <h3 class="selection-heading">{{heading}}</h3>
-    <div class="selection-container row">
+    <div class="selection-container row" aria-label="{{description}}">
         <div class="panel panel-default col-md-5 no-padding margin-right-20">
-            <div class="panel-heading">
+            <div class="panel-heading space-out">
                 <h4 class="panel-title">{{searchContext}}</h4>
+                <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
             </div>
             <input type="search" id="{{searchId}}" class="selection-search-box form-control" placeholder="{{placeholderText}}" />
             <div class="panel-body select-box" tabindex="{{tabindex @index}}">
