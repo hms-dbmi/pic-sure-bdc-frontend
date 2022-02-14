@@ -1,8 +1,10 @@
 <h3>{{heading}}</h3>
 <div class="panel panel-default no-padding" aria-label="{{description}}">
-    <div class="panel-heading space-out">
+    <div class="panel-heading space-out panel-extra-large">
         <h4 class="panel-title">{{searchContext}}</h4>
-        <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
+        {{#if description}}
+        <i class="fa fa-info-circle fa-lg" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
+        {{/if}}
     </div>
     <div class="panel-body">
         {{#each options}}
