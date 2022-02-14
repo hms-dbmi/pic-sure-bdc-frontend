@@ -96,7 +96,7 @@ try {
 		    
 		    
 			
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(grant))).click();
+			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath(grant))).click();
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(yesAuthorize))).click();
 					
