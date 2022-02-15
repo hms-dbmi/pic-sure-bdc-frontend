@@ -97,7 +97,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		},
 		retrieveDataTableMeta: function(dataTableId, successHandler){
 			$.ajax({
-				url: window.location.origin + "/jaxrs-service/rest/pic-sure/query/sync",
+				url: window.location.origin + "/picsure/query/sync",
 				type: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify({query: {id: dataTableId, entityType: "DATA_TABLE"}}),
