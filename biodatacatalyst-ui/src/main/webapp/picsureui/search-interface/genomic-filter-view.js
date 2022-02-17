@@ -13,19 +13,22 @@ define(['jquery', 'backbone','handlebars',
         const severityKey = 'Variant_severity';
         const classKey = 'Variant_class';
         const frequencyKey = 'Variant_frequency_as_text';
+        const TABABLE_CLASS = '.tabable';
+        const descRegEx = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
         let isLoading = true;
         let genomicFilterView = BB.View.extend({
             initialize: function(opts){
+                this.genomicTabIndex = 1000000;
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
                 this.data = opts;
                 this.infoColumns = [];
                 this.loadingData = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
-                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.match(/(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/)[0];
-                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.match(/(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/)[0];
-                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.match(/(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/)[0];
-                    this.data.classDescription = this.infoColumns.find(col => col.key === classKey).description.match(/(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/)[0];
-                    this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.match(/(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/)[0];
+                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.match(descRegEx)[0];
+                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.match(descRegEx)[0];
+                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.match(descRegEx)[0];
+                    this.data.classDescription = this.infoColumns.find(col => col.key === classKey).description.match(descRegEx)[0];
+                    this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.match(descRegEx)[0];
                     isLoading = false;
                     this.render();
                         
@@ -36,7 +39,6 @@ define(['jquery', 'backbone','handlebars',
                 const numericalPanelTemplate = HBS.compile(numericalPanel);
                 HBS.registerPartial('selection-panel', selectionPanelTemplate);
                 HBS.registerPartial('numerical-filter-partial', numericalPanelTemplate);
-                // HBS.registerPartial('genomic-filter-partial', filterPartialTemplate);
             },
             events: {
               'click #cancel-genomic-filters' : 'cancelGenomicFilters',
@@ -64,7 +66,7 @@ define(['jquery', 'backbone','handlebars',
                 this.dataForConsequenceSearch = {
                     heading: 'Variant consequence calculated',
                     results: consequencesList,
-                    searchContext: 'Select variant frequency as text',
+                    searchContext: 'Select variant consequence calculated',
                     resultContext: 'Selected variant consequence calculated',
                     placeholderText: 'Try searching for a consequence (Ex: intergenic_variant)',
                     description: this.data.consequenceDesc,
@@ -101,38 +103,67 @@ define(['jquery', 'backbone','handlebars',
                 $("#modalDialog").hide();
                 $(".modal-backdrop").hide();
             },
+            createTabIndex: function() {
+                $('#gene-search-container').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', this.genomicTabIndex);
+                    this.genomicTabIndex++;
+                });
+                $('#consequence-search-container').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', this.genomicTabIndex);
+                    this.genomicTabIndex++;
+                });
+                $('#severity').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', this.genomicTabIndex);
+                    this.genomicTabIndex++;
+                });
+                $('#variant-class').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', this.genomicTabIndex);
+                    this.genomicTabIndex++;
+                });
+                $('#frequency-text').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', this.genomicTabIndex);
+                    this.genomicTabIndex++;
+                });
+                $('#filters').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', this.genomicTabIndex);
+                    this.genomicTabIndex++;
+                });
+            }, 
             reapplyGenomicFilters: function(){
                 if (this.previousFilter) {
-                    if (this.previousFilter.categoryVariantInfoFilters.Variant_severity) {
-                        $('#severity input[type="checkbox"]').each((i, checkbox)  => { 
-                            console.log('checkbox', checkbox);
-                            if (this.previousFilter.Variant_severity.includes(checkbox.value)) {
+                    if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_severity) {
+                        $('#severity input[type="checkbox"]').each((i, checkbox)  => {
+                            if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_severity.includes(checkbox.value.toUpperCase())) {
                                 checkbox.checked = true;
                             }
                         });               
                     }
-                    if (this.previousFilter.categoryVariantInfoFilters.Variant_class) {
-                        $('#variant-class input[type="checkbox"]').each((i,checkbox)  => { 
-                            console.log('checkbox', checkbox);
-                            if (this.previousFilter.Variant_class.includes(checkbox.value)) {
+                    if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_class) {
+                        $('#variant-class input[type="checkbox"]').each((i,checkbox)  => {
+                            let value = checkbox.value === 'SNV' ? checkbox.value.toUpperCase() : checkbox.value.toLowerCase();
+                            if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_class.includes(value)) {
                                 checkbox.checked = true;
                             }
                         });               
                     }
-                    if (this.previousFilter.categoryVariantInfoFilters.Variant_frequency_as_text) {
-                        $('#frequency-text input[type="checkbox"]').each((i, checkbox)  => { 
-                            console.log('checkbox', checkbox);
-                            if (this.previousFilter.categoryVariantInfoFilters.Variant_frequency_as_text.includes(checkbox.value)) {
+                    if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_frequency_as_text) {
+                        $('#frequency-text input[type="checkbox"]').each((i, checkbox)  => {
+                            let value = checkbox.value.substr(0,1).toUpperCase() + checkbox.value.substr(1).toLowerCase();
+                            if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_frequency_as_text.includes(value)) {
                                 checkbox.checked = true;
                             }
                         });               
                     }
-                    // if (this.previousFilter.variantFrequencyNumber) {
-                    //     $('#frequency-number input[type="number"]').each((i, number)  => {
-                    //         console.log('number', number);
-                    //         number.value = this.previousFilter.variantFrequencyNumber[i];
-                    //     });
-                    // }
+                    if (!(_.isEmpty(this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant)) && this.geneSearchPanel.$el.length > 0) {
+                        this.geneSearchPanel.$el.find('.selections input[type="checkbox"]').each((i, checkbox)  => {
+                            checkbox.checked = true;
+                        });
+                    }
+                    if (!(_.isEmpty(this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated)) && this.consequenceSearchPanel.$el.length > 0) {
+                        this.consequenceSearchPanel.$el.find('.selections input[type="checkbox"]').each((i, checkbox)  => {
+                            checkbox.checked = true;
+                        });
+                    }
                     this.updateGenomicFilter();
                 }
             },
@@ -169,7 +200,7 @@ define(['jquery', 'backbone','handlebars',
                     variantClass.each(function(i, el){
                         let elVal = $(el).val().toLowerCase();
                         elVal = elVal === 'SNV' ? elVal.toUpperCase() : elVal.toLowerCase();
-                        variantClassData.push();
+                        variantClassData.push(elVal);
                     });
                 }
                 if (variantFrequencyText.length > 0) {
@@ -205,6 +236,7 @@ define(['jquery', 'backbone','handlebars',
                     this.previousFilter && this.reapplyGenomicFilters();
                     this.updateDisabledButton();
                     this.$el.find('#selected-filters').html(this.filterPartialTemplate({filters: this.data.categoryVariantInfoFilters}));
+                    this.createTabIndex();
                 } 
                 else {
                     this.$el.html('<div id="genomic-spinner"></div>');

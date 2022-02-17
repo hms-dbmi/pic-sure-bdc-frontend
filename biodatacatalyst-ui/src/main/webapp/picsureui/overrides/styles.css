@@ -483,12 +483,8 @@ input[type='checkbox'].categorical-filter-input {
     margin-bottom: 18px;
 }
 
-.push-left button {
+.push-left-and-down button {
     margin-left: 10px;
-}
-
-.push-left button:last-child {
-    margin-right: 10px;
 }
 
 .panel-extra-large {

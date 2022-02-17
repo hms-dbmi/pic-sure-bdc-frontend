@@ -3,13 +3,13 @@
     <div class="panel-heading space-out panel-extra-large">
         <h4 class="panel-title">{{searchContext}}</h4>
         {{#if description}}
-        <i class="fa fa-info-circle fa-lg" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
+        <i class="fa fa-info-circle fa-lg tabable" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
         {{/if}}
     </div>
-    <div class="panel-body">
+    <div class="panel-body" role="listbox">
         {{#each options}}
-        <input class="categorical-filter-input" type="checkbox" value="{{this}}"
-            tabindex="{{tabindex @index}}" />{{this}} <br />
+        <input class="categorical-filter-input selectable list-item tabable" type="checkbox" title="{{this}}" role="option" value="{{this}}"
+             />{{this}} <br />
         {{/each}}
     </div>
 </div>
