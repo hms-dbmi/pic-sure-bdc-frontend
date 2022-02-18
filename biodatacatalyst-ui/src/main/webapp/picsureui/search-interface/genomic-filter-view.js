@@ -6,8 +6,9 @@ define(['jquery', 'backbone','handlebars',
 'text!search-interface/numerical-filter-modal-partial.hbs', 
 'text!search-interface/genomic-filter-partial.hbs',
 'text!../studyAccess/variant-data.json',
-'picSure/ontology', "common/spinner"],
-    function($, BB, HBS, filterModel, genomicView, searchPanel, selectionPanel, numericalPanel, filterContainer, variantDataJson, ontology, spinner) {
+'picSure/ontology', "common/spinner",
+'common/keyboard-nav'],
+    function($, BB, HBS, filterModel, genomicView, searchPanel, selectionPanel, numericalPanel, filterContainer, variantDataJson, ontology, spinner, keyboardNav) {
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
@@ -15,10 +16,12 @@ define(['jquery', 'backbone','handlebars',
         const frequencyKey = 'Variant_frequency_as_text';
         const TABABLE_CLASS = '.tabable';
         const descRegEx = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
+        const SELECTED = 'selected';
+        const LIST_ITEM = 'list-item';
         let isLoading = true;
         let genomicFilterView = BB.View.extend({
             initialize: function(opts){
-                this.genomicTabIndex = 1000000;
+                this.previousUniqueId = 0;
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
                 this.data = opts;
                 this.infoColumns = [];
@@ -31,21 +34,35 @@ define(['jquery', 'backbone','handlebars',
                     this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.match(descRegEx)[0];
                     isLoading = false;
                     this.render();
-                        
                 }.bind(this));
                 this.template = HBS.compile(genomicView);
                 this.filterPartialTemplate = HBS.compile(filterContainer);
                 const selectionPanelTemplate = HBS.compile(selectionPanel);
                 const numericalPanelTemplate = HBS.compile(numericalPanel);
+                keyboardNav.addNavigableView('genomic-filter-view', this);
                 HBS.registerPartial('selection-panel', selectionPanelTemplate);
                 HBS.registerPartial('numerical-filter-partial', numericalPanelTemplate);
+                this.on({
+                    'keynav-arrowup document': this.navigateUp.bind(this),
+                    'keynav-arrowdown document': this.navigateDown.bind(this),
+                    'keynav-arrowright document': this.navigateDown.bind(this),
+                    'keynav-arrowleft document': this.navigateUp.bind(this),
+                    'keynav-enter': this.clickItem.bind(this),
+                    'keynav-space': this.clickItem.bind(this)
+                });
             },
             events: {
               'click #cancel-genomic-filters' : 'cancelGenomicFilters',
               'click #apply-genomic-filters' : 'applyGenomicFilters',
               'click #clear-genomic-filters' : 'clearGenomicFilters',
               'change input[type="checkbox"],input[type="number"]' : 'updateGenomicFilter',
-              'updatedLists' : 'updateGenomicFilter'
+              'updatedLists' : 'updateGenomicFilter',
+              'focus #severity .selection-box' : 'onFocusSelection',
+              'blur #severity .selection-box' : 'onBlurSelection',
+              'focus #variant-class .selection-box' : 'onFocusSelection',
+              'blur #variant-class .selection-box' : 'onBlurSelection',
+              'focus #frequency-text .selection-box' : 'onFocusSelection',
+              'blur #frequency-text .selection-box' : 'onBlurSelection',
             },
             setUpViews: function() {
                 const parsedVariantData = JSON.parse(variantDataJson);
@@ -82,55 +99,64 @@ define(['jquery', 'backbone','handlebars',
                 this.consequenceSearchPanel = new searchPanel(this.dataForConsequenceSearch);
             },
             applyGenomicFilters: function(){
-                console.log("apply genomic filters");
+                console.debug("apply genomic filters");
                 let filtersForQuery = {
                     categoryVariantInfoFilters: this.data.categoryVariantInfoFilters,
                     numericVariantInfoFilters: {}
                 };
-                filterModel.addGenomicFilter(filtersForQuery);
+                this.createUniqueId(filtersForQuery);
+                console.debug(filtersForQuery);
+                filterModel.addGenomicFilter(filtersForQuery, this.previousUniqueId);
                 this.cancelGenomicFilters();
             },
             clearGenomicFilters: function(){
-                console.log("clear genomic filters");
+                console.debug("clear genomic filters");
                 this.geneSearchPanel.reset();
                 this.consequenceSearchPanel.reset();
                 this.$el.find('input[type="checkbox"]').prop('checked', false);
                 this.$el.find('input[type="number"]').val('');
                 this.data.filters = {};
                 this.$el.find('#selected-filters').html(this.filterPartialTemplate({filters: this.data.categoryVariantInfoFilters}));
+                this.$el.find('#apply-genomic-filters').prop('disabled', true);
             },
             cancelGenomicFilters: function(){
-                $("#modalDialog").hide();
-                $(".modal-backdrop").hide();
+                this.undelegateEvents();
+                this.$el.removeData().unbind(); 
+                this.remove();  
+                BB.View.prototype.remove.call(this);
+                $("#modalDialog").remove();
+                $(".modal-backdrop").remove();
             },
             createTabIndex: function() {
+                let genomicTabIndex = 1000000;
                 $('#gene-search-container').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', this.genomicTabIndex);
-                    this.genomicTabIndex++;
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
                 });
                 $('#consequence-search-container').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', this.genomicTabIndex);
-                    this.genomicTabIndex++;
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
                 });
                 $('#severity').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', this.genomicTabIndex);
-                    this.genomicTabIndex++;
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
                 });
                 $('#variant-class').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', this.genomicTabIndex);
-                    this.genomicTabIndex++;
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
                 });
                 $('#frequency-text').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', this.genomicTabIndex);
-                    this.genomicTabIndex++;
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
                 });
                 $('#filters').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', this.genomicTabIndex);
-                    this.genomicTabIndex++;
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
                 });
             }, 
             reapplyGenomicFilters: function(){
                 if (this.previousFilter) {
+                    this.previousUniqueId = this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.__uniqueid;
                     if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_severity) {
                         $('#severity input[type="checkbox"]').each((i, checkbox)  => {
                             if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_severity.includes(checkbox.value.toUpperCase())) {
@@ -180,7 +206,7 @@ define(['jquery', 'backbone','handlebars',
                 }
             },
             updateGenomicFilter: function(){
-                console.log("Start update genomic filter");
+                console.debug("Start update genomic filter");
                 const geneData = this.geneSearchPanel.data.selectedResults;
                 const conData = this.consequenceSearchPanel.data.selectedResults;
                 const severity = this.$el.find('#severity input[type="checkbox"]:checked');
@@ -215,7 +241,7 @@ define(['jquery', 'backbone','handlebars',
                     Variant_severity: _.isEmpty(severityData) ? undefined : severityData,
                     Variant_class: _.isEmpty(variantClassData) ? undefined : variantClassData,
                     Variant_frequency_as_text: _.isEmpty(variantFrequencyData) ? undefined : variantFrequencyData,
-                }
+                };
 
                 this.updateDisabledButton();
                 
@@ -223,7 +249,86 @@ define(['jquery', 'backbone','handlebars',
                         categoryVariantInfoFilters: this.data.categoryVariantInfoFilters
                     }
                 }));
-                console.log("End update genomic filter", this.data.categoryVariantInfoFilters);
+                console.debug("End update genomic filter", this.data.categoryVariantInfoFilters);
+            },
+            createUniqueId: function(obj){
+                let uniqueId = '';
+                if (obj && Object.keys(obj).length > 0 && Object.values(obj).length > 0) {
+                        _.each(obj, (value) => {
+                            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                                uniqueId += this.createUniqueId(value);
+                            } else if (value && Array.isArray(value)) {
+                                _.each(value, (entry) => {
+                                    uniqueId += entry;
+                                });
+                            } else if (value) {
+                                uniqueId += value
+                            }
+                        });
+                } else {
+                    return;
+                }
+                let hash = 0;
+                if (uniqueId.length > 0) {
+                    for (let i=0; i<uniqueId.length; i++) {
+                        hash = ((hash << 5) - hash) + uniqueId.charCodeAt(i);
+                        hash |= 0;
+                    }
+                }
+                Object.defineProperty(obj, "__uniqueid", {value: parseInt(hash), configurable: true, enumerable: false, writable: true});
+            },
+            onFocusSelection: function(e){
+                keyboardNav.setCurrentView('genomic-filter-view');
+            },
+            onBlurSelection: function(e){
+                console.debug("Blur selection", e.target);
+                keyboardNav.setCurrentView(undefined);
+                $(e.target).find('.' + SELECTED).removeClass(SELECTED);
+            },
+            navigateUp: function(e) {
+                console.debug('navigateUp', e);
+                let selectionItems = e.target.querySelectorAll('.' + LIST_ITEM);
+                let selectedItem = $(selectionItems).filter('.' + SELECTED);
+                if ($(selectedItem).length <= 0) {
+                    $(selectionItems).eq(0).addClass(SELECTED);
+                    return;
+                }
+                let index = $(selectionItems).index(selectedItem);
+                let nextItem = $(selectionItems).eq(index - 1);
+                if (nextItem.length > 0) {
+                    selectedItem.removeClass(SELECTED);
+                    selectedItem.attr('role', 'option');
+                    selectedItem.attr('aria-selected', false);
+                    nextItem.addClass(SELECTED);
+                    nextItem.attr('aria-selected', true);
+                    nextItem.attr('aria-live', "polite");
+                    $(nextItem)[0].scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
+                }
+            },
+            navigateDown: function(e) {
+                console.debug('navigateDown', e);
+                let selectionItems = e.target.querySelectorAll('.' + LIST_ITEM);
+                let selectedItem = $(selectionItems).filter('.' + SELECTED);
+                if ($(selectedItem).length <= 0) {
+                    $(selectionItems).eq(0).addClass(SELECTED);
+                    return;
+                }
+                let index = $(selectionItems).index(selectedItem);
+                nextItem = (index === selectionItems.length - 1) ? $(selectionItems).eq(0) : $(selectionItems).eq(index + 1);
+                if (nextItem.length > 0) {
+                    selectedItem.removeClass(SELECTED);
+                    selectedItem.attr('role', 'option');
+                    selectedItem.attr('aria-selected', false);
+                    nextItem.addClass(SELECTED);
+                    nextItem.attr('aria-selected', true);
+                    nextItem.attr('aria-live', "polite");
+                    $(nextItem)[0].scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
+                }
+            },
+            clickItem: function(e) {
+                console.debug(e.target);
+                let selectedItem = e.target.querySelector('.' + SELECTED);
+                selectedItem && selectedItem.click();
             },
             render: function(){
                 if (!isLoading) {

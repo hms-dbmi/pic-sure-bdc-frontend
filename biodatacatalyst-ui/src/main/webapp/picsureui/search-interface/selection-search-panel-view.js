@@ -47,7 +47,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 }
             },
             clickItem: function(e) {
-                console.log(e.target);
+                console.debug(e.target);
                 let selectedItem = e.target.querySelector('.' + SELECTED);
                 selectedItem && selectedItem.click();
             },
@@ -57,7 +57,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 this.moveItem(this.data.placeholder, this.data.selectedResults, index);
             },
             unselectItem: function(e) {
-                console.log('unselectItem', e.target);
+                console.debug('unselectItem', e.target);
                 const index = this.data.selectedResults.indexOf(e.target.value);
                 this.moveItem(this.data.selectedResults, this.data.placeholder, index);
             },
@@ -69,7 +69,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 }
             },
             clearSelection: function() {
-                console.log('clearSelection from here');
+                console.debug('clearSelection from here');
                 this.$el.find('#'+this.data.searchId).val('');
                 this.data.selectedResults.forEach((item) => {
                     this.data.placeholder.unshift(item);
@@ -78,16 +78,16 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 this.renderLists();
             },
             focusItem: function(e) {
-                console.log('focusItem', e.target);
+                console.debug('focusItem', e.target);
                 keyboardNav.setCurrentView(e.target.classList[1]);
             },
             blurItem: function(e) {
-                console.log('blurItem', e.target);
+                console.debug('blurItem', e.target);
                 keyboardNav.setCurrentView(undefined);
-                $(e.target).find('.selected').removeClass(SELECTED);
+                $(e.target).find('.'+SELECTED).removeClass(SELECTED);
             },
             navigateUp: function(e) {
-                console.log('navigateUp', e);
+                console.debug('navigateUp', e);
                 let selectionItems = e.target.querySelectorAll('.' + LIST_ITEM);
                 let selectedItem = $(selectionItems).filter('.' + SELECTED);
                 if ($(selectedItem).length <= 0) {
@@ -107,7 +107,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 }
             },
             navigateDown: function(e) {
-                console.log('navigateDown', e);
+                console.debug('navigateDown', e);
                 let selectionItems = e.target.querySelectorAll('.' + LIST_ITEM);
                 let selectedItem = $(selectionItems).filter('.' + SELECTED);
                 if ($(selectedItem).length <= 0) {
@@ -127,16 +127,12 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 }
             },
             navigateRight: function(e) {
-                console.log('navigateRight', e);
+                console.debug('navigateRight', e);
                 this.navigateDown(e);
-                // this.clickItem(e);
-                // this.$el.find('.selections').filter(':checkbox[value='+e.target.value+']').addClass('selected');
             },
             navigateLeft: function(e) {
-                console.log('navigateLeft', e);
+                console.debug('navigateLeft', e);
                 this.navigateUp(e);
-                // this.clickItem(e);
-                // this.$el.find('.selection-search-results').filter(':checkbox[value='+e.target.value+']').addClass('selected');
             },
             reset() {
                 this.data.sample ? this.data.placeholder = _.sample(this.data.results, 10) : this.data.placeholder = this.data.results;

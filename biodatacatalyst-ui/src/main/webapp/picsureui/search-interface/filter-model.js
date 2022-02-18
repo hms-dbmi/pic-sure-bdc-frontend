@@ -68,10 +68,13 @@ define(["backbone", "handlebars"],
                     searchResult: datatableSelections.searchResult
                 });
             },
-            addGenomicFilter: function(variantInfoFilters) {
-                let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{return filter.get('type')==='genomic';});
+            addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
+                let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{
+                    return filter.get('type')==='genomic' && 
+                           filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId;
+                });
                 if(existingFilterForGenomic!==undefined){
-                    this.get('activeFilters').remove(existingFilterForGenomic);
+                    this.get('activeFilters').remove(existingFilterForGenomic, {silent:true});
                 }
                 this.get('activeFilters').add({
                     type: 'genomic',

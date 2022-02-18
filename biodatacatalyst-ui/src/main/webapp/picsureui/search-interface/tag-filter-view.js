@@ -154,7 +154,6 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				this.model.get("unusedTags").add(this.model.get("impliedTags").models);
 				this.model.get("impliedTags").reset(null);
 			}
-			this.modelChanged();
 		},
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);

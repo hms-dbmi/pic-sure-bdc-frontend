@@ -6,9 +6,9 @@
         <i class="fa fa-info-circle fa-lg tabable" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
         {{/if}}
     </div>
-    <div class="panel-body" role="listbox">
+    <div class="panel-body selection-box tabable" aria-label="You are on a list box. Use the arrow keys to navigate and space or enter to select" role="listbox">
         {{#each options}}
-        <input class="categorical-filter-input selectable list-item tabable" type="checkbox" title="{{this}}" role="option" value="{{this}}"
+        <input class="categorical-filter-input selectable list-item" type="checkbox" title="{{this}}" role="option" tabindex="-1" value="{{this}}"
              />{{this}} <br />
         {{/each}}
     </div>
