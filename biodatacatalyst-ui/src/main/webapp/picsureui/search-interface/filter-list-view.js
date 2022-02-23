@@ -1,16 +1,17 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
         "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
         "search-interface/datatable-filter-modal-view", 
-        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util"],
+        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util", "text!search-interface/genomic-filter-partial.hbs", "search-interface/genomic-filter-view",],
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView, 
         datatableFilterModalView,
-        queryBuilder, modal, keyboardNav, searchUtil){
+        queryBuilder, modal, keyboardNav, searchUtil, filterPartialTemplate, genomicFilterView){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 HBS.registerHelper('getFilterTypeDescription', this.getFilterTypeDescription);
                 HBS.registerHelper('getVariableDescription', this.getVariableDescription);
+                HBS.registerPartial('genomic-filter-partial', filterPartialTemplate);
 
                 this.filterListViewTemplate = HBS.compile(filterListViewTemplate);
                 filterModel.get('activeFilters').bind('change add remove', function () {
@@ -146,6 +147,12 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             console.log(response);
                         }.bind(this)
                     });
+                } else if (filter.type==='genomic') {
+                    let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter});
+			        genomicFilter.render()
+			        modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
+				        $('#filter-list').focus();
+			        });
                 } else {
                     let searchResult = filter.searchResult;
 

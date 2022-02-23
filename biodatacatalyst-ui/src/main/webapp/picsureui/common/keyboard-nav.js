@@ -38,7 +38,7 @@ define(['jquery'],function($){
 			eventsInScope = eventsInScope.concat(alphabet);
 		}
 
-		if (eventsInScope.includes(event.key.toLowerCase()) || (eventsInScope.includes('space') && event.key === ' ')) {
+		if (event.key && eventsInScope.includes(event.key.toLowerCase()) || (eventsInScope.includes('space') && event.key === ' ')) {
 			if (eventsInScope.includes('space') && event.key === ' ') {
 				navigableViews[currentView].trigger("keynav-space", event);
 			} else if (/^[a-z]{1}$/.test(event.key.toLowerCase())) {
