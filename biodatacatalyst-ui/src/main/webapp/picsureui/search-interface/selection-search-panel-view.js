@@ -7,8 +7,8 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 if (opts && opts.heading) {
                     this.data = opts;
                     this.data.searchId = opts.heading.toLowerCase().replace(/\s/g, '-');
-                    this.data.searchResultsText = opts.placeholderText || 'Search ' + opts.heading;
-                    opts.sample ? this.data.searchResults = _.sortBy(_.sample(opts.results, 10)) : this.data.searchResults = _.sortBy(opts.results);
+                    this.data.searchResultOptionsText = opts.placeholderText || 'Search ' + opts.heading;
+                    opts.sample ? this.data.searchResultOptions = _.sortBy(_.sample(opts.results, 10)) : this.data.searchResultOptions = _.sortBy(opts.results);
                     this.data.selectedResults = opts.searchResults || [];
                 }
                 console.debug('selectionSearchView', this.data);
@@ -37,7 +37,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
             search: function(e) {
                 console.debug('search', e.target.value);
                 if (e.target.value.length > 1) {
-                    this.data.searchResults = this.data.results.filter((gene) => {
+                    this.data.searchResultOptions = this.data.results.filter((gene) => {
                         return gene.toLowerCase().startsWith(e.target.value.toLowerCase());
                     });
                     this.renderLists();
@@ -52,13 +52,13 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
             },
             selectItem: function(e) {
                 console.debug('selectItem', e.target);
-                const index = this.data.searchResults.indexOf(e.target.value);
-                this.moveItem(this.data.searchResults, this.data.selectedResults, index);
+                const index = this.data.searchResultOptions.indexOf(e.target.value);
+                this.moveItem(this.data.searchResultOptions, this.data.selectedResults, index);
             },
             unselectItem: function(e) {
                 console.debug('unselectItem', e.target);
                 const index = this.data.selectedResults.indexOf(e.target.value);
-                this.moveItem(this.data.selectedResults, this.data.searchResults, index);
+                this.moveItem(this.data.selectedResults, this.data.searchResultOptions, index);
             },
             moveItem: function(from, to, index) {
                 if (index > -1) {
@@ -71,7 +71,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 console.debug('clearSelection from here');
                 this.$el.find('#'+this.data.searchId).val('');
                 this.data.selectedResults.forEach((item) => {
-                    this.data.searchResults.unshift(item);
+                    this.data.searchResultOptions.unshift(item);
                 });
                 this.data.selectedResults = [];
                 this.renderLists();
@@ -126,23 +126,23 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 }
             },
             reset() {
-                this.data.sample ? this.data.searchResults = _.sample(this.data.results, 10) : this.data.searchResults = this.data.results;
+                this.data.sample ? this.data.searchResultOptions = _.sample(this.data.results, 10) : this.data.searchResultOptions = this.data.results;
                 this.clearSelection();
             },
             renderLists: function() {
-                const newHTMLList  = this.data.searchResults.map((item) => {
+                const newHTMLList  = this.data.searchResultOptions.map((item) => {
                     return this.data.selectedResults.indexOf(item) > -1 ? 
                     `<input class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" checked disabled/>${item}<br/>` : 
-                    `<input class="categorical-filter-input selectable list-item" role="option"  type="checkbox" value="${item}" />${item}<br/>`;
+                    `<input class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" />${item}<br/>`;
                 }, this);
                 const newHTMLRSelectionList  = this.data.selectedResults.map((item) => {
                     return `<input class="categorical-filter-input selectable list-item" type="checkbox" value="${item}" checked/>${item}<br/>`;
                 });      
                 this.$el.find('.selections').html(newHTMLRSelectionList).fadeIn('fast');
                 const search = this.$el.find('#'+this.data.searchId)[0].value;
-                if (this.data.searchResults.length <= 0 && search) {
+                if (this.data.searchResultOptions.length <= 0 && search) {
                     this.$el.find('.genomic-value-container.selection-search-results').html('<span>No results found</span>');
-                } else if (this.data.searchResults.length <= 0 && !search) {
+                } else if (this.data.searchResultOptions.length <= 0 && !search) {
                     this.$el.find('.genomic-value-container.selection-search-results').html('<span style="color: #AAA">Try searching for more</span>');
                 } else {
                     this.$el.find('.selection-search-results').html(newHTMLList).fadeIn('fast');
