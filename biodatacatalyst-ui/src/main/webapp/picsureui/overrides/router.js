@@ -1,9 +1,9 @@
 define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "text!../settings/settings.json", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "output/outputPanel",
-        "search-interface/filter-list-view", "search-interface/search-view"],
+        "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
-             FilterListView, SearchView){
+             FilterListView, SearchView, ToolSuiteView){
         var displayDataAccess = function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/dataAccess']").addClass('active');
@@ -68,8 +68,13 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
                         el : $('#filter-list')
                     });
+                    let toolSuiteView = new ToolSuiteView({
+                        el: $('#tool-suite-panel')
+                    });
+                    
                     let filterListView = new FilterListView({
                         outputPanelView : outputPanelView,
+                        toolSuiteView: toolSuiteView,
                         el : $('#filter-list-panel')
                     });
                     filterListView.render();

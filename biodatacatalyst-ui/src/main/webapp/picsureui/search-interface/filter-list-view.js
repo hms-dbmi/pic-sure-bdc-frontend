@@ -5,19 +5,20 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView, 
         datatableFilterModalView,
-        queryBuilder, modal, keyboardNav, searchUtil, filterPartialTemplate, genomicFilterView){
+        queryBuilder, modal, keyboardNav, searchUtil, genomicFilterPartialTemplate, genomicFilterView){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 HBS.registerHelper('getFilterTypeDescription', this.getFilterTypeDescription);
                 HBS.registerHelper('getVariableDescription', this.getVariableDescription);
-                HBS.registerPartial('genomic-filter-partial', filterPartialTemplate);
+                HBS.registerPartial('genomic-filter-partial', genomicFilterPartialTemplate);
 
                 this.filterListViewTemplate = HBS.compile(filterListViewTemplate);
                 filterModel.get('activeFilters').bind('change add remove', function () {
                     this.modelChanged();
                 }.bind(this));
                 this.outputPanelView = opts.outputPanelView;
+                this.toolSuiteView = opts.toolSuiteView;
                 keyboardNav.addNavigableView("filterList",this);
                 this.on({
                     'keynav-arrowup document': this.previousFilter,
@@ -149,7 +150,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     });
                 } else if (filter.type==='genomic') {
                     let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter});
-			        genomicFilter.render()
+			        genomicFilter.render();
 			        modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 				        $('#filter-list').focus();
 			        });
@@ -182,6 +183,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})
                 }));
+                this.toolSuiteView.render();
             }
         });
 

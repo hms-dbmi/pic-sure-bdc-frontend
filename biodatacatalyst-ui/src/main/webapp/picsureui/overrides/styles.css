@@ -371,7 +371,6 @@
     border-color: #ffffff;
 }
 
-
 /* Genomic Modal */
 
 .no-padding {
@@ -489,6 +488,67 @@ input[type='checkbox'].categorical-filter-input {
 
 .panel-extra-large {
     padding: 17.5px 15px;
+}
+
+#tool-suite {
+    line-height: 1;
+    border: 1px solid lightgrey;
+    padding: 10px 8px;
+    background-color: rgb(223, 238, 255);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+#tool-suite .tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    row-gap: 2.5rem;
+    margin: 8px;
+}
+
+#tool-suite .tools button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    width: 100px;
+    height: 100px;
+}
+
+#tool-suite .tools button span {
+    font-size: 1rem;
+}
+
+#tool-suite .tools button:disabled i, #tool-suite .tools button:disabled span {
+    color: #cccccc;
+}
+
+.big-btn {
+    white-space: normal;
+}
+
+.btn-icon {
+    font-size: 2rem;
+}
+
+.m-l-1 {
+    margin-left: 1rem;
+}
+
+.m-lr-2 {
+    margin: 0 1.5rem;
+}
+
+.m-0 {
+    margin: 0; 
+}
+
+.center {
+    text-align: center;
+    margin: 0 auto;
 }
 
 /************************* STARTS Search X/reset button ******************************/
