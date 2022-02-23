@@ -70,14 +70,15 @@ define(["backbone", "handlebars"],
             },
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
                 let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{
-                    return filter.get('type')==='genomic' && 
-                           filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId;
+                    return filter.get('type')==='genomic'
+                        //&& filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId;
                 });
                 if(existingFilterForGenomic!==undefined){
                     this.get('activeFilters').remove(existingFilterForGenomic, {silent:true});
                 }
                 this.get('activeFilters').add({
                     type: 'genomic',
+                    filterType: 'genomic',
                     genomic: true,
                     variantInfoFilters: variantInfoFilters
                 });
