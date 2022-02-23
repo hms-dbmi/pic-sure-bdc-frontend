@@ -71,7 +71,8 @@ define(["backbone", "handlebars"],
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
                 let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{
                     return filter.get('type')==='genomic'
-                        //&& filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId;
+                        // //if we want to allow multiple genomic filters uncomment this line and the one in the genomic filter modal view
+                        //&& filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId; 
                 });
                 if(existingFilterForGenomic!==undefined){
                     this.get('activeFilters').remove(existingFilterForGenomic, {silent:true});

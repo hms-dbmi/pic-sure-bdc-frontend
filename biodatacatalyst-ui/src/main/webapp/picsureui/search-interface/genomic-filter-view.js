@@ -297,9 +297,7 @@ define(['jquery', 'backbone','handlebars',
                 let nextItem = $(selectionItems).eq(index - 1);
                 if (nextItem.length > 0) {
                     selectedItem.removeClass(SELECTED);
-                    selectedItem.attr('role', 'option');
                     selectedItem.attr('aria-selected', false);
-                    nextItem.addClass(SELECTED);
                     nextItem.attr('aria-selected', true);
                     nextItem.attr('aria-live', "polite");
                     $(nextItem)[0].scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
@@ -317,7 +315,6 @@ define(['jquery', 'backbone','handlebars',
                 nextItem = (index === selectionItems.length - 1) ? $(selectionItems).eq(0) : $(selectionItems).eq(index + 1);
                 if (nextItem.length > 0) {
                     selectedItem.removeClass(SELECTED);
-                    selectedItem.attr('role', 'option');
                     selectedItem.attr('aria-selected', false);
                     nextItem.addClass(SELECTED);
                     nextItem.attr('aria-selected', true);
