@@ -104,7 +104,7 @@ define(['jquery', 'backbone','handlebars',
                     categoryVariantInfoFilters: this.data.categoryVariantInfoFilters,
                     numericVariantInfoFilters: {}
                 };
-                this.createUniqueId(filtersForQuery);
+                //this.createUniqueId(filtersForQuery); uncomment to support multiple filters
                 console.debug(filtersForQuery);
                 filterModel.addGenomicFilter(filtersForQuery, this.previousUniqueId);
                 this.cancelGenomicFilters();
