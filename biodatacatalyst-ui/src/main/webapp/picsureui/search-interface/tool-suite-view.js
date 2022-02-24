@@ -12,14 +12,45 @@ function($, BB, HBS, template, filterModel, modal){
             'click #tool-suite-help' : 'openHelp',
             'click #export-to-seven-bridges' : 'exportToSevenBridges',
         },
-        openPackageData: function(){
-            console.log('openPackageData');
+        disableSuiteButtons: function(reason){
+            this.$el.find('#package-data').prop('disabled', true).prop('title', 'Please add a ' + reason + 'filter to your query to select and package data.');
+            this.$el.find('#distributions').prop('disabled', true).prop('title', 'Please add a '+ reason + 'filter to your query to view variable distributions');
         },
-        openVariantExplorer: function(){
-            console.log('openVariantExplorer');
+        enableSuiteButtons: function(){
+            this.$el.find('#package-data').prop('disabled', false).prop('title', 'Select and Package Data');
+            this.$el.find('#distributions').prop('disabled', false).prop('title', 'Visual Distributions');
         },
-        openImaging: function(){
-            console.log('openImaging');
+        exportToSevenBridges: function(){
+            console.log('exportToSevenBridges');
+        },
+        handleFilterChange: function(){
+            const filters = filterModel.get('activeFilters');
+            const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
+            const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
+
+            if (filters.length) {
+                if (anyRecordOf.length && anyRecordOf.length < filters.length) { // if there are any record of filters
+                    if (genomic.length && genomic.length < filters.length && (genomic.length + anyRecordOf.length) < filters.length) { // if there are genomic filters and acceptable filters
+                        this.enableSuiteButtons();
+                    } else if (genomic.length && genomic.length < filters.length && (genomic.length + anyRecordOf.length) >= filters.length) { // if there are genomic filters and unacceptable filters
+                        this.disableSuiteButtons('phenotypic ');
+                    } else if  (!genomic.length) { // if there are no genomic filters
+                        this.enableSuiteButtons();
+                    }
+                } else if (anyRecordOf.length && anyRecordOf.length >= filters.length) { // Only anyRecordOf
+                    this.disableSuiteButtons('');
+                } else if (!anyRecordOf.length) { // if there are no anyRecordOf filters
+                    if (genomic.length && genomic.length < filters.length && (genomic.length + anyRecordOf.length) < filters.length) { // if there are genomic filters and acceptable filters
+                        this.enableSuiteButtons();
+                    } else if (genomic.length && genomic.length <= filters.length && (genomic.length + anyRecordOf.length) >= filters.length) { // if there are genomic filters and unacceptable filters
+                        this.disableSuiteButtons('phenotypic ');
+                    } else if  (!genomic.length) { // if there are no genomic filters
+                        this.enableSuiteButtons();
+                    }
+                }
+            } else { // if there are no filters
+                this.disableSuiteButtons('');
+            }
         },
         openDistributions: function(){
             console.log('openDistributions');
@@ -35,27 +66,18 @@ function($, BB, HBS, template, filterModel, modal){
                 () => {console.log('close help')
             });
         },
-        exportToSevenBridges: function(){
-            console.log('exportToSevenBridges');
+        openImaging: function(){
+            console.log('openImaging');
+        },
+        openPackageData: function(){
+            console.log('openPackageData');
+        },
+        openVariantExplorer: function(){
+            console.log('openVariantExplorer');
         },
         render: function() {
             this.$el.html(this.template());
-            const filters = filterModel.get('activeFilters');
-            const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
-            const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
-            if (filters.length && anyRecordOf.length && !genomic.length) {
-                this.$el.find('#package-data').prop('disabled', false).prop('title', 'Select and Package Data');
-                this.$el.find('#distributions').prop('disabled', true).prop('title', 'Please add a filter to your query to view variable distributions.');
-            } else if (filters.length && !anyRecordOf.length && genomic.length) {
-                this.$el.find('#package-data').prop('disabled', true).prop('title', 'Please add a phenotypic filter to your query to select and package data.');
-                this.$el.find('#distributions').prop('disabled', true).prop('title', 'Please add a phenotypic filter to your query to view variable distributions.');
-            } else if (filters.length && anyRecordOf.length && genomic.length) {
-                this.$el.find('#package-data').prop('disabled', true).prop('title', 'Please add a phenotypic filter to your query to select and package data.');
-                this.$el.find('#distributions').prop('disabled', true).prop('title', 'Please add a phenotypic filter to your query to view variable distributions.');
-            } else {
-                this.$el.find('#package-data').prop('disabled', true).prop('title', 'Please add a filter to your query to package data.');
-                this.$el.find('#distributions').prop('disabled', true).prop('title', 'Please add a filter to your query to view variable distributions.');
-            }
+            this.handleFilterChange();
         }
     });
     return ToolSuiteView;
