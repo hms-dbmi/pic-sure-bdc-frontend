@@ -40,3 +40,6 @@
 	}
 };
 window.sessionStorage.setItem("session", '{"token":"a_token"}');
+
+
+var THIS_IS_A_SOLID_HACK ={
