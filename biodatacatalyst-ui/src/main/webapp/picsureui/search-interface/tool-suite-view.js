@@ -1,8 +1,9 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal",],
-function($, BB, HBS, template, filterModel, modal){
+define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view"],
+function($, BB, HBS, template, filterModel, modal, helpView) {
     var ToolSuiteView = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
+            this.helpView = new helpView();
         },
         events: {
             'click #package-data' : 'openPackageData',
@@ -62,9 +63,12 @@ function($, BB, HBS, template, filterModel, modal){
         },
         openHelp: function(){
             modal.displayModal(
+                this.helpView,
                 'Tool Suite Help', 
-                () => {console.log('close help')
-            });
+                () => {
+                    $('#tool-suite').focus();
+                }
+            );
         },
         openImaging: function(){
             console.log('openImaging');
