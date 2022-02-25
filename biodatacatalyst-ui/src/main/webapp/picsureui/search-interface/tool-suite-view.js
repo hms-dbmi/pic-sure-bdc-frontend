@@ -13,45 +13,29 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
             'click #tool-suite-help' : 'openHelp',
             'click #export-to-seven-bridges' : 'exportToSevenBridges',
         },
-        disableSuiteButtons: function(reason){
-            this.$el.find('#package-data').prop('disabled', true).prop('title', 'Please add a ' + reason + 'filter to your query to select and package data.');
-            this.$el.find('#distributions').prop('disabled', true).prop('title', 'Please add a '+ reason + 'filter to your query to view variable distributions');
-        },
-        enableSuiteButtons: function(){
-            this.$el.find('#package-data').prop('disabled', false).prop('title', 'Select and Package Data');
-            this.$el.find('#distributions').prop('disabled', false).prop('title', 'Visual Distributions');
-        },
-        exportToSevenBridges: function(){
-            console.log('exportToSevenBridges');
-        },
         handleFilterChange: function(){
             const filters = filterModel.get('activeFilters');
             const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
             const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
-
+            let shouldEnablePackageData = false;
+            let shouldEnableDistributions = false;
+            let packageTitle = '';
+            let distributionsTitle = '';
             if (filters.length) {
-                if (anyRecordOf.length && anyRecordOf.length < filters.length) { // if there are any record of filters
-                    if (genomic.length && genomic.length < filters.length && (genomic.length + anyRecordOf.length) < filters.length) { // if there are genomic filters and acceptable filters
-                        this.enableSuiteButtons();
-                    } else if (genomic.length && genomic.length < filters.length && (genomic.length + anyRecordOf.length) >= filters.length) { // if there are genomic filters and unacceptable filters
-                        this.disableSuiteButtons('phenotypic ');
-                    } else if  (!genomic.length) { // if there are no genomic filters
-                        this.enableSuiteButtons();
-                    }
-                } else if (anyRecordOf.length && anyRecordOf.length >= filters.length) { // Only anyRecordOf
-                    this.disableSuiteButtons('');
-                } else if (!anyRecordOf.length) { // if there are no anyRecordOf filters
-                    if (genomic.length && genomic.length < filters.length && (genomic.length + anyRecordOf.length) < filters.length) { // if there are genomic filters and acceptable filters
-                        this.enableSuiteButtons();
-                    } else if (genomic.length && genomic.length <= filters.length && (genomic.length + anyRecordOf.length) >= filters.length) { // if there are genomic filters and unacceptable filters
-                        this.disableSuiteButtons('phenotypic ');
-                    } else if  (!genomic.length) { // if there are no genomic filters
-                        this.enableSuiteButtons();
+                if (anyRecordOf.length) {
+                    packageTitle = 'Select and Package data';
+                    shouldEnablePackageData = true;
+                } else if (!anyRecordOf.length) {
+                    if ((genomic.length && genomic.length < filters.length) || (!genomic.length)) {
+                        shouldEnablePackageData = true;
+                        shouldEnableDistributions = true;
+                        packageTitle = 'Select and Package data';
+                        distributionsTitle = 'Visualize distributions';
                     }
                 }
-            } else { // if there are no filters
-                this.disableSuiteButtons('');
             }
+            this.$el.find('#package-data').prop('disabled', !shouldEnablePackageData).prop('title', packageTitle.length ? packageTitle : 'Please add a phenotypic filter to your query to package data');
+            this.$el.find('#distributions').prop('disabled', !shouldEnableDistributions).prop('title', distributionsTitle.length ? distributionsTitle : 'Please add a phenotypic filter to your query to view variable distributions');
         },
         openDistributions: function(){
             console.log('openDistributions');

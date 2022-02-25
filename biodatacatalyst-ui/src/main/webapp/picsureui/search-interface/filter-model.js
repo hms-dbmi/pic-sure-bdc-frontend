@@ -94,7 +94,9 @@ define(["backbone", "handlebars"],
                 return this.get('activeFilters').at(index).attributes;
             },
             getByVarId: function(varId) {
-                return this.get('activeFilters').find((filter)=>{return filter.get('searchResult').result.varId===varId;});
+                return this.get('activeFilters')
+                           .filter((filter) => filter.get('type')!=='genomic')
+                           .find((filter)=>{return filter.get('searchResult').result.varId===varId;});
             },
             getByDatatableId: function(dtId) {
                 return this.get('activeFilters').find((filter)=>{return filter.get('dtId')===dtId;});
