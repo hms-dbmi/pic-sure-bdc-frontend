@@ -449,7 +449,7 @@ input[type='checkbox'].categorical-filter-input {
     font-weight: 600;
 }
 
-.filter-container div {
+.filter-container .filter {
     max-width: 95%;
     word-break: break-word;
     hyphens: none;
