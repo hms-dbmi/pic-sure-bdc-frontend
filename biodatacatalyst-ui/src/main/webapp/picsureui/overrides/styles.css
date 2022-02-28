@@ -333,14 +333,25 @@
     border-radius: 4px;
 }
 
+.filter-list-action-btn:hover {
+    color: #adadad;
+}
+
 .filter-container {
     padding: 5px;
+    background-color: #fff;
 }
 
 .filter-container:not(:first-of-type) {
     border-top-width: 1px;
     border-top-color: #aaa;
     border-top-style: solid;
+}
+
+.filter-container .filter-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .remove-filter {

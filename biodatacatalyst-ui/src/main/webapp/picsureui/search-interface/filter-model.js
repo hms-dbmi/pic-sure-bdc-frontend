@@ -24,7 +24,8 @@ define(["backbone", "handlebars"],
                     category: this.generateVariableCategory(searchResult),
                     values: values,
                     searchResult: searchResult,
-                    filterType: "restrict"
+                    filterType: "restrict",
+                    topmed: searchResult.result.metadata.id.includes('phv'),
                 });
             },
             addNumericFilter: function(searchResult, min, max) {
@@ -38,7 +39,8 @@ define(["backbone", "handlebars"],
                     category: this.generateVariableCategory(searchResult),
                     min: min,
                     max: max,
-                    filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between"
+                    filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
+                    topmed: datatableSelections.searchResult.result.metadata.id.includes('phv'),
                 });
             },
             addRequiredFilter: function(searchResult) {
@@ -50,7 +52,8 @@ define(["backbone", "handlebars"],
                     type: 'required',
                     searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
-                    filterType: "any"
+                    filterType: "any",
+                    topmed: searchResult.metadata.id.includes('phv'),
                 });
             },
             addDatatableFilter: function(datatableSelections) {
@@ -65,6 +68,7 @@ define(["backbone", "handlebars"],
                     category: datatableSelections.title,
                     filterType: "anyRecordOf",
                     datatable: true,
+                    topmed: datatableSelections.searchResult.result.metadata.id.includes('phv'),
                     searchResult: datatableSelections.searchResult
                 });
             },
@@ -81,7 +85,8 @@ define(["backbone", "handlebars"],
                     type: 'genomic',
                     filterType: 'genomic',
                     genomic: true,
-                    variantInfoFilters: variantInfoFilters
+                    variantInfoFilters: variantInfoFilters,
+                    topmed: false
                 });
             },
             addExportField: function(searchResult){
