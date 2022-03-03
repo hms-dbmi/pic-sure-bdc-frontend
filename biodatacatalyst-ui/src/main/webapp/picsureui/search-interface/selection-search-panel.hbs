@@ -15,7 +15,7 @@
         </input>
         <div class="panel-body select-box">
             <div class="genomic-value-container selection-search-results tabable" role="listbox" >
-                {{#each placeholder}}
+                {{#each searchResultOptions}}
                 <input id="{{this}}" class="categorical-filter-input selectable list-item" type="checkbox" tabindex="-1" value="{{this}}" title="{{this}}" role="option"/>{{this}} <br />
                 {{/each}}
             </div>
