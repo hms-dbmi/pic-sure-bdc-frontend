@@ -68,16 +68,19 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
                         el : $('#filter-list')
                     });
-                    let toolSuiteView = new ToolSuiteView({
-                        el: $('#tool-suite-panel')
-                    });
                     
                     let filterListView = new FilterListView({
                         outputPanelView : outputPanelView,
-                        toolSuiteView: toolSuiteView,
                         el : $('#filter-list-panel')
                     });
+
                     filterListView.render();
+
+                    let toolSuiteView = new ToolSuiteView({
+                        el: $('#tool-suite-panel')
+                    });
+
+                    toolSuiteView.render();
                 }
             },
             defaultAction: displayDataAccess

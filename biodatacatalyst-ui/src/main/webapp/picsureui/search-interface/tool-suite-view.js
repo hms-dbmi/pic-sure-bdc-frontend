@@ -4,6 +4,7 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
         initialize: function(opts){
             this.template = HBS.compile(template);
             this.helpView = new helpView();
+            this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
         },
         events: {
             'click #package-data' : 'openPackageData',
@@ -17,25 +18,18 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
             const filters = filterModel.get('activeFilters');
             const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
             const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
-            let shouldEnablePackageData = false;
-            let shouldEnableDistributions = false;
-            let packageTitle = '';
-            let distributionsTitle = '';
+            let shouldDisablePackageData = true;
+            let shouldDisableDistributions = true;
             if (filters.length) {
-                if (anyRecordOf.length) {
-                    packageTitle = 'Select and Package data';
-                    shouldEnablePackageData = true;
-                } else if (!anyRecordOf.length) {
-                    if ((genomic.length && genomic.length < filters.length) || (!genomic.length)) {
-                        shouldEnablePackageData = true;
-                        shouldEnableDistributions = true;
-                        packageTitle = 'Select and Package data';
-                        distributionsTitle = 'Visualize distributions';
-                    }
-                }
+                if (anyRecordOf.length + genomic.length < filters.length) {
+                    shouldDisablePackageData = false;
+                    shouldDisableDistributions = false;
+                } else if (anyRecordOf.length) {
+                    shouldDisablePackageData = false;
+                } 
             }
-            this.$el.find('#package-data').prop('disabled', !shouldEnablePackageData).prop('title', packageTitle.length ? packageTitle : 'Please add a phenotypic filter to your query to package data');
-            this.$el.find('#distributions').prop('disabled', !shouldEnableDistributions).prop('title', distributionsTitle.length ? distributionsTitle : 'Please add a phenotypic filter to your query to view variable distributions');
+            this.$el.find('#package-data').prop('disabled', shouldDisablePackageData).prop('title', shouldDisablePackageData ? 'Please add a phenotypic filter to your query to package data':'Select and Package data');
+            this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
         },
         openDistributions: function(){
             console.log('openDistributions');
@@ -66,6 +60,7 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
         render: function() {
             this.$el.html(this.template());
             this.handleFilterChange();
+            return this;
         }
     });
     return ToolSuiteView;

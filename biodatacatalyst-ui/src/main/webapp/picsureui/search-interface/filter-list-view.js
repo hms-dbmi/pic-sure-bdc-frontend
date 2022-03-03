@@ -21,7 +21,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     this.modelChanged();
                 }.bind(this));
                 this.outputPanelView = opts.outputPanelView;
-                this.toolSuiteView = opts.toolSuiteView;
                 keyboardNav.addNavigableView("filterList",this);
                 this.on({
                     'keynav-arrowup document': this.previousFilter,
@@ -206,7 +205,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})
                 }));
-                this.toolSuiteView.render();
             }
         });
 
