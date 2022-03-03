@@ -100,7 +100,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				url: window.location.origin + "/picsure/query/sync",
 				type: 'POST',
 				contentType: 'application/json',
-				data: JSON.stringify({query: {id: dataTableId, entityType: "DATA_TABLE"}}),
+				data: JSON.stringify({resourceUUID: "36363664-6231-6134-2d38-6538652d3131", query: {id: dataTableId, entityType: "DATA_TABLE"}}),
 				success: successHandler,
 				error: function(response){
 					console.log(response);
