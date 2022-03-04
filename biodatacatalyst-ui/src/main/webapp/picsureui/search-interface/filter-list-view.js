@@ -142,7 +142,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                 if(filter.type==='datatable'){
                     $.ajax({
-                        url: window.location.origin + "/jaxrs-service/rest/pic-sure/search",
+                        url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({query: {

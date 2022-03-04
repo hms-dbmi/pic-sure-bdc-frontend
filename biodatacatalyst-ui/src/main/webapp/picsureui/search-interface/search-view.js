@@ -79,7 +79,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				return $(this).data('tag');
 			}).toArray();
 			$.ajax({
-				url: window.location.origin + "/jaxrs-service/rest/pic-sure/search",
+				url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
 				type: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify({query: {
