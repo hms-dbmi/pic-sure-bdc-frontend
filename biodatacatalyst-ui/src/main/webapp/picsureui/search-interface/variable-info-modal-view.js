@@ -71,7 +71,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 					this.filterModalView.render();
 					modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
 				}
-				if(event.target.dataset.target==='datatable'){
+				else if(event.target.dataset.target==='datatable'){
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
 
 					$.ajax({
@@ -134,7 +134,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 							data: filterViewData,
 							el: $(".modal-body"),
 						});
-					} else {
+					}
+					else if (event.target.dataset.target === "variable") {
 						this.filterModalView = new numericalfilterModalView({
 							data: filterViewData,
 							el: $(".modal-body"),
@@ -146,7 +147,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 						searchResult.result.metadata.description
 					);
 				} else {
-					filterModel.updateExportField(searchResult);
+					filterModel.toggleExportField(searchResult);
 					console.log(
 						"Current export field count is " + filterModel.getExportFieldCount()
 					);

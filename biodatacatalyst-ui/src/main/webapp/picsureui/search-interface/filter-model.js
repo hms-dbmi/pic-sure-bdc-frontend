@@ -72,7 +72,7 @@ define(["backbone", "handlebars"],
                     searchResult: datatableSelections.searchResult
                 });
             },
-			updateExportField: function (searchResult) {
+			toggleExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
 					return filter.get("result").varId === searchResult.result.varId;
 				});
@@ -113,9 +113,6 @@ define(["backbone", "handlebars"],
                     variantInfoFilters: variantInfoFilters,
                     topmed: false
                 });
-            },
-            addExportField: function(searchResult){
-                this.get('exportFields').add(searchResult);
             },
             removeByIndex: function(index) {
                 this.get('activeFilters').remove(this.get('activeFilters').at(index));
