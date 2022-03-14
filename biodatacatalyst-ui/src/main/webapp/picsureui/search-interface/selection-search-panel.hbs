@@ -1,0 +1,37 @@
+<style>
+    .selected {
+        outline: 4px solid red!important;
+    }
+</style>
+<h3 class="selection-heading">{{heading}}</h3>
+<div id="{{searchId}}-container" class="selection-container space-even" aria-label="{{description}}" >
+    <div class="panel panel-default no-padding half-width">
+        <div class="panel-heading space-out panel-extra-large">
+            <h4 class="panel-title">{{searchContext}}</h4>
+            <i class="fa fa-info-circle fa-lg tabable" aria-hidden="true" data-toggle="tooltip" data-trigger="click hover focus" data-placement="left" title="{{description}}"></i>
+        </div>
+        <input type="search" id="{{searchId}}" class="selection-search-box form-control tabable" placeholder="{{placeholderText}}">
+            {{!-- <input class="btn bg-transparent" value="" accesskey="r" type="reset"></input> --}}
+        </input>
+        <div class="panel-body select-box">
+            <div class="genomic-value-container selection-search-results tabable" role="listbox" >
+                {{#each searchResultOptions}}
+                <input id="{{this}}" class="categorical-filter-input selectable list-item" type="checkbox" tabindex="-1" value="{{this}}" title="{{this}}" role="option"/>{{this}} <br />
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default no-padding half-width">
+        <div class="panel-heading results-header">
+            <h4 class="panel-title">{{resultContext}}</h4>
+            <button id="{{searchId}}-selection-clear-button" class="btn btn-default tabable">Clear</button>
+        </div>
+        <div class="panel-body select-box results-box">
+            <div class="genomic-value-container selections tabable">
+                {{#each selectedResults}}
+                <input class="categorical-filter-input selectable list-item" type="checkbox" tabindex="-1" value="{{this}}" role="option"/>{{this}} <br />
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

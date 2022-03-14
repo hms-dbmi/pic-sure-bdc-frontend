@@ -1,4 +1,4 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "search-interface/keyboard-nav", "search-interface/search-util"],
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util"],
 function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
@@ -139,10 +139,9 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			keyboardNav.setCurrentView(undefined);
 		},
 		queryUpdated: function(model, collection, opts){
-			var studiesInScope = _.map(filterModel.get('activeFilters').models, 
-				function(model){
-					return  model.toJSON().searchResult.result.metadata.study_id.split('\.')[0];
-				});
+			var studiesInScope = _.filter(filterModel.get('activeFilters').models, (model) => {model.toJSON().searchResult !== undefined})
+								  .map((model) => {return model.toJSON().searchResult.studyId}); 
+
 			if(studiesInScope.length > 0){
 				var studyTag = this.model.get("unusedTags").findWhere({tag:studiesInScope[0].toUpperCase()});
 				if(studyTag !== undefined){
@@ -155,7 +154,6 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				this.model.get("unusedTags").add(this.model.get("impliedTags").models);
 				this.model.get("impliedTags").reset(null);
 			}
-			this.modelChanged();
 		},
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);

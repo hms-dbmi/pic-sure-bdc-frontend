@@ -1,4 +1,4 @@
-define(["handlebars","jquery","backbone","text!options/modal.hbs", "search-interface/keyboard-nav"],
+define(["handlebars","jquery","backbone","text!options/modal.hbs", "common/keyboard-nav"],
 	function(HBS,$,BB,modalTemplate, keyboardNav){
 	let Modal = BB.View.extend({
 		initialize: function(opts){

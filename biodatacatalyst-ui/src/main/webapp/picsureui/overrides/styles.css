@@ -333,14 +333,26 @@
     border-radius: 4px;
 }
 
+.filter-list-action-btn:hover {
+    color: #adadad;
+}
+
 .filter-container {
     padding: 5px;
+    background-color: #fff;
 }
 
 .filter-container:not(:first-of-type) {
     border-top-width: 1px;
-    border-top-color: #000;
+    border-top-color: #aaa;
     border-top-style: solid;
+}
+
+.filter-container .filter-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .remove-filter {
@@ -370,3 +382,246 @@
     background-color: #ffffff;
     border-color: #ffffff;
 }
+
+/* Genomic Modal */
+
+.no-padding {
+    padding: 0px;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
+
+.half-width:not(:last-child) {
+    margin-right: auto;
+}
+
+.thrid-width {
+    width: 30%;
+}
+
+.half-width {
+    width: 48.5%;
+}
+
+.select-box {
+    height: 200px;
+    overflow-y: auto;
+}
+
+.results-box {
+    height: 234px;
+}
+
+.genomic-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+    margin-bottom: 10px;
+}
+
+input[type='checkbox'].categorical-filter-input {
+    margin-right: 10px;
+}
+
+.selection-search-box {
+    border-radius: 0px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    margin-left: 0px;
+}
+
+.selection-container {
+    margin: 5px 0;
+    padding: 0 0 10px 0;
+}
+
+#frequency-number {
+    display: none;
+}
+
+.filter-container span {
+    font-weight: 600;
+}
+
+.filter-container .filter {
+    max-width: 95%;
+    word-break: break-word;
+    hyphens: none;
+}
+
+.space-out {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.space-out i {
+    margin-left: 10px;
+    color: #337ab7;
+    font-weight: bold;
+}
+
+.space-even {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.space-even section:not(:last-child) {
+    margin-right: auto;
+}
+
+.take-space {
+    flex: 1 0 auto;
+    margin-right: 20px;
+    max-width: 74%;
+}
+
+.push-left-and-down {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-self: flex-end;
+    margin-bottom: 18px;
+}
+
+.push-left-and-down button {
+    margin-left: 10px;
+}
+
+.panel-extra-large {
+    padding: 17.5px 15px;
+}
+
+#tool-suite {
+    line-height: 1;
+    border: 1px solid lightgrey;
+    padding: 10px 8px;
+    background-color: rgb(223, 238, 255);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+#tool-suite .tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    row-gap: 2.5rem;
+    margin: 8px;
+}
+
+#tool-suite .tools button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    width: 100px;
+    height: 100px;
+}
+
+#tool-suite .tools button span {
+    font-size: 1rem;
+}
+
+#tool-suite .tools button:disabled i, #tool-suite .tools button:disabled span {
+    color: #cccccc;
+}
+
+.big-btn {
+    white-space: normal;
+}
+
+.btn-icon {
+    font-size: 2rem;
+}
+
+.m-l-1 {
+    margin-left: 1rem;
+}
+
+.m-lr-2 {
+    margin: 0 1.5rem;
+}
+
+.m-0 {
+    margin: 0; 
+}
+
+.center {
+    text-align: center;
+    margin: 0 auto;
+}
+
+/************************* STARTS Search X/reset button ******************************/
+
+input[type="search"]::-webkit-search-cancel-button {
+    /* Remove default */
+    -webkit-appearance: none;
+    /* X image */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+    background-repeat: no-repeat;
+    background-size: 14px;
+    height: 14px;
+    width: 14px;
+    display: block;
+}
+
+@supports selector(::-webkit-search-cancel-button) {
+    input[type="search"] > input[type="reset"],
+    input[type="search"] + input[type="reset"] {
+        display: none;
+    }
+}
+
+/* Firefox (A bug in Safari allows it to impact for Safari) */
+@supports not selector(::-webkit-search-cancel-button) {
+    input[type="search"] > input[type="reset"],
+    input[type="search"] + input[type="reset"] {
+        display: inline-block;
+        background-color: transparent;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        background-repeat: no-repeat;
+        background-size: 14px;
+        height: 14px;
+        width: 14px;
+        padding: 0;
+        z-index: 100;
+        cursor: pointer;
+        position: relative;
+        right: 35px;
+    }
+    #search-box:not(:valid) ~ input[type="reset"] {
+        display: none;
+    }
+    #search-box:valid ~ #search-button, 
+    #search-box:valid ~ #genomic-filter-btn {
+        position: relative;
+        right: 18px;
+    }
+}
+
+/* Safari 9+ (no impact to Chrome or Firefox)
+remove when above bug is fixed */
+@supports (-webkit-hyphens:none) {
+    input[type="search"] > input[type="reset"],
+    input[type="search"] + input[type="reset"] {
+        display: none;
+    }
+    #search-box:valid ~ #search-button,
+    #search-box:valid ~ #genomic-filter-btn {
+        position: static;
+    }
+}
+
+/************************* ENDS Search X ******************************/

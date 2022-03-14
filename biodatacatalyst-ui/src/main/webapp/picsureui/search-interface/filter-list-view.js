@@ -1,16 +1,20 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
         "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
         "search-interface/datatable-filter-modal-view", 
-        "picSure/queryBuilder","search-interface/modal", "search-interface/keyboard-nav", "search-interface/search-util"],
+        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util", 
+        "text!search-interface/genomic-filter-partial.hbs", "search-interface/genomic-filter-view","search-interface/variable-info-cache",
+        "search-interface/variable-info-modal-view",
+    ],
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView, 
         datatableFilterModalView,
-        queryBuilder, modal, keyboardNav, searchUtil){
+        queryBuilder, modal, keyboardNav, searchUtil, genomicFilterPartialTemplate, genomicFilterView, variableInfoCache, variableInfoModalView) {
 
         var View = BB.View.extend({
             initialize: function(opts){
                 HBS.registerHelper('getFilterTypeDescription', this.getFilterTypeDescription);
                 HBS.registerHelper('getVariableDescription', this.getVariableDescription);
+                HBS.registerPartial('genomic-filter-partial', genomicFilterPartialTemplate);
 
                 this.filterListViewTemplate = HBS.compile(filterListViewTemplate);
                 filterModel.get('activeFilters').bind('change add remove', function () {
@@ -29,6 +33,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 "click .remove-filter": "removeFilterHandler",
                 "click .edit-filter": "editFilterHandler",
                 "click .variable-info": "editFilterHandler",
+                'click .info-filter': 'onInfoClick',
                 'focus #filter-list': 'filtersFocus',
                 'blur #filter-list': 'filtersBlur'
             },
@@ -113,6 +118,25 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
             removeFilterHandler: function(event) {
                 filterModel.removeByIndex($(event.target).data('index'));
             },
+            onInfoClick: function(event){
+                //get cached data via id
+                let filter = filterModel.getByIndex($(event.target).data('index'));
+                let data = undefined;
+                if (!filter.type!=='genomic') {
+                    data = variableInfoCache[filter.searchResult.result.varId];
+                }
+                if (data) {
+                    console.log('Filter: ', filter);
+                    const modalView = new variableInfoModalView({
+                        varId: data.variableId,
+                        el: $(".modal-body")
+                    });
+                    modalView.render();
+                    modal.displayModal(modalView, data.studyDescription,  ()=>{
+                        $('#filter-list').focus();
+                    });
+                }
+            },
             editFilterHandler: function(event) {
                 let filter = filterModel.getByIndex($(event.target).data('index'));
 
@@ -146,6 +170,12 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             console.log(response);
                         }.bind(this)
                     });
+                } else if (filter.type==='genomic') {
+                    let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter});
+			        genomicFilter.render();
+			        modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
+				        $('#filter-list').focus();
+			        });
                 } else {
                     let searchResult = filter.searchResult;
 
