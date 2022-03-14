@@ -1,11 +1,11 @@
-define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!search-interface/search-results-list.hbs", 
-		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util", 
-		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
-		"search-interface/filter-model", "search-interface/tag-filter-model", 
+define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!search-interface/search-results-list.hbs",
+		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util",
+		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
+		"search-interface/filter-model", "search-interface/tag-filter-model",
 		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav"],
-function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate, 
+function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
-		 categoricalFilterModalView, filterModel, tagFilterModel, 
+		 categoricalFilterModalView, filterModel, tagFilterModel,
 		 modal, variableInfoCache, keyboardNav){
 
 	let StudyResultsView = BB.View.extend({
@@ -64,7 +64,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				focusedResult=0;
 			}
 			$(results[focusedResult]).addClass('focused-search-result');
-            $("#search-results-div").attr("aria-activedescendant", results[focusedResult].id);
+			$("#search-results-div").attr("aria-activedescendant", results[focusedResult].id);
 
 			searchUtil.ensureElementIsInView(results[focusedResult]);
 		},
@@ -129,14 +129,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		resultKeyHandler: function(event){
 			event.target = $('.focused-search-result')[0];
 			if(event.key.toLowerCase()==='f'){
-                this.filterClickHandler(event);
-            }
-            if(event.key.toLowerCase()==='i'){
-                this.infoClickHandler(event);
-            }
-            if(event.key.toLowerCase()==='enter'){
-                this.infoClickHandler(event);
-            }
+				this.filterClickHandler(event);
+			}
+			if(event.key.toLowerCase()==='i'){
+				this.infoClickHandler(event);
+			}
+			if(event.key.toLowerCase()==='enter'){
+				this.infoClickHandler(event);
+			}
 		},
 		filterClickHandler: function(event) {
 			let resultIndex = $(event.target).data('result-index');
@@ -166,11 +166,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}.bind(this));
 		},
 		databaseClickHandler: function(event) {
-			let resultIndex = $(event.target).data('result-index');
+			let resultIndex = $(event.target).data("result-index");
 
-			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
-
-			filterModel.addExportField(searchResult);
+			let searchResult = tagFilterModel.get("searchResults").results
+			.searchResults[resultIndex];
+			filterModel.toggleExportField(searchResult);
+			console.log(
+				"Current export field count is " + filterModel.getExportFieldCount()
+			);
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.study_id;

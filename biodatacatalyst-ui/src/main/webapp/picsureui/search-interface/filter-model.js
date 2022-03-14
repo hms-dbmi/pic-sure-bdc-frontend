@@ -72,11 +72,36 @@ define(["backbone", "handlebars"],
                     searchResult: datatableSelections.searchResult
                 });
             },
+			toggleExportField: function (searchResult) {
+				var existingField = this.get("exportFields").find((filter) => {
+					return filter.get("result").varId === searchResult.result.varId;
+				});
+				if (existingField === undefined) {
+					this.addExportField(searchResult);
+				} else {
+					this.removeExportField(existingField);
+				}
+			},
+			isExportField: function (searchResult) {
+				var existingField = this.get("exportFields").find((filter) => {
+					return filter.get("result").varId === searchResult.result.varId;
+				});
+				return existingField !== undefined;
+			},
+			addExportField: function (searchResult) {
+				this.get("exportFields").add(searchResult);
+			},
+			removeExportField: function (searchResult) {
+				this.get("exportFields").remove(searchResult);
+			},
+			getExportFieldCount: function () {
+				return this.get("exportFields").length+4;
+			},
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
                 let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{
                     return filter.get('type')==='genomic'
                         // //if we want to allow multiple genomic filters uncomment this line and the one in the genomic filter modal view
-                        //&& filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId; 
+                        //&& filter.get('variantInfoFilters').categoryVariantInfoFilters.__uniqueid === previousUniqueId;
                 });
                 if(existingFilterForGenomic!==undefined){
                     this.get('activeFilters').remove(existingFilterForGenomic, {silent:true});
@@ -88,9 +113,6 @@ define(["backbone", "handlebars"],
                     variantInfoFilters: variantInfoFilters,
                     topmed: false
                 });
-            },
-            addExportField: function(searchResult){
-                this.get('exportFields').add(searchResult);
             },
             removeByIndex: function(index) {
                 this.get('activeFilters').remove(this.get('activeFilters').at(index));
