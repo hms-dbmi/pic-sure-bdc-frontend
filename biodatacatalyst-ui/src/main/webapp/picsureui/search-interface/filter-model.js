@@ -40,7 +40,7 @@ define(["backbone", "handlebars"],
                     min: min,
                     max: max,
                     filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
-                    topmed: datatableSelections.searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.metadata.id.includes('phv'),
                 });
             },
             addRequiredFilter: function(searchResult) {
@@ -53,7 +53,7 @@ define(["backbone", "handlebars"],
                     searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
                     filterType: "any",
-                    topmed: searchResult.metadata.id.includes('phv'),
+                    topmed: searchResult.result.metadata.id.includes('phv'),
                 });
             },
             addDatatableFilter: function(datatableSelections) {
