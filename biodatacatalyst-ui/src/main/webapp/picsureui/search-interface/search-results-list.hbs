@@ -1,5 +1,8 @@
 {{#if results}}
-<span class='row'>{{variableCount}} variables match your search</span>
+<div class="search-results-header section-label">
+  <span class="m-l-6">Search Results:</span>
+  <span class="row">{{variableCount}} variables match your search</span>
+</div>
 {{#each results}}
   <div id='search-result-{{this.variable_id}}' class='search-result row' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}"
   aria-label="Variable {{this.name}}, {{this.variable_id}} described as {{this.description}} from study {{this.abbreviation}}, {{this.study_id}}. Press enter to get more information about this variable or to create a cohort filter using this variable."

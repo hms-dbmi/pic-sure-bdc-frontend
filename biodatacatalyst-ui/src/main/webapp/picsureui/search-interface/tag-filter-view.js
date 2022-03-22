@@ -60,7 +60,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			for(var x = 0;x < tags.length;x++){
 				if($(tags[x]).hasClass('focused-tag-badge')){
 					focusedTag = x;
-					$('.focused-tag-badge .hover-control').hide();
+					$('.focused-tag-badge .hover-control').css('visibility','hidden');
 					$(tags[x]).removeClass('focused-tag-badge');
 				}
 			}
@@ -69,7 +69,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			}
 			$(tags[focusedTag - 1]).addClass('focused-tag-badge');
 			$(this.model.get('focusedSection')).attr('aria-activedescendant',$('.focused-tag-badge')[0].firstElementChild.id);
-			$('.focused-tag-badge .hover-control').show();
+			$('.focused-tag-badge .hover-control').css('visibility','visible');
 			searchUtil.ensureElementIsInView($('.focused-tag-badge')[0]);
 		},
 		nextTag: function(event){
@@ -78,13 +78,13 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			for(var x = 0;x < tags.length;x++){
 				if($(tags[x]).hasClass('focused-tag-badge')){
 					focusedTag = x;					
-					$('.focused-tag-badge .hover-control').hide();
+					$('.focused-tag-badge .hover-control').css('visibility','hidden');
 					$(tags[x]).removeClass('focused-tag-badge');
 				}
 			}
 			$(tags[(focusedTag + 1) % tags.length]).addClass('focused-tag-badge');
 			$(this.model.get('focusedSection')).attr('aria-activedescendant',$('.focused-tag-badge')[0].firstElementChild.id);
-			$('.focused-tag-badge .hover-control').show();
+			$('.focused-tag-badge .hover-control').css('visibility','visible');
 			searchUtil.ensureElementIsInView($('.focused-tag-badge')[0]);
 		},
 		studyTagKeypress: function(event){
@@ -112,8 +112,8 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		activeTagBlur: function(){
 			this.model.set('focusedSection', undefined, {silent:true});
-			$('.focused-tag-badge .hover-control').hide();
-			this.$("#active-tags-section-div  .section-body .focused-tag-badge").removeClass('focused-tag-badge');
+			$('.focused-tag-badge .hover-control').css('visibility','hidden');
+			this.$("#active-tags-section-div .section-body .focused-tag-badge").removeClass('focused-tag-badge');
 			keyboardNav.setCurrentView(undefined);
 		},
 		tagFocus: function(){
@@ -123,8 +123,8 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		tagBlur: function(){
 			this.model.set('focusedSection', undefined, {silent:true});
-			$('.focused-tag-badge .hover-control').hide();
-			this.$("#tags-section-div  .section-body .focused-tag-badge").removeClass('focused-tag-badge');
+			$('.focused-tag-badge .hover-control').css('visibility','hidden');
+			this.$("#tags-section-div .section-body .focused-tag-badge").removeClass('focused-tag-badge');
 			keyboardNav.setCurrentView(undefined);
 		},
 		studyTagFocus: function(){
@@ -134,8 +134,8 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		studyTagBlur: function(){
 			this.model.set('focusedSection', undefined, {silent:true});
-			$('.focused-tag-badge .hover-control').hide();
-			this.$("#study-tags-section-div  .section-body .focused-tag-badge").removeClass('focused-tag-badge');
+			$('.focused-tag-badge .hover-control').css('visibility','hidden');
+			this.$("#study-tags-section-div .section-body .focused-tag-badge").removeClass('focused-tag-badge');
 			keyboardNav.setCurrentView(undefined);
 		},
 		queryUpdated: function(model, collection, opts){
@@ -164,31 +164,19 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.render();
 		},
 		showTagControls: function(event){
-			$('.hover-control', event.target).show();
+			// $('.hover-control', event.target).css("visibility", "visible");
+			$('.hover-control', event.target).css("visibility", "visible").hover(function() {
+				$(this).css("visibility", "visible");
+				$(this).css("cursor", "pointer");
+			})
 		},
 		hideTagControls: function(event){
-			$('.hover-control', event.target).hide();
+			$('.hover-control', event.target).css("visibility", "hidden");
 		},
 		clickTag: function(event){
-			tagFilterModel.resetPagination({silent:true});
-			let tagBtnClicked = this.resolveTagButtonForClick(event);
-			if(tagBtnClicked){
-				this.model[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
+			if(event.target && event.target.classList.contains('hover-control')){	
+				this.model[event.target.dataset['action']](event.target.dataset['tag']);
 			}
-		},
-		resolveTagButtonForClick: function(event){
-			let clickIsInsideTagBtn = function(event, tagBtn){
-				let clientRect = tagBtn.getClientRects()[0];
-				let relativeX = event.clientX - clientRect.x;
-				return relativeX >= 0 && relativeX <= clientRect.width;
-			}
-			let tagBtnClicked;
-			_.each($('.hover-control', event.target), tagBtn=>{
-				if(clickIsInsideTagBtn(event, tagBtn)){
-					tagBtnClicked = tagBtn;
-				}
-			});
-			return tagBtnClicked;
 		},
 		updateTags: function(response) {
 			this.model.setUnusedTags(response.results.tags, {silent: true});
