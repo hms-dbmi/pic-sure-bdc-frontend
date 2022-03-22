@@ -15,7 +15,6 @@ define(['jquery', 'backbone','handlebars',
         const classKey = 'Variant_class';
         const frequencyKey = 'Variant_frequency_as_text';
         const TABABLE_CLASS = '.tabable';
-        const descRegEx = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
         const SELECTED = 'selected';
         const LIST_ITEM = 'list-item';
         let isLoading = true;
@@ -27,11 +26,11 @@ define(['jquery', 'backbone','handlebars',
                 this.infoColumns = [];
                 this.loadingData = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
-                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.match(descRegEx)[0];
-                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.match(descRegEx)[0];
-                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.match(descRegEx)[0];
-                    this.data.classDescription = this.infoColumns.find(col => col.key === classKey).description.match(descRegEx)[0];
-                    this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.match(descRegEx)[0];
+                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1];
+                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1];
+                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.split('"')[1];
+                    this.data.classDescription = this.infoColumns.find(col => col.key === classKey).description.split('"')[1];
+                    this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.split('"')[1];
                     isLoading = false;
                     this.render();
                 }.bind(this));
@@ -74,8 +73,8 @@ define(['jquery', 'backbone','handlebars',
                 this.dataForGeneSearch = {
                     heading: 'Gene with Variant',
                     results: geneList,
-                    searchContext: 'Select variants of interest',
-                    resultContext: 'Selected Variants',
+                    searchContext: 'Select genes of interest',
+                    resultContext: 'Selected genes',
                     placeholderText: 'Try searching for a gene (Ex: CHD8)',
                     description: this.data.geneDesc,
                     sample: true
@@ -83,8 +82,8 @@ define(['jquery', 'backbone','handlebars',
                 this.dataForConsequenceSearch = {
                     heading: 'Variant consequence calculated',
                     results: consequencesList,
-                    searchContext: 'Select variant consequence calculated',
-                    resultContext: 'Selected variant consequence calculated',
+                    searchContext: 'Select calculated variant consequence',
+                    resultContext: 'Selected calculated variant consequence',
                     placeholderText: 'Try searching for a consequence (Ex: intergenic_variant)',
                     description: this.data.consequenceDesc,
                     sample: false
