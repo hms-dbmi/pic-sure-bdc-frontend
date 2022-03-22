@@ -53,7 +53,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
                     filterType: "any",
-                    topmed: searchResult.metadata.id.includes('phv'),
+                    topmed: searchResult.result.metadata.id.includes('phv'),
                 });
             },
             addDatatableFilter: function(datatableSelections) {
