@@ -5,6 +5,7 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
             this.template = HBS.compile(template);
             this.helpView = new helpView();
             this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
+            this.listenTo(filterModel.get('exportFields'), 'change reset add remove', this.render);
         },
         events: {
             'click #package-data' : 'openPackageData',
@@ -26,7 +27,7 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
                     shouldDisableDistributions = false;
                 } else if (anyRecordOf.length) {
                     shouldDisablePackageData = false;
-                } 
+                }
             }
             this.$el.find('#package-data').prop('disabled', shouldDisablePackageData).prop('title', shouldDisablePackageData ? 'Please add a phenotypic filter to your query to package data':'Select and Package data');
             this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
@@ -34,15 +35,15 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
         openDistributions: function(){
             console.log('openDistributions');
             modal.displayModal(
-                '', 
-                'Data Retrieval Summary', 
+                '',
+                'Data Retrieval Summary',
                 () => {console.log('close help')
             });
         },
         openHelp: function(){
             modal.displayModal(
                 this.helpView,
-                'Tool Suite Help', 
+                'Tool Suite Help',
                 () => {
                     $('#tool-suite').focus();
                 }

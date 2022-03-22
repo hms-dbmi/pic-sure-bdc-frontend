@@ -1,12 +1,12 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
-        "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view", 
-        "search-interface/datatable-filter-modal-view", 
-        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util", 
+        "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
+        "search-interface/datatable-filter-modal-view",
+        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util",
         "text!search-interface/genomic-filter-partial.hbs", "search-interface/genomic-filter-view","search-interface/variable-info-cache",
         "search-interface/variable-info-modal-view",
     ],
     function($, BB, HBS, filterListViewTemplate, filterModel,
-        modalTemplate, filterModalView, categoricalFilterModalView, 
+        modalTemplate, filterModalView, categoricalFilterModalView,
         datatableFilterModalView,
         queryBuilder, modal, keyboardNav, searchUtil, genomicFilterPartialTemplate, genomicFilterView, variableInfoCache, variableInfoModalView) {
 
@@ -20,6 +20,10 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 filterModel.get('activeFilters').bind('change add remove', function () {
                     this.modelChanged();
                 }.bind(this));
+                filterModel.get('exportFields').bind('change add remove', function () {
+                    this.modelChanged();
+                }.bind(this));
+                
                 this.outputPanelView = opts.outputPanelView;
                 keyboardNav.addNavigableView("filterList",this);
                 this.on({
@@ -196,11 +200,11 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                     modal.displayModal(this.filterModalView, searchResult.result.metadata.description, ()=>{
                         $('#filter-list').focus();
-                    });                    
+                    });
                 }
             },
             render: function(){
-                let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+                let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
                 this.outputPanelView.runQuery(query);
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})

@@ -24,16 +24,16 @@ define(["underscore"],
 		}
 	};
 
-	var createQueryNew = function(filters, resourceUUID){
+	var createQueryNew = function(filters, exportFields, resourceUUID){
 		var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 		if(parsedSess.queryTemplate){
-			return generateQueryNew(filters,JSON.parse(parsedSess.queryTemplate), resourceUUID);
+			return generateQueryNew(filters,exportFields,JSON.parse(parsedSess.queryTemplate), resourceUUID);
 		} else {
-			return generateQueryNew(filters,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);
+			return generateQueryNew(filters,exportFields,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);
 		}
 	};
 
-	var generateQueryNew = function(filters, template, resourceUUID) {
+	var generateQueryNew = function(filters, exportFields, template, resourceUUID) {
 		if (!template)
 			template = queryTemplate;
 
@@ -44,6 +44,10 @@ define(["underscore"],
 		if (Array.isArray(query.query.expectedResultType)) {
 			query.query.expectedResultType = "COUNT";
 		}
+
+		_.each(exportFields, function(field){
+			query.query.fields.push(field.result.metadata.HPDS_PATH);
+		});
 
 		_.each(filters, function(filter){
 			if(filter.type==="required"){
@@ -107,7 +111,7 @@ define(["underscore"],
 							}
 						} else {
 							query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
-							
+
 						}
 					} else if(filter.attributes.valueType==="NUMBER"){
 						var one = filter.attributes.constrainParams.attributes.constrainValueOne;
@@ -158,7 +162,7 @@ define(["underscore"],
 
 			}
 		});
-		
+
 		return query;
 	};
 

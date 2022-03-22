@@ -1,5 +1,5 @@
-define(["backbone", "handlebars"],
-    function(BB, HBS){
+define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel"],
+    function(BB, HBS, settings, queryBuilder, outputPanel){
 
         let FilterModel = BB.Model.extend({
             defaults:{
@@ -40,7 +40,7 @@ define(["backbone", "handlebars"],
                     min: min,
                     max: max,
                     filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
-                    topmed: datatableSelections.searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.metadata.id.includes('phv'),
                 });
             },
             addRequiredFilter: function(searchResult) {
@@ -94,8 +94,9 @@ define(["backbone", "handlebars"],
 			removeExportField: function (searchResult) {
 				this.get("exportFields").remove(searchResult);
 			},
-			getExportFieldCount: function () {
-				return this.get("exportFields").length+4;
+			getExportFieldCount: function (query) {
+				let count = Object.keys(query.query.categoryFilters).length + Object.keys(query.query.numericFilters).length + query.query.fields.length + query.query.requiredFields.length + 1;
+				return count;
 			},
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
                 let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{

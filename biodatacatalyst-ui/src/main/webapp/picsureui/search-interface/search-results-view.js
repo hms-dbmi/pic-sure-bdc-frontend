@@ -171,9 +171,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			let searchResult = tagFilterModel.get("searchResults").results
 			.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
-			console.log(
-				"Current export field count is " + filterModel.getExportFieldCount()
-			);
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.study_id;
