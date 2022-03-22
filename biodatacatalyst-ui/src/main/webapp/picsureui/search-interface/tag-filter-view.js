@@ -164,7 +164,6 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.render();
 		},
 		showTagControls: function(event){
-			// $('.hover-control', event.target).css("visibility", "visible");
 			$('.hover-control', event.target).css("visibility", "visible").hover(function() {
 				$(this).css("visibility", "visible");
 				$(this).css("cursor", "pointer");
