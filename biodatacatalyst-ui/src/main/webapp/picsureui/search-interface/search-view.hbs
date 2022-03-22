@@ -1,42 +1,55 @@
 <style>
 	#search-box {
-		width: 55%;
-		display: inline-block;
+		display: inline;
+		vertical-align: bottom;
 	}
 	#search-button {
-		width: 15%;
-		min-width:5em;
+		width:6em;
 	}
 	#genomic-filter-btn {
-	    width:25%;
-	    min-width:10em;
+	    width:10em;
+		margin-right: 30px;
+	}
+	#search-controls:not([type="reset"]) {
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		align-items: end;
+	}
+	#search-controls > *:not([type="reset"]):not(:last-child) {
+		margin-right: 0.5em;
+	}
+	#search-controls label {
+		margin-left: 30px;
 	}
 </style>
 
 <div class="row">
     <div class="row">
 		<form id="search-controls" class="col">
-	        <label for='search-box' class='col'>Search</label>
+	        <label for='search-box' class='col'>Search:</label>
 	        <input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
 	        aria-label="Type search terms here, use enter or the search button to submit search"
 	        title="Type search terms here, use enter or the search button to submit search"
-	        placeholder="Search studies or variables" required>
+	        placeholder="Search studies or variables"
+			onsubmit="return false" 
+			required>
 				<input class="btn bg-transparent" value="" accesskey="r" type="reset"></input>
 			</input>
-    </button>
-	        <a id="search-button" href='#' class='btn btn-default col'
+	        <button id="search-button" type="button" class='btn btn-default col'
 	        aria-label="You are on the search button"
-	        >Search</a>
-	        <a id='genomic-filter-btn' href='#' class='btn btn-default col'
+	        >Search</button>
+	        <button id='genomic-filter-btn' type="button" class='btn btn-default col'
 	        aria-label="You are on the Genomic Filtering button"
-	        >Genomic Filtering</a>
+	        >Genomic Filtering</button>
 	    </form>
     </div>
     <hr>
-    <div class="row">
+    <div id="search-area" class="row">
 	    <div id="tag-filters" class="col-md-3">
 
 	    </div>
+		<div id="spinner-holder"></div>
 	    <div class="col-md-9">
 	        <div id="search-results">
 

@@ -17,6 +17,9 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "common/keybo
 			if ($("#modal-window").length === 0) {
                 $('#main-content').append('<div id="modal-window" aria-modal="true"></div>');
             }
+			if($("#modal-window").length !== 0) {
+				$(".modal-backdrop").remove();
+			}
 
             $("#modal-window").html(HBS.compile(modalTemplate)({title: this.title}));
             $('.close').click(function() {

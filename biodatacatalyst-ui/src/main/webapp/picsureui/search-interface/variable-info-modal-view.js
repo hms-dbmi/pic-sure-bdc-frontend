@@ -31,15 +31,17 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				'keypress .fa-database': 'databaseKeypressHandler'
 			},
 			showTagControls: function(event){
-				$('.hover-control', event.target).show();
+				$('.hover-control', event.target).css('visibility','visible').hover(function() {
+					$(this).css("visibility", "visible");
+					$(this).css("cursor", "pointer");
+				})
 			},
 			hideTagControls: function(event){
-				$('.hover-control', event.target).hide();
+				$('.hover-control', event.target).css('visibility','hidden');
 			},
 			clickTag: function(event){
-				let tagBtnClicked = this.resolveTagButtonForClick(event);
-				if(tagBtnClicked){
-					tagFilterModel[tagBtnClicked.dataset['action']](tagBtnClicked.dataset['tag']);
+				if(event.target && event.target.classList.contains('hover-control')){	
+					tagFilterModel[event.target.dataset['action']](event.target.dataset['tag']);
 				}
 			},
 			filterClickHandler: function(event) {
@@ -157,19 +159,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
 					this.filterClickHandler(event);
 				}
-			},
-			resolveTagButtonForClick: function(event){
-				let clickIsInsideTagBtn = function(event, tagBtn){
-					let clickXRelativeToTagBtn = (event.offsetX - (tagBtn.offsetLeft - event.target.offsetLeft));
-					return clickXRelativeToTagBtn > 0 && (clickXRelativeToTagBtn - tagBtn.offsetWidth) < tagBtn.offsetWidth;
-				}
-				let tagBtnClicked;
-				_.each($('.hover-control', event.target), tagBtn=>{
-					if(clickIsInsideTagBtn(event, tagBtn)){
-						tagBtnClicked = tagBtn;
-					}
-				});
-				return tagBtnClicked;
 			},
 			render: function(){
 				this.$el.html(this.dataTableInfoTemplate(variableInfoCache[this.varId]));

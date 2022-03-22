@@ -5,6 +5,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"text!search-interface/tag-search-response.json",
 	"search-interface/modal",
 	"search-interface/genomic-filter-view",
+	"common/spinner",
+	"text!common/unexpected_error.hbs",
+
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -13,6 +16,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			tagSearchResponseJson,
 			modal,
 			genomicFilterView,
+			spinner,
+			helpViewTemplate,
 		){
 
 	var SearchView = BB.View.extend({
@@ -66,7 +71,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.render();
 		},
 
-		submitSearch: function() {
+		submitSearch: function(e) {
 			this.searchTerm = $('#search-box').val();
 			if(tagFilterModel.get("term")!==this.searchTerm){
 				tagFilterModel.reset({silent:true});
@@ -78,6 +83,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
+			$('#search-results').hide();
+			e && $('#tag-filters').hide();
+			let deferredSearchResults = $.Deferred();
+			spinner.medium(deferredSearchResults, '#spinner-holder', '');
 			$.ajax({
 				url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
 				type: 'POST',
@@ -90,21 +99,28 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 						offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
 						limit: tagFilterModel.get("limit")
 					}}),
-				success: function(response){
-					this.updateTags(response);
-				}.bind(this),
-				error: function(response){
-					console.log(response);
-				}.bind(this)
+					success: function(response){
+						deferredSearchResults.resolve()
+						this.updateTags(response);
+						$('#tag-filters').show();
+						$('#search-results').show();
+					}.bind(this),
+					error: function(response){
+						deferredSearchResults.resolve()
+						const helpTemplate = HBS.compile(helpViewTemplate);
+						this.$el.html(helpTemplate());
+						console.log(response);
+					}.bind(this)
 			});
 		},
 
 		openGenomicFilteringModal: function() {
-			let genomicFilter = new genomicFilterView({el: $(".modal-body")});
+			const genomicFilter = new genomicFilterView({el: $(".modal-body")});
 			genomicFilter.render()
 			modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 				$('#filter-list').focus();
 			});
+			return false;
 		},
 
 		handleSearchKeypress: function(event){
