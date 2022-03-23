@@ -120,11 +120,7 @@ define(['jquery', 'backbone','handlebars',
             },
             cancelGenomicFilters: function(){
                 this.undelegateEvents();
-                this.$el.removeData().unbind(); 
-                this.remove();  
-                BB.View.prototype.remove.call(this);
-                $("#modalDialog").remove();
-                $(".modal-backdrop").remove();
+                $('.close').click();
             },
             createTabIndex: function() {
                 let genomicTabIndex = 1000000;

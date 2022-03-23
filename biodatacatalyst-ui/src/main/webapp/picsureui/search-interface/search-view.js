@@ -100,13 +100,13 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 						limit: tagFilterModel.get("limit")
 					}}),
 					success: function(response){
-						deferredSearchResults.resolve()
+						deferredSearchResults.resolve();
 						this.updateTags(response);
 						$('#tag-filters').show();
 						$('#search-results').show();
 					}.bind(this),
 					error: function(response){
-						deferredSearchResults.resolve()
+						deferredSearchResults.resolve();
 						const helpTemplate = HBS.compile(helpViewTemplate);
 						this.$el.html(helpTemplate());
 						console.log(response);
