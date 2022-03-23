@@ -122,7 +122,7 @@ define(["backbone", "handlebars"],
             },
             getByVarId: function(varId) {
                 return this.get('activeFilters')
-                           .filter((filter) => filter.get('type')!=='genomic')
+                           .filter((filter) => filter.get('type')!=='genomic' && filter.get('type')!=='datatable')
                            .find((filter)=>{return filter.get('searchResult').result.varId===varId;});
             },
             getByDatatableId: function(dtId) {
