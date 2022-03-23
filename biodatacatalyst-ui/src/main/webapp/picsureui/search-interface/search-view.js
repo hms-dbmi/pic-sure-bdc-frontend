@@ -28,6 +28,13 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			let response = JSON.parse(tagSearchResponseJson);
 
+			//tell the back end to exclude concepts from studies not in the user's scope'
+			this.antiScopeTags = _.filter( _.pluck(results.tags, 'tag'), function(tag){
+				return tag.startsWith("PHS") && _.find(opts.queryScope, function(scopeElement){
+					scopeElement.toLowerCase().includes(tag.toLowerCase());
+				}) == null;
+			});
+			
 			this.render();
 			this.tagFilterView = new tagFilterView({
 				tagSearchResponse:response,
@@ -83,6 +90,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
+			
+			//exclude the user selected tags as well as tags not in scope
+			searchExcludeTags = [].push(...this.excludedTags, ...this.antiScopeTags)
+			
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			let deferredSearchResults = $.Deferred();
@@ -94,7 +105,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				data: JSON.stringify({query: {
 						searchTerm: this.searchTerm,
 						includedTags: this.requiredTags,
-						excludedTags: this.excludedTags,
+						excludedTags: searchExcludeTags,
 						returnTags: true,
 						offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
 						limit: tagFilterModel.get("limit")
