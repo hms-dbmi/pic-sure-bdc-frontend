@@ -66,7 +66,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
 
                     let searchView = new SearchView({
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
-						queryScope: JSON.parse(parsedSess.queryScope),
+						queryScopes: parsedSess.queryScopes,
                         el : $('#filter-list')
                     });
                     

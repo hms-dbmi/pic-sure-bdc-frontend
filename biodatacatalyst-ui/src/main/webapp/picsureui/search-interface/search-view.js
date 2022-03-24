@@ -29,9 +29,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			let response = JSON.parse(tagSearchResponseJson);
 
 			//tell the back end to exclude concepts from studies not in the user's scope'
-			this.antiScopeTags = _.filter( _.pluck(results.tags, 'tag'), function(tag){
-				return tag.startsWith("PHS") && _.find(opts.queryScope, function(scopeElement){
-					scopeElement.toLowerCase().includes(tag.toLowerCase());
+			this.antiScopeTags = _.filter( _.pluck(response.results.tags, 'tag'), function(tag){
+				return tag.startsWith("PHS") && _.find(opts.queryScopes, function(scopeElement){
+					return scopeElement.toLowerCase().includes(tag.toLowerCase());
 				}) == null;
 			});
 			
@@ -92,7 +92,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			}).toArray();
 			
 			//exclude the user selected tags as well as tags not in scope
-			searchExcludeTags = [].push(...this.excludedTags, ...this.antiScopeTags)
+			searchExcludeTags= [...this.excludedTags, ...this.antiScopeTags];
 			
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
