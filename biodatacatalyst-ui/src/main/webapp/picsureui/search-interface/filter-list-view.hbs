@@ -19,79 +19,84 @@
         overflow-wrap: break-word;
     }
 </style>
-<div id="filter-list" tabindex=0 aria-activedescendent="">
-{{#each activeFilters}}
-    {{#if datatable}}
-        <div class="filter-container" id="{{this.searchResult.result.metadata.dataTableId}}">
-            <div class="filter-header">
-                <div>
-                    Filter: 
-                </div>
-                <div class="filter-buttons-container">
-                    <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
-                    <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
-                    <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
-                </div>
-            </div>
-            <div class="filter">
-                {{#if this.searchResult.result.metadata.var_name}}
-                    <p class="var-name">{{this.searchResult.result.metadata.var_name}}</p>
-                {{/if}}
-                <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
-                {{#if this.searchResult.result.metadata.dataTableId}}
-                    <p>Datatable ID: {{this.searchResult.result.metadata.dataTableId}}</p>
-                {{/if}}
-                {{#if this.searchResult.result.metadata.dataTableName}}
-                    <p>Datatable Name: {{this.searchResult.result.metadata.dataTableName}}</p>
-                {{/if}}
-                {{#if topmed }}
-                    {{#if this.searchResult.result.metadata.dataTableName}}
-                        <p class="table">Table Name: {{this.searchResult.result.metadata.dataTableName}}</p>
-                    {{/if}}
-                {{/if}}
-            </div>
-            <p class="value">{{variables.length}} variables selected. Participants with any value recorded for any of these variables will be included if they match all other defined filters</p>
-        </div>
-    {{else if genomic}}
-         <div class="filter-container with-wrap" id="genomic">
-             <div class="filter-header">
-                <div>
-                    <div>Genomic Filter</div>
-                </div>
-                <div class="filter-buttons-container">
-                    <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
-                    <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
-                </div>
-             </div>
-            {{> genomic-filter-partial filters=variantInfoFilters}}
-         </div>
-    {{else}}
-        <div class="filter-container" id="{{this.searchResult.result.metadata.varId}}">
+<div class="panel">
+    <div class="panel-heading">
+        Added Variable Filters
+    </div>
+    <div id="filter-list" class="panel-body" tabindex=0 aria-activedescendent="">
+    {{#each activeFilters}}
+        {{#if datatable}}
+            <div class="filter-container" id="{{this.searchResult.result.metadata.dataTableId}}">
                 <div class="filter-header">
                     <div>
                         Filter: 
                     </div>
-                    <div>
+                    <div class="filter-buttons-container">
                         <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
                         <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
                         <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
                     </div>
                 </div>
-            <div class="filter">
-                {{#if this.searchResult.result.metadata.var_name}}
-                    <p class="var-name">{{this.searchResult.result.metadata.var_name}}</p>
-                {{/if}}
-                <p>{{this.searchResult.result.metadata.varId}}</p>
-                <p>{{this.searchResult.result.metadata.description}}</p>
-                <p class="value">Value: {{getFilterTypeDescription this}}</p>
-                <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
-                {{#if topmed }}
-                    {{#if this.searchResult.result.metadata.dataTableName}}
-                        <p class="table">Table Name: {{this.searchResult.result.metadata.dataTableName}}</p>
+                <div class="filter">
+                    {{#if this.searchResult.result.metadata.var_name}}
+                        <p class="var-name">{{this.searchResult.result.metadata.var_name}}</p>
                     {{/if}}
-                {{/if}}
+                    <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
+                    {{#if this.searchResult.result.metadata.dataTableId}}
+                        <p>Datatable ID: {{this.searchResult.result.metadata.dataTableId}}</p>
+                    {{/if}}
+                    {{#if this.searchResult.result.metadata.dataTableName}}
+                        <p>Datatable Name: {{this.searchResult.result.metadata.dataTableName}}</p>
+                    {{/if}}
+                    {{#if topmed }}
+                        {{#if this.searchResult.result.metadata.dataTableName}}
+                            <p class="table">Table Name: {{this.searchResult.result.metadata.dataTableName}}</p>
+                        {{/if}}
+                    {{/if}}
+                </div>
+                <p class="value">{{variables.length}} variables selected. Participants with any value recorded for any of these variables will be included if they match all other defined filters</p>
             </div>
-        </div>
-    {{/if}}
-{{/each}}
+        {{else if genomic}}
+            <div class="filter-container with-wrap" id="genomic">
+                <div class="filter-header">
+                    <div>
+                        <div>Genomic Filter</div>
+                    </div>
+                    <div class="filter-buttons-container">
+                        <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
+                        <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
+                    </div>
+                </div>
+                {{> genomic-filter-partial filters=variantInfoFilters}}
+            </div>
+        {{else}}
+            <div class="filter-container" id="{{this.searchResult.result.metadata.varId}}">
+                    <div class="filter-header">
+                        <div>
+                            Filter: 
+                        </div>
+                        <div>
+                            <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
+                            <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
+                            <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
+                        </div>
+                    </div>
+                <div class="filter">
+                    {{#if this.searchResult.result.metadata.var_name}}
+                        <p class="var-name">{{this.searchResult.result.metadata.var_name}}</p>
+                    {{/if}}
+                    <p>{{this.searchResult.result.metadata.varId}}</p>
+                    <p>{{this.searchResult.result.metadata.description}}</p>
+                    <p class="value">Value: {{getFilterTypeDescription this}}</p>
+                    <p class="study">Study: {{this.searchResult.result.metadata.study_id}}</p>
+                    {{#if topmed }}
+                        {{#if this.searchResult.result.metadata.dataTableName}}
+                            <p class="table">Table Name: {{this.searchResult.result.metadata.dataTableName}}</p>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+        {{/if}}
+    {{/each}}
+    </div>
 </div>

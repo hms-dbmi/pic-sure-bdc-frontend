@@ -69,11 +69,11 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			searchUtil.ensureElementIsInView(results[focusedResult]);
 		},
 		previousSearchResult: function(event){
-			let results = this.$(".search-result.row");
+			let results = this.$(".search-result");
 			let focusedResult = this.adjustFocusedResult(1, results);
 		},
 		nextSearchResult: function(event){
-			let results = this.$(".search-result.row");
+			let results = this.$(".search-result");
 			let focusedResult = this.adjustFocusedResult(-1, results);
 		},
 		resultsFocus: function(event){

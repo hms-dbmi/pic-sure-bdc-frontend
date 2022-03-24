@@ -323,7 +323,7 @@
     padding: 20px;
 }
 
-#filter-list-panel {
+/* #filter-list-panel {
     line-height: 1;
     border-width: 1px;
     border-style: solid;
@@ -331,7 +331,7 @@
     padding: 40px 0px;
     background-color: rgb(223, 238, 255);
     border-radius: 4px;
-}
+} */
 
 .filter-list-action-btn:hover {
     color: #adadad;
@@ -504,10 +504,6 @@ input[type='checkbox'].categorical-filter-input {
 
 #tool-suite {
     line-height: 1;
-    border: 1px solid lightgrey;
-    padding: 10px 8px;
-    background-color: rgb(223, 238, 255);
-    border-radius: 4px;
     margin-bottom: 20px;
 }
 
@@ -544,6 +540,7 @@ input[type='checkbox'].categorical-filter-input {
 
 .btn-icon {
     font-size: 2rem;
+    padding: 0;
 }
 
 .m-l-1 {
@@ -633,6 +630,11 @@ remove when above bug is fixed */
 
 /************************* Start Visualization ******************************/
 
+.flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .image-container {
     display: flex;
     flex-direction: row;
@@ -650,12 +652,26 @@ remove when above bug is fixed */
     cursor: pointer;
 }
 
-.search-results-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    margin: 0 15px;
-    border-bottom: 1px solid black;
+#patient-count-box {
+    background-color: white;
+    line-height: 1;
+    padding: 40px 0px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
+
+.panel {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.panel .panel-heading {
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 1.1em;
+}
+
+.panel-body.search-result {
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+}
+

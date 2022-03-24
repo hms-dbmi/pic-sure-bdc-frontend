@@ -8,7 +8,7 @@
 	}
 	#genomic-filter-btn {
 	    width:10em;
-		margin-right: 30px;
+		margin-right: 15px;
 	}
 	#search-controls:not([type="reset"]) {
 		display: flex;
@@ -19,13 +19,15 @@
 	#search-controls > *:not([type="reset"]):not(:last-child) {
 		margin-right: 0.5em;
 	}
+	#search-controls > *:not([type="reset"]):not(:first-child) {
+		box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
+	}
 	#search-controls label {
-		margin-left: 30px;
+		margin-left: 15px;
 	}
 </style>
 
-<div class="row">
-    <div class="row">
+<div>
 		<form id="search-controls" class="col">
 	        <label for='search-box' class='col'>Search:</label>
 	        <input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
@@ -43,9 +45,8 @@
 	        aria-label="You are on the Genomic Filtering button"
 	        >Genomic Filtering</button>
 	    </form>
-    </div>
     <hr>
-    <div id="search-area" class="row">
+    <div id="search-area">
 	    <div id="tag-filters" class="col-md-3">
 
 	    </div>
