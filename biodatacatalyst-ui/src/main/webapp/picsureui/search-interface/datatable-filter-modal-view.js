@@ -3,6 +3,12 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 	let DatatableFilterModalView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatableFilterModal",this);
+			if (this.model.dtVariables[0]) {
+				this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.model.dtVariables[0].result.studyId);
+				this.data.studyId = this.model.dtVariables[0].result.studyId;
+				this.data.datasetName = this.model.dtVariables[0].result.metadata.dataTableName;
+			}
+			this.data.datasetAccession = this.model.dtId;
 			this.on({
 				'keynav-arrowup document': this.previousVariable,
 				'keynav-arrowdown document': this.nextVariable,
@@ -117,7 +123,8 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
             $('.close').click();
 		},
 		render: function(){
-			this.$el.html(HBS.compile(datatableFilterModalTemplate)());
+			const template = HBS.compile(datatableFilterModalTemplate);
+			this.$el.html(template(this.data));
 			$('.modal-dialog').width('90%');
 			$('#datatable-modal-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='vcfData' class='display stripe' ></table>");
 			let toggleable = true;

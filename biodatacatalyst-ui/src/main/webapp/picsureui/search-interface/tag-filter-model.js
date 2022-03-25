@@ -43,6 +43,9 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                     }
                     return 'tag-badge';
                 });
+                HBS.registerHelper('isStudy', function(arg1, options) {
+                    return studyVersionRegex.test(arg1) ? options.fn(this) : options.inverse(this);
+                });
             },
             reset: function(options){
                 this.get('unusedTags').add(this.get('requiredTags').models);

@@ -1,10 +1,11 @@
-define(["jquery","backbone","handlebars", "text!search-interface/categorical-filter-modal-view.hbs", "search-interface/filter-model"],
-    function($, BB, HBS, categoricalFilterModalViewTemplate, filterModel){
+define(["jquery","backbone","handlebars", "text!search-interface/categorical-filter-modal-view.hbs", "search-interface/filter-model", "search-interface/search-util"],
+    function($, BB, HBS, categoricalFilterModalViewTemplate, filterModel, searchUtil){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 this.categoricalFilterModalViewTemplate = HBS.compile(categoricalFilterModalViewTemplate);
                 this.data = opts.data;
+                this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.studyId);
             },
             events: {
                 "click #add-filter-button": "addFilter"

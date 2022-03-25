@@ -1,6 +1,9 @@
 
 
 <div class="variable-info">
+    {{#if variableMetadata.name}}
+        <div>Variable Name: {{variableMetadata.name}}</div>
+    {{/if}}
     {{#if variableId}}
         <div>
             Variable Accession: {{variableId}}
@@ -10,9 +13,6 @@
     {{/if}}
     {{#if variableMetadata.description}}
         <div>Variable Description: {{variableMetadata.description}}</div>
-    {{/if}}
-    {{#if variableMetadata.name}}
-        <div>Variable Name: {{variableMetadata.name}}</div>
     {{/if}}
     {{#if variableMetadata.type}}
         <div>Variable Type: {{variableMetadata.type}}</div>

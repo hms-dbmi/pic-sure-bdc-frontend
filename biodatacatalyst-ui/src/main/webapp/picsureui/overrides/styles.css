@@ -289,7 +289,6 @@
 .filter-modal-container {
     border-radius: 2px;
     border-color: #000000;
-    background-color: #1a568c;
     height: auto;
     width: 80%;
     margin: auto;
@@ -310,17 +309,12 @@
     float: left;
     width: 80%;
     background-color: #ffffff;
-    margin: 20px;
-    padding: 20px;
 }
 .button-container {
     border-radius: 2px;
     border-color: #000000;
     float: left;
-    width: 20%;
     background-color: #ffffff;
-    margin: 20px;
-    padding: 20px;
 }
 
 /* #filter-list-panel {
@@ -573,6 +567,10 @@ input[type='checkbox'].categorical-filter-input {
     overflow-wrap: break-word;
 }
 
+.grow {
+    flex-grow: 1;
+}
+
 /************************* STARTS Search X/reset button ******************************/
 
 input[type="search"]::-webkit-search-cancel-button {
@@ -585,6 +583,7 @@ input[type="search"]::-webkit-search-cancel-button {
     height: 14px;
     width: 14px;
     display: block;
+    cursor: pointer;
 }
 
 @supports selector(::-webkit-search-cancel-button) {
@@ -632,9 +631,6 @@ remove when above bug is fixed */
     #search-box:valid ~ #search-button,
     #search-box:valid ~ #genomic-filter-btn {
         position: static;
-    }
-    #tag-filters {
-        min-width: 315px;
     }
 }
 
@@ -705,4 +701,9 @@ remove when above bug is fixed */
 
 .space-between {
     justify-content: space-between;
+}
+
+.var-info {
+    list-style-type: none;
+    padding: 0;
 }

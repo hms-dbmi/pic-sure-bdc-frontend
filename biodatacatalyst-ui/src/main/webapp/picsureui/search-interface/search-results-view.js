@@ -121,7 +121,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
-				modal.displayModal(this.dataTableInfoView, response.variables[variableId].metadata.name,  ()=>{
+				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[variableId].metadata.name,  ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -160,7 +160,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 			this.retrieveDataTableMeta(searchResult.result.dtId, function(response){
 				this.cacheVariableInfo(response, searchResult.result.varId);
-				modal.displayModal(this.filterModalView, response.variables[searchResult.result.varId].metadata.name, ()=>{
+				modal.displayModal(this.filterModalView, "Variable Information for " + response.variables[searchResult.result.varId].metadata.name, ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));

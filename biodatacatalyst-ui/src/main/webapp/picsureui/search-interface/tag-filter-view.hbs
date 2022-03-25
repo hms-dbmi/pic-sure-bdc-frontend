@@ -48,6 +48,7 @@
 
 	#tag-filters {
 		max-width: 315px;
+		min-width: 315px;
 	}
 
 	.require-tag-btn {
@@ -72,7 +73,7 @@
 		padding-bottom: 1px;
 	}
 	.tag-study-text {
-		font-size: .9em;
+		font-size: 0.9em;
 	}
 </style>
 {{#if hasActiveTags}}
@@ -89,13 +90,15 @@
 		{{#if hasRequiredTags}}
 		<div class='row'><span>Required Tags:</span>
 			{{#each requiredTags}}
-			<div class="badge {{colorClass this.tag}}">
-				<span class="required-tag" id="tag-{{this.tag}}"
-					aria-label="Tag {{ariaAliasIfStudy this.tag}}is associated with {{this.score}} search results. Press enter to no longer require search results to have this tag.">
-					{{aliasIfStudy this.tag}} ({{this.score}})
-					<span data-tag="{{this.tag}}" data-action="removeRequiredTag"
-						class="selected-required-tag remove-tag-btn hover-control">X</span>
-				</span>
+			<div class="badge fat-badge {{colorClass this.tag}}">
+				<div class="stack">
+					<span id="tag-{{this.tag}}" class="required-tag bold-tag" aria-label="Tag {{ariaAliasIfStudy this.tag}}is associated with {{this.score}} search results. Press enter to no longer require search results to have this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
+					{{#isStudy this.tag}}
+					<span id="study-{{this.tag}}" class="tag-study-text">{{this.tag}}</span>
+					{{/isStudy}}
+				</div>
+				<span data-tag="{{this.tag}}" data-action="removeRequiredTag"
+						class="fa fa-times removeRequiredTag hover-control remove-tag-btn"></span>
 			</div>
 			{{/each}}
 		</div>
