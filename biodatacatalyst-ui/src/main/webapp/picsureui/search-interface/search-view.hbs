@@ -8,7 +8,7 @@
 	}
 	#genomic-filter-btn {
 	    width:10em;
-		margin-right: 15px;
+		margin-right: 20px;
 	}
 	#search-controls:not([type="reset"]) {
 		display: flex;
@@ -23,7 +23,14 @@
 		box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
 	}
 	#search-controls label {
-		margin-left: 15px;
+		align-self: center;
+	}
+	.reset-button {
+		align-self: center;
+	}
+	hr {
+		width: 98%;
+		margin-left: 0px;
 	}
 </style>
 
@@ -36,7 +43,7 @@
 	        placeholder="Search studies or variables"
 			onsubmit="return false" 
 			required>
-				<input class="btn bg-transparent" value="" accesskey="r" type="reset"></input>
+				<input class="btn bg-transparent reset-button" value="" accesskey="r" type="reset"></input>
 			</input>
 	        <button id="search-button" type="button" class='btn btn-default col'
 	        aria-label="You are on the search button"
@@ -46,15 +53,11 @@
 	        >Genomic Filtering</button>
 	    </form>
     <hr>
-    <div id="search-area">
-	    <div id="tag-filters" class="col-md-3">
-
-	    </div>
-		<div id="spinner-holder"></div>
-	    <div class="col-md-9">
-	        <div id="search-results">
-
-	        </div>
+    <div id="search-area" class="flex-container space-between">
+	    <div id="tag-filters"></div>
+		<div id="spinner-holder" class="center"></div>
+	    <div class="m-lr-20">
+	        <div id="search-results"></div>
     	</div>
     </div>
 </div>

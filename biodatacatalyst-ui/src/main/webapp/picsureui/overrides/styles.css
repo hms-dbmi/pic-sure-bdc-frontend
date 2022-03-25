@@ -440,6 +440,7 @@ input[type='checkbox'].categorical-filter-input {
 .selection-container {
     margin: 5px 0;
     padding: 0 0 10px 0;
+    overflow-wrap: anywhere;
 }
 
 #frequency-number {
@@ -551,6 +552,10 @@ input[type='checkbox'].categorical-filter-input {
     margin: 0 1.5rem;
 }
 
+.m-lr-20 {
+    margin: 0 20px;
+}
+
 .m-l-6 {
     margin-left: 6px;
 }
@@ -562,6 +567,10 @@ input[type='checkbox'].categorical-filter-input {
 .center {
     text-align: center;
     margin: 0 auto;
+}
+
+.with-wrap {
+    overflow-wrap: break-word;
 }
 
 /************************* STARTS Search X/reset button ******************************/
@@ -624,6 +633,9 @@ remove when above bug is fixed */
     #search-box:valid ~ #genomic-filter-btn {
         position: static;
     }
+    #tag-filters {
+        min-width: 315px;
+    }
 }
 
 /************************* ENDS Search X ******************************/
@@ -635,17 +647,28 @@ remove when above bug is fixed */
     flex-direction: row;
 }
 
-.image-container {
+#visualizations-container {
     display: flex;
-    flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.image-container {
+    display: flex;
     margin-bottom: 20px;
 }
 
-.image-container button {
+.image-container img {
+    max-width: 475px;
+}
+
+.image-container .download-button {
     position: relative;
-    left: -20px;
+    left: -130px;
+    font-size: 3em;
+    align-self: flex-start;
 }
 
 #show-all-tags-btn, #show-fewer-tags-btn {
@@ -675,3 +698,11 @@ remove when above bug is fixed */
     border-right: 1px solid transparent;
 }
 
+.output-size {
+    min-width: 300px;
+    max-width: 350px;
+}
+
+.space-between {
+    justify-content: space-between;
+}
