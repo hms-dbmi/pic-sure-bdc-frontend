@@ -46,6 +46,10 @@
 		padding: 0 1px;
 	}
 
+	.fat-badge .stack .mouse-through {
+		pointer-events: none;
+	}
+
 	#tag-filters {
 		max-width: 315px;
 		min-width: 315px;
@@ -88,17 +92,17 @@
 	{{/if}}
 	{{#if hasExcludedTags}} The results are filtered by excluding the following tags: 
 		{{#each excludedTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
-	{{/if}} Use up and down arrows to move between active tag filters.'>
+	{{/if}} Use arrows keys to move between active tag filters. Use enter to remove the tag.'>
 	<div class='panel-heading section-label'>Active Search Tags</div>
 	<div class='panel-body section-body'>
 		{{#if hasRequiredTags}}
 		<div class='row'><span>Required Tags:</span>
 			{{#each requiredTags}}
-			<div class="badge fat-badge {{colorClass this.tag}}">
+			<div class="badge fat-badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
 				<div class="stack">
-					<span id="tag-{{this.tag}}" class="required-tag bold-tag" aria-label="Tag {{ariaAliasIfStudy this.tag}}is associated with {{this.score}} search results. Press enter to no longer require search results to have this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
+					<span class="required-tag bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy this.tag}}is associated with {{this.score}} search results. Press enter to no longer require search results to have this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
 					{{#isStudy this.tag}}
-					<span id="study-{{this.tag}}" class="tag-study-text">{{this.tag}}</span>
+					<span id="study-{{this.tag}}" class="tag-study-text mouse-through">{{this.tag}}</span>
 					{{/isStudy}}
 				</div>
 				<span data-tag="{{this.tag}}" data-action="removeRequiredTag"
@@ -110,8 +114,8 @@
 		{{#if hasExcludedTags}}
 		<div class='row'><span>Excluded Tags:</span>
 			{{#each excludedTags}}
-			<div class="badge {{colorClass this.tag}}">
-				<span class="excluded-tag" id="tag-{{this.tag}}"
+			<div class="badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
+				<span class="excluded-tag" 
 					aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press enter to no longer exclude search results having this tag.">
 					{{aliasIfStudy this.tag}} ({{this.score}})
 					<span data-tag="{{this.tag}}" data-action="removeExcludedTag"
@@ -127,7 +131,7 @@
 {{/if}}
 {{#if hasInactiveStudyTags}}
 <div id='study-tags-section-div' role='region' class='panel section' tabindex=0
-	aria-label="You are in the study tag filters region. Use up and down arrows to move between study tag filters.">
+	aria-label="You are in the study tag filters region. Use arrows keys to move between study tag filters. Use the plus and minus keys to include or exclude tags.">
 	<div class='panel-heading'>
 		Filter Search Results by Study Tags
 	</div>
@@ -135,11 +139,11 @@
 		<p>Refine results by using study based filters:</p>
 		{{#each studyTags}}
 
-		<div class="badge fat-badge {{colorClass this.tag}}">
+		<div class="badge fat-badge {{colorClass this.tag}}" id="tag-{{this.tag}}" >
 			<span data-tag="{{this.tag}}" data-action="excludeTag" class="fa fa-minus exclude-tag-btn hover-control"></span>
 			<div class="stack">
-				<span id="tag-{{this.tag}}" class="bold-tag" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
-				<span id="study-{{this.tag}}" class="tag-study-text">{{this.tag}}</span>
+				<span class="bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press the plus key to include only search results having this tag. Press minus to exclude all search results having this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
+				<span id="study-{{this.tag}}" class="tag-study-text mouse-through">{{this.tag}}</span>
 			</div>
 			<span data-tag="{{this.tag}}" data-action="requireTag" class="fa fa-plus require-tag-btn hover-control"></span>
 		</div>
@@ -157,9 +161,9 @@
 		<p>Refine results by using tag based filters. Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that
 			have variables which match your search term:</p>
 		{{#each tags}}
-		<div class="badge {{colorClass this.tag}}">
-			<span class="badge-text" id="tag-{{this.tag}}"
-				aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag.">
+		<div class="badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
+			<span class="badge-text"
+				aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press plus key to include only search results having this tag. Press the minus key to exclude all search results having this tag.">
 				{{this.tag}} ({{this.score}})
 				<span data-tag="{{this.tag}}" data-action="requireTag" class="fa fa-plus require-tag-btn hover-control"></span>
 				<span data-tag="{{this.tag}}" data-action="excludeTag" class="fa fa-minus exclude-tag-btn hover-control"></span>
