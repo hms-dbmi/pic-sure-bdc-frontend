@@ -98,8 +98,8 @@
 					{{/isStudy}}
 				</div>
 				<span data-tag="{{this.tag}}" data-action="removeRequiredTag"
-						class="fa fa-times removeRequiredTag hover-control remove-tag-btn"></span>
-			</div>
+						class="fa fa-times selected-required-tag removeRequiredTag hover-control remove-tag-btn"></span>
+			</div>	
 			{{/each}}
 		</div>
 		{{/if}}
@@ -111,7 +111,7 @@
 					aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press enter to no longer exclude search results having this tag.">
 					{{aliasIfStudy this.tag}} ({{this.score}})
 					<span data-tag="{{this.tag}}" data-action="removeExcludedTag"
-						class="selected-excluded-tag remove-tag-btn hover-control">X</span>
+						class="fa fa-times selected-excluded-tag remove-tag-btn hover-control"></span>
 				</span>
 			</div>
 			{{/each}}

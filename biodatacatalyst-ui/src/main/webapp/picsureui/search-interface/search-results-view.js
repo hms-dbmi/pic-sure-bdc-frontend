@@ -192,7 +192,9 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 
 			if (tagFilterModel.get("searchResults")) {
 				if (tagFilterModel.get("searchResults").results.searchResults.length === 0) {
-					$("#search-area").html('<div style="margin-left: 35px" aria-label="0 results match your search">0 results match your search</div>');
+					$('#no-results').length === 0 && $("#search-area").prepend('<div id="no-results" aria-label="0 results match your search">0 results match your search</div>');
+				} else {
+					$('#no-results').remove();
 				}
 				let results = _.map(tagFilterModel.get("searchResults").results.searchResults, function(result, i){
 					let metadata = result.result.metadata;
