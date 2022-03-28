@@ -1,7 +1,7 @@
 <style>
 	.hover-control {
 		text-align: center;
-		padding: 0em 0.3em;
+		padding: 2px 3px 1px 3px;
 		border-radius: .5em;
 		visibility: hidden;
 		background: white;
@@ -64,6 +64,7 @@
 	.remove-tag-btn {
 		color: #a73039;
 		float: right;
+		padding-top: 1px;
 	}
 	.badge {
 		font-weight: normal;
@@ -74,6 +75,9 @@
 	}
 	.tag-study-text {
 		font-size: 0.9em;
+	}
+	.badge-text {
+		line-height: 1.2em;
 	}
 </style>
 {{#if hasActiveTags}}
@@ -132,12 +136,12 @@
 		{{#each studyTags}}
 
 		<div class="badge fat-badge {{colorClass this.tag}}">
-			<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+			<span data-tag="{{this.tag}}" data-action="excludeTag" class="fa fa-minus exclude-tag-btn hover-control"></span>
 			<div class="stack">
 				<span id="tag-{{this.tag}}" class="bold-tag" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
 				<span id="study-{{this.tag}}" class="tag-study-text">{{this.tag}}</span>
 			</div>
-			<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
+			<span data-tag="{{this.tag}}" data-action="requireTag" class="fa fa-plus require-tag-btn hover-control"></span>
 		</div>
 		{{/each}}
 	</div>
@@ -154,11 +158,11 @@
 			have variables which match your search term:</p>
 		{{#each tags}}
 		<div class="badge {{colorClass this.tag}}">
-			<span id="tag-{{this.tag}}"
+			<span class="badge-text" id="tag-{{this.tag}}"
 				aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press right arrow to include only search results having this tag. Press left arrow to exclude all search results having this tag.">
 				{{this.tag}} ({{this.score}})
-				<span data-tag="{{this.tag}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
-				<span data-tag="{{this.tag}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
+				<span data-tag="{{this.tag}}" data-action="requireTag" class="fa fa-plus require-tag-btn hover-control"></span>
+				<span data-tag="{{this.tag}}" data-action="excludeTag" class="fa fa-minus exclude-tag-btn hover-control"></span>
 			</span>
 		</div>
 		{{/each}}
