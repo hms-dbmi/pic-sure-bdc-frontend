@@ -1,19 +1,16 @@
 define(["jquery","backbone","handlebars","search-interface/tag-filter-view","search-interface/tag-filter-model",
 	"search-interface/search-results-view",
 	"text!search-interface/search-view.hbs",
-	"text!search-interface/search-results-view.hbs",
-	"text!search-interface/tag-search-response.json",
+	"text!../studyAccess/studies-data.json",
 	"search-interface/modal",
 	"search-interface/genomic-filter-view",
 	"common/spinner",
-	"text!common/unexpected_error.hbs",
-
+	"text!common/unexpected_error.hbs"
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
 			searchViewTemplate,
-			searchResultsViewTemplate,
-			tagSearchResponseJson,
+			studiesDataJson,
 			modal,
 			genomicFilterView,
 			spinner,
@@ -26,23 +23,29 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.filters = [];
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
-			let response = JSON.parse(tagSearchResponseJson);
+			let studiesData = JSON.parse(studiesDataJson);
 
 			//tell the back end to exclude concepts from studies not in the user's scope'
-			this.antiScopeTags = _.filter( _.pluck(response.results.tags, 'tag'), function(tag){
-				return tag.startsWith("PHS") && _.find(opts.queryScopes, function(scopeElement){
-					return scopeElement.toLowerCase().includes(tag.toLowerCase());
+			this.antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
+				//if this study is NOT in the query scopes, _.find will return NULL
+				return _.find(opts.queryScopes, function(scopeElement){
+					return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
 				}) == null;
+			})
+			
+			//only include each tag once
+			this.antiScopeTags = new Set();
+			_.each(antiScopeStudies, function(study){
+				//add PHSxxxxxx (caps) and phsxxxxxx.vxx (lower) tags to anti-scope
+				this.antiScopeTags.push(study.study_identifier.toUpperCase(), (study.study_identifier + "." + study.study_version).toLowerCase());
 			});
 			
 			this.render();
 			this.tagFilterView = new tagFilterView({
-				tagSearchResponse:response,
 				el : $('#tag-filters'),
 				onTagChange: this.submitSearch.bind(this)
 			});
 			this.searchResultsView = new searchResultsView({
-				tagSearchResponse:response,
 				tagFilterView: this.tagFilterView,
 				el : $('#search-results')
 			});
