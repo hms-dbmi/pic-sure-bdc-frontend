@@ -35,10 +35,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			
 			//only include each tag once
 			this.antiScopeTags = new Set();
-			_.each(antiScopeStudies, function(study){
+			_.each(this.antiScopeStudies, function(study){
 				//add PHSxxxxxx (caps) and phsxxxxxx.vxx (lower) tags to anti-scope
-				this.antiScopeTags.push(study.study_identifier.toUpperCase(), (study.study_identifier + "." + study.study_version).toLowerCase());
-			});
+				this.antiScopeTags.add(study.study_identifier.toUpperCase());
+				this.antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
+			}.bind(this));
 			
 			this.render();
 			this.tagFilterView = new tagFilterView({
