@@ -1,19 +1,16 @@
 define(["jquery","backbone","handlebars","search-interface/tag-filter-view","search-interface/tag-filter-model",
 	"search-interface/search-results-view",
 	"text!search-interface/search-view.hbs",
-	"text!search-interface/search-results-view.hbs",
-	"text!search-interface/tag-search-response.json",
+	"text!../studyAccess/studies-data.json",
 	"search-interface/modal",
 	"search-interface/genomic-filter-view",
 	"common/spinner",
-	"text!common/unexpected_error.hbs",
-
+	"text!common/unexpected_error.hbs"
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
 			searchViewTemplate,
-			searchResultsViewTemplate,
-			tagSearchResponseJson,
+			studiesDataJson,
 			modal,
 			genomicFilterView,
 			spinner,
@@ -26,16 +23,30 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.filters = [];
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
-			let response = JSON.parse(tagSearchResponseJson);
+			let studiesData = JSON.parse(studiesDataJson);
 
+			//tell the back end to exclude concepts from studies not in the user's scope'
+			this.antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
+				//if this study is NOT in the query scopes, _.find will return NULL
+				return _.find(opts.queryScopes, function(scopeElement){
+					return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
+				}) == null;
+			})
+			
+			//only include each tag once
+			this.antiScopeTags = new Set();
+			_.each(this.antiScopeStudies, function(study){
+				//add PHSxxxxxx (caps) and phsxxxxxx.vxx (lower) tags to anti-scope
+				this.antiScopeTags.add(study.study_identifier.toUpperCase());
+				this.antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
+			}.bind(this));
+			
 			this.render();
 			this.tagFilterView = new tagFilterView({
-				tagSearchResponse:response,
 				el : $('#tag-filters'),
 				onTagChange: this.submitSearch.bind(this)
 			});
 			this.searchResultsView = new searchResultsView({
-				tagSearchResponse:response,
 				tagFilterView: this.tagFilterView,
 				el : $('#search-results')
 			});
@@ -83,6 +94,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
+			
+			//exclude the user selected tags as well as tags not in scope
+			searchExcludeTags= [...this.excludedTags, ...this.antiScopeTags];
+			
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			let deferredSearchResults = $.Deferred();
@@ -94,7 +109,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				data: JSON.stringify({query: {
 						searchTerm: this.searchTerm,
 						includedTags: this.requiredTags,
-						excludedTags: this.excludedTags,
+						excludedTags: searchExcludeTags,
 						returnTags: true,
 						offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
 						limit: tagFilterModel.get("limit")
