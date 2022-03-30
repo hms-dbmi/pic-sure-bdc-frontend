@@ -8,7 +8,8 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                     this.data = opts;
                     this.data.searchId = opts.heading.toLowerCase().replace(/\s/g, '-');
                     this.data.searchResultOptionsText = opts.placeholderText || 'Search ' + opts.heading;
-                    opts.sample ? this.data.searchResultOptions = _.sortBy(_.sample(opts.results, 10)) : this.data.searchResultOptions = _.sortBy(opts.results);
+                    this.resetSearchResults();
+                    this.data.cachedResults = this.data.searchResultOptions;
                     this.data.selectedResults = opts.searchResults || [];
                 }
                 console.debug('selectionSearchView', this.data);
@@ -31,6 +32,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 $('.genomic-value-container.selection-search-results input').on('change', this.selectItem.bind(this));
                 $('.genomic-value-container.selections input').on('change', this.unselectItem.bind(this));
                 $('#'+this.data.searchId+'-selection-clear-button').on('click', this.clearSelection.bind(this));
+                $('#'+this.data.searchId+'-selection-select-all').on('click', this.selectAll.bind(this));
                 $('.genomic-value-container').on('focus', this.focusItem.bind(this));
                 $('.genomic-value-container').on('blur', this.blurItem.bind(this));
             },
@@ -41,7 +43,8 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                         return gene.toLowerCase().startsWith(e.target.value.toLowerCase());
                     });
                     this.renderLists();
-                } else if (e.target.value.length === 0) {
+                }else if (e.target.value.length === 0) {
+                    this.data.sample ? this.resetSearchResults(this.data.cachedResults) : this.resetSearchResults();
                     this.renderLists();
                 }
             },
@@ -58,6 +61,10 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
             unselectItem: function(e) {
                 console.debug('unselectItem', e.target);
                 const index = this.data.selectedResults.indexOf(e.target.value);
+                const searchIndex = this.data.searchResultOptions.indexOf(e.target.value)
+                if (searchIndex > -1 && index > -1) {
+                    this.data.searchResultOptions.splice(searchIndex, 1);
+                }
                 this.moveItem(this.data.selectedResults, this.data.searchResultOptions, index);
             },
             moveItem: function(from, to, index) {
@@ -71,9 +78,18 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 console.debug('clearSelection from here');
                 this.$el.find('#'+this.data.searchId).val('');
                 this.data.selectedResults.forEach((item) => {
-                    this.data.searchResultOptions.unshift(item);
+                    this.data.searchResultOptions.indexOf(item) === -1 && this.data.searchResultOptions.unshift(item);
                 });
                 this.data.selectedResults = [];
+                this.renderLists();
+            },
+            selectAll: function() {
+                console.debug('selectAll from here');
+                let unselectedItems = $('.selection-search-results input:not(:checked)').map(function(){
+                    return $(this).val();
+                  }).get();
+                this.data.selectedResults = this.data.selectedResults.concat(unselectedItems);
+                this.data.searchResultOptions = [];
                 this.renderLists();
             },
             focusItem: function(e) {
@@ -84,6 +100,11 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 console.debug('blurItem', e.target);
                 keyboardNav.setCurrentView(undefined);
                 $(e.target).find('.'+SELECTED).removeClass(SELECTED);
+            },
+            resetSearchResults: function(cached) {
+                    cached ? 
+                        this.data.searchResultOptions = cached : 
+                        this.data.sample ? this.data.searchResultOptions = _.sortBy(_.sample(this.data.results, 10)) : this.data.searchResultOptions = _.sortBy(this.data.results);
             },
             navigateUp: function(e) {
                 console.debug('navigateUp', e);
@@ -142,7 +163,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                 const search = this.$el.find('#'+this.data.searchId)[0].value;
                 if (this.data.searchResultOptions.length <= 0 && search) {
                     this.$el.find('.genomic-value-container.selection-search-results').html('<span>No results found</span>');
-                } else if (this.data.searchResultOptions.length <= 0 && !search) {
+                } else if (this.data.searchResultOptions.length <= 0 && !search && this.data.results.length > this.data.selectedResults.length) {
                     this.$el.find('.genomic-value-container.selection-search-results').html('<span style="color: #AAA">Try searching for more</span>');
                 } else {
                     this.$el.find('.selection-search-results').html(newHTMLList).fadeIn('fast');
@@ -152,9 +173,11 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
             },
             render: function(){
                 this.$el.html(this.template(this.data));
+                this.data.description ? this.$el.find('.search-heading').addClass('panel-extra-large') : this.$el.find('.search-heading').removeClass('panel-extra-large');
                 const searchInput = this.$el.find('#'+this.data.searchId);
                 searchInput && $(searchInput).on('input', this.search.bind(this));
                 this.addEvents();
+                this.renderLists();
             }
         });
         return selectionSearchView;

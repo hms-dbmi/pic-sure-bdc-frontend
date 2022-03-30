@@ -161,6 +161,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             };
                             this.filterModalView = new datatableFilterModalView({
                                 model: filterViewData,
+                                dataTableInfo: filterViewData.filter.searchResult.result,
                                 el: $(".modal-body"),
                             });
                             this.filterModalView.render();

@@ -90,8 +90,12 @@ define(['jquery', 'backbone','handlebars',
                 };
                 // If editing a previous filter, then repopulate the form.
                 if (this.data.currentFilter) {
-                    this.dataForGeneSearch.searchResults = this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant;
-                    this.dataForConsequenceSearch.searchResults = this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated;
+                    if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant) {
+                        this.dataForGeneSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant];
+                    }
+                    if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated) {
+                        this.dataForConsequenceSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated];
+                    }
                     this.previousFilter = this.data.currentFilter;
                 }
                 this.geneSearchPanel = new searchPanel(this.dataForGeneSearch);

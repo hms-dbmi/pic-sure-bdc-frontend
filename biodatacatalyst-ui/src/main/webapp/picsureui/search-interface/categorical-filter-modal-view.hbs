@@ -11,10 +11,6 @@
                 <button id="add-filter-button" class="btn btn-primary" tabindex="1099999">Add Filter to Query</button>
             </div>
         </div>
-        <div class="value-container">
-            {{#each searchResult.result.values}}
-                <input class="categorical-filter-input" type="checkbox" value="{{this}}" tabindex="{{tabindex @index}}"/>{{this}} <br/>
-            {{/each}}
-        </div>
+        <div id="value-container" class="value-container"></div>
     </div>
 </div>

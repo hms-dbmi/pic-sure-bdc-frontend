@@ -307,7 +307,7 @@
     border-radius: 2px;
     border-color: #000000;
     float: left;
-    width: 80%;
+    width: 100%;
     background-color: #ffffff;
 }
 .button-container {
@@ -316,16 +316,6 @@
     float: left;
     background-color: #ffffff;
 }
-
-/* #filter-list-panel {
-    line-height: 1;
-    border-width: 1px;
-    border-style: solid;
-    border-color: lightgrey;
-    padding: 40px 0px;
-    background-color: rgb(223, 238, 255);
-    border-radius: 4px;
-} */
 
 .filter-list-action-btn:hover {
     color: #adadad;

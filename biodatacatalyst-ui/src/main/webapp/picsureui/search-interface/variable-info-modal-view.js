@@ -96,6 +96,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 							};
 							this.filterModalView = new datatableFilterModalView({
 								model: filterViewData,
+								dataTableInfo: searchResult.result,
 								el: $(".modal-body"),
 							});
 							this.filterModalView.render();

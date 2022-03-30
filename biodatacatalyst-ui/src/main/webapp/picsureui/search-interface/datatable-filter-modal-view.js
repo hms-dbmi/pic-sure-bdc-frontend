@@ -1,12 +1,12 @@
 define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
 	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
 	let DatatableFilterModalView = BB.View.extend({
-		initialize: function(){
+		initialize: function(opts){
 			keyboardNav.addNavigableView("datatableFilterModal",this);
-			if (this.model.dtVariables[0]) {
-				this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.model.dtVariables[0].result.studyId);
-				this.data.studyId = this.model.dtVariables[0].result.studyId;
-				this.data.datasetName = this.model.dtVariables[0].result.metadata.dataTableName;
+			if (opts.dataTableInfo) {
+				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.dataTableInfo.studyId);
+				this.data.studyId = opts.dataTableInfo.studyId;
+				this.data.datasetName = opts.dataTableInfo.metadata.dataTableName;
 			}
 			this.data.datasetAccession = this.model.dtId;
 			this.on({
