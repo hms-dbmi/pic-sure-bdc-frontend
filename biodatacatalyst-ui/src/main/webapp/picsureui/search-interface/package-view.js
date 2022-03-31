@@ -16,7 +16,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		events: {
 			'click input[type="checkbox"]':"checkboxToggled",
 			'focus #exportData': 'exportDataFocus',
-			'blur #exportData': 'exportDataBlur'
+			'blur #exportData': 'exportDataBlur',
+			'click #package-package-data': 'initiatePackage'
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -107,6 +108,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			if(exportStatus === 'Ready'){
 				statusMessage = 'Status:  Ready to package. \nClick "Package Data" to proceed.';
 				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button').css('background-color', 'white');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 			}
@@ -114,18 +116,20 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				fontColor = 'Red';
 				statusMessage = 'Status: NUMBER OF DATA POINTS EXCEEDED \nRemove data selections';
 				$('#package-package-button').prop('disabled', true);
+				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 			}
 			else if (exportStatus === 'Progress') {
 				statusMessage = 'Status: In Progress';
 				$('#package-package-button').prop('disabled', true);
+				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 			}
 			else if (exportStatus === 'Done') {
 				statusMessage = 'Status: Available';
-				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button').prop('disabled', 'white');
 				$('.package-query-container').show();
 				$('#package-download-button').show();
 			}
