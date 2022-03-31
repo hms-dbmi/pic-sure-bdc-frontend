@@ -23,7 +23,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                 overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
                 overrides.update ? this.update = overrides.update.bind(this) : undefined;
                 this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
-                this.listenTo(filterModel.get('exportFields'), 'change reset add remove', this.render);
+                this.listenTo(filterModel.get('exportFields'), 'change reset add remove', this.updateVariableCount);
             },
             events:{
 
@@ -85,6 +85,10 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                             }
                         }.bind(this)
                     });
+            },
+            updateVariableCount: function(){
+                filterModel.updateExportValues();
+                $('#export-count').html(filterModel.get('totalVariables')+' Variables');
             },
             render: function(){
                 this.$el.html(this.template(this.model.toJSON()));

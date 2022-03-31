@@ -20,10 +20,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 filterModel.get('activeFilters').bind('change add remove', function () {
                     this.modelChanged();
                 }.bind(this));
-                filterModel.get('exportFields').bind('change add remove', function () {
-                    this.modelChanged();
-                }.bind(this));
-                
+
                 this.outputPanelView = opts.outputPanelView;
                 keyboardNav.addNavigableView("filterList",this);
                 this.on({

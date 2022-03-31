@@ -5,7 +5,6 @@ function($, BB, HBS, template, filterModel, modal, helpView, packageView) {
             this.template = HBS.compile(template);
             this.helpView = new helpView();
             this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
-            this.listenTo(filterModel.get('exportFields'), 'change reset add remove', this.render);
         },
         events: {
             'click #package-data' : 'openPackageData',
