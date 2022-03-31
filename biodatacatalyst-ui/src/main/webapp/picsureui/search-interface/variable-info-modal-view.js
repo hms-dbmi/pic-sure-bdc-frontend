@@ -148,9 +148,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 					);
 				} else {
 					filterModel.toggleExportField(searchResult);
-					console.log(
-						"Current export field count is " + filterModel.getExportFieldCount()
-					);
 				}
 			},
 			databaseKeypressHandler: function(event){

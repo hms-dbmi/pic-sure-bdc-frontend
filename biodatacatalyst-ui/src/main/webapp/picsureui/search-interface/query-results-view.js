@@ -50,9 +50,9 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                 this.model.set("totalPatients", patientCount);
                 this.model.set("totalVariables", totalVariables);
                 this.model.set("estDataPoints", estDataPoints);
-                $("#patient-count").html(patientCount);
-                $("#total-variables").html(totalVariables);
-                $("#est-data-points").html(estDataPoints)
+                filterModel.set("totalPatients", patientCount);
+                filterModel.set("totalVariables", totalVariables);
+                filterModel.set("estDataPoints", estDataPoints);
                 this.queryFinished();
 
             },

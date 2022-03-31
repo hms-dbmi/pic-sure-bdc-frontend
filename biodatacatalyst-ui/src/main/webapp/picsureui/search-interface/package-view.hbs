@@ -1,0 +1,116 @@
+<style>
+#export-selection-buttons {
+    float: right;
+}
+#export-selection-buttons > button {
+    margin-left: 20px;
+}
+.focused-variable {
+    border:solid;
+    border-width:-4px !important;
+    border-color:#a73039 !important;
+}
+table#exportData {
+    width: 100% !important;
+    margin: 0 auto;
+    clear: both;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+div#package-datatable-table{
+    margin: 50px;
+    margin-top: 20px;
+}
+.package-data-modal{
+    background: white;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+.package-data-modal>div{
+    margin: 10px;
+}
+.package-header{
+    display:inline-flex;
+    justify-content: space-between;
+    width:100%;
+    font-size:large;
+    margin-top:1.5vh;
+    margin-bottom:1.5vh;
+}
+.package-button{
+    margin-bottom: 3px;
+    width:11em;
+    height:2em;
+    background: white;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+.right-container{
+    display:inline-flex;
+    justify-content: end;
+    margin-right:10px;
+    text-align: right;
+}
+.package-summary-data{
+    display: block;
+}
+.package-query-container, .package-buttons-container{
+    display: inline-block;
+    text-align:right;
+    padding-right:10px;
+}
+.package-buttons-container > .package-button {
+    display: block;
+}
+#package-copy-query-button{
+    justify-content:center;
+}
+#package-query-id{
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: .3em;
+    height:2em;
+}
+</style>
+<div class="package-data-modal">
+    <div class="package-header">
+        <div class="left-container">
+            <div class="package-summary-data" id="package-participants">
+                <span id="package-participants-value">xxx</span>
+                <span id="package-participants-label">Participants</span>
+            </div>
+            <div class="package-summary-data" id="package-variables">
+                <span id="package-variables-value">xxx</span>
+                <span id="package-variables-label">Variables</span>
+            </div>
+            <div class="package-summary-data" id="package-est-data">
+                <span id="package-est-data-value">xxx</span>
+                <span id="package-est-data-label">Estimated Data Points</span>
+            </div>
+            <div class="package-summary-data" id="package-status">
+                <span id="package-status-label">Status</span>
+                <span id="package-status-value">xxx</span>
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="package-query-container">
+                <button class="package-button" id="package-copy-query-button">
+                    Copy Query ID
+                </button>
+                <div id="package-query-id">xxx</div>
+            </div>
+            <div class="package-buttons-container">
+                <button class="package-button" id="package-package-button">
+                    Package Data
+                </button>
+                <button class="package-button" id="package-download-button">
+                    Download Data
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="package-main">
+        <div class="package-datatable-label"></div>
+        <div id="package-datatable-table"></div>
+    </div>
+</div>

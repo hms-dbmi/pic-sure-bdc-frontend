@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view"],
-function($, BB, HBS, template, filterModel, modal, helpView) {
+define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/package-view"],
+function($, BB, HBS, template, filterModel, modal, helpView, packageView) {
     var ToolSuiteView = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
@@ -34,11 +34,6 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
         },
         openDistributions: function(){
             console.log('openDistributions');
-            modal.displayModal(
-                '',
-                'Data Retrieval Summary',
-                () => {console.log('close help')
-            });
         },
         openHelp: function(){
             modal.displayModal(
@@ -53,7 +48,32 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
             console.log('openImaging');
         },
         openPackageData: function(){
-            console.log('openPackageData');
+            let exportStatus = 'Ready';
+                if(filterModel.get('estDataPoints') > 1000000){
+                    exportStatus = 'Overload';
+                };
+            let exportModel = Backbone.Model.extend({
+                defaults: {},
+            });
+            this.packageView = new packageView({
+                model: new exportModel({
+                    //exportParticipants: filterModel.get('totalPatients'),
+                    //exportVariables: filterModel.get('totalVariables'),
+                    //exportDataPoints: filterModel.get('estDataPoints'),
+                    exportStatus: exportStatus,
+                    //exportQueryId:'-',
+                    //exportRan: false,
+                    deletedExports: new BB.Collection,
+                    query: ""
+                })
+            });
+            modal.displayModal(
+                this.packageView,
+                'Review and Package Data',
+                () => {
+                    $('#package-modal').focus();
+                }
+            );
         },
         openVariantExplorer: function(){
             console.log('openVariantExplorer');

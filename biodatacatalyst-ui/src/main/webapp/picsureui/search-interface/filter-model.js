@@ -1,10 +1,13 @@
 define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel"],
-    function(BB, HBS, settings, queryBuilder, outputPanel){
+    function(BB, HBS, settings, queryBuilder, output){
 
         let FilterModel = BB.Model.extend({
             defaults:{
                 activeFilters: new BB.Collection,
                 exportFields: new BB.Collection,
+                totalPatients : 0,
+                totalVariables : 4,
+                estDataPoints : 0,
             },
             initialize: function(opts){
                 this.set('activeFilters', new BB.Collection);
@@ -98,6 +101,16 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
 				let count = Object.keys(query.query.categoryFilters).length + Object.keys(query.query.numericFilters).length + query.query.fields.length + query.query.requiredFields.length + 1;
 				return count;
 			},
+            //function specifically for updating only variable and est data point values while in package view without having to run the query
+            updateExportValues: function () {
+            let query = queryBuilder.createQueryNew(this.get("activeFilters").toJSON(), this.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+            output.updateConsentFilters(query, settings);
+            let variableCount = this.getExportFieldCount(query);
+            this.set("totalVariables", variableCount);
+            this.set("estDataPoints", variableCount*this.get("totalPatients"));
+
+            },
+
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
                 let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{
                     return filter.get('type')==='genomic'
