@@ -57,14 +57,9 @@ function($, BB, HBS, template, filterModel, modal, helpView, packageView) {
             });
             this.packageView = new packageView({
                 model: new exportModel({
-                    //exportParticipants: filterModel.get('totalPatients'),
-                    //exportVariables: filterModel.get('totalVariables'),
-                    //exportDataPoints: filterModel.get('estDataPoints'),
                     exportStatus: exportStatus,
-                    //exportQueryId:'-',
-                    //exportRan: false,
                     deletedExports: new BB.Collection,
-                    query: ""
+                    queryId: ""
                 })
             });
             modal.displayModal(

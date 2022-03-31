@@ -1,5 +1,5 @@
-define(["jquery",'backbone', 'handlebars','text!search-interface/package-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util", "picSure/queryBuilder", "search-interface/query-results-view"],
-function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, queryBuilder, queryResultsView){
+define(["jquery",'backbone', 'handlebars','text!search-interface/package-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util", "picSure/queryBuilder", "search-interface/query-results-view", "overrides/outputPanel", "picSure/settings"],
+function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, queryBuilder, queryResultsView, output, settings){
 
 	var packageView = BB.View.extend({
 		initialize: function(){
@@ -11,13 +11,11 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				'keynav-arrowleft document': this.previousPage
 			});
 			this.tempExportFields = filterModel.get("exportFields").models;
-			this.listenTo(this.model.get('exportStatus'), 'change reset add remove', this.updateHeader);
 		},
 		events: {
 			'click input[type="checkbox"]':"checkboxToggled",
 			'focus #exportData': 'exportDataFocus',
-			'blur #exportData': 'exportDataBlur',
-			'click #package-package-data': 'initiatePackage'
+			'blur #exportData': 'exportDataBlur'
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -94,7 +92,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			}
 			filterModel.updateExportValues();
 			if(filterModel.get('estDataPoints') > 1000000){
-					this.model.set('exportStatus', 'Overload');
+				this.model.set('exportStatus', 'Overload');
 			}
 			else{
 				this.model.set('exportStatus', 'Ready');
@@ -105,9 +103,13 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			let exportStatus = this.model.get('exportStatus');
 			let fontColor = '#333';
 			let statusMessage = '';
+			var viewObj = this;
 			if(exportStatus === 'Ready'){
 				statusMessage = 'Status:  Ready to package. \nClick "Package Data" to proceed.';
 				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button', this.$el).click(function(){
+					viewObj.initiatePackage();
+				}.bind(viewObj));
 				$('#package-package-button').css('background-color', 'white');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
@@ -129,104 +131,217 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			}
 			else if (exportStatus === 'Done') {
 				statusMessage = 'Status: Available';
-				$('#package-package-button').prop('disabled', 'white');
+				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button', this.$el).click(function(){
+					viewObj.initiatePackage();
+				}.bind(viewObj));
+				$('#package-package-button').css('background-color', 'white');
 				$('.package-query-container').show();
+				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
+				$('#package-download-button', this.$el).one("click", function(){
+					viewObj.downloadData(viewObj.model.get("queryId"));
+				}.bind(viewObj));
+				$('#package-copy-query-button', this.$el).click(function(){
+					viewObj.copyQueryId();
+				}.bind(viewObj));
 			}
+			else {
+				statusMessage = 'Error-please try again';
+				fontColor = 'Red';
+				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button', this.$el).click(function(){
+					viewObj.initiatePackage();
+				}.bind(viewObj));
+				$('#package-package-button').css('background-color', 'white');
+			}
+
 			$('#package-participants-value').html(filterModel.get("totalPatients"));
 			$('#package-variables-value').html(filterModel.get("totalVariables"));
 			$('#package-est-data-value').html(filterModel.get("estDataPoints"));
 			$('#package-status').html(statusMessage);
 			$('#package-status').css('color', fontColor);
 		},
-
-		render: function(){
-			this.$el.html((HBS.compile(packageModalTemplate))(this.model));
-			$('.modal-dialog').width('90%');
-			$('#package-datatable-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='exportData' class='display stripe' ></table>");
+		initiatePackage: function(){
+			this.model.set('exportStatus', 'Progress');
 			this.updateHeader();
-			let toggleable = true;
-			let data = _.map(this.tempExportFields,function(variable){
-				return [
-					true,
-					variable.attributes.result.varId,
-					variable.attributes.result.metadata.name,
-					variable.attributes.result.metadata.description,
-					variable.attributes.result.is_continuous ? "Continuous" : "Categorical",
-					variable.attributes.result.is_continuous ? "" : '[ ' + variable.attributes.result.value_tags.join(", ") + ' ]',
-					variable.attributes.result.metadata.HPDS_PATH
-				];
+			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+			query = JSON.parse(JSON.stringify(query));
+			query.query.expectedResultType="DATAFRAME";
+			output.updateConsentFilters(query, settings);
+			var deferredQueryId = $.Deferred();
+			var viewObj = this;
+			this.queryAsync(query, deferredQueryId);
+			$.when(deferredQueryId).then(function(queryUUID){
+				viewObj.model.set('exportStatus', 'Done');
+				viewObj.updateHeader();
 			});
-			$('#exportData').DataTable( {
-				data: data,
-				columns: [
-					{title:'Selected'},
-					{title:'Variable ID'},
-					{title:'Name'},
-					{title:'Description'},
-					{title:'Type'},
-					{title:'Values'}
-				],
-				select: {
-					style:    'os',
-					selector: 'td:first-child',
-					toggleable: toggleable
-				},
-				columnDefs: [
-					{
-						targets: [1,2,3,4,5],
-						className: 'dt-center',
-						type:'string'
-					},
-					{
-						render: function(data,type,row,meta){
-							return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
-						},
-						type:'string',
-						targets: 0
-					}
-				],
-				order: [[0,'asc'],[ 1, 'asc' ]],
-				deferRender: true,
-				drawCallback: function(){
-					let x = 0;
-					_.each($('input[type="checkbox"]'), (checkbox)=>{
-						let varId = checkbox.dataset['varid'];
-						let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === varId;});
-						if(dataRow[0]){
-							$('input[data-varid="' + varId +'"]')[0].checked = true;
-						}else{
-							$('input[data-varid="' + varId +'"]')[0].checked = false;
-						}
-						checkbox.parentElement.parentElement.id = "table_" + x;
-						x++;
-					});
-					this.setTabIndices();
-					this.delegateEvents();
-				}.bind(this)
-			} );
-			this.setTabIndices();
-			return this;
 		},
-		setTabIndices: function(){
-			let tabcounter = 1000001;
-			$('.dataTables_length select').attr('tabindex', tabcounter++);
-			$('.dataTables_filter input').attr('tabindex', tabcounter++);
+	queryAsync: function(query, promise){
+		var queryUUID = null;
+		var queryUrlFragment = '';
+		var interval = 0;
+		var viewObj = this;
 
-			_.each($('.sorting', this.$el), function(sortHeader){
-				sortHeader.setAttribute('tabindex', tabcounter++);
+		(function updateStatus(){
+			$.ajax({
+				url: window.location.origin + "/picsure/query" + queryUrlFragment,
+				type: 'POST',
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				contentType: 'application/json',
+				dataType: 'text',
+				data: JSON.stringify(query),
+				success: function(response){
+					respJson = JSON.parse(response);
+					queryUUID = respJson.picsureResultId;
+					status = respJson.status;
+					if( !status || status == "ERROR" ){
+						viewObj.model.set("exportStatus", status);
+						viewObj.updateHeader();
+						return;
+					} else if (status == "AVAILABLE"){
+						//resolve any waiting functions.
+						if(promise) {
+							viewObj.model.set("queryId", queryUUID);
+							promise.resolve(queryUUID);
+						}
+						return;
+					}
+
+					//check again, but back off at 2, 4, 6, ... 30 second (max) intervals
+					interval = Math.min(interval + 2000, 30000);
+					//hit the status endpoint after the first request
+					queryUrlFragment = "/" + queryUUID + "/status";
+					setTimeout(updateStatus, interval);
+				},
+				error: function(response){
+					$('#resource-id-display', this.$el).html("Error running query, Please see logs");
+					console.log("error preparing async download: ");
+					console.dir(response);
+				}
 			});
-			_.each($('select', this.$el), function(checkbox){
-				checkbox.setAttribute('tabindex', tabcounter++);
-			});
-			_.each($('.paginate_button'), function(pagebutton){
-				pagebutton.setAttribute('tabindex', -1);
-			});
-			$('#exportData').attr('tabindex', tabcounter++);
-			$('#add-filter-button').attr('tabindex', tabcounter++);
-		}
-	});
-	return packageView;
+		}());
+	},
+	downloadData: function(queryId){
+		$.ajax({
+			url: window.location.origin + "/picsure/query/" + queryId + "/result",
+			type: 'POST',
+			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+			contentType: 'application/json',
+			dataType: 'text',
+			data: "{}",
+			success: function(response){
+				responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
+				$("#package-download-button", this.$el).off('click');
+				$("#package-download-button", this.$el).attr("href", responseDataUrl);
+				$("#package-download-button", this.$el).on('click');
+				$("#package-download-button", this.$el)[0].click();
+			}.bind(this),
+			error: function(response){
+				console.log("error preparing download : ");
+				console.dir(response);
+			}.bind(this)
+		})
+	}.bind(this),
+	copyQueryId: function(){
+		//this will copy the query ID to the user's clipboard
+		var sel = getSelection();
+		var range = document.createRange();
+		document.getElementById("package-query-id").value
+		= document.getElementById("package-query-id").textContent;
+		range.selectNode(document.getElementById("package-query-id"));
+		sel.removeAllRanges();
+		sel.addRange(range);
+		document.execCommand("copy");
+	},
+
+	render: function(){
+		this.$el.html((HBS.compile(packageModalTemplate))(this.model));
+		$('.modal-dialog').width('90%');
+		$('#package-datatable-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='exportData' class='display stripe' ></table>");
+		this.updateHeader();
+		let toggleable = true;
+		let data = _.map(this.tempExportFields,function(variable){
+			return [
+				true,
+				variable.attributes.result.varId,
+				variable.attributes.result.metadata.name,
+				variable.attributes.result.metadata.description,
+				variable.attributes.result.is_continuous ? "Continuous" : "Categorical",
+				variable.attributes.result.is_continuous ? "" : '[ ' + variable.attributes.result.value_tags.join(", ") + ' ]',
+				variable.attributes.result.metadata.HPDS_PATH
+			];
+		});
+		$('#exportData').DataTable( {
+			data: data,
+			columns: [
+				{title:'Selected'},
+				{title:'Variable ID'},
+				{title:'Name'},
+				{title:'Description'},
+				{title:'Type'},
+				{title:'Values'}
+			],
+			select: {
+				style:    'os',
+				selector: 'td:first-child',
+				toggleable: toggleable
+			},
+			columnDefs: [
+				{
+					targets: [1,2,3,4,5],
+					className: 'dt-center',
+					type:'string'
+				},
+				{
+					render: function(data,type,row,meta){
+						return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
+					},
+					type:'string',
+					targets: 0
+				}
+			],
+			order: [[0,'asc'],[ 1, 'asc' ]],
+			deferRender: true,
+			drawCallback: function(){
+				let x = 0;
+				_.each($('input[type="checkbox"]'), (checkbox)=>{
+					let varId = checkbox.dataset['varid'];
+					let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === varId;});
+					if(dataRow[0]){
+						$('input[data-varid="' + varId +'"]')[0].checked = true;
+					}else{
+						$('input[data-varid="' + varId +'"]')[0].checked = false;
+					}
+					checkbox.parentElement.parentElement.id = "table_" + x;
+					x++;
+				});
+				this.setTabIndices();
+				this.delegateEvents();
+			}.bind(this)
+		} );
+		this.setTabIndices();
+		return this;
+	},
+	setTabIndices: function(){
+		let tabcounter = 1000001;
+		$('.dataTables_length select').attr('tabindex', tabcounter++);
+		$('.dataTables_filter input').attr('tabindex', tabcounter++);
+
+		_.each($('.sorting', this.$el), function(sortHeader){
+			sortHeader.setAttribute('tabindex', tabcounter++);
+		});
+		_.each($('select', this.$el), function(checkbox){
+			checkbox.setAttribute('tabindex', tabcounter++);
+		});
+		_.each($('.paginate_button'), function(pagebutton){
+			pagebutton.setAttribute('tabindex', -1);
+		});
+		$('#exportData').attr('tabindex', tabcounter++);
+		$('#add-filter-button').attr('tabindex', tabcounter++);
+	}
+});
+return packageView;
 ;
 
 });

@@ -37,14 +37,6 @@ div#package-datatable-table{
     margin-top:1.5vh;
     margin-bottom:1.5vh;
 }
-.package-button{
-    margin-bottom: 3px;
-    width:11em;
-    height:2em;
-    background: white;
-    border: 2px solid black;
-    border-radius: 5px;
-}
 .right-container{
     display:inline-flex;
     justify-content: end;
@@ -59,17 +51,16 @@ div#package-datatable-table{
     text-align:right;
     padding-right:10px;
 }
-.package-buttons-container > .package-button {
-    display: block;
-}
-#package-copy-query-button{
-    justify-content:center;
-}
-#package-query-id{
+.right-container > div > .package-button, #package-query-id {
+    display: flex;
+    justify-content: center;
+    height: 2em;
+    margin-bottom: 3px;
+    width:11em;
+    background: white;
     border: 2px solid black;
     border-radius: 5px;
-    padding: .3em;
-    height:2em;
+    align-items: center;
 }
 </style>
 <div class="package-data-modal">
@@ -94,18 +85,18 @@ div#package-datatable-table{
         </div>
         <div class="right-container">
             <div class="package-query-container">
-                <button class="package-button" id="package-copy-query-button">
+                <a class="package-button" id="package-copy-query-button">
                     Copy Query ID
-                </button>
+                </a>
                 <div id="package-query-id">xxx</div>
             </div>
             <div class="package-buttons-container">
-                <button class="package-button" id="package-package-button">
+                <a class="package-button" id="package-package-button">
                     Package Data
-                </button>
-                <button class="package-button" id="package-download-button">
+                </a>
+                <a class="package-button" id="package-download-button" download='data.csv'>
                     Download Data
-                </button>
+                </a>
             </div>
         </div>
     </div>
