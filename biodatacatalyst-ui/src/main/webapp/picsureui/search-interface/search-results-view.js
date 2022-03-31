@@ -121,7 +121,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
-				modal.displayModal(this.dataTableInfoView, response.metadata.description,  ()=>{
+				modal.displayModal(this.dataTableInfoView, response.variables[variableId].metadata.name,  ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -160,7 +160,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 			this.retrieveDataTableMeta(searchResult.result.dtId, function(response){
 				this.cacheVariableInfo(response, searchResult.result.varId);
-				modal.displayModal(this.filterModalView, searchResult.result.metadata['description'], ()=>{
+				modal.displayModal(this.filterModalView, response.variables[searchResult.result.varId].metadata.name, ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -188,6 +188,9 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 
 			if (tagFilterModel.get("searchResults")) {
+				if (tagFilterModel.get("searchResults").results.searchResults.length === 0) {
+					$("#search-area").html('<div style="margin-left: 35px" aria-label="0 results match your search">0 results match your search</div>');
+				}
 				let results = _.map(tagFilterModel.get("searchResults").results.searchResults, function(result, i){
 					let metadata = result.result.metadata;
 					return {
