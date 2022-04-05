@@ -123,8 +123,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 if (studyAccess.resources.auth) {
                     var query = queryBuilder.createQuery({}, studyAccess.resources.auth);
                     query.query.expectedResultType = "COUNT";
-                    if (outputPanelOverrides.updateConsentFilters)
-                        outputPanelOverrides.updateConsentFilters(query, settings);
+                    queryBuilder.updateConsentFilters(query, settings);
                     var deferredParticipants = $.ajax({
                         url: window.location.origin + "/picsure/query/sync",
                         type: 'POST',

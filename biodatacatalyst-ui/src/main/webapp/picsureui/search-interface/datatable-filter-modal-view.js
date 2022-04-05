@@ -136,11 +136,11 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 			return conceptPath.includes(variable.result.varId);
                 			}) !== undefined ? true : false) : false,
                 		variable.result.varId,
-                		variable.result.metadata.name,
-                		variable.result.metadata.description,
+                		variable.result.metadata.columnmeta_name,
+                		variable.result.metadata.columnmeta_description,
                 		variable.result.is_continuous ? "Continuous" : "Categorical",
                 		variable.result.is_continuous ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
-                		variable.result.metadata.HPDS_PATH
+                		variable.result.metadata.columnmeta_HPDS_PATH
                 	];
                 });
             $('#vcfData').DataTable( {

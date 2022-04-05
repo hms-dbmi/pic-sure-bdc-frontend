@@ -5,10 +5,10 @@
     <span>{{variableCount}} variables match your search</span>
   </div>
   {{#each results}}
-    <div id='search-result-{{this.variable_id}}' class='panel-body search-result' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}"
+    <div id='search-result-{{this.variable_id}}' class='panel-body search-result' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" data-study-id="{{study_id}}"
     aria-label="Variable {{this.name}}, {{this.variable_id}} described as {{this.description}} from study {{this.abbreviation}}, {{this.study_id}}. Press enter to get more information about this variable or to create a cohort filter using this variable.">
-      <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">{{this.abbreviation}}<br>{{this.variable_id}} </span>
-      <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">[{{this.name}}] {{this.description}} </span>
+      <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-study-id="{{study_id}}" data-result-index="{{this.result_index}}">{{this.abbreviation}}<br>{{this.variable_id}} </span>
+      <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-study-id="{{study_id}}" data-result-index="{{this.result_index}}">[{{this.name}}] {{this.description}} </span>
       <span class='search-result-icons col'>
         <i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i>
         <i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" title="Click to add this variable to your data retrieval." class="glyphicon glyphicon-log-out search-result-action-btn"></i>

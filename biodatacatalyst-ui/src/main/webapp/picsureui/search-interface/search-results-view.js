@@ -90,19 +90,21 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					studyDescription: response.metadata.study_description,
 					studyAccession: this.generateStudyAccession(response),
 					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.study_id),
-					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.study_id),
+					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id),
 					variableId: variableId,
 					variableMetadata: response.variables[variableId].metadata
-				};
+			}
+			variableInfoCache[variableId].columnmeta_var_id = variableId;
 		},
-		retrieveDataTableMeta: function(dataTableId, successHandler){
+		retrieveDataTableMeta: function(id, successHandler){
 			$.ajax({
 				url: window.location.origin + "/picsure/query/sync",
 				type: 'POST',
 				contentType: 'application/json',
-				data: JSON.stringify({resourceUUID: "36363664-6231-6134-2d38-6538652d3131", query: {id: dataTableId, entityType: "DATA_TABLE"}}),
+				data: JSON.stringify({resourceUUID: "36363664-6231-6134-2d38-6538652d3131", query: {id: id, entityType: "DATA_TABLE"}}),
 				success: successHandler,
 				error: function(response){
+					console.error("Error retrieving data table metadata: " + id);
 					console.log(response);
 				}.bind(this)
 			});
@@ -111,17 +113,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			if(event.target.classList.contains('fa')){
 				return;
 			}
+			let study_id = $(event.target).data('study-id');
 			let dataTableId = $(event.target).data('data-table-id');
 			let variableId = $(event.target).data('variable-id');
 			$('#search-results-div').blur();
-			this.retrieveDataTableMeta(dataTableId, function(response){
+			this.retrieveDataTableMeta(study_id+'_'+dataTableId, function(response){
 				this.cacheVariableInfo(response, variableId);
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: variableId,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
-				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[variableId].metadata.name,  ()=>{
+				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[variableId].metadata.columnmeta_name,  ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -158,9 +161,9 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			} else {
 				this.filterModalView = new numericFilterModalView(filterViewData);
 			}
-			this.retrieveDataTableMeta(searchResult.result.dtId, function(response){
+			this.retrieveDataTableMeta(searchResult.result.studyId + "_" + searchResult.result.dtId, function(response){
 				this.cacheVariableInfo(response, searchResult.result.varId);
-				modal.displayModal(this.filterModalView, "Variable Information for " + response.variables[searchResult.result.varId].metadata.name, ()=>{
+				modal.displayModal(this.filterModalView, "Variable Information for " + response.variables[searchResult.result.varId].metadata.columnmeta_name, ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -176,7 +179,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			);
 		},
 		generateStudyAccession: function(response) {
-			let studyAccession = response.metadata.study_id;
+			let studyAccession = response.metadata.columnmeta_study_id;
 			if (response.metadata.participant_set) {
 				studyAccession += '.p' + response.metadata.participant_set
 			}
@@ -199,13 +202,13 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				let results = _.map(tagFilterModel.get("searchResults").results.searchResults, function(result, i){
 					let metadata = result.result.metadata;
 					return {
-						abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.study_id),
-						study_id: metadata.study_id,
-						table_id: metadata.dataTableId,
-						variable_id: metadata.varId,
-						name: metadata.name,
-						dataTableDescription: metadata.dataTableDescription,
-						description: metadata.description,
+						abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.columnmeta_study_id),
+						study_id: metadata.columnmeta_study_id,
+						table_id: metadata.columnmeta_var_group_id,
+						variable_id: result.result.varId,
+						name: metadata.columnmeta_name,
+						dataTableDescription: metadata.columnmeta_var_group_description,
+						description: metadata.columnmeta_description,
 						result_index: i
 					}
 				});

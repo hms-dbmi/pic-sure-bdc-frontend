@@ -100,33 +100,34 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
-			let deferredSearchResults = $.Deferred();
-			spinner.medium(deferredSearchResults, '#spinner-holder', '');
-			$.ajax({
+			//let deferredSearchResults = $.Deferred();
+			let deferredSearchResults = $.ajax({
 				url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
 				type: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify({query: {
-						searchTerm: this.searchTerm,
-						includedTags: this.requiredTags,
-						excludedTags: searchExcludeTags,
-						returnTags: true,
-						offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
-						limit: tagFilterModel.get("limit")
-					}}),
-					success: function(response){
-						deferredSearchResults.resolve();
-						this.updateTags(response);
-						$('#tag-filters').show();
-						$('#search-results').show();
-					}.bind(this),
-					error: function(response){
-						deferredSearchResults.resolve();
-						const helpTemplate = HBS.compile(helpViewTemplate);
-						this.$el.html(helpTemplate());
-						console.log(response);
-					}.bind(this)
+					searchTerm: this.searchTerm,
+					includedTags: this.requiredTags,
+					excludedTags: searchExcludeTags,
+					returnTags: true,
+					offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
+					limit: tagFilterModel.get("limit")
+				}}),
+				success: function(response){
+					//deferredSearchResults.resolve();
+					this.updateTags(response);
+					$('#tag-filters').show();
+					$('#search-results').show();
+				}.bind(this),
+				error: function(response){
+					//deferredSearchResults.resolve();
+					$("#spinner-holder").html("");
+					const helpTemplate = HBS.compile(helpViewTemplate);
+					this.$el.html(helpTemplate());
+					console.log(response);
+				}.bind(this)
 			});
+			spinner.medium(deferredSearchResults, '#spinner-holder', '');
 		},
 
 		openGenomicFilteringModal: function() {

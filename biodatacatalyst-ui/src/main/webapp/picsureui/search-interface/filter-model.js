@@ -25,7 +25,7 @@ define(["backbone", "handlebars"],
                     values: values,
                     searchResult: searchResult,
                     filterType: "restrict",
-                    topmed: searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.varId.includes('phv'),
                 });
             },
             addNumericFilter: function(searchResult, min, max) {
@@ -40,7 +40,7 @@ define(["backbone", "handlebars"],
                     min: min,
                     max: max,
                     filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
-                    topmed: searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.varId.includes('phv'),
                 });
             },
             addRequiredFilter: function(searchResult) {
@@ -53,7 +53,7 @@ define(["backbone", "handlebars"],
                     searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
                     filterType: "any",
-                    topmed: searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
             },
             addDatatableFilter: function(datatableSelections) {
@@ -68,7 +68,7 @@ define(["backbone", "handlebars"],
                     category: datatableSelections.title,
                     filterType: "anyRecordOf",
                     datatable: true,
-                    topmed: datatableSelections.searchResult.result.metadata.id.includes('phv'),
+                    topmed: datatableSelections.searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                     searchResult: datatableSelections.searchResult
                 });
             },
@@ -129,7 +129,7 @@ define(["backbone", "handlebars"],
                 return this.get('activeFilters').find((filter)=>{return filter.get('dtId')===dtId;});
             },
             generateVariableCategory: function(searchResult) {
-                return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\" + searchResult.result.metadata.varId;
+                return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\" + searchResult.result.varId;
             },
             generateDatatableCategory: function(searchResult) {
                 return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\";
