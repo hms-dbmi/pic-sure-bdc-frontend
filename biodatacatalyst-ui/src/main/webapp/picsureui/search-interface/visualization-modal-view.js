@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/visualization-modal-view.hbs", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", 'text!./image.json', "picSure/settings"],
-function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, imageJson, settings) {
+define(["jquery", "backbone", "handlebars", "text!search-interface/visualization-modal-view.hbs", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings"],
+function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings) {
     var visualizationModalView = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
