@@ -8,7 +8,7 @@
 	}
 	#genomic-filter-btn {
 	    width:10em;
-		margin-right: 30px;
+		margin-right: 20px;
 	}
 	#search-controls:not([type="reset"]) {
 		display: flex;
@@ -19,13 +19,27 @@
 	#search-controls > *:not([type="reset"]):not(:last-child) {
 		margin-right: 0.5em;
 	}
+	#search-controls > *:not([type="reset"]):not(:first-child) {
+		box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
+	}
 	#search-controls label {
-		margin-left: 30px;
+		align-self: center;
+	}
+	.reset-button {
+		align-self: center;
+	}
+	hr {
+		width: 98%;
+		margin-left: 0px;
+	}
+	.center-spinner {
+		text-align: center;
+		margin: 50px auto;
+		flex-grow: 100;
 	}
 </style>
 
-<div class="row">
-    <div class="row">
+<div>
 		<form id="search-controls" class="col">
 	        <label for='search-box' class='col'>Search:</label>
 	        <input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
@@ -34,7 +48,7 @@
 	        placeholder="Search studies or variables"
 			onsubmit="return false" 
 			required>
-				<input class="btn bg-transparent" value="" accesskey="r" type="reset"></input>
+				<input class="btn bg-transparent reset-button" value="" accesskey="r" type="reset"></input>
 			</input>
 	        <button id="search-button" type="button" class='btn btn-default col'
 	        aria-label="You are on the search button"
@@ -43,17 +57,12 @@
 	        aria-label="You are on the Genomic Filtering button"
 	        >Genomic Filtering</button>
 	    </form>
-    </div>
     <hr>
-    <div id="search-area" class="row">
-	    <div id="tag-filters" class="col-md-3">
-
-	    </div>
-		<div id="spinner-holder"></div>
-	    <div class="col-md-9">
-	        <div id="search-results">
-
-	        </div>
+    <div id="search-area" class="flex-container space-between">
+	    <div id="tag-filters"></div>
+		<div id="spinner-holder" class="center-spinner"></div>
+	    <div class="m-lr-20 grow">
+	        <div id="search-results"></div>
     	</div>
     </div>
 </div>

@@ -10,7 +10,7 @@ define(["jquery","text!studyAccess/studies-data.json"],
             findStudyAbbreviationFromId: function(study_id){
                 let study = _.find(studiesData.bio_data_catalyst,
                     function(studyData){
-                        return studyData.study_identifier === study_id.split('.')[0].toLowerCase();
+                        return studyData.study_identifier === study_id.toLowerCase();
                     });
                 if (study) {
                     return study.abbreviated_name;

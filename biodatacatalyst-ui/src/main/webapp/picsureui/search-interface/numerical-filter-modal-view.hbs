@@ -1,10 +1,18 @@
 <div class="filter-modal-container">
     <div class="row">
-        
+        <div class="flex-container space-out">
+            <ul class="var-info">
+                <li>Study Name: {{studyName}} ({{searchResult.result.studyId}})</li>
+                <li>Variable Name: {{searchResult.result.metadata.name}}</li>
+                <li>Variable Accession: {{searchResult.result.varId}}</li>
+                <li>Variable Description: {{searchResult.result.metadata.description}}</li>
+            </ul>
+            <div class="button-container">
+                <button id="add-filter-button" class="btn btn-primary" tabindex="1000002">Add Filter to Query</button>
+            </div>
+        </div>
+
         {{> numerical-filter-partial min=min max=max}}
 
-        <div class="button-container">
-            <button id="add-filter-button" tabindex="1000002">Add Filter to Query</button>
-        </div>
     </div>
 </div>

@@ -132,7 +132,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         el: $(".modal-body")
                     });
                     modalView.render();
-                    modal.displayModal(modalView, data.studyDescription,  ()=>{
+                    modal.displayModal(modalView, "Variable Information for " + data.variableMetadata.name,  ()=>{
                         $('#filter-list').focus();
                     });
                 }
@@ -161,10 +161,11 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             };
                             this.filterModalView = new datatableFilterModalView({
                                 model: filterViewData,
+                                dataTableInfo: filterViewData.filter.searchResult.result,
                                 el: $(".modal-body"),
                             });
                             this.filterModalView.render();
-                            modal.displayModal(this.filterModalView, "Dataset : " + filter.searchResult.result.metadata.dataTableName);
+                            modal.displayModal(this.filterModalView, "Dataset Filter for " + filter.searchResult.result.metadata.dataTableName);
                         }.bind(this),
                         error: function(response){
                             console.log(response);

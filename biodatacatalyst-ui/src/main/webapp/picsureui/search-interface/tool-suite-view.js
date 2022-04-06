@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view"],
-function($, BB, HBS, template, filterModel, modal, helpView) {
+define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view"],
+function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView) {
     var ToolSuiteView = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
@@ -33,11 +33,12 @@ function($, BB, HBS, template, filterModel, modal, helpView) {
         },
         openDistributions: function(){
             console.log('openDistributions');
+            const vizModal = new VisualizationModalView();
             modal.displayModal(
-                '', 
-                'Data Retrieval Summary', 
-                () => {console.log('close help')
-            });
+                vizModal, 
+                'Variable distributions of query filters', 
+                () => {this.$el.focus();}
+            );
         },
         openHelp: function(){
             modal.displayModal(
