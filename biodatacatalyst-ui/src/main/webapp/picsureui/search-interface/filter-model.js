@@ -81,14 +81,17 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
 				});
 				if (existingField === undefined) {
 					this.addExportField(searchResult);
+                    console.log("added field");
 				} else {
 					this.removeExportField(existingField);
+                    console.log("removed field")
 				}
 			},
 			isExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
 					return filter.get("result").varId === searchResult.result.varId;
 				});
+                console.log(existingField);
 				return existingField !== undefined;
 			},
 			addExportField: function (searchResult) {
