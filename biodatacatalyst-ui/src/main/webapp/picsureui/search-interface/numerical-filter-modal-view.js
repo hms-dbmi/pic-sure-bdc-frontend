@@ -22,7 +22,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
             },
             render: function(){
                 search.dictionary(
-                    this.data.searchResult.result.metadata.HPDS_PATH, 
+                    this.data.searchResult.result.metadata.columnmeta_HPDS_PATH, 
                     function(searchResponse){
                         let concept = _.values(searchResponse.results.phenotypes)[0];
                         this.data.min = concept.min;
