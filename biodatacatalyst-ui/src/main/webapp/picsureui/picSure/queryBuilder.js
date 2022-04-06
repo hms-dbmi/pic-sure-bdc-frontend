@@ -1,5 +1,5 @@
-define(["underscore"],
-		function(_){
+define(["underscore", "picSure/settings"],
+		function(_, settings){
 
     var queryTemplate = {
         categoryFilters: {},
@@ -33,6 +33,44 @@ define(["underscore"],
 		}
 	};
 
+	let updateConsentFilters = function(query, settings) {
+		console.log("update consent filters for query "  + query);
+
+		if(_.filter(_.keys(query.query.categoryFilters), function(concept) {
+				return concept.includes(settings.harmonizedPath);
+			}).length == 0 &&
+			_.filter(_.keys(query.query.numericFilters), function(concept) {
+				return concept.includes(settings.harmonizedPath);
+			}).length  == 0 &&
+			_.filter(query.query.fields, function(concept) {
+				return concept.includes(settings.harmonizedPath);
+			}).length  == 0 &&
+			_.filter(query.query.requiredFields, function(concept) {
+				return concept.includes(settings.harmonizedPath);
+			}).length  == 0
+		){
+//				console.log("removing harmonized consents");
+			delete query.query.categoryFilters[settings.harmonizedConsentPath];
+		}
+
+
+		topmedPresent = false;
+
+		if(_.keys(query.query.variantInfoFilters[0].numericVariantInfoFilters).length > 0){
+			topmedPresent = true;
+		}
+
+		if(_.keys(query.query.variantInfoFilters[0].categoryVariantInfoFilters).length > 0){
+			topmedPresent = true;
+		}
+
+		if(!topmedPresent){
+//				console.log("removing Topmed consents");
+			delete query.query.categoryFilters[settings.topmedConsentPath];
+		}
+
+	};
+
 	var generateQueryNew = function(filters, exportFields, template, resourceUUID) {
 		if (!template)
 			template = queryTemplate;
@@ -51,11 +89,11 @@ define(["underscore"],
 
 		_.each(filters, function(filter){
 			if(filter.type==="required"){
-				query.query.requiredFields.push(filter.searchResult.result.metadata.HPDS_PATH);
+				query.query.requiredFields.push(filter.searchResult.result.metadata.columnmeta_HPDS_PATH);
 			}else if(filter.type==="category"){
-				query.query.categoryFilters[filter.searchResult.result.metadata.HPDS_PATH]=filter.values;
+				query.query.categoryFilters[filter.searchResult.result.metadata.columnmeta_HPDS_PATH]=filter.values;
 			}else if(filter.type==="numeric"){
-				query.query.numericFilters[filter.searchResult.result.metadata.HPDS_PATH]={min:filter.min, max:filter.max};
+				query.query.numericFilters[filter.searchResult.result.metadata.columnmeta_HPDS_PATH]={min:filter.min, max:filter.max};
 			}else if (filter.type==='genomic'){
 				if (query.query.variantInfoFilters.length && _.isEmpty(query.query.variantInfoFilters[0].categoryVariantInfoFilters)) {
 					query.query.variantInfoFilters[0].categoryVariantInfoFilters = filter.variantInfoFilters.categoryVariantInfoFilters;
@@ -69,7 +107,7 @@ define(["underscore"],
 				query.query.anyRecordOf = query.query.anyRecordOf.concat(_.map(filter.variables, (variable)=>{return variable[6];}));
 			}
 		});
-
+		//this.updateConsentFilters(query, settings);
 		return query;
 	};
 
@@ -172,6 +210,7 @@ define(["underscore"],
 		createQuery:createQuery,
 		generateQuery: generateQuery,
 		createQueryNew:createQueryNew,
-		generateQueryNew: generateQueryNew
+		generateQueryNew: generateQueryNew,
+		updateConsentFilters: updateConsentFilters,
 	}
 });

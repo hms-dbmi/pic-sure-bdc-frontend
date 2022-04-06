@@ -75,7 +75,7 @@ define(['jquery', 'backbone','handlebars',
                     results: geneList,
                     searchContext: 'Select genes of interest',
                     resultContext: 'Selected genes',
-                    placeholderText: 'Try searching for a gene (Ex: CHD8)',
+                    placeholderText: 'The list of genes below is a sub-set, try typing other gene names (Ex. CHD8)',
                     description: this.data.geneDesc,
                     sample: true
                 }
@@ -90,8 +90,12 @@ define(['jquery', 'backbone','handlebars',
                 };
                 // If editing a previous filter, then repopulate the form.
                 if (this.data.currentFilter) {
-                    this.dataForGeneSearch.searchResults = this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant;
-                    this.dataForConsequenceSearch.searchResults = this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated;
+                    if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant) {
+                        this.dataForGeneSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant];
+                    }
+                    if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated) {
+                        this.dataForConsequenceSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated];
+                    }
                     this.previousFilter = this.data.currentFilter;
                 }
                 this.geneSearchPanel = new searchPanel(this.dataForGeneSearch);
@@ -120,11 +124,7 @@ define(['jquery', 'backbone','handlebars',
             },
             cancelGenomicFilters: function(){
                 this.undelegateEvents();
-                this.$el.removeData().unbind(); 
-                this.remove();  
-                BB.View.prototype.remove.call(this);
-                $("#modalDialog").remove();
-                $(".modal-backdrop").remove();
+                $('.close').click();
             },
             createTabIndex: function() {
                 let genomicTabIndex = 1000000;

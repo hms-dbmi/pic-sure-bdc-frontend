@@ -1,0 +1,14 @@
+<div id="visualizations-modal">
+    <h4>All visualizations display the distributions of each variable for the specified cohort of interest.</h4>
+    <div>
+        <h5>Data Retrieval Summary</h5>
+        <p>{{numParticipants}} participants</p>
+        <p>{{numVariables}} variables</p>
+        <p>{{numData}} estimated data points</p>
+    </div>
+    <div id="visualizations-container">
+        {{#each images}}
+            {{> visualization-image-partial data=this}}
+        {{/each}}
+    </div>
+</div>

@@ -1,49 +1,51 @@
 {{#if results}}
-<div class="search-results-header section-label">
-  <span class="m-l-6">Search Results:</span>
-  <span class="row">{{variableCount}} variables match your search</span>
-</div>
-{{#each results}}
-  <div id='search-result-{{this.variable_id}}' class='search-result row' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}"
-  aria-label="Variable {{this.name}}, {{this.variable_id}} described as {{this.description}} from study {{this.abbreviation}}, {{this.study_id}}. Press enter to get more information about this variable or to create a cohort filter using this variable."
-  >
-  	<span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">{{this.abbreviation}}<br>{{this.variable_id}} </span>
-  	<span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}">[{{this.name}}] {{this.description}} </span>
-  	<span class='search-result-icons col'>
-  		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-filter search-result-action-btn"></i>
-  		<i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" class="fa fa-database search-result-action-btn"></i>
-  	</span>
+<div class="panel">
+  <div class="space-out panel-heading">
+    <h4>Search Results:</h4>
+    <span>{{variableCount}} variables match your search</span>
   </div>
-{{/each}}
-<style>
-   .paginate_button{ box-sizing: border-box;
-    display: inline-block;
-    min-width: 1.5em;
-    padding: .5em 1em;
-    margin-left: 2px;
-    text-align: center;
-    cursor: pointer;
-    *cursor: hand;
-    color: #333 !important;
-    border: 1px solid transparent;
-    border-radius: 2px;
-}
-.paginate_button.current{
-    color: #333 !important;
-    border: 1px solid #979797;
-    background-color: white;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #dcdcdc));
-    background: -webkit-linear-gradient(top, white 0%, #dcdcdc 100%);
-    background: -moz-linear-gradient(top, white 0%, #dcdcdc 100%);
-    background: -ms-linear-gradient(top, white 0%, #dcdcdc 100%);
-    background: -o-linear-gradient(top, white 0%, #dcdcdc 100%);
-    background: linear-gradient(to bottom, white 0%, #dcdcdc 100%);
-}
-
-</style>
-<div class='search-result-pages row'>
-	{{#each pages}}
-		<span id='page-link-{{pageNumber}}' class='page-link' data-page='{{pageNumber}}'><a class="paginate_button{{#if isActive}} current{{/if}}" id='page-{{pageNumber}}'>{{pageNumber}}</a></span>
-	{{/each}}
+  {{#each results}}
+    <div id='search-result-{{this.variable_id}}' class='panel-body search-result' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" data-study-id="{{study_id}}"
+    aria-label="Variable {{this.name}}, {{this.variable_id}} described as {{this.description}} from study {{this.abbreviation}}, {{this.study_id}}. Press enter to get more information about this variable or to create a cohort filter using this variable.">
+      <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-study-id="{{study_id}}" data-result-index="{{this.result_index}}">{{this.abbreviation}}<br>{{this.variable_id}} </span>
+      <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-study-id="{{study_id}}" data-result-index="{{this.result_index}}">[{{this.name}}] {{this.description}} </span>
+      <span class='search-result-icons col'>
+        <i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i>
+        <i data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" title="Click to add this variable to your data retrieval." class="glyphicon glyphicon-log-out search-result-action-btn"></i>
+      </span>
+    </div>
+  {{/each}}
+    <style>
+      .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: .5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 1px solid transparent;
+        border-radius: 2px;
+      }
+  
+      .paginate_button.current {
+        color: #333 !important;
+        border: 1px solid #979797;
+        background-color: white;
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #dcdcdc));
+        background: -webkit-linear-gradient(top, white 0%, #dcdcdc 100%);
+        background: -moz-linear-gradient(top, white 0%, #dcdcdc 100%);
+        background: -ms-linear-gradient(top, white 0%, #dcdcdc 100%);
+        background: -o-linear-gradient(top, white 0%, #dcdcdc 100%);
+        background: linear-gradient(to bottom, white 0%, #dcdcdc 100%);
+      }
+    </style>
+    <div class='search-result-pages row'>
+      {{#each pages}}
+      <span id='page-link-{{pageNumber}}' class='page-link' data-page='{{pageNumber}}'><a class="paginate_button{{#if isActive}} current{{/if}}" id='page-{{pageNumber}}'>{{pageNumber}}</a></span>
+      {{/each}}
+    </div>
 </div>
 {{/if}}

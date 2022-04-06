@@ -32,15 +32,21 @@ define(['jquery'],function($){
 		
 
 		if (eventsInScope.includes('letters')) {
-			eventsInScope = eventsInScope.filter(item => item !== 'letters');
+			eventsInScope.splice(eventsInScope.indexOf('letters'), 1);
 			const alpha = Array.from(Array(26)).map((e, i) => i + 97);
 			const alphabet = alpha.map((x) => String.fromCharCode(x));
 			eventsInScope = eventsInScope.concat(alphabet);
+		}
+		if (eventsInScope.includes('minus')) {
+			eventsInScope.push('-');
+			eventsInScope.splice(eventsInScope.indexOf('minus'), 1);
 		}
 
 		if (event.key && eventsInScope.includes(event.key.toLowerCase()) || (eventsInScope.includes('space') && event.key === ' ')) {
 			if (eventsInScope.includes('space') && event.key === ' ') {
 				navigableViews[currentView].trigger("keynav-space", event);
+			} else  if (eventsInScope.includes('minus') && event.key === '-') {
+				navigableViews[currentView].trigger("keynav-" + event.code.toLowerCase(), event);
 			} else if (/^[a-z]{1}$/.test(event.key.toLowerCase())) {
 				navigableViews[currentView].trigger("keynav-letters", event);
 			} else {

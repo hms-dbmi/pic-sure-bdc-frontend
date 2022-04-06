@@ -289,7 +289,6 @@
 .filter-modal-container {
     border-radius: 2px;
     border-color: #000000;
-    background-color: #1a568c;
     height: auto;
     width: 80%;
     margin: auto;
@@ -308,29 +307,14 @@
     border-radius: 2px;
     border-color: #000000;
     float: left;
-    width: 80%;
+    width: 100%;
     background-color: #ffffff;
-    margin: 20px;
-    padding: 20px;
 }
 .button-container {
     border-radius: 2px;
     border-color: #000000;
     float: left;
-    width: 20%;
     background-color: #ffffff;
-    margin: 20px;
-    padding: 20px;
-}
-
-#filter-list-panel {
-    line-height: 1;
-    border-width: 1px;
-    border-style: solid;
-    border-color: lightgrey;
-    padding: 40px 0px;
-    background-color: rgb(223, 238, 255);
-    border-radius: 4px;
 }
 
 .filter-list-action-btn:hover {
@@ -440,6 +424,7 @@ input[type='checkbox'].categorical-filter-input {
 .selection-container {
     margin: 5px 0;
     padding: 0 0 10px 0;
+    overflow-wrap: anywhere;
 }
 
 #frequency-number {
@@ -504,10 +489,6 @@ input[type='checkbox'].categorical-filter-input {
 
 #tool-suite {
     line-height: 1;
-    border: 1px solid lightgrey;
-    padding: 10px 8px;
-    background-color: rgb(223, 238, 255);
-    border-radius: 4px;
     margin-bottom: 20px;
 }
 
@@ -544,6 +525,7 @@ input[type='checkbox'].categorical-filter-input {
 
 .btn-icon {
     font-size: 2rem;
+    padding: 0;
 }
 
 .m-l-1 {
@@ -552,6 +534,10 @@ input[type='checkbox'].categorical-filter-input {
 
 .m-lr-2 {
     margin: 0 1.5rem;
+}
+
+.m-lr-20 {
+    margin: 0 20px;
 }
 
 .m-l-6 {
@@ -567,6 +553,20 @@ input[type='checkbox'].categorical-filter-input {
     margin: 0 auto;
 }
 
+.with-wrap {
+    overflow-wrap: break-word;
+}
+
+.grow {
+    flex-grow: 1;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+
 /************************* STARTS Search X/reset button ******************************/
 
 input[type="search"]::-webkit-search-cancel-button {
@@ -579,6 +579,7 @@ input[type="search"]::-webkit-search-cancel-button {
     height: 14px;
     width: 14px;
     display: block;
+    cursor: pointer;
 }
 
 @supports selector(::-webkit-search-cancel-button) {
@@ -633,29 +634,78 @@ remove when above bug is fixed */
 
 /************************* Start Visualization ******************************/
 
-.image-container {
+#images-spinner-holder {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+}
+
+#visualizations-container {
+    display: flex;
     justify-content: flex-start;
     align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.image-container {
+    display: flex;
     margin-bottom: 20px;
 }
 
-.image-container button {
-    position: relative;
-    left: -20px;
+.image-container img {
+    max-width: 475px;
 }
+
+.image-container .download-button {
+    position: relative;
+    left: -130px;
+    font-size: 3em;
+    align-self: flex-start;
+}
+
+/************************* End Visualization ******************************/
 
 #show-all-tags-btn, #show-fewer-tags-btn {
     cursor: pointer;
 }
 
-.search-results-header {
-    display: flex;
-    flex-direction: row;
+#patient-count-box {
+    background-color: white;
+    line-height: 1;
+    padding: 40px 0px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.panel {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.panel .panel-heading {
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 1.1em;
+}
+
+.panel-body.search-result {
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+}
+
+.output-size {
+    min-width: 300px;
+    max-width: 350px;
+}
+
+.space-between {
     justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    margin: 0 15px;
-    border-bottom: 1px solid black;
+}
+
+.var-info {
+    list-style-type: none;
+    padding: 0;
 }

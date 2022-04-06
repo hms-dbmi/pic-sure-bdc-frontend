@@ -28,7 +28,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     values: values,
                     searchResult: searchResult,
                     filterType: "restrict",
-                    topmed: searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.varId.includes('phv'),
                 });
             },
             addNumericFilter: function(searchResult, min, max) {
@@ -43,7 +43,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     min: min,
                     max: max,
                     filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
-                    topmed: searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.varId.includes('phv'),
                 });
             },
             addRequiredFilter: function(searchResult) {
@@ -56,7 +56,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
                     filterType: "any",
-                    topmed: searchResult.result.metadata.id.includes('phv'),
+                    topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
             },
             addDatatableFilter: function(datatableSelections) {
@@ -71,7 +71,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     category: datatableSelections.title,
                     filterType: "anyRecordOf",
                     datatable: true,
-                    topmed: datatableSelections.searchResult.result.metadata.id.includes('phv'),
+                    topmed: datatableSelections.searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                     searchResult: datatableSelections.searchResult
                 });
             },
@@ -139,14 +139,14 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             },
             getByVarId: function(varId) {
                 return this.get('activeFilters')
-                           .filter((filter) => filter.get('type')!=='genomic')
+                           .filter((filter) => filter.get('type')!=='genomic' && filter.get('type')!=='datatable')
                            .find((filter)=>{return filter.get('searchResult').result.varId===varId;});
             },
             getByDatatableId: function(dtId) {
                 return this.get('activeFilters').find((filter)=>{return filter.get('dtId')===dtId;});
             },
             generateVariableCategory: function(searchResult) {
-                return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\" + searchResult.result.metadata.varId;
+                return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\" + searchResult.result.varId;
             },
             generateDatatableCategory: function(searchResult) {
                 return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\";

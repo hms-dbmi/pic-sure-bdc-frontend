@@ -1,8 +1,14 @@
 define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
 	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
 	let DatatableFilterModalView = BB.View.extend({
-		initialize: function(){
+		initialize: function(opts){
 			keyboardNav.addNavigableView("datatableFilterModal",this);
+			if (opts.dataTableInfo) {
+				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.dataTableInfo.studyId);
+				this.data.studyId = opts.dataTableInfo.studyId;
+				this.data.datasetName = opts.dataTableInfo.metadata.dataTableName;
+			}
+			this.data.datasetAccession = this.model.dtId;
 			this.on({
 				'keynav-arrowup document': this.previousVariable,
 				'keynav-arrowdown document': this.nextVariable,
@@ -117,7 +123,8 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
             $('.close').click();
 		},
 		render: function(){
-			this.$el.html(HBS.compile(datatableFilterModalTemplate)());
+			const template = HBS.compile(datatableFilterModalTemplate);
+			this.$el.html(template(this.data));
 			$('.modal-dialog').width('90%');
 			$('#datatable-modal-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='vcfData' class='display stripe' ></table>");
 			let toggleable = true;
@@ -129,11 +136,11 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 			return conceptPath.includes(variable.result.varId);
                 			}) !== undefined ? true : false) : false,
                 		variable.result.varId,
-                		variable.result.metadata.name,
-                		variable.result.metadata.description,
+                		variable.result.metadata.columnmeta_name,
+                		variable.result.metadata.columnmeta_description,
                 		variable.result.is_continuous ? "Continuous" : "Categorical",
                 		variable.result.is_continuous ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
-                		variable.result.metadata.HPDS_PATH
+                		variable.result.metadata.columnmeta_HPDS_PATH
                 	];
                 });
             $('#vcfData').DataTable( {

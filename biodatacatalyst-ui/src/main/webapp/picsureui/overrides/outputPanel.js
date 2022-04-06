@@ -1,5 +1,5 @@
-define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
-	function(HBS, BB, settings, transportErrors){
+define(["handlebars", "backbone", "picSure/settings", "common/transportErrors", "picSure/queryBuilder"],
+	function(HBS, BB, settings, transportErrors, queryBuilder){
 
 	return {
 		/*
@@ -59,48 +59,6 @@ define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
 		 * If you want to show your customized error message, please override this
 		 */
 		outputErrorMessage: undefined,
-		
-		/*
-		 * A function to ensure the correct consents are sent
-		 */
-		updateConsentFilters : function(query, settings) {
-			console.log("update consent filters for query "  + query);			
-			
-			if(_.filter(_.keys(query.query.categoryFilters), function(concept) {
-				    return concept.includes(settings.harmonizedPath);
-				}).length == 0 &&  
-				_.filter(_.keys(query.query.numericFilters), function(concept) {
-				    return concept.includes(settings.harmonizedPath);
-				}).length  == 0 &&
-				_.filter(query.query.fields, function(concept) {
-					return concept.includes(settings.harmonizedPath);
-				}).length  == 0 &&
-				_.filter(query.query.requiredFields, function(concept) {
-					return concept.includes(settings.harmonizedPath);
-				}).length  == 0
-			){
-//				console.log("removing harmonized consents");
-				delete query.query.categoryFilters[settings.harmonizedConsentPath];
-			}
-			
-			
-			topmedPresent = false;
-			
-			if(_.keys(query.query.variantInfoFilters[0].numericVariantInfoFilters).length > 0){
-				topmedPresent = true;
-			}
-			
-			if(_.keys(query.query.variantInfoFilters[0].categoryVariantInfoFilters).length > 0){
-				topmedPresent = true;
-			}
-			
-			if(!topmedPresent){
-//				console.log("removing Topmed consents");
-				delete query.query.categoryFilters[settings.topmedConsentPath];
-			}
-			
-	    },
-
 		/*
 		 * The new hook for overriding all custom query logic
 		 */
@@ -111,7 +69,7 @@ define(["handlebars", "backbone", "picSure/settings", "common/transportErrors"],
 			var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy for filtering out consents
 
 			//BDC requires appropriate consent filters to be supplied
-			this.updateConsentFilters(query, settings);
+			queryBuilder.updateConsentFilters(query, settings);
 			
 			$.ajax({
 				url: window.location.origin + "/picsure/query/sync",

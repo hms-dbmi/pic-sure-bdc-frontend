@@ -1,11 +1,12 @@
-define(["jquery","backbone","handlebars", "text!search-interface/numerical-filter-modal-partial.hbs", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings"],
-    function($, BB, HBS, partialTemplate, filterModalViewTemplate, filterModel, search, settings){
+define(["jquery","backbone","handlebars", "text!search-interface/numerical-filter-modal-partial.hbs", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings", "search-interface/search-util"],
+    function($, BB, HBS, partialTemplate, filterModalViewTemplate, filterModel, search, settings, searchUtil){
 
         var View = BB.View.extend({
             initialize: function(opts){
                 this.filterModalViewTemplate = HBS.compile(filterModalViewTemplate);
                 this.partialTemplate = HBS.compile(partialTemplate);
                 this.data = opts.data;
+                this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.studyId);
                 HBS.registerPartial('numerical-filter-partial', this.partialTemplate);
             },
             events: {
@@ -21,7 +22,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
             },
             render: function(){
                 search.dictionary(
-                    this.data.searchResult.result.metadata.HPDS_PATH, 
+                    this.data.searchResult.result.metadata.columnmeta_HPDS_PATH, 
                     function(searchResponse){
                         let concept = _.values(searchResponse.results.phenotypes)[0];
                         this.data.min = concept.min;
