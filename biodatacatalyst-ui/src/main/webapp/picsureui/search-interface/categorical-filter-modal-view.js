@@ -5,7 +5,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
             initialize: function(opts){
                 this.categoricalFilterModalViewTemplate = HBS.compile(categoricalFilterModalViewTemplate);
                 this.data = opts.data;
-                this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.studyId);
+                this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.metadata.columnmeta_study_id);
                 this.dataForSearchPanel = {
                     heading: 'Available values',
                     results: _.values(this.data.searchResult.result.values),

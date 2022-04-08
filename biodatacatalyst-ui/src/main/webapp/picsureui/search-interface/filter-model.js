@@ -28,7 +28,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     values: values,
                     searchResult: searchResult,
                     filterType: "restrict",
-                    topmed: searchResult.result.varId.includes('phv'),
+                    topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
             },
             addNumericFilter: function(searchResult, min, max) {

@@ -124,7 +124,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 let filter = filterModel.getByIndex($(event.target).data('index'));
                 let data = undefined;
                 if (!filter.type!=='genomic') {
-                    data = variableInfoCache[filter.searchResult.result.varId];
+                    data = variableInfoCache[filter.searchResult.result.metadata.columnmeta_var_id];
                 }
                 if (data) {
                     console.log('Filter: ', filter);
