@@ -1,8 +1,8 @@
-define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
-	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
-	let DatatableFilterModalView = BB.View.extend({
+define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
+	function(BB, HBS, datatableExportModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
+	let DatatableExportModalView = BB.View.extend({
 		initialize: function(opts){
-			keyboardNav.addNavigableView("datatableFilterModal",this);
+			keyboardNav.addNavigableView("datatableExportModal",this);
 			if (opts.model.dataTableInfo) {
 				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.model.dataTableInfo.studyId);
 				this.data.studyId = opts.model.dataTableInfo.studyId;
@@ -17,7 +17,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			});
 		},
 		events: {
-			"click #add-filter-button":"addFilterToQuery",
+			"click #add-exports-button":"addVariablesToExport",
 			'click input[type="checkbox"]':"checkboxToggled",
 			'click #select-all':'selectAll',
 			'click #deselect-all':'deselectAll',
@@ -64,7 +64,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			searchUtil.ensureElementIsInView(variables[focusedVariable]);
 		},
 		vcfDataFocus: function(event){
-			keyboardNav.setCurrentView("datatableFilterModal");
+			keyboardNav.setCurrentView("datatableExportModal");
 		},
 		vcfDataBlur: function(){
 			keyboardNav.setCurrentView(undefined);
@@ -109,38 +109,38 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 				});
 	    	target[0] = valueToSet;
 		},
-		addFilterToQuery: function(){
-			let selectedVariables = _.filter(this.data(), (variable)=>{
-				return variable[0];
-			});
-			console.log(selectedVariables);
-			filterModel.addDatatableFilter({
-				variables: selectedVariables,
-				dtId:this.model.dtId,
-				title: "\\" + this.model.dtVariables[0].result.metadata.study_id + "\\" + this.model.dtId + "\\",
-				searchResult: this.model.dtVariables[0]
+		addVariablesToExport: function(){
+			var exportView = this;
+			 _.each(this.data(), (variable)=>{
+				 if(variable[0] !== filterModel.isExportFieldFromId(variable[1])){
+					 let toggledField = exportView.getVariableData(variable[1]);
+					 filterModel.toggleExportField(toggledField);
+				 }
 			});
             $('.close').click();
 		},
+		getVariableData: function(id){
+			let variable = _.find(this.model.dtVariables, function(searchResult){
+				return id === searchResult.result.metadata.columnmeta_var_id;
+			});
+			return variable;
+		},
 		render: function(){
-			const template = HBS.compile(datatableFilterModalTemplate);
+			const template = HBS.compile(datatableExportModalTemplate);
 			this.$el.html(template(this.data));
 			$('.modal-dialog').width('90%');
 			$('#datatable-modal-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='vcfData' class='display stripe' ></table>");
 			let toggleable = true;
-			let existingFilter = filterModel.getByDatatableId(this.model.dtId);
 			let data = _.map(this.model.dtVariables,function(variable){
                 	return [
-                		existingFilter ?
-                			(_.find(existingFilter.get('variables'), (conceptPath)=>{
-                			return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
-                			}) !== undefined ? true : false) : false,
-                		variable.result.metadata.columnmeta_var_id,
-                		variable.result.metadata.columnmeta_name,
-                		variable.result.metadata.columnmeta_description,
+						//TODO change to check for variable in ExportFields
+                		filterModel.isExportField(variable),
+						variable.result.metadata.columnmeta_var_id,
+						variable.result.metadata.columnmeta_name,
+						variable.result.metadata.columnmeta_description,
 						variable.result.metadata.columnmeta_data_type,
 						(variable.result.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
-                		variable.result.metadata.columnmeta_HPDS_PATH
+						variable.result.metadata.columnmeta_HPDS_PATH
                 	];
                 });
             $('#vcfData').DataTable( {
@@ -178,13 +178,6 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
             		let x = 0;
             		_.each($('input[type="checkbox"]'), (checkbox)=>{
             			let varId = checkbox.dataset['varid'];
-                		if(existingFilter !== undefined){
-                			if(_.find(existingFilter.get('variables'), (conceptPath)=>{
-                				return conceptPath.includes(varId);
-							}) === undefined){
-							    checkbox.checked = false;
-							}
-            			}
 						let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === varId;});
 						if(dataRow[0]){
 							$('input[data-varid="' + varId +'"]')[0].checked = true;
@@ -221,5 +214,5 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
             $('#add-filter-button').attr('tabindex', tabcounter++);
 		}
 	});
-	return DatatableFilterModalView;
+	return DatatableExportModalView;
 });

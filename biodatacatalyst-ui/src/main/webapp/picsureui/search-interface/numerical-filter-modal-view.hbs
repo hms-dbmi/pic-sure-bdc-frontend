@@ -2,10 +2,10 @@
     <div class="row">
         <div class="flex-container space-out">
             <ul class="var-info">
-                <li>Study Name: {{studyName}} ({{searchResult.result.studyId}})</li>
-                <li>Variable Name: {{searchResult.result.metadata.name}}</li>
-                <li>Variable Accession: {{searchResult.result.varId}}</li>
-                <li>Variable Description: {{searchResult.result.metadata.description}}</li>
+                <li>Study Name: {{studyName}} ({{searchResult.result.metadata.columnmeta_study_id}})</li>
+                <li>Variable Name: {{searchResult.result.metadata.columnmeta_name}}</li>
+                <li>Variable Accession: {{variable.result.metadata.columnmeta_var_id}}</li>
+                <li>Variable Description: {{searchResult.result.metadata.columnmeta_description}}</li>
             </ul>
             <div class="button-container">
                 <button id="add-filter-button" class="btn btn-primary" tabindex="1000002">Add Filter to Query</button>

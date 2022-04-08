@@ -1,9 +1,9 @@
 define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "text!../settings/settings.json", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "output/outputPanel",
-        "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",],
+        "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view", "search-interface/query-results-view",],
     function(HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
-             FilterListView, SearchView, ToolSuiteView){
+             FilterListView, SearchView, ToolSuiteView, queryResultsView){
         var displayDataAccess = function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/dataAccess']").addClass('active');
@@ -32,7 +32,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     outputPanelView.render();
                     $('#query-results').append(outputPanelView.$el);
 
-                    var query = queryBuilder.generateQuery({}, null, JSON.parse(settings).openAccessResourceId);
+                    var query = queryBuilder.generateQuery({}, {}, JSON.parse(settings).openAccessResourceId);
                     outputPanelView.runQuery(query);
 
                     var renderHelpCallback = function() {
@@ -55,23 +55,24 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     let parsedSettings = this.settings;
                     $('#main-content').append(this.layoutTemplate(parsedSettings));
 
-                    var outputPanelView = new output.View({model: new output.Model()});
-                    outputPanelView.render();
-                    $('#query-results').append(outputPanelView.$el);
+                    var queryView = new queryResultsView.View({model: new queryResultsView.Model()});
+
+                    queryView.render();
+                    $('#query-results').append(queryView.$el);
 
                     var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 
-                    var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
-                    outputPanelView.runQuery(query);
+                    var query = queryBuilder.generateQueryNew({},{}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
+                    queryView.runQuery(query);
 
                     let searchView = new SearchView({
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
 						queryScopes: parsedSess.queryScopes,
                         el : $('#filter-list')
                     });
-                    
+
                     let filterListView = new FilterListView({
-                        outputPanelView : outputPanelView,
+                        outputPanelView : queryView,
                         el : $('#filter-list-panel')
                     });
 

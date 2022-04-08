@@ -22,7 +22,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		events: {
 			"click .search-result": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
-			"click .fa-database": "databaseClickHandler",
+			"click .glyphicon-log-out": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-div': 'resultsFocus',
 			'blur #search-results-div': 'resultsBlur',
@@ -89,7 +89,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			variableInfoCache[variableId] = {
 					studyDescription: response.metadata.study_description,
 					studyAccession: this.generateStudyAccession(response),
-					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.study_id),
+					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.columnmeta_study_id),
 					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id),
 					variableId: variableId,
 					variableMetadata: response.variables[variableId].metadata
@@ -110,7 +110,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			});
 		},
 		infoClickHandler: function(event) {
-			if(event.target.classList.contains('fa')){
+			if(event.target.classList.contains('search-result-action-btn') ){
 				return;
 			}
 			let study_id = $(event.target).data('study-id');
@@ -121,6 +121,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.cacheVariableInfo(response, variableId);
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: variableId,
+					dataTableData: response,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -174,9 +175,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			let searchResult = tagFilterModel.get("searchResults").results
 			.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
-			console.log(
-				"Current export field count is " + filterModel.getExportFieldCount()
-			);
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.columnmeta_study_id;

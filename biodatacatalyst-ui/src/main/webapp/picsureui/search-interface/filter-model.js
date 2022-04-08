@@ -1,10 +1,13 @@
-define(["backbone", "handlebars"],
-    function(BB, HBS){
+define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel"],
+    function(BB, HBS, settings, queryBuilder, output){
 
         let FilterModel = BB.Model.extend({
             defaults:{
                 activeFilters: new BB.Collection,
                 exportFields: new BB.Collection,
+                totalPatients : 0,
+                totalVariables : 4,
+                estDataPoints : 0,
             },
             initialize: function(opts){
                 this.set('activeFilters', new BB.Collection);
@@ -25,7 +28,7 @@ define(["backbone", "handlebars"],
                     values: values,
                     searchResult: searchResult,
                     filterType: "restrict",
-                    topmed: searchResult.result.varId.includes('phv'),
+                    topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
             },
             addNumericFilter: function(searchResult, min, max) {
@@ -74,29 +77,50 @@ define(["backbone", "handlebars"],
             },
 			toggleExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
-					return filter.get("result").varId === searchResult.result.varId;
+					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
 				});
 				if (existingField === undefined) {
 					this.addExportField(searchResult);
+                    console.log("added field");
 				} else {
 					this.removeExportField(existingField);
+                    console.log("removed field")
 				}
 			},
 			isExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
-					return filter.get("result").varId === searchResult.result.varId;
+					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
 				});
+                console.log(existingField);
 				return existingField !== undefined;
 			},
+            isExportFieldFromId: function(varId) {
+                var existingField = this.get("exportFields").find((filter) => {
+                    return filter.attributes.metadata.columnmeta_var_id === varId;
+                });
+                console.log(existingField);
+                return existingField !== undefined;
+            },
 			addExportField: function (searchResult) {
-				this.get("exportFields").add(searchResult);
+				this.get("exportFields").add(searchResult.result);
 			},
-			removeExportField: function (searchResult) {
-				this.get("exportFields").remove(searchResult);
+			removeExportField: function (existingField) {
+				this.get("exportFields").remove(existingField);
 			},
-			getExportFieldCount: function () {
-				return this.get("exportFields").length+4;
+			getExportFieldCount: function (query) {
+				let count = Object.keys(query.query.categoryFilters).length + Object.keys(query.query.numericFilters).length + query.query.fields.length + query.query.requiredFields.length + 1;
+				return count;
 			},
+            //function specifically for updating only variable and est data point values while in package view without having to run the query
+            updateExportValues: function () {
+            let query = queryBuilder.createQueryNew(this.get("activeFilters").toJSON(), this.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+            queryBuilder.updateConsentFilters(query, settings);
+            let variableCount = this.getExportFieldCount(query);
+            this.set("totalVariables", variableCount);
+            this.set("estDataPoints", variableCount*this.get("totalPatients"));
+
+            },
+
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
                 let existingFilterForGenomic = this.get('activeFilters').find((filter)=>{
                     return filter.get('type')==='genomic'

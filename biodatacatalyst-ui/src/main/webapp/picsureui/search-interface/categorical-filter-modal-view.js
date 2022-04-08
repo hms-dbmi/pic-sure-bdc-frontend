@@ -5,19 +5,19 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
             initialize: function(opts){
                 this.categoricalFilterModalViewTemplate = HBS.compile(categoricalFilterModalViewTemplate);
                 this.data = opts.data;
-                this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.studyId);
+                this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.metadata.columnmeta_study_id);
                 this.dataForSearchPanel = {
                     heading: 'Available values',
                     results: _.values(this.data.searchResult.result.values),
                     searchContext: 'Select values of interest',
-                    resultContext: 'Selected salues',
+                    resultContext: 'Selected values',
                     placeholderText: 'Try searching for values',
                     description: null,
                     sample: false
                 }
                 if (this.data.filter) {
-                    this.dataForSearchPanel.searchResults = this.data.filter.type === 'required' ? 
-                        _.values(this.data.filter.searchResult.result.values) : 
+                    this.dataForSearchPanel.searchResults = this.data.filter.type === 'required' ?
+                        _.values(this.data.filter.searchResult.result.values) :
                         this.data.filter.values;
                 }
                 this.searchPanel = new searchPanel(this.dataForSearchPanel);
@@ -25,7 +25,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
             events: {
                 "click #add-filter-button": "addFilter"
             },
-            addFilter: function(event) { 
+            addFilter: function(event) {
                 if(_.keys(this.data.searchResult.result.values).length <= $('.results-box .categorical-filter-input:checked').length){
                     filterModel.addRequiredFilter(
                         this.data.searchResult,

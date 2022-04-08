@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view"],
-function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView) {
+define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"],
+function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView) {
     var ToolSuiteView = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
@@ -26,7 +26,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                     shouldDisableDistributions = false;
                 } else if (anyRecordOf.length) {
                     shouldDisablePackageData = false;
-                } 
+                }
             }
             this.$el.find('#package-data').prop('disabled', shouldDisablePackageData).prop('title', shouldDisablePackageData ? 'Please add a phenotypic filter to your query to package data':'Select and Package data');
             this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
@@ -35,15 +35,15 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             console.log('openDistributions');
             const vizModal = new VisualizationModalView();
             modal.displayModal(
-                vizModal, 
-                'Variable distributions of query filters', 
+                vizModal,
+                'Variable distributions of query filters',
                 () => {this.$el.focus();}
             );
         },
         openHelp: function(){
             modal.displayModal(
                 this.helpView,
-                'Tool Suite Help', 
+                'Tool Suite Help',
                 () => {
                     $('#tool-suite').focus();
                 }
@@ -53,7 +53,27 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             console.log('openImaging');
         },
         openPackageData: function(){
-            console.log('openPackageData');
+            let exportStatus = 'Ready';
+                if(filterModel.get('estDataPoints') > 1000000){
+                    exportStatus = 'Overload';
+                };
+            let exportModel = Backbone.Model.extend({
+                defaults: {},
+            });
+            this.packageView = new packageView({
+                model: new exportModel({
+                    exportStatus: exportStatus,
+                    deletedExports: new BB.Collection,
+                    queryId: ""
+                })
+            });
+            modal.displayModal(
+                this.packageView,
+                'Review and Package Data',
+                () => {
+                    $('#package-modal').focus();
+                }
+            );
         },
         openVariantExplorer: function(){
             console.log('openVariantExplorer');

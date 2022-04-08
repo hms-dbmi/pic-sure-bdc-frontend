@@ -24,21 +24,21 @@ define(["underscore", "picSure/settings"],
 		}
 	};
 
-	var createQueryNew = function(filters, resourceUUID){
+	var createQueryNew = function(filters, exportFields, resourceUUID){
 		var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 		if(parsedSess.queryTemplate){
-			return generateQueryNew(filters,JSON.parse(parsedSess.queryTemplate), resourceUUID);
+			return generateQueryNew(filters,exportFields,JSON.parse(parsedSess.queryTemplate), resourceUUID);
 		} else {
-			return generateQueryNew(filters,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);
+			return generateQueryNew(filters,exportFields,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);
 		}
 	};
 
 	let updateConsentFilters = function(query, settings) {
-		console.log("update consent filters for query "  + query);			
-		
+		console.log("update consent filters for query "  + query);
+
 		if(_.filter(_.keys(query.query.categoryFilters), function(concept) {
 				return concept.includes(settings.harmonizedPath);
-			}).length == 0 &&  
+			}).length == 0 &&
 			_.filter(_.keys(query.query.numericFilters), function(concept) {
 				return concept.includes(settings.harmonizedPath);
 			}).length  == 0 &&
@@ -52,26 +52,26 @@ define(["underscore", "picSure/settings"],
 //				console.log("removing harmonized consents");
 			delete query.query.categoryFilters[settings.harmonizedConsentPath];
 		}
-		
-		
+
+
 		topmedPresent = false;
-		
+
 		if(_.keys(query.query.variantInfoFilters[0].numericVariantInfoFilters).length > 0){
 			topmedPresent = true;
 		}
-		
+
 		if(_.keys(query.query.variantInfoFilters[0].categoryVariantInfoFilters).length > 0){
 			topmedPresent = true;
 		}
-		
+
 		if(!topmedPresent){
 //				console.log("removing Topmed consents");
 			delete query.query.categoryFilters[settings.topmedConsentPath];
 		}
-		
+
 	};
 
-	var generateQueryNew = function(filters, template, resourceUUID) {
+	var generateQueryNew = function(filters, exportFields, template, resourceUUID) {
 		if (!template)
 			template = queryTemplate;
 
@@ -82,6 +82,10 @@ define(["underscore", "picSure/settings"],
 		if (Array.isArray(query.query.expectedResultType)) {
 			query.query.expectedResultType = "COUNT";
 		}
+
+		_.each(exportFields, function(field){
+			query.query.fields.push(field.metadata.columnmeta_HPDS_PATH);
+		});
 
 		_.each(filters, function(filter){
 			if(filter.type==="required"){
@@ -145,7 +149,7 @@ define(["underscore", "picSure/settings"],
 							}
 						} else {
 							query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
-							
+
 						}
 					} else if(filter.attributes.valueType==="NUMBER"){
 						var one = filter.attributes.constrainParams.attributes.constrainValueOne;
@@ -196,7 +200,7 @@ define(["underscore", "picSure/settings"],
 
 			}
 		});
-		
+
 		return query;
 	};
 

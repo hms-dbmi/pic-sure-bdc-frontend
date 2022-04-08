@@ -1,0 +1,41 @@
+<style>
+#patient-count-box{
+    padding: 20px 0px;
+}
+#patient-count {
+    font-size: 200%;
+    font-weight: 800;
+    width: 98%;
+    margin-bottom: .1em;
+}
+#patient-count-label {
+    font-size: 150%;
+    font-weight: 600;
+    width: 98%;
+    margin-bottom: .5em;
+}
+#export-count {
+    font-size: 125%;
+    font-weight: 400;
+    width: 98%;
+    margin-bottom: .4em;
+}
+.blue-center-large{
+    margin: 10px;
+}
+</style>
+
+<div>
+<div class="space-even" id="patient-count-box">
+	<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+	<span id="patient-count" class="blue center large">{{#if queryRan}}{{totalPatients}}{{else}}-{{/if}}</span>
+
+	<span id="patient-count-label" class="center medium">Total Participants</span>
+
+    <span id="export-count" class="center small">{{#if queryRan}}{{totalVariables}}{{else}}-{{/if}} Variables</span>
+
+	<div class="container" id="pic-sure-instances">
+<link rel="stylesheet" href="/picsureui/webjars/jstree/3.3.7/themes/default/style.min.css"></link>
+<div id="concept-tree-div">
+</div>
+</div>
