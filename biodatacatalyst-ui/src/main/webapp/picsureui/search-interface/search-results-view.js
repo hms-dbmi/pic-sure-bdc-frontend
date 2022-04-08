@@ -89,7 +89,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			variableInfoCache[variableId] = {
 					studyDescription: response.metadata.study_description,
 					studyAccession: this.generateStudyAccession(response),
-					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.study_id),
+					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.columnmeta_study_id),
 					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id),
 					variableId: variableId,
 					variableMetadata: response.variables[variableId].metadata
