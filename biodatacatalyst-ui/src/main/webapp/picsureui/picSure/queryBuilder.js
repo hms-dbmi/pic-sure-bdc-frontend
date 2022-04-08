@@ -84,7 +84,7 @@ define(["underscore", "picSure/settings"],
 		}
 
 		_.each(exportFields, function(field){
-			query.query.fields.push(field.result.metadata.HPDS_PATH);
+			query.query.fields.push(field.metadata.columnmeta_HPDS_PATH);
 		});
 
 		_.each(filters, function(filter){

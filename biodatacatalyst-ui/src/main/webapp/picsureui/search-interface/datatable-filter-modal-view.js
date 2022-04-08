@@ -3,10 +3,10 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 	let DatatableFilterModalView = BB.View.extend({
 		initialize: function(opts){
 			keyboardNav.addNavigableView("datatableFilterModal",this);
-			if (opts.dataTableInfo) {
-				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.dataTableInfo.studyId);
-				this.data.studyId = opts.dataTableInfo.studyId;
-				this.data.datasetName = opts.dataTableInfo.metadata.dataTableName;
+			if (opts.model.dataTableInfo) {
+				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.model.dataTableInfo.studyId);
+				this.data.studyId = opts.model.dataTableInfo.studyId;
+				this.data.datasetName = opts.model.dataTableInfo.dataTableName;
 			}
 			this.data.datasetAccession = this.model.dtId;
 			this.on({
@@ -131,15 +131,15 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			let existingFilter = filterModel.getByDatatableId(this.model.dtId);
 			let data = _.map(this.model.dtVariables,function(variable){
                 	return [
-                		existingFilter ? 
+                		existingFilter ?
                 			(_.find(existingFilter.get('variables'), (conceptPath)=>{
-                			return conceptPath.includes(variable.result.varId);
+                			return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
                 			}) !== undefined ? true : false) : false,
-                		variable.result.varId,
+                		variable.result.metadata.columnmeta_var_id,
                 		variable.result.metadata.columnmeta_name,
                 		variable.result.metadata.columnmeta_description,
-                		variable.result.is_continuous ? "Continuous" : "Categorical",
-                		variable.result.is_continuous ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
+						variable.result.metadata.columnmeta_data_type,
+						(variable.result.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
                 		variable.result.metadata.columnmeta_HPDS_PATH
                 	];
                 });
@@ -159,7 +159,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 		            toggleable: toggleable
 		        },
                 columnDefs: [
-                    {  
+                    {
                         targets: [1,2,3,4,5],
                         className: 'dt-center',
                         type:'string'
@@ -182,7 +182,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 			if(_.find(existingFilter.get('variables'), (conceptPath)=>{
                 				return conceptPath.includes(varId);
 							}) === undefined){
-							    checkbox.checked = false;	
+							    checkbox.checked = false;
 							}
             			}
 						let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === varId;});
@@ -207,7 +207,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
             $('.dataTables_filter input').attr('tabindex', tabcounter++);
             $('#select-all').attr('tabindex', tabcounter++);
             $('#deselect-all').attr('tabindex', tabcounter++);
-            
+
             _.each($('.sorting', this.$el), function(sortHeader){
             	sortHeader.setAttribute('tabindex', tabcounter++);
             });

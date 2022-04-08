@@ -3,10 +3,10 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
 	let DatatableExportModalView = BB.View.extend({
 		initialize: function(opts){
 			keyboardNav.addNavigableView("datatableExportModal",this);
-			if (opts.dataTableInfo) {
-				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.dataTableInfo.studyId);
-				this.data.studyId = opts.dataTableInfo.studyId;
-				this.data.datasetName = opts.dataTableInfo.metadata.dataTableName;
+			if (opts.model.dataTableInfo) {
+				this.data.studyName = searchUtil.findStudyAbbreviationFromId(opts.model.dataTableInfo.studyId);
+				this.data.studyId = opts.model.dataTableInfo.studyId;
+				this.data.datasetName = opts.model.dataTableInfo.dataTableName;
 			}
 			this.data.datasetAccession = this.model.dtId;
 			this.on({
@@ -110,11 +110,20 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
 	    	target[0] = valueToSet;
 		},
 		addVariablesToExport: function(){
+			var exportView = this;
 			 _.each(this.data(), (variable)=>{
-				filterModel.toggleExportField(variable);
-
+				 if(variable[0] !== filterModel.isExportFieldFromId(variable[1])){
+					 let toggledField = exportView.getVariableData(variable[1]);
+					 filterModel.toggleExportField(toggledField);
+				 }
 			});
             $('.close').click();
+		},
+		getVariableData: function(id){
+			let variable = _.find(this.model.dtVariables, function(searchResult){
+				return id === searchResult.result.metadata.columnmeta_var_id;
+			});
+			return variable;
 		},
 		render: function(){
 			const template = HBS.compile(datatableExportModalTemplate);
@@ -126,12 +135,12 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
                 	return [
 						//TODO change to check for variable in ExportFields
                 		filterModel.isExportField(variable),
-                		variable.result.varId,
-                		variable.result.metadata.name,
-                		variable.result.metadata.description,
-                		variable.result.is_continuous ? "Continuous" : "Categorical",
-                		variable.result.is_continuous ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
-                		variable.result.metadata.HPDS_PATH
+						variable.result.metadata.columnmeta_var_id,
+						variable.result.metadata.columnmeta_name,
+						variable.result.metadata.columnmeta_description,
+						variable.result.metadata.columnmeta_data_type,
+						(variable.result.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
+						variable.result.metadata.columnmeta_HPDS_PATH
                 	];
                 });
             $('#vcfData').DataTable( {

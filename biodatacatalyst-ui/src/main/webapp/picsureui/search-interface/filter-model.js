@@ -77,7 +77,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             },
 			toggleExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
-					return filter.get("result").varId === searchResult.result.varId;
+					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
 				});
 				if (existingField === undefined) {
 					this.addExportField(searchResult);
@@ -89,16 +89,23 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
 			},
 			isExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
-					return filter.get("result").varId === searchResult.result.varId;
+					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
 				});
                 console.log(existingField);
 				return existingField !== undefined;
 			},
+            isExportFieldFromId: function(varId) {
+                var existingField = this.get("exportFields").find((filter) => {
+                    return filter.attributes.metadata.columnmeta_var_id === varId;
+                });
+                console.log(existingField);
+                return existingField !== undefined;
+            },
 			addExportField: function (searchResult) {
-				this.get("exportFields").add(searchResult);
+				this.get("exportFields").add(searchResult.result);
 			},
-			removeExportField: function (searchResult) {
-				this.get("exportFields").remove(searchResult);
+			removeExportField: function (existingField) {
+				this.get("exportFields").remove(existingField);
 			},
 			getExportFieldCount: function (query) {
 				let count = Object.keys(query.query.categoryFilters).length + Object.keys(query.query.numericFilters).length + query.query.fields.length + query.query.requiredFields.length + 1;
@@ -107,7 +114,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             //function specifically for updating only variable and est data point values while in package view without having to run the query
             updateExportValues: function () {
             let query = queryBuilder.createQueryNew(this.get("activeFilters").toJSON(), this.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
-            output.updateConsentFilters(query, settings);
+            queryBuilder.updateConsentFilters(query, settings);
             let variableCount = this.getExportFieldCount(query);
             this.set("totalVariables", variableCount);
             this.set("estDataPoints", variableCount*this.get("totalPatients"));

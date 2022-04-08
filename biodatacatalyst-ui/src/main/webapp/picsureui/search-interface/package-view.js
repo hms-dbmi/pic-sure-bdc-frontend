@@ -168,7 +168,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
 			query = JSON.parse(JSON.stringify(query));
 			query.query.expectedResultType="DATAFRAME";
-			output.updateConsentFilters(query, settings);
+			queryBuilder.updateConsentFilters(query, settings);
 			var deferredQueryId = $.Deferred();
 			var viewObj = this;
 			this.queryAsync(query, deferredQueryId);
@@ -264,12 +264,12 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		let data = _.map(this.tempExportFields,function(variable){
 			return [
 				true,
-				variable.attributes.result.varId,
-				variable.attributes.result.metadata.name,
-				variable.attributes.result.metadata.description,
-				variable.attributes.result.is_continuous ? "Continuous" : "Categorical",
-				variable.attributes.result.is_continuous ? "" : '[ ' + variable.attributes.result.value_tags.join(", ") + ' ]',
-				variable.attributes.result.metadata.HPDS_PATH
+				variable.attributes.metadata.columnmeta_var_id,
+				variable.attributes.metadata.columnmeta_name,
+				variable.attributes.metadata.columnmeta_description,
+				variable.attributes.metadata.columnmeta_data_type,
+				(variable.attributes.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.attributes.value_tags.join(", ") + ' ]',
+				variable.attributes.metadata.columnmeta_HPDS_PATH
 			];
 		});
 		$('#exportData').DataTable( {

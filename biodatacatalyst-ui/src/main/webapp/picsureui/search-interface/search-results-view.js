@@ -22,7 +22,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		events: {
 			"click .search-result": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
-			"click .fa-database": "databaseClickHandler",
+			"click .glyphicon-log-out": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-div': 'resultsFocus',
 			'blur #search-results-div': 'resultsBlur',
@@ -110,7 +110,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			});
 		},
 		infoClickHandler: function(event) {
-			if(event.target.classList.contains('fa')){
+			if(event.target.classList.contains('search-result-action-btn') ){
 				return;
 			}
 			let study_id = $(event.target).data('study-id');
@@ -121,6 +121,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.cacheVariableInfo(response, variableId);
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: variableId,
+					dataTableData: response,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();

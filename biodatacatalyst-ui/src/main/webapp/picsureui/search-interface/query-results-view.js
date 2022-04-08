@@ -65,7 +65,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             runQuery: function(incomingQuery){
                     this.queryRunning(incomingQuery);
                     var query = JSON.parse(JSON.stringify(incomingQuery));
-                    overrides.updateConsentFilters(query, settings);
+                    queryBuilder.updateConsentFilters(query, settings);
                     this.model.set('query', query);
                     $.ajax({
                         url: window.location.origin + "/picsure/query/sync",

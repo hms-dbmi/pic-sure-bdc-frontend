@@ -14,6 +14,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
 				this.modalTemplate = HBS.compile(modalTemplate);
 				this.varId = opts.varId;
+				this.dataTableData = opts.dataTableData;
 			},
 			events: {
 				'mouseover .badge': 'showTagControls',
@@ -26,7 +27,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				'click #show-all-tags-btn': 'showAllTags',
 				'click #show-fewer-tags-btn': 'showFewerTags',
 				'click .fa-filter': 'filterClickHandler',
-				'click .fa-database': 'databaseClickHandler',
+				'click .glyphicon-log-out': 'databaseClickHandler',
 				'keypress .fa-filter': 'filterKeypressHandler',
 				'keypress .fa-database': 'databaseKeypressHandler'
 			},
@@ -71,7 +72,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 						});
 					}
 					this.filterModalView.render();
-					modal.displayModal(this.filterModalView, "Variable Information for " + searchResult.result.metadata.name);
+					modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
 				}
 				else if(event.target.dataset.target==='datatable'){
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
@@ -89,18 +90,22 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								limit: 100000
 						}}),
 						success: function(response){
+							let dataTableInfo = {
+								studyId: this.dataTableData.metadata.columnmeta_study_id,
+								dataTableName: this.dataTableData.metadata.study_description
+							};
 							let filterViewData = {
 								dtId: event.target.dataset.id,
 								filter: filter ? filter.toJSON() : undefined,
-								dtVariables: response.results.searchResults
+								dtVariables: response.results.searchResults,
+								dataTableInfo: dataTableInfo
 							};
 							this.filterModalView = new datatableFilterModalView({
 								model: filterViewData,
-								dataTableInfo: searchResult.result,
 								el: $(".modal-body"),
 							});
 							this.filterModalView.render();
-							modal.displayModal(this.filterModalView, "Dataset Filter for " + searchResult.result.metadata.dataTableName);
+							modal.displayModal(this.filterModalView, "Dataset : " + dataTableInfo.dataTableName);
 						}.bind(this),
 						error: function(response){
 							console.log(response);
@@ -114,16 +119,13 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				}
 			},
 			databaseClickHandler: function(event) {
-				let variableId = _.find($(".modal .fa-database"), (filterButton) => {
+				let variableId = _.find($('.modal .glyphicon-log-out'), (filterButton) => {
 					return filterButton.dataset.target === "variable";
 				}).dataset.id;
 
-				let searchResult = _.find(
-					tagFilterModel.attributes.searchResults.results.searchResults,
-					function (variable) {
-						return variable.result.varId === event.target.dataset["id"];
-					}
-				);
+				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
+					function(variable){return variable.result.varId===variableId;});
+
 				if (event.target.dataset.target === "datatable") {
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
 
@@ -140,17 +142,22 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								limit: 100000
 						}}),
 						success: function(response){
+							let dataTableInfo = {
+								studyId: this.dataTableData.metadata.columnmeta_study_id,
+								dataTableName: this.dataTableData.metadata.study_description
+							};
 							let exportViewData = {
 								dtId: event.target.dataset.id,
 								variable: filter ? filter.toJSON() : undefined,
-								dtVariables: response.results.searchResults
+								dtVariables: response.results.searchResults,
+								dataTableInfo: dataTableInfo
 							};
 							this.exportModalView = new datatableExportModalView({
 								model: exportViewData,
 								el: $(".modal-body"),
 							});
 							this.exportModalView.render();
-							modal.displayModal(this.exportModalView, "Dataset : " + searchResult.result.metadata.dataTableName);
+							modal.displayModal(this.exportModalView, "Dataset : " + dataTableInfo.dataTableName);
 						}.bind(this),
 						error: function(response){
 							console.log(response);
@@ -168,7 +175,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 					this.filterModalView.render();
 					modal.displayModal(
 						this.filterModalView,
-						"Variable Information for " + searchResult.result.metadata.name
+						searchResult.result.metadata.description
 					);
 				}
 
