@@ -32,8 +32,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
         },
         openDistributions: function(){
-            console.log('openDistributions');
-            const vizModal = new VisualizationModalView();
+            const vizModal = new VisualizationModalView.View({model: new VisualizationModalView.Model()});
             modal.displayModal(
                 vizModal,
                 'Variable distributions of query filters',

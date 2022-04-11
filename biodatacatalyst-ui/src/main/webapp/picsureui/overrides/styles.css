@@ -570,6 +570,9 @@ input[type='checkbox'].categorical-filter-input {
     flex-direction: row;
 }
 
+.min-width-20 {
+    min-width: 20%;
+}
 
 /************************* STARTS Search X/reset button ******************************/
 
@@ -644,7 +647,7 @@ remove when above bug is fixed */
 
 #visualizations-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
@@ -661,9 +664,16 @@ remove when above bug is fixed */
 
 .image-container .download-button {
     position: relative;
-    left: -130px;
     font-size: 3em;
     align-self: flex-start;
+}
+
+.visualization-body {
+    min-height: 100px;
+}
+
+.visualization-footer span {
+    align-self: center;
 }
 
 /************************* End Visualization ******************************/

@@ -1,15 +1,18 @@
-<div id="visualizations-modal">
-    <h4>All visualizations display the distributions of each variable for the specified cohort of interest.</h4>
-    <div>
-        <h5>Data Retrieval Summary</h5>
-        <p>{{numParticipants}} participants</p>
-        <p>{{numVariables}} variables</p>
-        <p>{{numData}} estimated data points</p>
+<div id="visualizations-modal" class="panel panel-default">
+    <div class="panel-heading">
+        <h3>All visualizations display the distributions of each variable for the specified cohort of interest.</h3>
     </div>
-    <div id="images-spinner-holder"></div>
-    <div id="visualizations-container">
-        {{#each images}}
-            {{> visualization-image-partial data=this}}
-        {{/each}}
+    <div class="visualization-body panel-body">
+        <div class="center large" id="spinner-holder">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</div>
+        <div id="visualizations-container" class="panel-body">
+            {{#each visualizations.images}}
+                {{> visualization-image-partial description=this.description image=this.image title=this.title }}
+            {{/each}}
+        </div>
     </div>
+    <div class="visualization-footer panel-footer flex-container space-between">
+            <span><strong>Data Retrieval Summary:</strong>   {{numParticipants}} participants</span>
+            <span>{{numVariables}} variables</span>
+            <span>{{numData}} estimated data points</span>
+        </div>  
 </div>
