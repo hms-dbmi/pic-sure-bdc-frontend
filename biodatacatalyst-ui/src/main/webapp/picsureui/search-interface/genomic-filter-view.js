@@ -336,7 +336,6 @@ define(['jquery', 'backbone','handlebars',
                     this.consequenceSearchPanel.render();
                     this.previousFilter && this.reapplyGenomicFilters();
                     this.updateDisabledButton();
-                    this.$el.find('#selected-filters').html(this.filterPartialTemplate({filters: this.data.categoryVariantInfoFilters}));
                     this.createTabIndex();
                 } 
                 else {
