@@ -561,6 +561,10 @@ input[type='checkbox'].categorical-filter-input {
     flex-grow: 1;
 }
 
+.big-grow {
+    flex-grow:100;
+}
+
 .flex-container {
     display: flex;
     flex-direction: row;
@@ -610,11 +614,6 @@ input[type="search"]::-webkit-search-cancel-button {
     #search-box:not(:valid) ~ input[type="reset"] {
         visibility: hidden;
     }
-    /* #search-box:valid ~ #search-button, 
-    #search-box:valid ~ #genomic-filter-btn {
-        position: relative;
-        right: 14px;
-    } */
 }
 
 /* Safari 9+ (no impact to Chrome or Firefox)
