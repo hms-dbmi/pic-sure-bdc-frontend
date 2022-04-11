@@ -672,10 +672,6 @@ remove when above bug is fixed */
     min-height: 100px;
 }
 
-.visualization-footer span {
-    align-self: center;
-}
-
 /************************* End Visualization ******************************/
 
 #show-all-tags-btn, #show-fewer-tags-btn {
