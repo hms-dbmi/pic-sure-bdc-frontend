@@ -54,7 +54,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.tagFilterView.render();
 			this.searchResultsView.render();
 			tagFilterModel.bind('change', this.submitSearch.bind(this));
-			override.enterKeyHandler ? this.handleSearchKeypress = override.enterKeyHandler.bind(this) : undefined;
 		},
 
 		findStudyAbbreviationFromId: function(study_id){
