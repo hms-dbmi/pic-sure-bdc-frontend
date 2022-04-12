@@ -4,6 +4,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let tableRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d$');
 	let tableVersionRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d');
+    let dccHarmonizedTag = 'DCC Harmonized data set';
 	let defaultTagLimit = 12;
 
 	let TagFilterView = BB.View.extend({
@@ -197,7 +198,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();
 			let tags = _.filter(unusedTags, function(tag){
-				return ! studyVersionRegex.test(tag.get('tag')) && ! tableVersionRegex.test(tag.get('tag'));
+				return ! (tag.get('tag')===dccHarmonizedTag || studyVersionRegex.test(tag.get('tag'))) && ! tableVersionRegex.test(tag.get('tag'));
 			}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit'));
 			this.model.set('numTags', Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()))
 			this.model.set('focusedTag', this.model.get('numTags') * 1000000);
@@ -220,7 +221,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 					excludedTags:this.model.get("excludedTags").map(function(tag){return tag.toJSON();}),
 					studyTags:
 						_.filter(unusedTags, function(tag){
-							return studyRegex.test(tag.get('tag'));
+							return (tag.get('tag')===dccHarmonizedTag || studyRegex.test(tag.get('tag')));
 						}).map(function(tag){
 							return tag.toJSON();
 						})
