@@ -5,8 +5,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"search-interface/modal",
 	"search-interface/genomic-filter-view",
 	"common/spinner",
-	"text!common/unexpected_error.hbs",
-	"overrides/filter"
+	"text!common/unexpected_error.hbs"
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -15,8 +14,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			modal,
 			genomicFilterView,
 			spinner,
-			helpViewTemplate,
-			override
+			helpViewTemplate
 		){
 
 	var SearchView = BB.View.extend({
