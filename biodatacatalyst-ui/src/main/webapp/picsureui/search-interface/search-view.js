@@ -5,7 +5,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"search-interface/modal",
 	"search-interface/genomic-filter-view",
 	"common/spinner",
-	"text!common/unexpected_error.hbs"
+	"text!common/unexpected_error.hbs",
+	"overrides/filter"
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -15,10 +16,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			genomicFilterView,
 			spinner,
 			helpViewTemplate,
+			override
 		){
 
 	var SearchView = BB.View.extend({
-		
+
 		initialize: function(opts){
 			this.filters = [];
 			this.queryTemplate = opts.queryTemplate;
@@ -32,7 +34,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
 				}) == null;
 			})
-			
+
 			//only include each tag once
 			this.antiScopeTags = new Set();
 			_.each(this.antiScopeStudies, function(study){
@@ -40,7 +42,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				this.antiScopeTags.add(study.study_identifier.toUpperCase());
 				this.antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
 			}.bind(this));
-			
+
 			this.render();
 			this.tagFilterView = new tagFilterView({
 				el : $('#tag-filters'),
@@ -54,6 +56,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.tagFilterView.render();
 			this.searchResultsView.render();
 			tagFilterModel.bind('change', this.submitSearch.bind(this));
+			override.enterKeyHandler ? this.handleSearchKeypress = override.enterKeyHandler.bind(this) : undefined;
 		},
 
 		findStudyAbbreviationFromId: function(study_id){
@@ -94,10 +97,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
-			
+
 			//exclude the user selected tags as well as tags not in scope
 			searchExcludeTags= [...this.excludedTags, ...this.antiScopeTags];
-			
+
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			//let deferredSearchResults = $.Deferred();
@@ -127,7 +130,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					console.log(response);
 				}.bind(this)
 			});
+
 			spinner.medium(deferredSearchResults, '#spinner-holder', '');
+			$('#search-results').show();
 		},
 
 		openGenomicFilteringModal: function() {
@@ -141,8 +146,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 		handleSearchKeypress: function(event){
 			if(event.keyCode===13){
-				this.submitSearch();
+				$("#search-button", this.$el)[0].click();
+				return false;
 			}
+
 		},
 
 		render: function(){
