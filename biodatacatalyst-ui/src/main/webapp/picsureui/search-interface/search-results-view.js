@@ -22,7 +22,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		events: {
 			"click .search-result": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
-			"click .glyphicon-log-out": "databaseClickHandler",
+			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-div': 'resultsFocus',
 			'blur #search-results-div': 'resultsBlur',
@@ -171,10 +171,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		},
 		databaseClickHandler: function(event) {
 			let resultIndex = $(event.target).data("result-index");
-
-			let searchResult = tagFilterModel.get("searchResults").results
-			.searchResults[resultIndex];
+			this.toggleExportClasses(event.target);
+			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
+		},
+		toggleExportClasses: function(target) {
+			if (target.classList.contains('glyphicon-log-out')) {
+				target.classList.remove('glyphicon', 'glyphicon-log-out');
+				target.classList.add('fa', 'fa-check-square-o');
+			} else {
+				target.classList.remove('fa', 'fa-check-square-o');
+				target.classList.add('glyphicon', 'glyphicon-log-out');
+			}
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.columnmeta_study_id;

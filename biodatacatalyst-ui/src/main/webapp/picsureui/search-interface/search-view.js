@@ -118,6 +118,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					this.updateTags(response);
 					$('#tag-filters').show();
 					$('#search-results').show();
+					$('#spinner-holder').removeClass('big-grow');
 				}.bind(this),
 				error: function(response){
 					//deferredSearchResults.resolve();
@@ -128,6 +129,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				}.bind(this)
 			});
 			spinner.medium(deferredSearchResults, '#spinner-holder', '');
+			$('#spinner-holder').addClass('big-grow');
 		},
 
 		openGenomicFilteringModal: function() {

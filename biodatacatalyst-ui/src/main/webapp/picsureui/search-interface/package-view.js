@@ -116,7 +116,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			}
 			else if (exportStatus === 'Overload') {
 				fontColor = 'Red';
-				statusMessage = 'Status: NUMBER OF DATA POINTS EXCEEDED \nRemove data selections';
+				statusMessage = 'Status: NUMBER OF DATA POINTS EXCEEDED\nRemove data selections';
 				$('#package-package-button').prop('disabled', true);
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();

@@ -561,11 +561,18 @@ input[type='checkbox'].categorical-filter-input {
     flex-grow: 1;
 }
 
+.big-grow {
+    flex-grow:100;
+}
+
 .flex-container {
     display: flex;
     flex-direction: row;
 }
 
+.min-width-20 {
+    min-width: 20%;
+}
 
 /************************* STARTS Search X/reset button ******************************/
 
@@ -610,11 +617,6 @@ input[type="search"]::-webkit-search-cancel-button {
     #search-box:not(:valid) ~ input[type="reset"] {
         visibility: hidden;
     }
-    /* #search-box:valid ~ #search-button, 
-    #search-box:valid ~ #genomic-filter-btn {
-        position: relative;
-        right: 14px;
-    } */
 }
 
 /* Safari 9+ (no impact to Chrome or Firefox)
@@ -645,7 +647,7 @@ remove when above bug is fixed */
 
 #visualizations-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
@@ -662,9 +664,12 @@ remove when above bug is fixed */
 
 .image-container .download-button {
     position: relative;
-    left: -130px;
     font-size: 3em;
     align-self: flex-start;
+}
+
+.visualization-body {
+    min-height: 100px;
 }
 
 /************************* End Visualization ******************************/
