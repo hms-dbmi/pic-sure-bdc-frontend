@@ -27,9 +27,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				'click #show-all-tags-btn': 'showAllTags',
 				'click #show-fewer-tags-btn': 'showFewerTags',
 				'click .fa-filter': 'filterClickHandler',
-				'click .glyphicon-log-out': 'databaseClickHandler',
+				'click .export-icon': 'databaseClickHandler',
 				'keypress .fa-filter': 'filterKeypressHandler',
-				'keypress .fa-database': 'databaseKeypressHandler'
+				'keypress .export-icon': 'databaseKeypressHandler'
 			},
 			showTagControls: function(event){
 				$('.hover-control', event.target).css('visibility','visible').hover(function() {
@@ -119,7 +119,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				}
 			},
 			databaseClickHandler: function(event) {
-				let variableId = _.find($('.modal .glyphicon-log-out'), (filterButton) => {
+				this.toggleExportClasses(event.target);
+				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
 					return filterButton.dataset.target === "variable";
 				}).dataset.id;
 
@@ -179,6 +180,15 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 					);
 				}
 
+			},
+			toggleExportClasses: function(target) {
+				if (target.classList.contains('glyphicon-log-out')) {
+					target.classList.remove('glyphicon', 'glyphicon-log-out');
+					target.classList.add('fa', 'fa-check-square-o');
+				} else {
+					target.classList.remove('fa', 'fa-check-square-o');
+					target.classList.add('glyphicon', 'glyphicon-log-out');
+				}
 			},
 			databaseKeypressHandler: function(event){
 				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
