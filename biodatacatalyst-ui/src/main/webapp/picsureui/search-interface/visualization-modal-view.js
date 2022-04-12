@@ -4,9 +4,6 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
 		defaults: {
 			spinnerClasses: "spinner-medium spinner-medium-center ",
 			spinning: false,
-            numParticipants: 0,
-            numVariables: 0,
-            numData: 0,
             viusalizations: [],
 		}
 	});
@@ -16,8 +13,6 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
             this.template = HBS.compile(template);
             HBS.registerPartial("visualization-image-partial", imageTemplate);
             this.getImages();
-            this.updateExport();
-            //this.getInfo();
         },
         events: {
             'click #package-data' : 'openPackageData',
@@ -34,11 +29,6 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
 					console.error(response);
 				}.bind(this)
 			});
-        },
-        updateExport() {
-            this.model.set('numParticipants', filterModel.get("totalPatients"));
-            this.model.set('numVariables', filterModel.get("totalVariables"));
-            this.model.set('numVariables', filterModel.get("estDataPoints"));
         },
         getImages: function(){
             let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, "ca0ad4a9-130a-3a8a-ae00-e35b07f1108b");
