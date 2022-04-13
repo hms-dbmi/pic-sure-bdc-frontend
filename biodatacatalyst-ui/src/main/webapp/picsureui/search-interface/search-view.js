@@ -85,7 +85,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		submitSearch: function(e) {
 			this.searchTerm = $('#search-box').val();
 			if(tagFilterModel.get("term")!==this.searchTerm){
-				tagFilterModel.reset({silent:true});
 				tagFilterModel.set("term", this.searchTerm, {silent:true});
 			}
 			this.requiredTags = $('.selected-required-tag').map(function(x) {
