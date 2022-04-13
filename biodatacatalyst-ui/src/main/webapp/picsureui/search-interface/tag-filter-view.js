@@ -200,8 +200,8 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			let tags = _.filter(unusedTags, function(tag){
 				return ! (tag.get('tag')===dccHarmonizedTag || studyVersionRegex.test(tag.get('tag'))) && ! tableVersionRegex.test(tag.get('tag'));
 			}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit'));
-			this.model.set('numTags', Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()))
-			this.model.set('focusedTag', this.model.get('numTags') * 1000000);
+			this.model.set('numTags', Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()), {silent:true})
+			this.model.set('focusedTag', this.model.get('numTags') * 1000000, {silent:true});
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
 					tags: tags,
