@@ -106,7 +106,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			var viewObj = this;
 			if(exportStatus === 'Ready'){
 				statusMessage = 'Status:  Ready to package. \nClick "Package Data" to proceed.';
-				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button').attr('disabled', false);
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
@@ -117,21 +117,23 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			else if (exportStatus === 'Overload') {
 				fontColor = 'Red';
 				statusMessage = 'Status: NUMBER OF DATA POINTS EXCEEDED\nRemove data selections';
-				$('#package-package-button').prop('disabled', true);
+				$('#package-package-button').attr('disabled', true);
+				$('#package-package-button', this.$el).off('click');
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 			}
 			else if (exportStatus === 'Progress') {
 				statusMessage = 'Status: In Progress';
-				$('#package-package-button').prop('disabled', true);
+				$('#package-package-button').attr('disabled', true);
+				$('#package-package-button', this.$el).off('click');
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 			}
 			else if (exportStatus === 'Done') {
 				statusMessage = 'Status: Available';
-				$('#package-package-button').prop('disabled', false);
+				$('#package-package-button').attr('disabled', false);
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
@@ -139,8 +141,9 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('.package-query-container').show();
 				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
-				$('#package-download-button', this.$el).one("click", function(){
-					viewObj.downloadData(viewObj.model.get("queryId"));
+				$('#package-download-button', this.$el).off("click");
+				$('#package-download-button', this.$el).click(function(){
+					viewObj.downloadData(viewObj);
 				}.bind(viewObj));
 				$('#package-copy-query-button', this.$el).click(function(){
 					viewObj.copyQueryId();
@@ -222,7 +225,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			});
 		}());
 	},
-	downloadData: function(queryId){
+	downloadData: function(viewObj){
+		let queryId = viewObj.model.get('queryId');
 		$.ajax({
 			url: window.location.origin + "/picsure/query/" + queryId + "/result",
 			type: 'POST',
