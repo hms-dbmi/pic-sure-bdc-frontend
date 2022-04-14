@@ -42,7 +42,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		requireTag: function(event){
 			let focusedTag = $('.focused-tag-badge')[0];
 			if(focusedTag){
-				this.model.requireTag(focusedTag.id.split('-')[1]);				
+				this.model.requireTag(focusedTag.id.split('-')[1]);
 			}
 		},
 		excludeTag: function(event){
@@ -81,7 +81,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			let focusedTag = -1;
 			for(var x = 0;x < tags.length;x++){
 				if($(tags[x]).hasClass('focused-tag-badge')){
-					focusedTag = x;					
+					focusedTag = x;
 					$('.focused-tag-badge .hover-control').css('visibility','hidden');
 					$(tags[x]).removeClass('focused-tag-badge');
 				}
@@ -94,7 +94,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		studyTagKeypress: function(event){
 			console.log(event);
 			switch(event.key){
-				case 'a':{  
+				case 'a':{
 					this.model.decrementTagFocus();
 					this.render();
 					break;
@@ -144,7 +144,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		queryUpdated: function(model, collection, opts){
 			var studiesInScope = _.filter(filterModel.get('activeFilters').models, (model) => {model.toJSON().searchResult !== undefined})
-								  .map((model) => {return model.toJSON().searchResult.studyId}); 
+								  .map((model) => {return model.toJSON().searchResult.studyId});
 
 			if(studiesInScope.length > 0){
 				var studyTag = this.model.get("unusedTags").findWhere({tag:studiesInScope[0].toUpperCase()});
@@ -183,7 +183,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			}
 		},
 		clickTag: function(event){
-			if(event.target && event.target.classList.contains('hover-control')){	
+			if(event.target && event.target.classList.contains('hover-control')){
 				this.model[event.target.dataset['action']](event.target.dataset['tag']);
 			}
 		},
@@ -194,6 +194,20 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.render();
 			tagFilterModel.resetPagination({silent:true});
 			this.onTagChange();
+		},
+		determineStudyTags: function(unusedTags){
+			let filteredTags = _.chain(unusedTags).filter(function(tag){
+				return (tag.get('tag')===dccHarmonizedTag || studyRegex.test(tag.get('tag')));
+			}).sortBy(function(tag){
+				return tag.get('score');
+			}).sortBy(function(tag){
+				return tag.get('tag').toLowerCase();
+			}).value()
+			let studyTags = _.uniq(filteredTags, function(tag){return tag.get('tag').toLowerCase();}).map(function(tag){
+				tag.set('tag', tag.get('tag').toLowerCase());
+				return tag.toJSON();
+			})
+			return studyTags;
 		},
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();
@@ -219,12 +233,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 						return tag.toJSON();
 					}),
 					excludedTags:this.model.get("excludedTags").map(function(tag){return tag.toJSON();}),
-					studyTags:
-						_.filter(unusedTags, function(tag){
-							return (tag.get('tag')===dccHarmonizedTag || studyRegex.test(tag.get('tag')));
-						}).map(function(tag){
-							return tag.toJSON();
-						})
+					studyTags: this.determineStudyTags(unusedTags)
 				})
 			);
 			$('.study-badge-'+this.model.get('focusedTag')).addClass('focused-tag-badge');
