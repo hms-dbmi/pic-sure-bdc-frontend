@@ -141,7 +141,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('.package-query-container').show();
 				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
-				$('#package-download-button', this.$el).off("click");
+				$('#package-download-button', this.$el).off('click');
 				$('#package-download-button', this.$el).click(function(){
 					viewObj.downloadData(viewObj);
 				}.bind(viewObj));
@@ -159,6 +159,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('#package-package-button').css('background-color', 'white');
 			}
 
+			$('#package-download-button', this.$el).removeAttr("href");
 			$('#package-participants-value').html(filterModel.get("totalPatients"));
 			$('#package-variables-value').html(filterModel.get("totalVariables"));
 			$('#package-est-data-value').html(filterModel.get("estDataPoints"));
@@ -226,6 +227,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		}());
 	},
 	downloadData: function(viewObj){
+		$('#package-download-button', this.$el).removeAttr("href");
 		let queryId = viewObj.model.get('queryId');
 		$.ajax({
 			url: window.location.origin + "/picsure/query/" + queryId + "/result",
@@ -238,7 +240,6 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
 				$("#package-download-button", this.$el).off('click');
 				$("#package-download-button", this.$el).attr("href", responseDataUrl);
-				$("#package-download-button", this.$el).on('click');
 				$("#package-download-button", this.$el)[0].click();
 			}.bind(this),
 			error: function(response){
