@@ -78,14 +78,14 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			target[0] = valueToSet;
 			if(valueToSet){
 				let varToAdd = this.model.get("deletedExports").find((filter) => {
-					return filter.get("result").varId === target[1];
+					return filter.attributes.metadata.columnmeta_var_id === target[1];
 				});
 				filterModel.get("exportFields").add(varToAdd);
 				this.model.get("deletedExports").remove(varToAdd);
 			}
 			else{
 				let varToRemove = filterModel.get("exportFields").find((filter) => {
-					return filter.get("result").varId === target[1];
+					return filter.attributes.metadata.columnmeta_var_id === target[1];
 				});
 				filterModel.get("exportFields").remove(varToRemove);
 				this.model.get("deletedExports").add(varToRemove);
