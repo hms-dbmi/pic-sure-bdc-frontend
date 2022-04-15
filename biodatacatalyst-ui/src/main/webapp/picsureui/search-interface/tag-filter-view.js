@@ -13,7 +13,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.onTagChange = opts.onTagChange;
 			this.model.get('requiredTags').bind('change add remove', this.modelChanged.bind(this));
 			this.model.get('excludedTags').bind('change add remove', this.modelChanged.bind(this));
-			filterModel.get("activeFilters").bind('change add remove', this.queryUpdated.bind(this));
+			//filterModel.get("activeFilters").bind('change add remove', this.queryUpdated.bind(this));
 			keyboardNav.addNavigableView("tagFilters",this);
 			this.on({
 				'keynav-arrowup document': this.previousTag,
@@ -142,23 +142,23 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.$("#study-tags-section-div .section-body .focused-tag-badge").removeClass('focused-tag-badge');
 			keyboardNav.setCurrentView(undefined);
 		},
-		queryUpdated: function(model, collection, opts){
-			var studiesInScope = _.filter(filterModel.get('activeFilters').models, (model) => {model.toJSON().searchResult !== undefined})
-								  .map((model) => {return model.toJSON().searchResult.studyId});
-
-			if(studiesInScope.length > 0){
-				var studyTag = this.model.get("unusedTags").findWhere({tag:studiesInScope[0].toUpperCase()});
-				if(studyTag !== undefined){
-					this.model.get("unusedTags").remove(studyTag);
-					this.model.get("requiredTags").add(studyTag);
-					this.model.get("impliedTags").add(studyTag);
-				}
-			} else {
-				this.model.get("requiredTags").remove(this.model.get("impliedTags").models);
-				this.model.get("unusedTags").add(this.model.get("impliedTags").models);
-				this.model.get("impliedTags").reset(null);
-			}
-		},
+		// queryUpdated: function(model, collection, opts){
+		// 	var studiesInScope = _.filter(filterModel.get('activeFilters').models, (model) => {model.toJSON().searchResult !== undefined})
+		// 						  .map((model) => {return model.toJSON().searchResult.studyId});
+		//
+		// 	if(studiesInScope.length > 0){
+		// 		var studyTag = this.model.get("unusedTags").findWhere({tag:studiesInScope[0].toUpperCase()});
+		// 		if(studyTag !== undefined){
+		// 			this.model.get("unusedTags").remove(studyTag);
+		// 			this.model.get("requiredTags").add(studyTag);
+		// 			this.model.get("impliedTags").add(studyTag);
+		// 		}
+		// 	} else {
+		// 		this.model.get("requiredTags").remove(this.model.get("impliedTags").models);
+		// 		this.model.get("unusedTags").add(this.model.get("impliedTags").models);
+		// 		this.model.get("impliedTags").reset(null);
+		// 	}
+		// },
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);
 			this.render();

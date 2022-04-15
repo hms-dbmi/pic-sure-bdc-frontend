@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel"],
-    function(BB, HBS, settings, queryBuilder, output){
+define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel", "search-interface/tag-filter-model"],
+    function(BB, HBS, settings, queryBuilder, output, tagFilterModel){
 
         let FilterModel = BB.Model.extend({
             defaults:{
@@ -30,6 +30,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     filterType: "restrict",
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
+                tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
             },
             addNumericFilter: function(searchResult, min, max) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -45,6 +46,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
                     topmed: searchResult.result.varId.includes('phv'),
                 });
+                    tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
             },
             addRequiredFilter: function(searchResult) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -58,6 +60,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     filterType: "any",
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
+                    tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
             },
             addDatatableFilter: function(datatableSelections) {
                 let existingFilterForVariable = this.getByDatatableId(datatableSelections.searchResult.result.dtId);
@@ -74,6 +77,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: datatableSelections.searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                     searchResult: datatableSelections.searchResult
                 });
+                tagFilterModel.requireTag(datatableSelections.searchResult.result.metadata.columnmeta_study_id);
             },
 			toggleExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {

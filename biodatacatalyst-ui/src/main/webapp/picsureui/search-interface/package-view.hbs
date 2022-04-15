@@ -21,13 +21,9 @@ div#package-datatable-table{
     margin: 50px;
     margin-top: 20px;
 }
-.package-data-modal{
-    background: white;
-    border: 2px solid black;
-    border-radius: 5px;
-}
+
 .package-data-modal>div{
-    margin: 8px;
+    margin: 7px;
 }
 .package-header{
     display:inline-flex;
@@ -51,25 +47,37 @@ div#package-datatable-table{
     text-align:right;
     padding-right:10px;
 }
-.right-container > div > .package-button, #package-query-id {
+.package-button {
     display: flex;
     justify-content: center;
-    height: 2em;
     margin-bottom: 3px;
     width:11em;
-    background: white;
-    border: 2px solid black;
-    border-radius: 5px;
-    align-items: center;
-    color:inherit;
+    font-size:1em;
 }
 #package-query-id{
     width:fit-content;
-    padding:2px;
+    padding:6px 4px;
+    border: 2px solid black;
+    border-radius: 5px;
+    align-items: center;
+    height:
 }
 #package-copy-query-button{
     position:relative;
     right:-40%;
+    font-size:1em;
+}
+#package-download-button{
+    background: #337ab7;
+    color: white;
+}
+#package-download-label{
+    font-family:'Nunito Sans', sans-serif;
+    font-weight: 400;
+    padding-left: 3px;
+}
+#package-download-icon{
+    padding-top:.2em;
 }
 
 </style>
@@ -95,17 +103,18 @@ div#package-datatable-table{
         </div>
         <div class="right-container">
             <div class="package-query-container">
-                <a class="package-button" id="package-copy-query-button">
+                <button id="package-copy-query-button" class="btn btn-primary package-button" tabindex="1099999">
                     Copy Query ID
-                </a>
+                </button>
                 <div id="package-query-id">xxx</div>
             </div>
             <div class="package-buttons-container">
-                <a class="package-button" id="package-package-button">
-                    Package Data
-                </a>
-                <a class="package-button" id="package-download-button" download='data.csv'>
-                    Download Data
+                <button id="package-package-button" class="btn btn-primary package-button" tabindex="1099999">
+                        Package Data
+                </button>
+                <a id="package-download-button" class="btn btn-primary download-button package-button" title="Download Data" download='data.csv'>
+                      <div class="fa fa-download" id="package-download-icon"></div>
+                      <span id='package-download-label'> Download </span>
                 </a>
             </div>
         </div>
