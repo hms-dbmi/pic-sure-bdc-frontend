@@ -14,11 +14,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			modal,
 			genomicFilterView,
 			spinner,
-			helpViewTemplate,
+			helpViewTemplate
 		){
 
 	var SearchView = BB.View.extend({
-		
+
 		initialize: function(opts){
 			this.filters = [];
 			this.queryTemplate = opts.queryTemplate;
@@ -32,7 +32,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
 				}) == null;
 			})
-			
+
 			//only include each tag once
 			this.antiScopeTags = new Set();
 			_.each(this.antiScopeStudies, function(study){
@@ -40,7 +40,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				this.antiScopeTags.add(study.study_identifier.toUpperCase());
 				this.antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
 			}.bind(this));
-			
+
 			this.render();
 			this.tagFilterView = new tagFilterView({
 				el : $('#tag-filters'),
@@ -87,8 +87,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		submitSearch: function(e) {
 			this.searchTerm = $('#search-box').val();
 			if(tagFilterModel.get("term")!==this.searchTerm){
-				tagFilterModel.reset({silent:true});
-				tagFilterModel.set("term", this.searchTerm);
+				tagFilterModel.set("term", this.searchTerm, {silent:true});
 			}
 			this.requiredTags = $('.selected-required-tag').map(function(x) {
 				return $(this).data('tag');
@@ -96,10 +95,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
 				return $(this).data('tag');
 			}).toArray();
-			
+
 			//exclude the user selected tags as well as tags not in scope
 			searchExcludeTags= [...this.excludedTags, ...this.antiScopeTags];
-			
+
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			//let deferredSearchResults = $.Deferred();
@@ -130,6 +129,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					console.log(response);
 				}.bind(this)
 			});
+
 			spinner.medium(deferredSearchResults, '#spinner-holder', '');
 			$('#spinner-holder').addClass('big-grow');
 		},
@@ -145,8 +145,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 		handleSearchKeypress: function(event){
 			if(event.keyCode===13){
-				this.submitSearch();
+				$("#search-button", this.$el)[0].click();
+				return false;
 			}
+
 		},
 
 		render: function(){

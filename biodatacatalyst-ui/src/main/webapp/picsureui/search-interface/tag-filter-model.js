@@ -1,6 +1,7 @@
 define(["backbone", "handlebars", "search-interface/search-util"],
     function(BB, HBS, searchUtil){
         let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
+        let dccHarmonizedTag = 'DCC Harmonized data set';
         let defaultTagLimit = 12;
 
         let TagCollection = BB.Collection.extend({
@@ -26,25 +27,25 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.set('focusedSection', undefined);
                 this.set('numTags', 0);
                 HBS.registerHelper("aliasIfStudy", function(tag){
-                    if(studyVersionRegex.test(tag)){
+                    if(tag===dccHarmonizedTag || studyVersionRegex.test(tag)){
                         return searchUtil.findStudyAbbreviationFromId(tag);
                     }
                     return tag;
                 });
                 HBS.registerHelper("ariaAliasIfStudy", function(tag){
-                    if(studyVersionRegex.test(tag)){
+                    if(tag===dccHarmonizedTag || studyVersionRegex.test(tag)){
                         return "Study " + searchUtil.findStudyAbbreviationFromId(tag).split('').join('.');
                     }
                     return tag;
                 });
                 HBS.registerHelper("colorClass", function(tag){
-                    if(studyVersionRegex.test(tag)){
+                    if(tag===dccHarmonizedTag || studyVersionRegex.test(tag)){
                         return 'study-badge';
                     }
                     return 'tag-badge';
                 });
                 HBS.registerHelper('isStudy', function(arg1, options) {
-                    return studyVersionRegex.test(arg1) ? options.fn(this) : options.inverse(this);
+                    return (arg1===dccHarmonizedTag || studyVersionRegex.test(arg1)) ? options.fn(this) : options.inverse(this);
                 });
             },
             reset: function(options){
@@ -73,7 +74,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
             },
             hasInactiveStudyTags: function(){
                 return this.get("unusedTags").filter(function(tag){
-                        return studyVersionRegex.test(tag.get('tag'));
+                        return tag.get('tag')===dccHarmonizedTag || studyVersionRegex.test(tag.get('tag'));
                 }).length>0;
             },
             requireTag: function(tagName){
