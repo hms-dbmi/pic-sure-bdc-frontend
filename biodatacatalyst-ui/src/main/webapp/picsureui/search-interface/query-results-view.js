@@ -1,9 +1,9 @@
 define(["jquery",  "text!search-interface/query-results-view.hbs", "picSure/ontology", "backbone", "handlebars",
 "overrides/outputPanel", "common/transportErrors", "common/config",
-"text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder"],
+"text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder", "search-interface/query-results-help-view", "search-interface/modal"],
 function($, queryResultsTemplate, ontology, BB, HBS,
     overrides, transportErrors, config,
-    modalTemplate, settings, filterModel, queryBuilder){
+    modalTemplate, settings, filterModel, queryBuilder, helpView, modal){
 
         var queryResultsModel = BB.Model.extend({
             defaults: {
@@ -20,13 +20,14 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             ontology: ontology,
             initialize: function(){
                 this.template = HBS.compile(queryResultsTemplate);
+                this.helpView = new helpView();
                 overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
                 overrides.update ? this.update = overrides.update.bind(this) : undefined;
                 this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
                 this.listenTo(filterModel.get('exportFields'), 'change reset add remove', this.updateVariableCount);
             },
             events:{
-
+                'click #data-summary-help' : 'openHelp',
             },
             queryRunning: function(query){
                 this.model.set('spinning', true);
@@ -89,6 +90,15 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             updateVariableCount: function(){
                 filterModel.updateExportValues();
                 $('#export-count').html(filterModel.get('totalVariables')+' Variables');
+            },
+            openHelp: function(){
+                modal.displayModal(
+                    this.helpView,
+                    'Data Summary Help',
+                    () => {
+                        $('#patient-count-box').focus();
+                    }
+                );
             },
             render: function(){
                 this.$el.html(this.template(this.model.toJSON()));
