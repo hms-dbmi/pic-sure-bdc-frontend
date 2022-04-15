@@ -130,6 +130,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 if (data) {
                     console.log('Filter: ', filter);
                     const modalView = new variableInfoModalView({
+                        isOpenAccess: this.isOpenAccess,
                         varId: data.variableId,
                         el: $(".modal-body")
                     });
@@ -163,6 +164,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             };
                             this.filterModalView = new datatableFilterModalView({
                                 model: filterViewData,
+                                isOpenAccess: this.isOpenAccess,
                                 dataTableInfo: filterViewData.filter.searchResult.result,
                                 el: $(".modal-body"),
                             });
@@ -184,6 +186,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                     let filterViewData = {
                         el: $('.modal-body'),
+                        isOpenAccess: this.isOpenAccess,
                         data: {
                             searchResult: searchResult,
                             filter: filter

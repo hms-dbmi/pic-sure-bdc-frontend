@@ -84,7 +84,6 @@
 		line-height: 1.2em;
 	}
 </style>
-{{log isOpenAccess}}
 {{#if hasActiveTags}}
 <div id='active-tags-section-div' role='region' class='panel section' tabindex=0 aria-label='You are in the active tag filters region. 
 	Currently {{numActiveTags}} tags are being used to filter search results for your search term "{{searchTerm}}". Currently {{numSearchResults}} search results are displayed in the results region.
@@ -137,9 +136,6 @@
 	aria-label="You are in the study tag filters region. Use arrows keys to move between study tag filters. Use the plus and minus keys to include or exclude tags.">
 	<div class="space-out panel-heading">
 		<span>Filter Search Results by Study Tags</span>
-		{{#if isOpenAccess}}
-		<i id="tag-help" class="fa fa-info-circle fa-lg btn btn-icon" tabindex="0" title="Tag Help"></i>
-		{{/if}}
 	</div>
 	<div class='panel-body section-body'>
 		<p>Refine results by using study based filters:</p>

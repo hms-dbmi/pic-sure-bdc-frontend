@@ -1,11 +1,12 @@
-define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "text!../studyAccess/studies-data.json", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel", "common/keyboard-nav",],
-		function($, BB, HBS, settings, studiesDataJson, studiesPanelTemplate, outputModel, keyboardNav) {
+define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "text!../studyAccess/studies-data.json", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel", "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",],
+		function($, BB, HBS, settings, studiesDataJson, studiesPanelTemplate, outputModel, keyboardNav, helpView, modal) {
     const LIST_ITEM = 'study-container'
     const SELECTED = 'selected';
 
 	let studiesPanelView = BB.View.extend({
         initialize: function(opts){
             this.data = opts || {};
+            this.helpView = new helpView();
             this.template = HBS.compile(studiesPanelTemplate);
             outputModel.on('change reset add remove', this.render.bind(this));
             keyboardNav.addNavigableView('studies-list',this);
@@ -15,6 +16,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
                 'keynav-arrowright document': this.navigateDown.bind(this),
                 'keynav-arrowleft document': this.navigateUp.bind(this),
                 'keynav-enter': this.clickItem.bind(this),
+
             });
         },
         events:{
@@ -24,6 +26,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
 			"mouseout .request-access": "unhighlightConsent",
             "focus .panel-body": "focusBody",
             "blur .panel-body": "blurBody",
+			'click #studies-help' : 'openHelpModal'
 		},
 		toggleConsentGroup: function(event) {
 			var studyRoot = event.currentTarget.parentElement.parentElement;
@@ -97,6 +100,15 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
                 $(nextItem)[0].scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
             }
         },
+        openHelpModal: function(event) {
+			modal.displayModal(
+                this.helpView,
+                'Filtered Results by Study',
+                () => {
+                    $('#patient-count-box').focus();
+                }
+            );
+		},
         render: function() {
             this.$el.html(this.template(outputModel.toJSON()));
             return this;

@@ -39,8 +39,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			'focus #study-tags-section-div': 'studyTagFocus',
 			'blur #study-tags-section-div': 'studyTagBlur',
 			'focus #tags-section-div': 'tagFocus',
-			'blur #tags-section-div': 'tagBlur',
-			'click #tag-help' : 'openTagHelp'
+			'blur #tags-section-div': 'tagBlur'
 		},
 		requireTag: function(event){
 			let focusedTag = $('.focused-tag-badge')[0];
@@ -211,15 +210,6 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				return tag.toJSON();
 			})
 			return studyTags;
-		},
-		openTagHelp: function(event){
-			modal.displayModal(
-                this.helpView,
-                'Tool Suite Help',
-                () => {
-                    $('#tool-suite').focus();
-                }
-            );
 		},
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();

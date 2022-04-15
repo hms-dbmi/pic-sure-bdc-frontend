@@ -96,6 +96,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     filterListView.render();
 
                     let toolSuiteView = new ToolSuiteView({
+                        isOpenAccess: false,
                         el: $('#tool-suite-panel')
                     });
 

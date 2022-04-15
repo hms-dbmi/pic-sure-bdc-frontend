@@ -123,7 +123,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: variableId,
 					dataTableData: response,
-					isAuthorized: this.isAuthorized,
+					isOpenAccess: !this.isAuthorized,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -152,6 +152,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			let filter = filterModel.getByVarId(searchResult.result.varId);
 
 			let filterViewData = {
+				isOpenAccess: !this.isAuthorized,
 				data: {
 					searchResult: searchResult,
 					filter: filter ? filter.toJSON() : undefined

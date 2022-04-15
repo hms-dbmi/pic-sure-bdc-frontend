@@ -12,8 +12,10 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 		var View = BB.View.extend({
 			initialize: function(opts){
 				this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
+				this.isOpenAccess = opts.isOpenAccess;
 				this.modalTemplate = HBS.compile(modalTemplate);
 				this.varId = opts.varId;
+				variableInfoCache[opts.varId].isAuthorized = !opts.isOpenAccess;
 				this.dataTableData = opts.dataTableData;
 			},
 			events: {

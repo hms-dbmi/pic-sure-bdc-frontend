@@ -221,7 +221,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 		openHelpModal: function(event) {
 			modal.displayModal(
                 this.helpView,
-                'Filtered Results by Study',
+                'Welcome to Open Access!',
                 () => {
                     $('#patient-count-box').focus();
                 }
