@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util"],
-function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil){
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util", "search-interface/open-picsure-tag-help-view", "search-interface/modal"],
+function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil, helpView, modal){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let tableRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d$');
@@ -9,7 +9,9 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 
 	let TagFilterView = BB.View.extend({
 		initialize: function(opts){
+			this.isOpenAccess = opts.isOpenAccess;
 			this.model = tagFilterModel;
+			this.helpView = new helpView();
 			this.onTagChange = opts.onTagChange;
 			this.model.get('requiredTags').bind('change add remove', this.modelChanged.bind(this));
 			this.model.get('excludedTags').bind('change add remove', this.modelChanged.bind(this));
@@ -219,6 +221,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
 					tags: tags,
+					isOpenAccess: this.isOpenAccess,
 					searchTerm: $('#search-box').val(),
 					numSearchResults: this.model.get("searchResults") ? this.model.get("searchResults").results.numResults : 0,
 					numActiveTags: this.model.get("requiredTags").size() + this.model.get("excludedTags").size(),

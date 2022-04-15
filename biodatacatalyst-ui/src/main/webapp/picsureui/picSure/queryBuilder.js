@@ -26,7 +26,7 @@ define(["underscore", "picSure/settings"],
 
 	var createQueryNew = function(filters, exportFields, resourceUUID){
 		var parsedSess = JSON.parse(sessionStorage.getItem("session"));
-		if(parsedSess.queryTemplate){
+		if(parsedSess.queryTemplate && resourceUUID !== settings.openAccessResourceId){
 			return generateQueryNew(filters,exportFields,JSON.parse(parsedSess.queryTemplate), resourceUUID);
 		} else {
 			return generateQueryNew(filters,exportFields,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);

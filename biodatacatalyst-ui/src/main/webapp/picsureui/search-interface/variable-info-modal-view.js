@@ -12,8 +12,10 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 		var View = BB.View.extend({
 			initialize: function(opts){
 				this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
+				this.isOpenAccess = opts.isOpenAccess;
 				this.modalTemplate = HBS.compile(modalTemplate);
 				this.varId = opts.varId;
+				variableInfoCache[opts.varId].isAuthorized = !opts.isOpenAccess;
 				this.dataTableData = opts.dataTableData;
 			},
 			events: {
@@ -72,7 +74,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 						});
 					}
 					this.filterModalView.render();
-					modal.displayModal(this.filterModalView, searchResult.result.metadata.description);
+					modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name);
 				}
 				else if(event.target.dataset.target==='datatable'){
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);

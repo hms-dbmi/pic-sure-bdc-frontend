@@ -11,6 +11,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
 			this.modalTemplate = HBS.compile(modalTemplate);
+			this.isAuthorized = !opts.isOpenAccess;
 			keyboardNav.addNavigableView("searchResults",this);
 			this.on({
 				'keynav-arrowup document': this.previousSearchResult,
@@ -122,6 +123,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: variableId,
 					dataTableData: response,
+					isOpenAccess: !this.isAuthorized,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -150,6 +152,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			let filter = filterModel.getByVarId(searchResult.result.varId);
 
 			let filterViewData = {
+				isOpenAccess: !this.isAuthorized,
 				data: {
 					searchResult: searchResult,
 					filter: filter ? filter.toJSON() : undefined
@@ -200,12 +203,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 
 			if (tagFilterModel.get("searchResults")) {
-				if (tagFilterModel.get("searchResults").results.searchResults.length === 0) {
-					$('#no-results').length === 0 && $("#search-area").prepend('<div id="no-results" aria-label="0 results match your search">0 results match your search</div>');
+				let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
+				if (!this.isAuthorized) {
+					filteredResults = _.filter(filteredResults, function(result) {
+						return result.result.metadata.columnmeta_is_stigmatized === "false";
+					})
+				}
+				if (filteredResults.length === 0) {
+					$('#no-results').length === 0 && $("#search-area").append('<div id="no-results" style="margin-right: 20px;" aria-label="0 results match your search">0 results match your search</div>');
 				} else {
 					$('#no-results').remove();
 				}
-				let results = _.map(tagFilterModel.get("searchResults").results.searchResults, function(result, i){
+				let results = _.map(filteredResults, function(result, i){
 					let metadata = result.result.metadata;
 					return {
 						abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.columnmeta_study_id),
@@ -220,7 +229,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				});
 				let pageSize = tagFilterModel.get("limit");
 				let pages = [];
-				for(var offset = 0;offset < tagFilterModel.get("searchResults").results.numResults; offset += pageSize){
+				for(var offset = 0;offset <tagFilterModel.get("searchResults").results.numResults; offset += pageSize){
 					var pageNumber = parseInt(offset/pageSize) + 1;
 					pages.push({
 						pageNumber : parseInt(offset/pageSize) + 1,
@@ -229,6 +238,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				}
 				$('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
 					{
+						"isAuthorized": this.isAuthorized,
 						"results": results,
 						"variableCount": tagFilterModel.get("searchResults").results.numResults,
 						"pages": pages

@@ -3,15 +3,16 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
         "search-interface/datatable-filter-modal-view",
         "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util",
         "text!search-interface/genomic-filter-partial.hbs", "search-interface/genomic-filter-view","search-interface/variable-info-cache",
-        "search-interface/variable-info-modal-view",
+        "search-interface/variable-info-modal-view", "picSure/settings"
     ],
     function($, BB, HBS, filterListViewTemplate, filterModel,
         modalTemplate, filterModalView, categoricalFilterModalView,
         datatableFilterModalView,
-        queryBuilder, modal, keyboardNav, searchUtil, genomicFilterPartialTemplate, genomicFilterView, variableInfoCache, variableInfoModalView) {
+        queryBuilder, modal, keyboardNav, searchUtil, genomicFilterPartialTemplate, genomicFilterView, variableInfoCache, variableInfoModalView, settings) {
 
         var View = BB.View.extend({
             initialize: function(opts){
+                this.isOpenAccess = opts.isOpenAccess || false;
                 HBS.registerHelper('getFilterTypeDescription', this.getFilterTypeDescription);
                 HBS.registerHelper('getVariableDescription', this.getVariableDescription);
                 HBS.registerPartial('genomic-filter-partial', genomicFilterPartialTemplate);
@@ -129,6 +130,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 if (data) {
                     console.log('Filter: ', filter);
                     const modalView = new variableInfoModalView({
+                        isOpenAccess: this.isOpenAccess,
                         varId: data.variableId,
                         el: $(".modal-body")
                     });
@@ -162,6 +164,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             };
                             this.filterModalView = new datatableFilterModalView({
                                 model: filterViewData,
+                                isOpenAccess: this.isOpenAccess,
                                 dataTableInfo: filterViewData.filter.searchResult.result,
                                 el: $(".modal-body"),
                             });
@@ -183,6 +186,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                     let filterViewData = {
                         el: $('.modal-body'),
+                        isOpenAccess: this.isOpenAccess,
                         data: {
                             searchResult: searchResult,
                             filter: filter
@@ -196,13 +200,14 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         this.filterModalView = new filterModalView(filterViewData);
                     }
 
-                    modal.displayModal(this.filterModalView, searchResult.result.metadata.description, ()=>{
+                    modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name, ()=>{
                         $('#filter-list').focus();
                     });
                 }
             },
             render: function(){
-                let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+                const resourceUUID = this.isOpenAccess ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140"
+                const query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), resourceUUID);
                 this.outputPanelView.runQuery(query);
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})
