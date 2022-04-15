@@ -11,6 +11,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
 			this.modalTemplate = HBS.compile(modalTemplate);
+			this.isAuthorized = !opts.isOpenAccess;
 			keyboardNav.addNavigableView("searchResults",this);
 			this.on({
 				'keynav-arrowup document': this.previousSearchResult,
@@ -122,6 +123,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: variableId,
 					dataTableData: response,
+					isAuthorized: this.isAuthorized,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -229,6 +231,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				}
 				$('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
 					{
+						"isAuthorized": this.isAuthorized,
 						"results": results,
 						"variableCount": tagFilterModel.get("searchResults").results.numResults,
 						"pages": pages

@@ -24,7 +24,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.queryTemplate = opts.queryTemplate;
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			let studiesData = JSON.parse(studiesDataJson);
-
+			this.isOpenAccess = opts.isOpenAccess;
 			//tell the back end to exclude concepts from studies not in the user's scope'
 			this.antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
 				//if this study is NOT in the query scopes, _.find will return NULL
@@ -44,10 +44,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.render();
 			this.tagFilterView = new tagFilterView({
 				el : $('#tag-filters'),
+				isOpenAccess : this.isOpenAccess,
 				onTagChange: this.submitSearch.bind(this)
 			});
 			this.searchResultsView = new searchResultsView({
 				tagFilterView: this.tagFilterView,
+				isOpenAccess: this.isOpenAccess,
 				el : $('#search-results')
 			});
 
@@ -149,6 +151,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
+			if (this.isOpenAccess) {
+				this.$el.find('#genomic-filter-btn').remove();
+			}
 		}
 	});
 

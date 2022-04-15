@@ -114,13 +114,15 @@
 		{{#if hasExcludedTags}}
 		<div class='row'><span>Excluded Tags:</span>
 			{{#each excludedTags}}
-			<div class="badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
-				<span class="excluded-tag" 
-					aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press enter to no longer exclude search results having this tag.">
-					{{aliasIfStudy this.tag}} ({{this.score}})
+			<div class="badge fat-badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
+					<div class="stack excluded-tag">
+						<span class="bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press the plus key to include only search results having this tag. Press minus to exclude all search results having this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
+						{{#isStudy this.tag}}
+						<span id="study-{{this.tag}}" class="tag-study-text mouse-through">{{this.tag}}</span>
+						{{/isStudy}}
+					</div>
 					<span data-tag="{{this.tag}}" data-action="removeExcludedTag"
 						class="fa fa-times selected-excluded-tag remove-tag-btn hover-control"></span>
-				</span>
 			</div>
 			{{/each}}
 		</div>
