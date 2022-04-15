@@ -70,7 +70,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     let parsedSettings = this.settings;
                     $('#main-content').append(this.layoutTemplate(parsedSettings));
 
-                    var queryView = new queryResultsView.View({model: new queryResultsView.Model()});
+                    var queryView = new queryResultsView.View({model: new queryResultsView.Model(), isOpenAccess: false});
 
                     queryView.render();
                     $('#query-results').append(queryView.$el);

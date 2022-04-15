@@ -13,8 +13,12 @@
     }
 
 </style>
-<div>
-<div id="patient-count-box" class="panel panel-default">
+<div class="panel">
+<div class="space-out panel-heading">
+        <span>Data Summary</span>
+        <i id="open-access-output-help" class="fa fa-info-circle fa-lg btn btn-icon" tabindex="0" title="Open Access Help"></i>
+</div>
+<div id="patient-count-box" class="panel-body">
 	<div class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</div>
 	<div id="patient-count" class="blue center">
         {{#if queryRan}}

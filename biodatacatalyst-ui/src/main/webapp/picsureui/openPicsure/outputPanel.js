@@ -1,7 +1,7 @@
 define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs",
-		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model"],
+		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "search-interface/modal", "openPicsure/openPicsureHelpView"],
 		function($, settings, outputTemplate,
-				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel){
+				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView){
 
 	let studiesInfo = {};
 	var studyConcepts = [];
@@ -178,6 +178,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 	var outputView = BB.View.extend({
 		initialize: function(){
 			this.template = HBS.compile(outputTemplate);
+			this.helpView = new helpView();
 			loadConcepts();
 		},
 		events:{
@@ -188,7 +189,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			"mouseout .request-access": "unhighlightConsent",
 			"keypress .request-access": "keyRequestAccess",
 			"click .request-access": "requestAccess",
-            "click .explore-access": "exploreAccess"
+            "click .explore-access": "exploreAccess",
+			"click #open-access-output-help": "openHelpModal"
 		},
 		keyToggleConsentGroup: function(event) {
 			if (event.key === "Enter") this.toggleConsentGroup(event);
@@ -216,6 +218,15 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
             console.log("Explore study: " + $(event.target).data("study"));
             window.history.pushState({}, "", "picsureui/queryBuilder");
         },
+		openHelpModal: function(event) {
+			modal.displayModal(
+                this.helpView,
+                'Filtered Results by Study',
+                () => {
+                    $('#patient-count-box').focus();
+                }
+            );
+		},
 		totalCount: 0,
 		tagName: "div",
 		runQuery: function(incomingQuery) {

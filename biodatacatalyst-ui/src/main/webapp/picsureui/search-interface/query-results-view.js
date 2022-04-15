@@ -1,9 +1,9 @@
 define(["jquery",  "text!search-interface/query-results-view.hbs", "picSure/ontology", "backbone", "handlebars",
 "overrides/outputPanel", "common/transportErrors", "common/config",
-"text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder", "search-interface/query-results-help-view", "search-interface/modal"],
+"text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder", "search-interface/query-results-help-view", "search-interface/modal", "openPicsure/openPicsureHelpView"],
 function($, queryResultsTemplate, ontology, BB, HBS,
     overrides, transportErrors, config,
-    modalTemplate, settings, filterModel, queryBuilder, helpView, modal){
+    modalTemplate, settings, filterModel, queryBuilder, helpView, modal, openHelpView){
 
         var queryResultsModel = BB.Model.extend({
             defaults: {
@@ -18,9 +18,10 @@ function($, queryResultsTemplate, ontology, BB, HBS,
         });
         var queryResultsView = BB.View.extend({
             ontology: ontology,
-            initialize: function(){
+            initialize: function(opts){
                 this.template = HBS.compile(queryResultsTemplate);
                 this.helpView = new helpView();
+                this.openHelpView = new openHelpView();
                 overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
                 overrides.update ? this.update = overrides.update.bind(this) : undefined;
                 this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
@@ -93,7 +94,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             },
             openHelp: function(){
                 modal.displayModal(
-                    this.helpView,
+                    this.isOpenAccess ? this.helpView : this.openHelpView,
                     'Data Summary Help',
                     () => {
                         $('#patient-count-box').focus();

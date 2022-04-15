@@ -682,8 +682,7 @@ remove when above bug is fixed */
     background-color: white;
     line-height: 1;
     padding: 40px 0px;
-    border-radius: 4px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border: none;
 }
 
 .panel {

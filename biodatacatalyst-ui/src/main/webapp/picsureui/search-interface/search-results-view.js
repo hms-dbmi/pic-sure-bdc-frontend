@@ -202,12 +202,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 
 			if (tagFilterModel.get("searchResults")) {
-				if (tagFilterModel.get("searchResults").results.searchResults.length === 0) {
-					$('#no-results').length === 0 && $("#search-area").prepend('<div id="no-results" aria-label="0 results match your search">0 results match your search</div>');
+				let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
+				if (!this.isAuthorized) {
+					filteredResults = _.filter(filteredResults, function(result) {
+						return result.result.metadata.columnmeta_is_stigmatized === "false";
+					})
+				}
+				if (filteredResults.length === 0) {
+					$('#no-results').length === 0 && $("#search-area").append('<div id="no-results" style="margin-right: 20px;" aria-label="0 results match your search">0 results match your search</div>');
 				} else {
 					$('#no-results').remove();
 				}
-				let results = _.map(tagFilterModel.get("searchResults").results.searchResults, function(result, i){
+				let results = _.map(filteredResults, function(result, i){
 					let metadata = result.result.metadata;
 					return {
 						abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.columnmeta_study_id),
@@ -222,7 +228,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				});
 				let pageSize = tagFilterModel.get("limit");
 				let pages = [];
-				for(var offset = 0;offset < tagFilterModel.get("searchResults").results.numResults; offset += pageSize){
+				for(var offset = 0;offset <tagFilterModel.get("searchResults").results.numResults; offset += pageSize){
 					var pageNumber = parseInt(offset/pageSize) + 1;
 					pages.push({
 						pageNumber : parseInt(offset/pageSize) + 1,
