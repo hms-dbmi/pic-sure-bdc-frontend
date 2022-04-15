@@ -1,6 +1,9 @@
 <style>
+.data-summary-body{
+    padding:15px;
+}
 #patient-count-box{
-    padding: 20px 0px;
+    padding:0px;
 }
 #patient-count {
     font-size: 200%;
@@ -26,16 +29,19 @@
 </style>
 
 <div>
-<div class="space-even" id="patient-count-box">
-	<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
-	<span id="patient-count" class="blue center large">{{#if queryRan}}{{totalPatients}}{{else}}-{{/if}}</span>
+<div class="panel" id="patient-count-box">
+    <div class="space-out panel-heading">
+        <span>Data Summary</span>
+        <i id="data-summary-help" class="fa fa-info-circle fa-lg btn btn-icon" tabindex="0" title="Data Summary Help"></i>
+    </div>
+    <div class="data-summary-body panel-body" >
+	       <span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+	          <span id="patient-count" class="blue center large">{{#if queryRan}}{{totalPatients}}{{else}}-{{/if}}</span>
 
-	<span id="patient-count-label" class="center medium">Total Participants</span>
+	             <span id="patient-count-label" class="center medium">Total Participants</span>
 
-    <span id="export-count" class="center small">{{#if queryRan}}{{totalVariables}}{{else}}-{{/if}} Variables</span>
+                 <span id="export-count" class="center small">{{#if queryRan}}{{totalVariables}}{{else}}-{{/if}} Variables</span>
 
-	<div class="container" id="pic-sure-instances">
-<link rel="stylesheet" href="/picsureui/webjars/jstree/3.3.7/themes/default/style.min.css"></link>
-<div id="concept-tree-div">
+	                <div class="container" id="pic-sure-instances"></div>
 </div>
 </div>
