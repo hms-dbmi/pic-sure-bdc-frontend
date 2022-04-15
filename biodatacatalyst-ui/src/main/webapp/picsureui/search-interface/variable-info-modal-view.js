@@ -170,16 +170,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 
 				}
 				else if (event.target.dataset.target === "variable") {
-						this.filterModalView = new numericalfilterModalView({
-							data: filterViewData,
-							el: $(".modal-body"),
-						});
-
-					this.filterModalView.render();
-					modal.displayModal(
-						this.filterModalView,
-						searchResult.result.metadata.description
-					);
+					filterModel.toggleExportField(searchResult);
 				}
 
 			},

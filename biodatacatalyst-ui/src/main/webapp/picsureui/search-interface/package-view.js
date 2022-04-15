@@ -110,7 +110,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', 'white');
+				$('#package-package-button').css('background-color', '#337ab7');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 			}
@@ -137,7 +137,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', 'white');
+				$('#package-package-button').css('background-color', '#337ab7');
 				$('.package-query-container').show();
 				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
@@ -156,7 +156,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', 'white');
+				$('#package-package-button').css('background-color', '#337ab7');
 			}
 
 			$('#package-download-button', this.$el).removeAttr("href");
