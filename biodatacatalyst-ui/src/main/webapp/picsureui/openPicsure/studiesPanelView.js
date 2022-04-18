@@ -42,16 +42,20 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
 			event.currentTarget.parentElement.style.background = "";
 		},
         requestAccess: function(event) {
-            window.open(event.currentTarget.getAttribute("data-href"));
+            let target = event.currentTarget;
+            if (event.type === 'keydown') {
+                target = $('#studies-list').find('.' + SELECTED).find('.request-access')[0];
+            }
+            window.open(target.getAttribute("data-href"));
         },
         exploreAccess: function(event) {
             window.history.pushState({}, "", "picsureui/queryBuilder");
         },
         clickItem: function(event) {
-            if (event.target.classList.contains('explore-access')) {
-                this.exploreAccess(event);
-            } else {
+            if (event.target.classList.contains('request-access')) {
                 this.requestAccess(event);
+            } else {
+                this.exploreAccess(event);
             }
         },
         focusBody: function(event) {
