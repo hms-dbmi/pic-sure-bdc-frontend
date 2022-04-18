@@ -52,7 +52,11 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             window.history.pushState({}, "", "picsureui/queryBuilder");
         },
         clickItem: function(event) {
-            if (event.target.classList.contains('request-access')) {
+            let target = event.target;
+			if (event.type === 'keydown') {
+                target = $('#studies-list').find('.' + SELECTED).find('.request-access')[0];
+            }
+            if (target.classList.contains('request-access')) {
                 this.requestAccess(event);
             } else {
                 this.exploreAccess(event);
