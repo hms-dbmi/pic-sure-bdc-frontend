@@ -27,14 +27,16 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					return x.split("\\").length === 4;
 				});
 				_.forEach(studyKeys, x => {
-					let studyName = x.split("\\")[2];
+					let studyName = x.split("\\")[2].split(" ")[0];
 					studiesInfo[studyName] = {code:studyName, name:"", study_matches: 0, consents:[]}
 				})
 
 				let studiesData = JSON.parse(studiesDataJson).bio_data_catalyst;
 				studiesData.forEach((studyRecord) => {
-					
 					var temp = studiesInfo[studyRecord.study_identifier];
+					if (!temp) {
+						temp = studiesInfo[studyRecord.abbreviated_name.toUpperCase()]
+					}
 					if (temp) {
 						temp.display_name = generateStudiesInfoKey(studyRecord.abbreviated_name, studyRecord.study_identifier);
 						temp.name = studyRecord.full_study_name;
@@ -130,7 +132,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				var sorted_found = [];
 				var sorted_unfound = [];
 				for (var x in studiesInfo) {
-					var cnt = String(response[studiesInfo[x].study_concept]);
+					let key = x.startsWith("phs") ? '\\_studies_consents\\'+ x + ' (' + x + ')\\': '\\_studies_consents\\'+ x + '\\';
+					let cnt = String(response[key]);
 					if (cnt) {
 						studiesInfo[x].study_matches = String(cnt);
 						if (cnt.includes("<") || cnt.includes("\u00B1") || cnt > 0) {
@@ -160,7 +163,10 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					studiesInfo[code].consents.forEach((x) => {
 						// todo: remove consents if not found? or 0?
 						// yes
-						x.study_matches = response["\\_studies_consents\\" + x.study_identifier + "\\" + x.short_title + "\\"];
+						let key = (code.startsWith("phs")) ? 
+							'\\_studies_consents\\'+ x.study_identifier +' (' + x.study_identifier + ')\\'+ x.short_title + "\\" : 
+							'\\_studies_consents\\'+ x.abbreviated_name +' (' + x.abbreviated_name + ')\\'+ x.short_title + "\\";
+						x.study_matches = response[key];
 					});
 				}
 				outputModel.set("studies",sorted_final);

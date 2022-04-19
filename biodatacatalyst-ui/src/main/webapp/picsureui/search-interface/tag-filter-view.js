@@ -206,7 +206,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				return tag.get('tag').toLowerCase();
 			}).value()
 			let studyTags = _.uniq(filteredTags, function(tag){return tag.get('tag').toLowerCase();}).map(function(tag){
-				tag.set('tag', tag.get('tag').toLowerCase());
+				tag.get('tag')===dccHarmonizedTag ? tag.set('tag', tag.get('tag')) : tag.set('tag', tag.get('tag').toLowerCase());
 				return tag.toJSON();
 			})
 			return studyTags;
