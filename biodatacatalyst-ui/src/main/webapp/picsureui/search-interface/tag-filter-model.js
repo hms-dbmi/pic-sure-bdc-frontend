@@ -83,14 +83,20 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                     return;
                 }
                 var unusedTags = this.get('unusedTags');
-                var targetTag = unusedTags.findWhere({tag: tagName});
+                var targetTag = _.filter(unusedTags.models, function(model) {return model.attributes.tag.toLowerCase() === tagName.toLowerCase()});
 
-                if (targetTag === undefined) {
-                    targetTag = {tag: tagName, score: 0}
+                if (targetTag.length == 0) {
+                    targetTag = {tag: tagName, score: 0};
+                    this.get('requiredTags').add(targetTag);
                 } else {
-                    unusedTags.remove(targetTag);
+                    let i = targetTag.length;
+                    while(i > 0){
+                        unusedTags.remove(targetTag[i-1]);
+                        i--;
+                    }
+                    this.get('requiredTags').add(targetTag[0]);
                 }
-                this.get('requiredTags').add(targetTag);
+
             },
             excludeTag: function(tagName){
                 this.removeRequiredTag(tagName);
@@ -114,7 +120,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
 
                 requiredTags.remove(targetTag);
                 unusedTags.add(targetTag);
-                this.set('unusedTags', unusedTags);
+                this.set('unusedTags', unusedTags, {silent:true});
                 this.set('requiredTags', requiredTags);
             },
             removeExcludedTag: function(tag){
@@ -124,16 +130,26 @@ define(["backbone", "handlebars", "search-interface/search-util"],
 
                 excludedTags.remove(targetTag);
                 unusedTags.add(targetTag);
-                this.set('unusedTags', unusedTags);
+                this.set('unusedTags', unusedTags, {silent:true});
                 this.set('excludedTags', excludedTags);
             },
             setUnusedTags: function(tags, options) {
-                tags = _.filter(tags,(tag)=>{
-                    return this.get('requiredTags').findWhere({tag:tag.tag}) === undefined;
-                });
-                this.get('unusedTags').set(tags, options);
+
+                let filteredTags = _.chain(tags).sortBy(function(tag){
+                    return tag.score;
+                }).sortBy(function(tag){
+                    return tag.tag.toLowerCase();
+                }).uniq(function(tag){return tag.tag.toLowerCase();
+                }).filter((tag)=>{
+                    return (this.get('requiredTags').findWhere({tag:tag.tag.toUpperCase()}) === undefined && this.get('requiredTags').findWhere({tag:tag.tag.toLowerCase()}) === undefined &&
+                        this.get('excludedTags').findWhere({tag:tag.tag.toUpperCase()}) === undefined &&
+                        this.get('excludedTags').findWhere({tag:tag.tag.toLowerCase()}) === undefined);
+                }).value();
+
+                this.get('unusedTags').set(filteredTags, options);
                 this.get('unusedTags').remove(this.get('requiredTags').models, options);
             }
+
         });
         return new TagFilterModel();
     });

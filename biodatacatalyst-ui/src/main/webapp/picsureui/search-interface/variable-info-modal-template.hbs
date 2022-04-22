@@ -55,11 +55,35 @@
     </div>
     <div class="study-accession">
         Study Accession: {{studyAccession}}
-        <div class="badge {{colorClass this.tag}}" tabindex=1000004>
-        <span id="tag-{{studyAccessionTagId}}"> {{studyAccessionTagName}}
-            <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="require-tag-btn hover-control">+</span>
-            <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="exclude-tag-btn hover-control">-</span>
-        </span>
-        </div>
     </div>
+    {{#if isRequiredTag}}
+    <div class="badge fat-badge {{colorClass studyAccessionTagId}}" id="tag-{{studyAccessionTagId}}">
+        <div class="stack">
+            <span class="required-tag bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy studyAccessionTagId}}is associated with this variable. There are {{tagScore}} search results having this tag. Press enter to no longer require search results to have this tag.">{{aliasIfStudy studyAccessionTagName}} ({{tagScore}})</span>
+            <span id="study-{{studyAccessionTagId}}" class="tag-study-text mouse-through">{{studyAccessionTagId}}</span>
+        </div>
+        <span data-tag="{{studyAccessionTagId}}" data-action="removeRequiredTag"
+                class="fa fa-times selected-required-tag removeRequiredTag hover-control remove-tag-btn"></span>
+    </div>
+    {{/if}}
+    {{#if isExcludedTag}}
+    <div class="badge fat-badge {{colorClass studyAccessionTagId}}" id="tag-{{studyAccessionTagId}}">
+            <div class="stack excluded-tag">
+                <span class="bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy studyAccessionTagId}} is associated with this variable. There are {{tagScore}} search results having this tag. Press enter to no longer exclude this tag from search results.">{{aliasIfStudy studyAccessionTagName}} ({{tagScore}})</span>
+                <span id="study-{{studyAccessionTagId}}" class="tag-study-text mouse-through">{{studyAccessionTagId}}</span>
+            </div>
+            <span data-tag="{{studyAccessionTagId}}" data-action="removeExcludedTag"
+                class="fa fa-times selected-excluded-tag remove-tag-btn hover-control"></span>
+    </div>
+    {{/if}}
+    {{#if isUnusedTag}}
+    <div class="badge fat-badge {{colorClass studyAccessionTagId}}" id="tag-{{studyAccessionTagId}}" >
+        <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="fa fa-minus exclude-tag-btn hover-control"></span>
+        <div class="stack">
+            <span class="bold-tag mouse-through" aria-label="Study Tag {{ariaAliasIfStudy studyAccessionTagId}} is associated with this variable. There are {{tagScore}} search results having this tag. Press the plus key to include only search results having this tag. Press minus to exclude all search results having this tag.">{{aliasIfStudy studyAccessionTagName}} ({{tagScore}})</span>
+            <span id="study-{{studyAccessionTagId}}" class="tag-study-text mouse-through">{{studyAccessionTagId}}</span>
+        </div>
+        <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="fa fa-plus require-tag-btn hover-control"></span>
+    </div>
+    {{/if}}
 </div>
