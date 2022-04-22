@@ -1,7 +1,7 @@
 ARG FILE_SUFFIX=development
 
 FROM hms-dbmi/pic-sure-hpds-ui:TARGET_BUILD_VERSION AS pic-sure-ui
-FROM httpd:2.4.52-alpine
+FROM httpd:2.4.53-alpine
 
 ARG FILE_SUFFIX
 ENV FILE_SUFFIX=${FILE_SUFFIX}
