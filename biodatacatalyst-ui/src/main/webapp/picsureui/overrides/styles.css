@@ -574,6 +574,10 @@ input[type='checkbox'].categorical-filter-input {
     min-width: 20%;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 /************************* STARTS Search X/reset button ******************************/
 
 input[type="search"]::-webkit-search-cancel-button {

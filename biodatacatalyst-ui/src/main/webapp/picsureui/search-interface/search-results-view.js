@@ -2,11 +2,11 @@ define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs
 		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util",
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
 		"search-interface/filter-model", "search-interface/tag-filter-model",
-		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav"],
+		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",],
 function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel,
-		 modal, variableInfoCache, keyboardNav){
+		 modal, variableInfoCache, keyboardNav, tableView){
 
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
@@ -22,6 +22,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		},
 		events: {
 			"click .search-result": "infoClickHandler",
+			"click #search-results-datatable tr": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
 			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
@@ -114,20 +115,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			if(event.target.classList.contains('search-result-action-btn') ){
 				return;
 			}
-			let study_id = $(event.target).data('study-id');
-			let dataTableId = $(event.target).data('data-table-id');
-			let variableId = $(event.target).data('variable-id');
+			const rowData = this.searchResultsTable.row(event.target).data();
 			$('#search-results-div').blur();
-			this.retrieveDataTableMeta(study_id+'_'+dataTableId, function(response){
-				this.cacheVariableInfo(response, variableId);
+			this.retrieveDataTableMeta(rowData.study_id+'_'+rowData.table_id, function(response){
+				this.cacheVariableInfo(response, rowData.variable_id);
 				this.dataTableInfoView = new dataTableInfoView({
-					varId: variableId,
+					varId: rowData.variable_id,
 					dataTableData: response,
 					isOpenAccess: !this.isAuthorized,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
-				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[variableId].metadata.columnmeta_name,  ()=>{
+				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[rowData.variable_id].metadata.columnmeta_name,  ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -236,14 +235,65 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						isActive : tagFilterModel.get("currentPage") == pageNumber
 					});
 				}
-				$('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
-					{
-						"isAuthorized": this.isAuthorized,
-						"results": results,
-						"variableCount": tagFilterModel.get("searchResults").results.numResults,
-						"pages": pages
-					}
-				));
+				let searchResultData = {
+					"isAuthorized": this.isAuthorized,
+					"results": results,
+					"variableCount": tagFilterModel.get("searchResults").results.numResults,
+					"pages": pages
+				}
+
+				let searchResultsView = new tableView(searchResultData);
+				searchResultsView.render();
+				$('#search-results-div').html(searchResultsView.$el);
+				const isAuthorized = this.isAuthorized;
+				this.searchResultsTable = $('#search-results-datatable').DataTable({
+                    data: results,
+					"searching": false,
+					"sorting": false,
+					"bAutoWidth": false,
+                    columns: [
+                        {title:'Study', data:'abbreviation'},
+						{title:'Dataset ID', data:'table_id'},
+                        {title:'Variable ID', data:'variable_id'},
+                        {title:'Variable Name', data:'name'},
+                        {title:'Variable Description',data:'description'},
+						{title:'Actions'},
+                    ],
+					columnDefs: [
+						{
+							targets: [0, 1, 2, 3, 4, 5],
+							className: 'dt-center',
+							type: 'string'
+						},
+						{
+							render: function (data, type, row, meta) {
+								if (isAuthorized) {
+									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to add this variable to your data retrieval." class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i></span>';
+								}
+								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
+							},
+							type: 'string',
+							targets: 5
+						}
+					],
+                });
+// 				abbreviation: "CARDIA"
+// dataTableDescription: "Subject Identifier"
+// description: "REASON(S) FOR HOSPITALIZATION"
+// name: "YTRCARR"
+// result_index: 0
+// study_id: "phs000285"
+// table_id: "pht001867"
+// variable_id: "phv00121188"
+
+				// $('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
+				// 	{
+				// 		"isAuthorized": this.isAuthorized,
+				// 		"results": results,
+				// 		"variableCount": tagFilterModel.get("searchResults").results.numResults,
+				// 		"pages": pages
+				// 	}
+				// ));
 				$('#search-results-div').attr('aria-label',
 					"You are in the results region on page " +
 					tagFilterModel.get("currentPage") + " out of " + pages.length +

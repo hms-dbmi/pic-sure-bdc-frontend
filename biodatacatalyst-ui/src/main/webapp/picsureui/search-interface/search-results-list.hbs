@@ -4,7 +4,19 @@
     <h4>Search Results:</h4>
     <span>{{variableCount}} variables match your search</span>
   </div>
-  {{#each results}}
+  <table id="search-results-datatable" class="table table-striped row-border hover">
+    <thead>
+        <tr>
+            <th>Study</th>
+            <th>Dataset ID</th>
+            <th>Variable ID</th>
+            <th>Variable Name</th>
+            <th>Variable Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+  </table>
+  {{!-- {{#each results}}
     <div id='search-result-{{this.variable_id}}' class='panel-body search-result' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-result-index="{{this.result_index}}" data-study-id="{{study_id}}"
     aria-label="Variable {{this.name}}, {{this.variable_id}} described as {{this.description}} from study {{this.abbreviation}}, {{this.study_id}}. Press enter to get more information about this variable or to create a cohort filter using this variable.">
       <span class='col' data-data-table-id="{{this.table_id}}" data-variable-id="{{this.variable_id}}" data-study-id="{{study_id}}" data-result-index="{{this.result_index}}">{{this.abbreviation}}<br>{{this.variable_id}} </span>
@@ -16,7 +28,7 @@
         {{/if}}
       </span>
     </div>
-  {{/each}}
+  {{/each}} --}}
     <style>
       .paginate_button {
         box-sizing: border-box;
@@ -44,10 +56,10 @@
         background: linear-gradient(to bottom, white 0%, #dcdcdc 100%);
       }
     </style>
-    <div class='search-result-pages row'>
+    {{!-- <div class='search-result-pages row'>
       {{#each pages}}
       <span id='page-link-{{pageNumber}}' class='page-link' data-page='{{pageNumber}}'><a class="paginate_button{{#if isActive}} current{{/if}}" id='page-{{pageNumber}}'>{{pageNumber}}</a></span>
       {{/each}}
-    </div>
+    </div> --}}
 </div>
 {{/if}}
