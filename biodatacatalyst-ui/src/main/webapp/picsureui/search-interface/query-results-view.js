@@ -19,6 +19,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
         var queryResultsView = BB.View.extend({
             ontology: ontology,
             initialize: function(opts){
+                this.isOpenAccess = opts.isOpenAccess;
                 this.template = HBS.compile(queryResultsTemplate);
                 this.helpView = new helpView();
                 this.openHelpView = new openHelpView();
@@ -94,7 +95,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             },
             openHelp: function(){
                 modal.displayModal(
-                    this.isOpenAccess ? this.helpView : this.openHelpView,
+                    this.isOpenAccess ?  this.openHelpView : this.helpView,
                     'Data Summary Help',
                     () => {
                         $('#patient-count-box').focus();
