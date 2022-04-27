@@ -1,5 +1,5 @@
-define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util"],
-	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil){
+define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util","search-interface/variable-values-view", "search-interface/modal"],
+	function(BB, HBS, datatableFilterModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, variableValuesView, modal){
 	let DatatableFilterModalView = BB.View.extend({
 		initialize: function(opts){
 			keyboardNav.addNavigableView("datatableFilterModal",this);
@@ -22,7 +22,8 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			'click #select-all':'selectAll',
 			'click #deselect-all':'deselectAll',
 			'focus #vcfData': 'vcfDataFocus',
-			'blur #vcfData': 'vcfDataBlur'
+			'blur #vcfData': 'vcfDataBlur',
+			'click button[id="varValuesButton"]':"openVariableValues"
 		},
 		data: function(){
 			return $('#vcfData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -122,6 +123,47 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			});
             $('.close').click();
 		},
+		openVariableValues: function(event){
+			let varId = event.target.dataset['varid'];
+			let target = _.find(this.model.dtVariables,(variable)=>{
+				return varId === variable.result.metadata.columnmeta_var_id;
+			});
+			var valuesModelTemplate = Backbone.Model.extend({
+							defaults: {},
+						});
+			valuesModel = new valuesModelTemplate();
+			keyboardNav.addNavigableView("variableValuesModal",this);
+			valuesModel.varId = target.result.metadata.columnmeta_var_id;
+			valuesModel.varDesc = target.result.metadata.columnmeta_description;
+			valuesModel.varName = target.result.metadata.columnmeta_name;
+			valuesModel.varDataset = target.result.metadata.columnmeta_var_group_id;
+			valuesModel.varStudy = target.result.metadata.columnmeta_study_id;
+			valuesModel.isNumerical = target.result.is_continuous;
+			valuesModel.isCategorical = target.result.is_categorical;
+			if(valuesModel.isCategorical){
+				valuesModel.varValues = target.result.value_tags;
+			}
+			else{
+				valuesModel.varMin = target.result.metadata.columnmeta_min;
+				valuesModel.varMax = target.result.metadata.columnmeta_max;
+			}
+
+			this.valuesView = new variableValuesView({
+				prevModal: {
+					view: this,
+					title: "Dataset : " + this.data.datasetName,
+					div: '#filter-modal'
+				},
+				model: valuesModel});
+			let title = 'Values for ' + varId;
+			modal.displayModal(
+				this.valuesView,
+				title,
+				() => {
+					$('#values-modal').focus();
+				}
+			);
+		},
 		render: function(){
 			const template = HBS.compile(datatableFilterModalTemplate);
 			this.$el.html(template(this.data));
@@ -129,7 +171,9 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			$('#datatable-modal-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='vcfData' class='display stripe' ></table>");
 			let toggleable = true;
 			let existingFilter = filterModel.getByDatatableId(this.model.dtId);
-			let data = _.map(this.model.dtVariables,function(variable){
+			let data = this.dtData;
+			if(!data){
+				data = _.map(this.model.dtVariables,function(variable){
                 	return [
                 		existingFilter ?
                 			(_.find(existingFilter.get('variables'), (conceptPath)=>{
@@ -139,10 +183,13 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 		variable.result.metadata.columnmeta_name,
                 		variable.result.metadata.columnmeta_description,
 						variable.result.metadata.columnmeta_data_type,
+						'See Values',
 						(variable.result.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
                 		variable.result.metadata.columnmeta_HPDS_PATH
                 	];
                 });
+				this.dtData = data;
+			}
             $('#vcfData').DataTable( {
                 data: data,
                 columns: [
@@ -151,7 +198,8 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                 	{title:'Name'},
                 	{title:'Description'},
                 	{title:'Type'},
-                	{title:'Values'}
+                	{title:'Values'},
+					{title: 'ValuesHidden', visible: false}
                	],
                	select: {
 		            style:    'os',
@@ -160,7 +208,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 		        },
                 columnDefs: [
                     {
-                        targets: [1,2,3,4,5],
+                        targets: [1,2,3,4],
                         className: 'dt-center',
                         type:'string'
                     },
@@ -170,7 +218,14 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
                     	},
                     	type:'string',
                     	targets: 0
-                    }
+                    },
+					{
+						render: function(data,type,row,meta){
+							return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">See Values</button>';
+						},
+						type:'string',
+						targets: 5
+					},
                   ],
         		order: [[0,'asc'],[ 1, 'asc' ]],
                 deferRender: true,

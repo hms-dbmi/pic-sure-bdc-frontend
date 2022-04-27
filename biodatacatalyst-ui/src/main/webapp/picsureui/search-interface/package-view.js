@@ -1,5 +1,5 @@
-define(["jquery",'backbone', 'handlebars','text!search-interface/package-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util", "picSure/queryBuilder", "search-interface/query-results-view", "overrides/outputPanel", "picSure/settings"],
-function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, queryBuilder, queryResultsView, output, settings){
+define(["jquery",'backbone', 'handlebars','text!search-interface/package-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util", "picSure/queryBuilder", "search-interface/query-results-view", "overrides/outputPanel", "picSure/settings", "search-interface/variable-values-view", "search-interface/modal"],
+function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, queryBuilder, queryResultsView, output, settings, variableValuesView, modal){
 
 	var packageView = BB.View.extend({
 		initialize: function(){
@@ -15,7 +15,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		events: {
 			'click input[type="checkbox"]':"checkboxToggled",
 			'focus #exportData': 'exportDataFocus',
-			'blur #exportData': 'exportDataBlur'
+			'blur #exportData': 'exportDataBlur',
+			'click button[id="varValuesButton"]':"openVariableValues"
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -259,24 +260,74 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		sel.addRange(range);
 		document.execCommand("copy");
 	},
-
+	openVariableValues: function(event){
+		let varId = event.target.dataset['varid'];
+		let target = _.find(this.tempExportFields,(variable)=>{
+			return varId === variable.attributes.metadata.columnmeta_var_id;
+		});
+		if (!target){
+			target = _.find(this.model.get('deletedExports').models,(variable)=>{
+				return varId === variable.attributes.metadata.columnmeta_var_id;
+			});
+		}
+		var valuesModelTemplate = Backbone.Model.extend({
+						defaults: {},
+					});
+		valuesModel = new valuesModelTemplate();
+		keyboardNav.addNavigableView("variableValuesModal",this);
+		valuesModel.varId = target.attributes.metadata.columnmeta_var_id;
+		valuesModel.varDesc = target.attributes.metadata.columnmeta_description;
+		valuesModel.varName = target.attributes.metadata.columnmeta_name;
+		valuesModel.varDataset = target.attributes.metadata.columnmeta_var_group_id;
+		valuesModel.varStudy = target.attributes.metadata.columnmeta_study_id;
+		valuesModel.isNumerical = target.attributes.is_continuous;
+		valuesModel.isCategorical = target.attributes.is_categorical;
+		if(valuesModel.isCategorical){
+			valuesModel.varValues = target.attributes.value_tags;
+		}
+		else{
+			valuesModel.varMin = target.attributes.metadata.columnmeta_min;
+			valuesModel.varMax = target.attributes.metadata.columnmeta_max;
+		}
+		this.valuesView = new variableValuesView({
+			prevModal: {
+				view: this,
+				title: 'Review and Package Data',
+				div: '#package-modal'
+			},
+			model: valuesModel});
+		let title = 'Values for ' + varId;
+		modal.displayModal(
+			this.valuesView,
+			title,
+			() => {
+				$('#values-modal').focus();
+			}
+		);
+	},
 	render: function(){
 		this.$el.html((HBS.compile(packageModalTemplate))(this.model));
 		$('.modal-dialog').width('90%');
 		$('#package-datatable-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='exportData' class='display stripe' ></table>");
 		this.updateHeader();
 		let toggleable = true;
-		let data = _.map(this.tempExportFields,function(variable){
-			return [
-				true,
-				variable.attributes.metadata.columnmeta_var_id,
-				variable.attributes.metadata.columnmeta_name,
-				variable.attributes.metadata.columnmeta_description,
-				variable.attributes.metadata.columnmeta_data_type,
-				(variable.attributes.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.attributes.value_tags.join(", ") + ' ]',
-				variable.attributes.metadata.columnmeta_HPDS_PATH
-			];
-		});
+		let data = this.dtData;
+		if(!data){
+			data = _.map(this.tempExportFields,function(variable){
+				return [
+					true,
+					variable.attributes.metadata.columnmeta_var_id,
+					variable.attributes.metadata.columnmeta_name,
+					variable.attributes.metadata.columnmeta_description,
+					variable.attributes.metadata.columnmeta_data_type,
+					'See Values',
+					(variable.attributes.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.attributes.value_tags.join(", ") + ' ]',
+					variable.attributes.metadata.columnmeta_HPDS_PATH
+				];
+			});
+			this.dtData = data;
+		}
+
 		$('#exportData').DataTable( {
 			data: data,
 			columns: [
@@ -285,7 +336,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				{title:'Name'},
 				{title:'Description'},
 				{title:'Type'},
-				{title:'Values'}
+				{title: 'Values'},
+				{title: 'ValuesHidden', visible: false}
 			],
 			select: {
 				style:    'os',
@@ -294,7 +346,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			},
 			columnDefs: [
 				{
-					targets: [1,2,3,4,5],
+					targets: [1,2,3,4],
 					className: 'dt-center',
 					type:'string'
 				},
@@ -304,7 +356,15 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 					},
 					type:'string',
 					targets: 0
-				}
+				},
+				{
+					render: function(data,type,row,meta){
+						return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">See Values</button>';
+					},
+					type:'string',
+					targets: 5
+				},
+
 			],
 			order: [[0,'asc'],[ 1, 'asc' ]],
 			deferRender: true,

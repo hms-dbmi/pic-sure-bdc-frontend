@@ -1,0 +1,39 @@
+<style>
+    #datatable-selection-buttons {
+        float: right;
+    }
+    #datatable-selection-buttons > button {
+        margin-left: 20px;
+    }
+    .focused-variable {
+        border:solid;
+        border-width:-4px !important;
+        border-color:#a73039 !important;
+    }
+    table.dataTable {
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+</style>
+<div class="values-modal" style="background:white;">
+    <div class="flex-container space-out">
+            <ul class="var-info">
+                <li> {{varName}}</li>
+                <li>{{varDesc}}</li>
+                <li>Dataset ID: {{varDataset}}</li>
+                <li>Study ID: {{varStudy}}</li>
+            </ul>
+    </div>
+    {{#if isNumerical}}
+    <div id="value-modal-info">
+        <p>{{varId}} is a numerical variable with values ranging from a minimum of {{varMin}} and maximum of {{varMax}}</p>
+    </div>
+    {{/if}}
+    {{#if isCategorical}}
+    <div id="value-modal-table"></div>
+    {{/if}}
+
+</div>
