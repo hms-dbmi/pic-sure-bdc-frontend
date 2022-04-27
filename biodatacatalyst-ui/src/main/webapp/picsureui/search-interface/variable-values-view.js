@@ -83,10 +83,12 @@ define(['backbone', 'handlebars','text!search-interface/variable-values-view.hbs
 
 			if(this.model.isCategorical){
 				$('#value-modal-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='valueData' class='display stripe' ></table>");
-				let data = _.map(this.model.varValues,function(value){return [
+				let data = _.keys(this.model.varValues);
+				data = _.map(data, function(value){return [
 					value
 				]
-                });
+
+				})
 	            $('#valueData').DataTable( {
 	                data: data,
 	                columns: [

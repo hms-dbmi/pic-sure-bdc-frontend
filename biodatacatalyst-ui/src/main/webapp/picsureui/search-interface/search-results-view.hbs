@@ -1,9 +1,4 @@
 <style>
-	.focused-search-result {
-    	border-top: 1px solid;
-		border-width:4px !important;
-		border-color:#a73039 !important;
-	}
 	.search-result {
 		border-bottom: 1px solid;
 		padding:3px;
@@ -12,9 +7,6 @@
 	}
 	.search-result:first-of-type {
 		border-top: 1px solid;
-	}
-	.search-result-icons {
-		float:right;
 	}
 	.search-result-icons .glyphicon{
 		font-size:1.3em;
@@ -55,7 +47,7 @@
     display: inline-block;
 	}
 </style>
-<div id='search-results-div' role="region" aria-label="You are in the results region. Use the up and down arrows to move between search results. Use the left and right arrows to move between pages of search results. You are currently on page {{pageNum}} out of {{numPages}} pages of search results with up to 10 results per page." tabindex=0>
+<div id='search-results-div' role="region">
 
 </div>
 <div id='aria-live' aria-live='polite' style="position:absolute;left:-99999;display:hidden;"></div>

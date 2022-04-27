@@ -283,7 +283,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		valuesModel.isNumerical = target.attributes.is_continuous;
 		valuesModel.isCategorical = target.attributes.is_categorical;
 		if(valuesModel.isCategorical){
-			valuesModel.varValues = target.attributes.value_tags;
+			valuesModel.varValues = target.attributes.values;
 		}
 		else{
 			valuesModel.varMin = target.attributes.metadata.columnmeta_min;
@@ -313,7 +313,9 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		let toggleable = true;
 		let data = this.dtData;
 		if(!data){
+
 			data = _.map(this.tempExportFields,function(variable){
+				let values = _.keys(variable.attributes.values).join(", ");
 				return [
 					true,
 					variable.attributes.metadata.columnmeta_var_id,
@@ -321,7 +323,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 					variable.attributes.metadata.columnmeta_description,
 					variable.attributes.metadata.columnmeta_data_type,
 					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.attributes.metadata.columnmeta_min + ', Max: ' + variable.attributes.metadata.columnmeta_max : 'See Values',
-					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + variable.attributes.value_tags.join(", ") + ' ]',
+					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + values + ' ]',
 					variable.attributes.metadata.columnmeta_HPDS_PATH
 				];
 			});

@@ -111,8 +111,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					includedTags: this.requiredTags,
 					excludedTags: searchExcludeTags,
 					returnTags: true,
-					offset: (tagFilterModel.get("currentPage")-1) * tagFilterModel.get("limit"),
-					limit: tagFilterModel.get("limit")
+					limit: 1000000
 				}}),
 				success: function(response){
 					//deferredSearchResults.resolve();

@@ -145,7 +145,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
 			valuesModel.isNumerical = target.result.is_continuous;
 			valuesModel.isCategorical = target.result.is_categorical;
 			if(valuesModel.isCategorical){
-				valuesModel.varValues = target.result.value_tags;
+				valuesModel.varValues = target.result.values;
 			}
 			else{
 				valuesModel.varMin = target.result.metadata.columnmeta_min;
@@ -176,6 +176,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
 			let data = this.dtData;
 			if(!data){
 				data = _.map(this.model.dtVariables,function(variable){
+						let values = _.keys(variable.result.values).join(", ");
 	                	return [
 							//TODO change to check for variable in ExportFields
 	                		filterModel.isExportField(variable),
@@ -184,7 +185,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
 							variable.result.metadata.columnmeta_description,
 							variable.result.metadata.columnmeta_data_type,
 							(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.result.metadata.columnmeta_min + ', Max: ' + variable.result.metadata.columnmeta_max : 'See Values',
-							(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + variable.result.value_tags.join(", ") + ' ]',
+							(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + values + ' ]',
 							variable.result.metadata.columnmeta_HPDS_PATH
 	                	];
 	                });
