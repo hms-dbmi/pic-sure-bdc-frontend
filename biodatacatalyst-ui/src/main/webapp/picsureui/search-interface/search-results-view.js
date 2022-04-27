@@ -47,7 +47,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		resultsBlur: function(){
 			this.focusedSection = undefined;
 			keyboardNav.setCurrentView(undefined);
-			this.$("#search-results-datatable  .search-result.focused-search-result").removeClass('focused-search-result');
+			this.$("#search-results-datatable .focused-search-result").removeClass('focused-search-result');
 		},
 		cacheVariableInfo: function(response, variableId){
 			variableInfoCache[variableId] = {
@@ -78,7 +78,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				return;
 			}
 			const rowData = this.searchResultsTable.row(event.target).data();
-			$('#search-results-div').blur();
+			$('#search-results-datatable').blur();
 			this.retrieveDataTableMeta(rowData.study_id+'_'+rowData.table_id, function(response){
 				this.cacheVariableInfo(response, rowData.variable_id);
 				this.dataTableInfoView = new dataTableInfoView({
@@ -89,7 +89,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				});
 				this.dataTableInfoView.render();
 				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[rowData.variable_id].metadata.columnmeta_name,  ()=>{
-					$('#search-results-div').focus();
+					$('#search-results-datatable').focus();
 				});
 			}.bind(this));
 		},
@@ -286,14 +286,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						}
 					],
                 });
-				// abbreviation: "CARDIA"
-				// dataTableDescription: "Subject Identifier"
-				// description: "REASON(S) FOR HOSPITALIZATION"
-				// name: "YTRCARR"
-				// result_index: 0
-				// study_id: "phs000285"
-				// table_id: "pht001867"
-				// variable_id: "phv00121188"
 				$('#search-results-div').attr('aria-label',
 					"You are in the results region on page " +
 					tagFilterModel.get("currentPage") + " out of " + pages.length +

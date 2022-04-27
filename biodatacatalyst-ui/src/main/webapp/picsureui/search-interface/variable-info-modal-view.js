@@ -185,7 +185,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 			},
 			databaseKeypressHandler: function(event){
 				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
-					this.filterClickHandler(event);
+					this.databaseClickHandler(event);
 				}
 			},
 			render: function(){
