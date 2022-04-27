@@ -2,11 +2,11 @@ define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs
 		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util",
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
 		"search-interface/filter-model", "search-interface/tag-filter-model",
-		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav"],
+		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",],
 function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel,
-		 modal, variableInfoCache, keyboardNav){
+		 modal, variableInfoCache, keyboardNav, tableView){
 
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
@@ -22,26 +22,13 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		},
 		events: {
 			"click .search-result": "infoClickHandler",
+			"click #search-results-datatable tr": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
 			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
-			'focus #search-results-div': 'resultsFocus',
-			'blur #search-results-div': 'resultsBlur',
+			'focus #search-results-datatable': 'resultsDatatableFocus',
+			'blur #search-results-datatable': 'resultsBlur',
 			'keypress #search-results-div': 'resultKeyHandler'
-		},
-		nextPage: function(){
-			let nextPageLink = document.getElementById('page-link-' + tagFilterModel.get("currentPage")).nextElementSibling;
-			if(nextPageLink){
-				tagFilterModel.set("currentPage", nextPageLink.dataset["page"]);
-			}
-			$('#aria-live').html("Now on page " + tagFilterModel.get("currentPage") + " of the results region.");
-		},
-		previousPage: function(){
-			let previousPageLink = document.getElementById('page-link-' + tagFilterModel.get("currentPage")).previousElementSibling;
-			if(previousPageLink){
-				tagFilterModel.set("currentPage", previousPageLink.dataset["page"]);
-			}
-			$('#aria-live').html("Now on page " + tagFilterModel.get("currentPage") + " of the results region.");
 		},
 		pageLinkHandler: function(event){
 			tagFilterModel.set("currentPage", event.target.innerText);
@@ -49,42 +36,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		updateResponse: function(response) {
 			tagFilterModel.set("searchResults",response, {silent:true});
 		},
-		adjustFocusedResult: function(adjustment, results){
-			let focusedResult = adjustment;
-			for(var x = 0;x < results.length;x++){
-				if($(results[x]).hasClass('focused-search-result')){
-					focusedResult = x;
-					$(results[x]).removeClass('focused-search-result')
-				}
-			}
-			focusedResult = focusedResult - adjustment;
-			if(focusedResult===-1){
-				focusedResult = results.length-1;
-			}
-			if(focusedResult===results.length){
-				focusedResult=0;
-			}
-			$(results[focusedResult]).addClass('focused-search-result');
-			$("#search-results-div").attr("aria-activedescendant", results[focusedResult].id);
-
-			searchUtil.ensureElementIsInView(results[focusedResult]);
-		},
-		previousSearchResult: function(event){
-			let results = this.$(".search-result");
-			let focusedResult = this.adjustFocusedResult(1, results);
-		},
-		nextSearchResult: function(event){
-			let results = this.$(".search-result");
-			let focusedResult = this.adjustFocusedResult(-1, results);
-		},
 		resultsFocus: function(event){
 			this.focusedSection = '#search-results-div';
+			keyboardNav.setCurrentView("searchResults");
+		},
+		resultsDatatableFocus: function(event){
+			this.focusedSection = '#search-results-datatable';
 			keyboardNav.setCurrentView("searchResults");
 		},
 		resultsBlur: function(){
 			this.focusedSection = undefined;
 			keyboardNav.setCurrentView(undefined);
-			this.$("#search-results-div  .search-result.focused-search-result").removeClass('focused-search-result');
+			this.$("#search-results-datatable  .search-result.focused-search-result").removeClass('focused-search-result');
 		},
 		cacheVariableInfo: function(response, variableId){
 			variableInfoCache[variableId] = {
@@ -114,20 +77,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			if(event.target.classList.contains('search-result-action-btn') ){
 				return;
 			}
-			let study_id = $(event.target).data('study-id');
-			let dataTableId = $(event.target).data('data-table-id');
-			let variableId = $(event.target).data('variable-id');
+			const rowData = this.searchResultsTable.row(event.target).data();
 			$('#search-results-div').blur();
-			this.retrieveDataTableMeta(study_id+'_'+dataTableId, function(response){
-				this.cacheVariableInfo(response, variableId);
+			this.retrieveDataTableMeta(rowData.study_id+'_'+rowData.table_id, function(response){
+				this.cacheVariableInfo(response, rowData.variable_id);
 				this.dataTableInfoView = new dataTableInfoView({
-					varId: variableId,
+					varId: rowData.variable_id,
 					dataTableData: response,
 					isOpenAccess: !this.isAuthorized,
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
-				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[variableId].metadata.columnmeta_name,  ()=>{
+				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[rowData.variable_id].metadata.columnmeta_name,  ()=>{
 					$('#search-results-div').focus();
 				});
 			}.bind(this));
@@ -197,6 +158,52 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		generateStudyAccessionTagId: function(studyId) {
 			return studyId.split('.')[0].toUpperCase();
 		},
+		nextPage: function(){
+		    $('#search-results-datatable').DataTable().page( 'next' ).draw( 'page' );
+			$('#aria-live').html("Now on page " + ($('#search-results-datatable').DataTable().page() + 1) + " of the results region.");
+		},
+		previousPage: function(){
+			$('#search-results-datatable').DataTable().page( 'previous' ).draw( 'page' );
+			$('#aria-live').html("Now on page " + ($('#search-results-datatable').DataTable().page() + 1) + " of the results region.");
+		},
+		previousSearchResult: function(event){
+			let results = this.$("#search-results-datatable tbody tr");
+			const focused = this.$el.find(".focused-search-result");
+			if (focused.length === 0) {
+				$(results[results.length-1]).addClass("focused-search-result");
+			} else {
+				this.adjustFocusedVariable(1, results);
+			}
+		},
+		nextSearchResult: function(event){
+			const results = this.$("#search-results-datatable tbody tr");
+			const focused = this.$el.find(".focused-search-result");
+			if (focused.length === 0) {
+				$(results[0]).addClass("focused-search-result");
+			} else {
+				this.adjustFocusedVariable(-1, results);
+			}
+		},
+		adjustFocusedVariable: function(adjustment, results){
+			let focusedVariable = adjustment;
+			for(var x = 0;x < results.length;x++){
+				if($(results[x]).hasClass('focused-search-result')){
+					focusedVariable = x;
+					$(results[x]).removeClass('focused-search-result')
+				}
+			}
+			focusedVariable = focusedVariable - adjustment;
+			if(focusedVariable===-1){
+				focusedVariable = results.length-1;
+			}
+			if(focusedVariable===results.length){
+				focusedVariable=0;
+			}
+			$(results[focusedVariable]).addClass('focused-search-result');
+            $("#search-results-datatable").attr("aria-activedescendant", results[focusedVariable].id);
+
+			searchUtil.ensureElementIsInView(results[focusedVariable]);
+		},
 		render: function(){
 			if($('#search-results-div')[0]===undefined){
 				this.$el.html(HBS.compile(searchResultsViewTemplate));
@@ -236,14 +243,57 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						isActive : tagFilterModel.get("currentPage") == pageNumber
 					});
 				}
-				$('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
-					{
-						"isAuthorized": this.isAuthorized,
-						"results": results,
-						"variableCount": tagFilterModel.get("searchResults").results.numResults,
-						"pages": pages
-					}
-				));
+				let searchResultData = {
+					"isAuthorized": this.isAuthorized,
+					"results": results,
+					"variableCount": tagFilterModel.get("searchResults").results.numResults,
+					"pages": pages
+				}
+
+				let searchResultsView = new tableView(searchResultData);
+				searchResultsView.render();
+				$('#search-results-div').html(searchResultsView.$el);
+				const isAuthorized = this.isAuthorized;
+				this.searchResultsTable = $('#search-results-datatable').DataTable({
+                    data: results,
+					"searching": false,
+					"sorting": false,
+					"bAutoWidth": false,
+					"tabIndex": -1,
+                    columns: [
+                        {title:'Study', data:'abbreviation'},
+						{title:'Dataset ID', data:'table_id'},
+                        {title:'Variable ID', data:'variable_id'},
+                        {title:'Variable Name', data:'name'},
+                        {title:'Variable Description',data:'description'},
+						{title:'Actions'},
+                    ],
+					columnDefs: [
+						{
+							targets: [0, 1, 2, 3, 4, 5],
+							className: 'dt-center',
+							type: 'string'
+						},
+						{
+							render: function (data, type, row, meta) {
+								if (isAuthorized) {
+									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to add this variable to your data retrieval." class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i></span>';
+								}
+								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
+							},
+							type: 'string',
+							targets: 5
+						}
+					],
+                });
+				// abbreviation: "CARDIA"
+				// dataTableDescription: "Subject Identifier"
+				// description: "REASON(S) FOR HOSPITALIZATION"
+				// name: "YTRCARR"
+				// result_index: 0
+				// study_id: "phs000285"
+				// table_id: "pht001867"
+				// variable_id: "phv00121188"
 				$('#search-results-div').attr('aria-label',
 					"You are in the results region on page " +
 					tagFilterModel.get("currentPage") + " out of " + pages.length +

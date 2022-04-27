@@ -11,6 +11,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		initialize: function(opts){
 			this.isOpenAccess = opts.isOpenAccess;
 			this.model = tagFilterModel;
+			this.clicked = false;
 			this.helpView = new helpView();
 			this.onTagChange = opts.onTagChange;
 			this.model.get('requiredTags').bind('change add remove', this.modelChanged.bind(this));
@@ -31,7 +32,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		events: {
 			'mouseover .badge': 'showTagControls',
 			'mouseout .badge': 'hideTagControls',
-			'click .badge': 'clickTag',
+			'click .hover-control': 'clickTag',
 			'click #show-all-tags-btn': 'showAllTags',
 			'click #show-fewer-tags-btn': 'showFewerTags',
 			'focus #active-tags-section-div': 'activeTagFocus',
@@ -60,7 +61,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				this.model.removeRequiredTag(focusedTag.id.split('-')[1]);
 			}
 		},
-		previousTag: function(event){
+		previousTag: function(e){
 			let tags = this.$(this.model.get("focusedSection") + " .section-body .badge");
 			let focusedTag = 1;
 			for(var x = 0;x < tags.length;x++){
@@ -78,7 +79,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			$('.focused-tag-badge .hover-control').css('visibility','visible');
 			searchUtil.ensureElementIsInView($('.focused-tag-badge')[0]);
 		},
-		nextTag: function(event){
+		nextTag: function(e){
 			let tags = this.$(this.model.get("focusedSection") + " .section-body .badge");
 			let focusedTag = -1;
 			for(var x = 0;x < tags.length;x++){
@@ -113,7 +114,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		activeTagFocus: function(){
 			this.model.set('focusedSection', '#active-tags-section-div', {silent:true});
-			this.nextTag();
+			this.focusFirstTag();
 			keyboardNav.setCurrentView("tagFilters");
 		},
 		activeTagBlur: function(){
@@ -124,7 +125,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		tagFocus: function(){
 			this.model.set('focusedSection', '#tags-section-div', {silent:true});
-			this.nextTag();
+			this.focusFirstTag();
 			keyboardNav.setCurrentView("tagFilters");
 		},
 		tagBlur: function(){
@@ -135,7 +136,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		studyTagFocus: function(){
 			this.model.set('focusedSection', '#study-tags-section-div', {silent:true});
-			this.nextTag();
+			this.focusFirstTag();
 			keyboardNav.setCurrentView("tagFilters");
 		},
 		studyTagBlur: function(){
@@ -143,6 +144,11 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			$('.focused-tag-badge .hover-control').css('visibility','hidden');
 			this.$("#study-tags-section-div .section-body .focused-tag-badge").removeClass('focused-tag-badge');
 			keyboardNav.setCurrentView(undefined);
+		},
+		focusFirstTag: function(){
+			const tags = this.$(this.model.get("focusedSection") + " .section-body .badge");
+			tags && $(tags[0]).addClass('focused-tag-badge');
+			tags && $('.focused-tag-badge .hover-control').css('visibility','visible');
 		},
 		// queryUpdated: function(model, collection, opts){
 		// 	var studiesInScope = _.filter(filterModel.get('activeFilters').models, (model) => {model.toJSON().searchResult !== undefined})
