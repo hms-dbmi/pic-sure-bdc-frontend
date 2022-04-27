@@ -118,7 +118,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			filterModel.addDatatableFilter({
 				variables: selectedVariables,
 				dtId:this.model.dtId,
-				title: "\\" + this.model.dtVariables[0].result.metadata.study_id + "\\" + this.model.dtId + "\\",
+				title: "\\" + this.model.dtVariables[0].result.metadata.columnmeta_study_id + "\\" + this.model.dtId + "\\",
 				searchResult: this.model.dtVariables[0]
 			});
             $('.close').click();

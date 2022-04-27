@@ -104,7 +104,7 @@ define(["underscore", "picSure/settings"],
 				if(query.query.anyRecordOf===undefined){
 					query.query.anyRecordOf = [];
 				}
-				query.query.anyRecordOf = query.query.anyRecordOf.concat(_.map(filter.variables, (variable)=>{return variable[6];}));
+				query.query.anyRecordOf = query.query.anyRecordOf.concat(_.map(filter.variables, (variable)=>{return variable[7];}));
 			}
 		});
 		//this.updateConsentFilters(query, settings);
