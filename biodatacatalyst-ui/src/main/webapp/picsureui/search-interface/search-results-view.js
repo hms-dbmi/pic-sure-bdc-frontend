@@ -277,23 +277,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						}
 					],
                 });
-// 				abbreviation: "CARDIA"
-// dataTableDescription: "Subject Identifier"
-// description: "REASON(S) FOR HOSPITALIZATION"
-// name: "YTRCARR"
-// result_index: 0
-// study_id: "phs000285"
-// table_id: "pht001867"
-// variable_id: "phv00121188"
-
-				// $('#search-results-div').html(HBS.compile(searchResultsListTemplate)(
-				// 	{
-				// 		"isAuthorized": this.isAuthorized,
-				// 		"results": results,
-				// 		"variableCount": tagFilterModel.get("searchResults").results.numResults,
-				// 		"pages": pages
-				// 	}
-				// ));
+				// abbreviation: "CARDIA"
+				// dataTableDescription: "Subject Identifier"
+				// description: "REASON(S) FOR HOSPITALIZATION"
+				// name: "YTRCARR"
+				// result_index: 0
+				// study_id: "phs000285"
+				// table_id: "pht001867"
+				// variable_id: "phv00121188"
 				$('#search-results-div').attr('aria-label',
 					"You are in the results region on page " +
 					tagFilterModel.get("currentPage") + " out of " + pages.length +

@@ -578,6 +578,10 @@ input[type='checkbox'].categorical-filter-input {
     cursor: pointer;
 }
 
+.no-mouse-events {
+    pointer-events: none;
+}
+
 /************************* STARTS Search X/reset button ******************************/
 
 input[type="search"]::-webkit-search-cancel-button {
@@ -680,6 +684,8 @@ remove when above bug is fixed */
 
 #show-all-tags-btn, #show-fewer-tags-btn {
     cursor: pointer;
+    pointer-events: auto;
+    padding: 0.5em;
 }
 
 #patient-count-box {
@@ -716,4 +722,8 @@ remove when above bug is fixed */
 .var-info {
     list-style-type: none;
     padding: 0;
+}
+
+#search-results-datatable tr {
+    cursor: pointer;
 }

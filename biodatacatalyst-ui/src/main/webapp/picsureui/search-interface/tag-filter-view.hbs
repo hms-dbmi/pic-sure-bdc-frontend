@@ -7,6 +7,7 @@
 		background: white;
 		border: solid;
 		border-width: 1px;
+		pointer-events: auto;
 	}
 
 	.focused-tag-badge {
@@ -72,6 +73,7 @@
 	}
 	.badge {
 		font-weight: normal;
+		pointer-events: auto;
 	}
 	.badge .bold-tag {
 		font-weight: 700;
@@ -85,7 +87,7 @@
 	}
 </style>
 {{#if hasActiveTags}}
-<div id='active-tags-section-div' role='region' class='panel section' tabindex=0 aria-label='You are in the active tag filters region. 
+<div id='active-tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0 aria-label='You are in the active tag filters region. 
 	Currently {{numActiveTags}} tags are being used to filter search results for your search term "{{searchTerm}}". Currently {{numSearchResults}} search results are displayed in the results region.
 	{{#if hasRequiredTags}} The results are filtered by requiring the following tags: 
 		{{#each requiredTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
@@ -132,7 +134,7 @@
 </div>
 {{/if}}
 {{#if hasInactiveStudyTags}}
-<div id='study-tags-section-div' role='region' class='panel section' tabindex=0
+<div id='study-tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0
 	aria-label="You are in the study tag filters region. Use arrows keys to move between study tag filters. Use the plus and minus keys to include or exclude tags.">
 	<div class="space-out panel-heading">
 		<span>Filter Search Results by Study Tags</span>
@@ -154,7 +156,7 @@
 </div>
 {{/if}}
 {{#if this.tagsShown}}
-<div id='tags-section-div' role='region' class='panel section' tabindex=0
+<div id='tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0
 	aria-label="You are in the tag filters region. Use up and down arrows to move between tag filters.">
 	<div class='panel-heading'>
 		Filter Search Results by Variable Tags
@@ -174,9 +176,9 @@
 		{{/each}}
 		<br>
 		{{#if tagsLimited}}
-		<span id="show-all-tags-btn"> <span class="glyphicon glyphicon-chevron-down"></span> View more tags</span>
+		<span id="show-all-tags-btn" tabindex="0"> <span class="glyphicon glyphicon-chevron-down"></span> View more tags</span>
 		{{else}}
-		<span id="show-fewer-tags-btn"> <span class="glyphicon glyphicon-chevron-up"></span> View fewer tags</span>
+		<span id="show-fewer-tags-btn" tabindex="0"> <span class="glyphicon glyphicon-chevron-up"></span> View fewer tags</span>
 		{{/if}}
 	</div>
 </div>
