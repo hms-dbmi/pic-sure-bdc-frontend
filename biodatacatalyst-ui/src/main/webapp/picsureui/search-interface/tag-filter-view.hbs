@@ -87,12 +87,12 @@
 	}
 </style>
 {{#if hasActiveTags}}
-<div id='active-tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0 aria-label='You are in the active tag filters region. 
+<div id='active-tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0 aria-label='You are in the active tag filters region.
 	Currently {{numActiveTags}} tags are being used to filter search results for your search term "{{searchTerm}}". Currently {{numSearchResults}} search results are displayed in the results region.
-	{{#if hasRequiredTags}} The results are filtered by requiring the following tags: 
+	{{#if hasRequiredTags}} The results are filtered by requiring the following tags:
 		{{#each requiredTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
 	{{/if}}
-	{{#if hasExcludedTags}} The results are filtered by excluding the following tags: 
+	{{#if hasExcludedTags}} The results are filtered by excluding the following tags:
 		{{#each excludedTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
 	{{/if}} Use arrows keys to move between active tag filters. Use enter to remove the tag.'>
 	<div class='panel-heading section-label'>Active Search Tags</div>
@@ -109,7 +109,7 @@
 				</div>
 				<span data-tag="{{this.tag}}" data-action="removeRequiredTag"
 						class="fa fa-times selected-required-tag removeRequiredTag hover-control remove-tag-btn"></span>
-			</div>	
+			</div>
 			{{/each}}
 		</div>
 		{{/if}}
@@ -118,7 +118,7 @@
 			{{#each excludedTags}}
 			<div class="badge fat-badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
 					<div class="stack excluded-tag">
-						<span class="bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press the plus key to include only search results having this tag. Press minus to exclude all search results having this tag.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
+						<span class="bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy this.tag}} is associated with {{this.score}} search results. Press enter to no longer exclude this tag from search results.">{{aliasIfStudy this.tag}} ({{this.score}})</span>
 						{{#isStudy this.tag}}
 						<span id="study-{{this.tag}}" class="tag-study-text mouse-through">{{this.tag}}</span>
 						{{/isStudy}}

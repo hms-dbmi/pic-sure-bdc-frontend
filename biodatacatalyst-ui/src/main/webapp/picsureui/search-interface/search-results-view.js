@@ -50,13 +50,36 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			this.$("#search-results-datatable .focused-search-result").removeClass('focused-search-result');
 		},
 		cacheVariableInfo: function(response, variableId){
+			var isRequiredTag = false;
+			var isExcludedTag = false;
+			var isUnusedTag = false;
+			var tagScore;
+			let requiredTag = tagFilterModel.get("requiredTags").models.find(function(tag) {return tag.get('tag').toLowerCase() === response.metadata.columnmeta_study_id.toLowerCase()});
+			let excludedTag = tagFilterModel.get("excludedTags").models.find(function(tag) {return tag.get('tag').toLowerCase() === response.metadata.columnmeta_study_id.toLowerCase()});
+			if ( requiredTag !== undefined){
+				isRequiredTag = true;
+				tagScore = requiredTag.get('score');
+			}
+			else if (excludedTag !== undefined){
+				isExcludedTag = true;
+				tagScore = excludedTag.get('score');
+			}
+			else{
+				isUnusedTag = true;
+				tagScore = tagFilterModel.get("unusedTags").models.find(function(tag) {return tag.get('tag').toLowerCase() === response.metadata.columnmeta_study_id.toLowerCase()}).get('score');
+			}
 			variableInfoCache[variableId] = {
 					studyDescription: response.metadata.study_description,
 					studyAccession: this.generateStudyAccession(response),
 					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.columnmeta_study_id),
 					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id),
 					variableId: variableId,
-					variableMetadata: response.variables[variableId].metadata
+					variableMetadata: response.variables[variableId].metadata,
+					isRequiredTag: isRequiredTag,
+					isExcludedTag: isExcludedTag,
+					isUnusedTag: isUnusedTag,
+					tagScore: tagScore,
+					isExportField: filterModel.isExportFieldFromId(variableId)
 			}
 			variableInfoCache[variableId].columnmeta_var_id = variableId;
 		},
@@ -156,7 +179,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			return studyAccession;
 		},
 		generateStudyAccessionTagId: function(studyId) {
-			return studyId.split('.')[0].toUpperCase();
+			return studyId.split('.')[0].toLowerCase();
 		},
 		nextPage: function(){
 		    $('#search-results-datatable').DataTable().page( 'next' ).draw( 'page' );

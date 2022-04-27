@@ -89,12 +89,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			if(tagFilterModel.get("term")!==this.searchTerm){
 				tagFilterModel.set("term", this.searchTerm, {silent:true});
 			}
-			this.requiredTags = $('.selected-required-tag').map(function(x) {
-				return $(this).data('tag');
-			}).toArray();
-			this.excludedTags = $('.selected-excluded-tag').map(function(x) {
-				return $(this).data('tag');
-			}).toArray();
+			this.requiredTags = tagFilterModel.get('requiredTags').models.map(function(x) {
+				return x.get('tag');
+			});
+			this.excludedTags = tagFilterModel.get('excludedTags').models.map(function(x) {
+				return x.get('tag');
+			});
 
 			//exclude the user selected tags as well as tags not in scope
 			searchExcludeTags= [...this.excludedTags, ...this.antiScopeTags];

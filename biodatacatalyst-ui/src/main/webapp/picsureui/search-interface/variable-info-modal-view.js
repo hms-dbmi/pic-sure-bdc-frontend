@@ -17,6 +17,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				this.varId = opts.varId;
 				variableInfoCache[opts.varId].isAuthorized = !opts.isOpenAccess;
 				this.dataTableData = opts.dataTableData;
+				tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
+				tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
+				tagFilterModel.get('unusedTags').bind('add', this.tagUnused.bind(this));
 			},
 			events: {
 				'mouseover .badge': 'showTagControls',
@@ -46,6 +49,26 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				if(event.target && event.target.classList.contains('hover-control')){
 					tagFilterModel[event.target.dataset['action']](event.target.dataset['tag']);
 				}
+			},
+			tagRequired: function(){
+
+					variableInfoCache[this.varId].isRequiredTag = true;
+					variableInfoCache[this.varId].isExcludedTag = false;
+					variableInfoCache[this.varId].isUnusedTag = false;
+					this.render();
+			},
+			tagExcluded: function(){
+
+					variableInfoCache[this.varId].isRequiredTag = false;
+					variableInfoCache[this.varId].isExcludedTag = true;
+					variableInfoCache[this.varId].isUnusedTag = false;
+					this.render();
+			},
+			tagUnused: function(){
+					variableInfoCache[this.varId].isRequiredTag = false;
+					variableInfoCache[this.varId].isExcludedTag = false;
+					variableInfoCache[this.varId].isUnusedTag = true;
+					this.render();
 			},
 			filterClickHandler: function(event) {
 				let variableId = _.find($('.modal .fa-filter'),
@@ -121,7 +144,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				}
 			},
 			databaseClickHandler: function(event) {
-				this.toggleExportClasses(event.target);
+
 				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
 					return filterButton.dataset.target === "variable";
 				}).dataset.id;
@@ -170,6 +193,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 
 				}
 				else if (event.target.dataset.target === "variable") {
+					this.toggleExportClasses(event.target);
 					filterModel.toggleExportField(searchResult);
 				}
 
