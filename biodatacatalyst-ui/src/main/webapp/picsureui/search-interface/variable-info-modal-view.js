@@ -144,7 +144,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				}
 			},
 			databaseClickHandler: function(event) {
-				this.toggleExportClasses(event.target);
+
 				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
 					return filterButton.dataset.target === "variable";
 				}).dataset.id;
@@ -193,6 +193,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 
 				}
 				else if (event.target.dataset.target === "variable") {
+					this.toggleExportClasses(event.target);
 					filterModel.toggleExportField(searchResult);
 				}
 

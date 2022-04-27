@@ -78,7 +78,8 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					isRequiredTag: isRequiredTag,
 					isExcludedTag: isExcludedTag,
 					isUnusedTag: isUnusedTag,
-					tagScore: tagScore
+					tagScore: tagScore,
+					isExportField: filterModel.isExportFieldFromId(variableId)
 			}
 			variableInfoCache[variableId].columnmeta_var_id = variableId;
 		},
