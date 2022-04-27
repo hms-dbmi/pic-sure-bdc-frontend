@@ -320,8 +320,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 					variable.attributes.metadata.columnmeta_name,
 					variable.attributes.metadata.columnmeta_description,
 					variable.attributes.metadata.columnmeta_data_type,
-					'See Values',
-					(variable.attributes.metadata.columnmeta_data_type == 'Continuous') ? "" : '[ ' + variable.attributes.value_tags.join(", ") + ' ]',
+					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.attributes.metadata.columnmeta_min + ', Max: ' + variable.attributes.metadata.columnmeta_max : 'See Values',
+					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + variable.attributes.value_tags.join(", ") + ' ]',
 					variable.attributes.metadata.columnmeta_HPDS_PATH
 				];
 			});
@@ -359,7 +359,12 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				},
 				{
 					render: function(data,type,row,meta){
-						return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">See Values</button>';
+						if(row[4].toLowerCase() === 'categorical'){
+						return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">'+data+'</button>';
+						}
+						else{
+						return '<td class="dt-center" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">'+data+'</td>'
+						}
 					},
 					type:'string',
 					targets: 5
