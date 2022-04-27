@@ -727,3 +727,12 @@ remove when above bug is fixed */
 #search-results-datatable tr {
     cursor: pointer;
 }
+
+#search-results-datatable th {
+    cursor: auto;
+    pointer-events: none;
+}
+
+.focused-search-result {
+    border: 4px solid #a73039!important;
+}
