@@ -54,7 +54,7 @@
     <div id="header-tabs" style="display: inline-block; width:auto" role="menubar" aria-label="tab menu" tabindex="0">
         {{#not_empty applications}}
         <div class="col dropdown" id="applications-dropdown" role="none">
-            <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
+            <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Applications">Applications</button>
             <ul class="dropdown-menu" role="menu">
             {{#each applications}}
                 <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
@@ -65,37 +65,37 @@
 
         {{#contains privileges "SUPER_ADMIN"}}
             <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
-                <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
+                <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Super Admin Console">Super Admin Console</span>
                 <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
-                    <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
-                    <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
-                    <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+                    <li class="dropdown" title="Applications"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#" >Applications</a></li>
+                    <li class="dropdown" title="Connections"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement" >Connections</a></li>
+                    <li class="dropdown" title="Privileges"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement" >Privileges</a></li>
+                    <li class="dropdown" title="Roles"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement" >Roles</a></li>
                 </ul>
             </div>
         {{/contains}}
         {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
-            <a class="col btn btn-default header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" role="menuitem" tabindex="-1">Authorized Access</a>
+            <a class="col btn btn-default header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" role="menuitem" tabindex="-1" title="Authorized Access">Authorized Access</a>
         {{/contains}}
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" role="menuitem" tabindex="-1">Open Access</a>
-            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" role="menuitem" tabindex="-1">Data Access</a> 
+            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" role="menuitem" tabindex="-1" title="Open Access">Open Access</a>
+            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" role="menuitem" tabindex="-1" title="Data Access">Data Access</a>
         {{/contains}}
         {{#contains privileges 'ADMIN'}}
-            <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#" role="menuitem">Users</a>
+            <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#" role="menuitem" title="Users">Users</a>
         {{/contains}}
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-            <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#" tabindex="-1">User Profile</a>
+            <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile">User Profile</a>
             <div tabindex="-1" class="col nav-dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1">Help</div>
+                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1" title="Help">Help</div>
                 <ul class="nav-dropdown-menu" aria-labelledby="dropdownMenuLink" tabindex="-1" role="menu">
-                    {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                    {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
-                    {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
-                    {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
+                    {{#if videoLink}}<li class="dropdown" title="Video Demonstration"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
+                    {{#if pdfLink}}<li class="dropdown" title="User Guide"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                    {{#if jupyterExampleLink}}<li class="dropdown" title="Jupyter Examples"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
+                    {{#if helpLink}}<li class="dropdown" title="Contact Us"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
                 </ul>
             </div>
-            <a href="#" id="logout-btn" class="col btn btn-default header-btn authenticated-visible" tabindex="-1">Log Out</a>
+            <a href="#" id="logout-btn" class="col btn btn-default header-btn authenticated-visible" tabindex="-1" title="Log Out">Log Out</a>
         {{/contains}}
     </div>
 </div>

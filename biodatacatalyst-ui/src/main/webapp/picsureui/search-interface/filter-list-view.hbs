@@ -25,7 +25,7 @@
             <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_group_id}}">
                 <div class="filter-header">
                     <div>
-                        <span>Filter: </span> {{#if this.searchResult.result.metadata.columnmeta_name}}<span class="var-name">{{this.searchResult.result.metadata.columnmeta_name}}</span>{{/if}}
+                        <span>Filter: </span> {{variables.length}} variable(s) in {{this.searchResult.result.metadata.columnmeta_var_group_id}}
                     </div>
                     <div class="filter-buttons-container">
                         <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
@@ -34,15 +34,15 @@
                     </div>
                 </div>
                 <div class="filter">
-                    <div class="study"><span>Study: </span>{{this.searchResult.result.metadata.columnmeta_study_id}}</div>
-                    {{#if this.searchResult.result.metadata.columnmeta_var_group_id}}
-                        <div><span>Dataset ID:</span> {{this.searchResult.result.metadata.columnmeta_var_group_id}}</div>
-                    {{/if}}
                     {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
                         <div><span>Dataset Name:</span> {{this.searchResult.result.metadata.columnmeta_var_group_description}}</div>
                     {{/if}}
+                    {{#if this.searchResult.result.metadata.columnmeta_var_group_id}}
+                        <div><span>Dataset Accession:</span> {{this.searchResult.result.metadata.columnmeta_var_group_id}}</div>
+                    {{/if}}
+                    <div class="study"><span>Study: </span>{{this.searchResult.result.metadata.columnmeta_study_id}}</div>
                 </div>
-                <div class="value">{{variables.length}} variables selected. Participants with any value recorded for any of these variables will be included if they match all other defined filters</div>
+                <div class="value"> Participants with any value recorded for any of these variables will be included if they match all other defined filters</div>
             </div>
         {{else if genomic}}
             <div class="filter-container with-wrap" id="genomic">
