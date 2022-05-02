@@ -25,7 +25,7 @@
             <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_group_id}}">
                 <div class="filter-header">
                     <div>
-                        Filter: 
+                        <span>Filter: </span> {{variables.length}} variable(s) in {{this.searchResult.result.metadata.columnmeta_var_group_id}}
                     </div>
                     <div class="filter-buttons-container">
                         <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
@@ -34,23 +34,15 @@
                     </div>
                 </div>
                 <div class="filter">
-                    {{#if this.searchResult.result.metadata.columnmeta_name}}
-                        <p class="var-name">{{this.searchResult.result.metadata.columnmeta_name}}</p>
-                    {{/if}}
-                    <p class="study">Study: {{this.searchResult.result.metadata.columnmeta_study_id}}</p>
-                    {{#if this.searchResult.result.metadata.columnmeta_var_group_id}}
-                        <p>Datatable ID: {{this.searchResult.result.metadata.columnmeta_var_group_id}}</p>
-                    {{/if}}
                     {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
-                        <p>Datatable Name: {{this.searchResult.result.metadata.columnmeta_var_group_description}}</p>
+                        <div><span>Dataset Name:</span> {{this.searchResult.result.metadata.columnmeta_var_group_description}}</div>
                     {{/if}}
-                    {{#if topmed }}
-                        {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
-                            <p class="table">Table Name: {{this.searchResult.result.metadata.columnmeta_var_group_description}}</p>
-                        {{/if}}
+                    {{#if this.searchResult.result.metadata.columnmeta_var_group_id}}
+                        <div><span>Dataset Accession:</span> {{this.searchResult.result.metadata.columnmeta_var_group_id}}</div>
                     {{/if}}
+                    <div class="study"><span>Study: </span>{{this.searchResult.result.metadata.columnmeta_study_id}}</div>
                 </div>
-                <p class="value">{{variables.length}} variables selected. Participants with any value recorded for any of these variables will be included if they match all other defined filters</p>
+                <div class="value"> Participants with any value recorded for any of these variables will be included if they match all other defined filters</div>
             </div>
         {{else if genomic}}
             <div class="filter-container with-wrap" id="genomic">
@@ -69,7 +61,7 @@
             <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_id}}">
                     <div class="filter-header">
                         <div>
-                            Filter: 
+                            <span>Filter: </span> {{#if this.searchResult.result.metadata.columnmeta_name}}<span class="var-name">{{this.searchResult.result.metadata.columnmeta_name}}</span>{{/if}}
                         </div>
                         <div>
                             <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
@@ -78,17 +70,14 @@
                         </div>
                     </div>
                 <div class="filter">
-                    {{#if this.searchResult.result.metadata.columnmeta_name}}
-                        <p class="var-name">{{this.searchResult.result.metadata.columnmeta_name}}</p>
-                    {{/if}}
-                    <p>{{this.searchResult.result.metadata.columnmeta_var_id}}</p>
-                    <p>{{this.searchResult.result.metadata.description}}</p>
-                    <p class="value">Value: {{getFilterTypeDescription this}}</p>
-                    <p class="study">Study: {{this.searchResult.result.metadata.columnmeta_study_id}}</p>
-                    {{#if topmed }}
-                        {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
-                            <p class="table">Table Name: {{this.searchResult.result.metadata.columnmeta_var_group_description}}</p>
-                        {{/if}}
+                    <div><span>Variable Accession: </span>{{this.searchResult.result.metadata.columnmeta_var_id}}</div>
+                    <div><span>Variable Name: </span>{{this.searchResult.result.metadata.columnmeta_name}}</div>
+                    <div class="value"><span>Value: </span>{{getFilterTypeDescription this}}</div>
+                    <div class="study"><span>Study: </span>{{this.searchResult.result.metadata.columnmeta_study_id}}</div>
+                    {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
+                        <div class="dataset">
+                            <span>Dataset Name: </span>{{this.searchResult.result.metadata.columnmeta_var_group_description}}
+                        </div>
                     {{/if}}
                 </div>
             </div>

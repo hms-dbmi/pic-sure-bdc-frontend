@@ -150,23 +150,6 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			tags && $(tags[0]).addClass('focused-tag-badge');
 			tags && $('.focused-tag-badge .hover-control').css('visibility','visible');
 		},
-		// queryUpdated: function(model, collection, opts){
-		// 	var studiesInScope = _.filter(filterModel.get('activeFilters').models, (model) => {model.toJSON().searchResult !== undefined})
-		// 						  .map((model) => {return model.toJSON().searchResult.studyId});
-		//
-		// 	if(studiesInScope.length > 0){
-		// 		var studyTag = this.model.get("unusedTags").findWhere({tag:studiesInScope[0].toUpperCase()});
-		// 		if(studyTag !== undefined){
-		// 			this.model.get("unusedTags").remove(studyTag);
-		// 			this.model.get("requiredTags").add(studyTag);
-		// 			this.model.get("impliedTags").add(studyTag);
-		// 		}
-		// 	} else {
-		// 		this.model.get("requiredTags").remove(this.model.get("impliedTags").models);
-		// 		this.model.get("unusedTags").add(this.model.get("impliedTags").models);
-		// 		this.model.get("impliedTags").reset(null);
-		// 	}
-		// },
 		showAllTags: function(event){
 			this.model.set('tagLimit', 1000000);
 			this.render();
@@ -215,10 +198,12 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		},
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();
-			let tags = _.filter(unusedTags, function(tag){
+			let filteredTags = _.filter(unusedTags, function(tag){
 				return ! (tag.get('tag')===dccHarmonizedTag || studyVersionRegex.test(tag.get('tag'))) && ! tableVersionRegex.test(tag.get('tag'));
-			}).map(function(tag){return tag.toJSON();}).slice(0,this.model.get('tagLimit'));
-			this.model.set('numTags', Math.min(this.model.get("tagLimit"),this.model.get("unusedTags").size()), {silent:true})
+			}).map(function(tag){return tag.toJSON();})
+			let tags = filteredTags.slice(0,this.model.get('tagLimit'));
+			let studyTags = this.determineStudyTags(unusedTags);
+			this.model.set('numTags', Math.min(this.model.get("tagLimit"),filteredTags.length), {silent:true});
 			this.model.set('focusedTag', this.model.get('numTags') * 1000000, {silent:true});
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
@@ -227,7 +212,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 					searchTerm: $('#search-box').val(),
 					numSearchResults: this.model.get("searchResults") ? this.model.get("searchResults").results.numResults : 0,
 					numActiveTags: this.model.get("requiredTags").size() + this.model.get("excludedTags").size(),
-					tagsTotal: this.model.get("unusedTags").size(),
+					tagsTotal: filteredTags.length,
 					tagsShown: this.model.get('numTags'),
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
@@ -238,7 +223,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 						return tag.toJSON();
 					}),
 					excludedTags:this.model.get("excludedTags").map(function(tag){return tag.toJSON();}),
-					studyTags: this.determineStudyTags(unusedTags)
+					studyTags: studyTags
 				})
 			);
 			$('.study-badge-'+this.model.get('focusedTag')).addClass('focused-tag-badge');
