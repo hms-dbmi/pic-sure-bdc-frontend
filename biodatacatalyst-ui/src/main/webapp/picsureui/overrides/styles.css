@@ -667,7 +667,7 @@ remove when above bug is fixed */
 }
 
 .image-container img {
-    max-width: 475px;
+    max-width: 600px;
     border: 1px solid black;
 }
 
