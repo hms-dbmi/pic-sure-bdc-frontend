@@ -27,9 +27,6 @@
     {{#if variableMetadata.columnmeta_data_type}}
         <div>Variable Type: {{variableMetadata.columnmeta_data_type}}</div>
     {{/if}}
-    {{#if variableMetadata.columnmeta_var_group_description}}
-        <div>Variable Report Description: {{variableMetadata.columnmeta_var_group_description}}</div>
-    {{/if}}
     {{#if variableMetadata.columnmeta_var_report_comment}}
         <div>Variable Report Comment: {{variableMetadata.columnmeta_var_report_comment}}</div>
     {{/if}}
@@ -37,13 +34,13 @@
 <hr>
 <div class="dataset-info">
     <div class="dataset-name">
-        Dataset Name: {{variableMetadata.columnmeta_name}}
+        Dataset Name: {{variableMetadata.derived_group_name}}
     </div>
     <div class="dataset-accession">
         Dataset Accession: {{variableMetadata.columnmeta_var_group_id}}
         <i data-target="datatable" data-id="{{variableMetadata.columnmeta_var_group_id}}" tabindex=1000002 title="Click to configure a filter on this variable." class="fa fa-filter search-result-action-btn"></i>
         {{#if isAuthorized}}
-            <i data-target="datatable" data-id="{{variableMetadata.columnmeta_var_group_id}}" tabindex=1000003 title="Click to add this variable to your data retrieval." class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i>
+            <i data-target="datatable" data-id="{{variableMetadata.columnmeta_var_group_id}}" tabindex=1000003 title="Click to configure data retrieval on this variable." class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i>
         {{/if}}
     </div>
     {{#if variableMetadata.columnmeta_var_group_description}}

@@ -10,7 +10,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				'keynav-arrowright document': this.nextPage,
 				'keynav-arrowleft document': this.previousPage
 			});
-			this.tempExportFields = filterModel.get("exportFields").models;
+			this.tempExportFields = filterModel.get("exportColumns").models;
 		},
 		events: {
 			'click input[type="checkbox"]':"checkboxToggled",
@@ -79,16 +79,22 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			target[0] = valueToSet;
 			if(valueToSet){
 				let varToAdd = this.model.get("deletedExports").find((filter) => {
-					return filter.attributes.metadata.columnmeta_var_id === target[1];
+					return filter.attributes.variable.metadata.columnmeta_var_id === target[1];
 				});
-				filterModel.get("exportFields").add(varToAdd);
+				filterModel.get('exportColumns').add(varToAdd);
+				filterModel.get('exportFields').add(varToAdd.attributes.variable);
 				this.model.get("deletedExports").remove(varToAdd);
 			}
 			else{
-				let varToRemove = filterModel.get("exportFields").find((filter) => {
-					return filter.attributes.metadata.columnmeta_var_id === target[1];
+				let varToRemove = filterModel.get("exportColumns").find((filter) => {
+					return filter.attributes.variable.metadata.columnmeta_var_id === target[1] && target[7] === filter.attributes.type;
 				});
-				filterModel.get("exportFields").remove(varToRemove);
+				filterModel.get('exportColumns').remove(varToRemove);
+				filterModel.get('exportFields').remove(
+					filterModel.get('exportFields').find((field)=>{
+						return varToRemove.attributes.variable.metadata.columnmeta_var_id === field.attributes.metadata.columnmeta_var_id;
+					})
+				);
 				this.model.get("deletedExports").add(varToRemove);
 			}
 			filterModel.updateExportValues();
@@ -263,11 +269,11 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 	openVariableValues: function(event){
 		let varId = event.target.dataset['varid'];
 		let target = _.find(this.tempExportFields,(variable)=>{
-			return varId === variable.attributes.metadata.columnmeta_var_id;
+			return '\\' + varId + '\\' === '\\' + variable.attributes.variable.metadata.columnmeta_var_id + '\\';
 		});
 		if (!target){
 			target = _.find(this.model.get('deletedExports').models,(variable)=>{
-				return varId === variable.attributes.metadata.columnmeta_var_id;
+				return varId === variable.attributes.variable.metadata.columnmeta_var_id;
 			});
 		}
 		var valuesModelTemplate = Backbone.Model.extend({
@@ -275,19 +281,20 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 					});
 		valuesModel = new valuesModelTemplate();
 		keyboardNav.addNavigableView("variableValuesModal",this);
-		valuesModel.varId = target.attributes.metadata.columnmeta_var_id;
-		valuesModel.varDesc = target.attributes.metadata.columnmeta_description;
-		valuesModel.varName = target.attributes.metadata.columnmeta_name;
-		valuesModel.varDataset = target.attributes.metadata.columnmeta_var_group_id;
-		valuesModel.varStudy = target.attributes.metadata.columnmeta_study_id;
-		valuesModel.isNumerical = target.attributes.is_continuous;
-		valuesModel.isCategorical = target.attributes.is_categorical;
+		let metadata = target.attributes.variable.metadata;
+		valuesModel.varId = metadata.columnmeta_var_id;
+		valuesModel.varDesc = metadata.columnmeta_description;
+		valuesModel.varName = metadata.columnmeta_name;
+		valuesModel.varDataset = metadata.columnmeta_var_group_id;
+		valuesModel.varStudy = metadata.columnmeta_study_id;
+		valuesModel.isNumerical = target.attributes.variable.is_continuous ? target.attributes.variable.is_continuous : false;
+		valuesModel.isCategorical = target.attributes.variable.is_categorical ? target.attributes.variable.is_categorical : true;
 		if(valuesModel.isCategorical){
-			valuesModel.varValues = target.attributes.values;
+			valuesModel.varValues = target.attributes.variable.values;
 		}
 		else{
-			valuesModel.varMin = target.attributes.metadata.columnmeta_min;
-			valuesModel.varMax = target.attributes.metadata.columnmeta_max;
+			valuesModel.varMin = metadata.columnmeta_min;
+			valuesModel.varMax = metadata.columnmeta_max;
 		}
 		this.valuesView = new variableValuesView({
 			prevModal: {
@@ -314,17 +321,22 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		let data = this.dtData;
 		if(!data){
 
-			data = _.map(this.tempExportFields,function(variable){
-				let values = _.keys(variable.attributes.values).join(", ");
+			data = _.map(this.tempExportFields,function(model){
+				let variable = model.attributes;
+
+				let metadata = variable.variable.metadata;
+				let values = _.values(variable.variable.values).join(", ");
+
 				return [
 					true,
-					variable.attributes.metadata.columnmeta_var_id,
-					variable.attributes.metadata.columnmeta_name,
-					variable.attributes.metadata.columnmeta_description,
-					variable.attributes.metadata.columnmeta_data_type,
-					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.attributes.metadata.columnmeta_min + ', Max: ' + variable.attributes.metadata.columnmeta_max : 'See Values',
-					(variable.attributes.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + values + ' ]',
-					variable.attributes.metadata.columnmeta_HPDS_PATH
+					metadata.columnmeta_var_id,
+					metadata.columnmeta_name,
+					metadata.columnmeta_description,
+					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'continuous' : 'categorical',
+					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ metadata.columnmeta_min + ', Max: ' + metadata.columnmeta_max : '',
+					(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + values + ' ]' :  "",
+					variable.type,
+					metadata.columnmeta_HPDS_PATH
 				];
 			});
 			this.dtData = data;
@@ -339,7 +351,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				{title:'Description'},
 				{title:'Type'},
 				{title: 'Values'},
-				{title: 'ValuesHidden', visible: false}
+				{title: 'ValuesHidden', visible: false},
+				{title: 'exportType', visible: false}
 			],
 			select: {
 				style:    'os',
@@ -354,6 +367,12 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				},
 				{
 					render: function(data,type,row,meta){
+						if(row[7] === 'auto'){
+							return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'" title= "This variable cannot be removed from the export." disabled></input>'
+						}
+						else if (row[7] === 'filter'){
+							return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'" title = "This variable cannot be removed from the export." disabled></input>'
+						}
 						return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
 					},
 					type:'string',
@@ -361,33 +380,22 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				},
 				{
 					render: function(data,type,row,meta){
-						if(row[4].toLowerCase() === 'categorical'){
-						return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">'+data+'</button>';
+
+						if(row[4].toLowerCase() === 'categorical' && row[6] !== ""){
+						return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">See Values</button>';
 						}
 						else{
 						return '<td class="dt-center" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">'+data+'</td>'
-						}
+					}
 					},
 					type:'string',
 					targets: 5
 				},
 
 			],
-			order: [[0,'asc'],[ 1, 'asc' ]],
+			order: [[7,'desc'],[ 0, 'asc' ], [1, 'asc']],
 			deferRender: true,
 			drawCallback: function(){
-				let x = 0;
-				_.each($('input[type="checkbox"]'), (checkbox)=>{
-					let varId = checkbox.dataset['varid'];
-					let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === varId;});
-					if(dataRow[0]){
-						$('input[data-varid="' + varId +'"]')[0].checked = true;
-					}else{
-						$('input[data-varid="' + varId +'"]')[0].checked = false;
-					}
-					checkbox.parentElement.parentElement.id = "table_" + x;
-					x++;
-				});
 				this.setTabIndices();
 				this.delegateEvents();
 			}.bind(this)

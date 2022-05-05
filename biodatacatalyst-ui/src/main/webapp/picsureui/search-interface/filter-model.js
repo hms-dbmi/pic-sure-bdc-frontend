@@ -5,6 +5,8 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             defaults:{
                 activeFilters: new BB.Collection,
                 exportFields: new BB.Collection,
+                exportColumns: new BB.Collection,
+                automaticFilters: new BB.Collection,
                 totalPatients : 0,
                 totalVariables : 4,
                 estDataPoints : 0,
@@ -12,9 +14,38 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             initialize: function(opts){
                 this.set('activeFilters', new BB.Collection);
                 this.set('exportFields', new BB.Collection);
+                this.set('exportColumns', new BB.Collection);
+                let autoFilters = new BB.Collection;
+                autoFilters.add(this.createResultModel('Patient Id', 'Patient ID', 'Internal PIC-SURE participant identifier', 'categoricalAuto', '_patient_id'));
+                autoFilters.add(this.createResultModel('_Parent Study Accession with Subject ID', 'Parent Study Accession with Subject ID', 'Parent study accession number and subject identifier', 'categoricalAuto', '_Parent Study Accession with Subject ID'));
+                autoFilters.add(this.createResultModel('_Topmed Study Accession with Subject ID', 'TOPMed Study Accession with Subject ID', 'TOPMed study accession number and subject identifier', 'categoricalAuto', '_Topmed Study Accession with Subject ID'));
+                this.set('autoFilters', autoFilters);
+                let model = this;
+                _.each(this.get('autoFilters').models, function(variable){
+                    model.addExportColumn(variable.attributes, 'auto');
+                })
+                this.initializeConsents();
+                this.updateConsents();
                 HBS.registerHelper("filter_type_is", function(type, context){
                     return context.type===type;
                 });
+            },
+            createResultModel: function(varId, name, description, dataType, hpdsPath, values){
+                return {
+
+                            result: {
+                                values: values ? values : {},
+                                metadata: {
+                                    columnmeta_var_id: varId,
+                                    columnmeta_name: name,
+                                    columnmeta_description: description,
+                                    columnmeta_data_type: dataType,
+                                    columnmeta_hpds_path: hpdsPath
+                                }
+                            }
+
+
+                };
             },
             addCategoryFilter: function(searchResult, values) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -23,7 +54,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 }
                 this.get('activeFilters').add({
                     type: 'category',
-                    searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
                     values: values,
                     searchResult: searchResult,
@@ -31,6 +61,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
                 tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
+                this.addExportColumn(searchResult, 'filter');
             },
             addNumericFilter: function(searchResult, min, max) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -47,6 +78,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: searchResult.result.varId.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
+                    this.addExportColumn(searchResult, 'filter');
             },
             addRequiredFilter: function(searchResult) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -61,6 +93,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
+                    this.addExportColumn(searchResult, 'filter');
             },
             addDatatableFilter: function(datatableSelections) {
                 let existingFilterForVariable = this.getByDatatableId(datatableSelections.searchResult.result.dtId);
@@ -85,17 +118,14 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
 				});
 				if (existingField === undefined) {
 					this.addExportField(searchResult);
-                    console.log("added field");
 				} else {
 					this.removeExportField(existingField);
-                    console.log("removed field")
 				}
 			},
 			isExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
 					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
 				});
-                console.log(existingField);
 				return existingField !== undefined;
 			},
             isExportFieldFromId: function(varId) {
@@ -107,22 +137,17 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             },
 			addExportField: function (searchResult) {
 				this.get("exportFields").add(searchResult.result);
+                this.addExportColumn(searchResult, 'export');
 			},
 			removeExportField: function (existingField) {
 				this.get("exportFields").remove(existingField);
-			},
-			getExportFieldCount: function (query) {
-				let count = Object.keys(query.query.categoryFilters).length + Object.keys(query.query.numericFilters).length + query.query.fields.length + query.query.requiredFields.length + 1;
-				return count;
+                this.removeExportColumn(existingField.attributes, 'export');
 			},
             //function specifically for updating only variable and est data point values while in package view without having to run the query
             updateExportValues: function () {
-            let query = queryBuilder.createQueryNew(this.get("activeFilters").toJSON(), this.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
-            queryBuilder.updateConsentFilters(query, settings);
-            let variableCount = this.getExportFieldCount(query);
-            this.set("totalVariables", variableCount);
+            let variableCount = _.size(this.get('exportColumns'));
             this.set("estDataPoints", variableCount*this.get("totalPatients"));
-
+            this.set("totalVariables", variableCount);
             },
 
             addGenomicFilter: function(variantInfoFilters, previousUniqueId = 0) {
@@ -143,7 +168,14 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 });
             },
             removeByIndex: function(index) {
-                this.get('activeFilters').remove(this.get('activeFilters').at(index));
+                let removedFilter = this.get('activeFilters').remove(this.get('activeFilters').at(index));
+                if(removedFilter.attributes.type === 'datatable'){
+                    this.removeExportColumn(null, null, removedFilter.attributes.dtId);
+                }
+                else{
+                    this.removeExportColumn(removedFilter.attributes.searchResult.result, 'filter');
+                }
+
             },
             getByIndex: function(index) {
                 return this.get('activeFilters').at(index).attributes;
@@ -162,6 +194,147 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             generateDatatableCategory: function(searchResult) {
                 return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\";
             },
+            addExportColumn: function(searchResult, type, source){
+                let existingColumn =   _.find(this.get('exportColumns').models, (model)=>{
+                         return model.attributes.variable.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
+                });
+                if(existingColumn){
+                    existingColumn = existingColumn.attributes;
+                    //tree for hierarchy of replacement
+                    if(type == 'filter' && existingColumn.type === 'export'){
+                        this.removeExportColumn(searchResult.result, existingColumn.type);
+                        this.toggleExportField(searchResult);
+                        this.get('exportColumns').add({
+                            type: type,
+                            variable: searchResult.result,
+                            source: source
+                        });
+                    }
+                    else if(type == 'filter' && existingColumn.type === 'auto'){
+                        this.get('exportColumns').add({
+                            type: type,
+                            variable: searchResult.result,
+                            source: source
+                        });
+                    }
+                }
+                else{
+                    this.get('exportColumns').add({
+                        type: type,
+                        variable: searchResult.result,
+                        source: source
+                    });
+                }
+
+                if(type != 'auto' && source == undefined){
+                    this.updateConsents();
+                }
+            },
+            removeExportColumn: function(result, type, source){
+            if(source){
+                let columns = _.filter(this.get('exportColumns').models, (model)=>{
+                        return model.attributes.source === source;
+                });
+                this.get('exportColumns').remove(columns);
+            }
+            else{
+                let column =  type ?
+                 _.find(this.get('exportColumns').models, (model)=>{
+                         return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id && model.attributes.type === type;
+                }) :
+                _.find(this.get('exportColumns').models, (model)=>{
+                        return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id;
+                });
+                if(column){
+                    this.get('exportColumns').remove(column);
+                    if(column.attributes.type != 'auto'){
+                        this.updateConsents();
+                    }
+                }
+            }
+
+            },
+            initializeConsents: function(){
+                var parsedSess = JSON.parse(sessionStorage.getItem("session"));
+                const resourceUUID = this.isOpenAccess ? settings.openAccessResourceId:settings.picSureResourceId;
+                var queryTemplate;
+                if(parsedSess){
+                    if(parsedSess.queryTemplate && resourceUUID !== settings.openAccessResourceId){
+                        queryTemplate = JSON.parse(parsedSess.queryTemplate)
+                    }
+                    else{
+                        queryTemplate = queryBuilder.getDefaultQueryTemplate();
+                    }
+                    if(queryTemplate.categoryFilters){
+                        for(varId in queryTemplate.categoryFilters){
+                            let values = queryTemplate.categoryFilters[varId];
+                            if(varId === '\\_consents\\'){
+                                this.get('autoFilters').add(this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', '_consents', values));
+                            }
+                            else if (varId === '\\_harmonized_consent\\'){
+                                this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', '_harmonized_consent', values));
+                            }
+                            else if (varId === '\\_topmed_consents\\'){
+                                this.get('autoFilters').add(this.createResultModel('_topmed_consent', 'TOPMed consent groups', 'Consent code for TOPMed data', 'categorical', '_topmed_consent', values));
+                            }
+                        }
+                    }
+
+                }
+            },
+            updateConsents: function(){
+                if(_.filter(this.get('exportColumns').models, function(column) {
+        				return column.attributes.variable.metadata.columnmeta_hpds_path.includes(settings.harmonizedPath)
+        			}).length > 0 &&
+                    _.filter(this.get('activeFilters').models, function(filter) {
+            				return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('harmonized_consent')
+            		}).length == 0
+        		){
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('harmonized_consent')});
+                    if(existingColumn){
+                        this.addExportColumn(existingColumn.attributes, 'auto');
+                    }
+        		}
+                else{
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('harmonized_consent')});
+                    if(existingColumn){
+                        this.removeExportColumn(existingColumn.attributes.result, 'auto');
+                    }
+                }
+
+        	    if(_.filter(this.get('activeFilters').models, function(column) {
+        				return column.attributes.filterType === 'genomic';
+        			}).length > 0
+                && _.filter(this.get('activeFilters').models, function(filter) {
+                        return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('topmed_consents')
+                }).length == 0){
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('topmed_consent')});
+                    if(existingColumn){
+                        this.addExportColumn(existingColumn.attributes, 'auto');
+                    }
+                }
+                else{
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('topmed_consent')});
+                    if(existingColumn){
+                        this.removeExportColumn(existingColumn.attributes.result, 'auto');
+                    }
+                }
+                if (_.filter(this.get('activeFilters').models, function(filter) {
+                        return filter.attributes.searchResult.result.metadata.columnmeta_var_id === ('_consents')
+                }).length == 0){
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('\\_consents')});
+                    if(existingColumn){
+                        this.addExportColumn(existingColumn.attributes, 'auto');
+                    }
+                }
+                else{
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('_consents')});
+                    if(existingColumn){
+                        this.removeExportColumn(existingColumn.attributes.result, 'auto');
+                    }
+                }
+                this.updateExportValues();
+            }
         });
         return new FilterModel();
     });

@@ -26,7 +26,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                 overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
                 overrides.update ? this.update = overrides.update.bind(this) : undefined;
                 this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
-                this.listenTo(filterModel.get('exportFields'), 'change reset add remove', this.updateVariableCount);
+                this.listenTo(filterModel, 'change:totalVariables', this.updateVariableCount);
             },
             events:{
                 'click #data-summary-help' : 'openHelp',
@@ -45,16 +45,15 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             tagName: "div",
             dataCallback: function(result){
                 //default function to update a single patient count element in the output panel
-
+                filterModel.updateExportValues();
                 var patientCount = parseInt(result);
-                var totalVariables = filterModel.getExportFieldCount(this.model.get('query'));
+                var totalVariables = filterModel.get('totalVariables');
                 var estDataPoints = patientCount*totalVariables;
 
                 this.model.set("totalPatients", patientCount);
                 this.model.set("totalVariables", totalVariables);
                 this.model.set("estDataPoints", estDataPoints);
                 filterModel.set("totalPatients", patientCount);
-                filterModel.set("totalVariables", totalVariables);
                 filterModel.set("estDataPoints", estDataPoints);
                 this.queryFinished();
 
@@ -90,7 +89,6 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                     });
             },
             updateVariableCount: function(){
-                filterModel.updateExportValues();
                 $('#export-count').html(filterModel.get('totalVariables')+' Variables');
             },
             openHelp: function(){
