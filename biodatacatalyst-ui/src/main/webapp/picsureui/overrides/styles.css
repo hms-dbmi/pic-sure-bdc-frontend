@@ -655,7 +655,7 @@ remove when above bug is fixed */
 
 #visualizations-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
@@ -667,17 +667,24 @@ remove when above bug is fixed */
 }
 
 .image-container img {
-    max-width: 475px;
+    max-width: 600px;
+    border: 1px solid black;
 }
 
 .image-container .download-button {
     position: relative;
-    font-size: 3em;
-    align-self: flex-start;
+    font-size: 1.2em;
+    left: -39px;
+    top: -1px;
+    height: fit-content;
 }
 
 .visualization-body {
     min-height: 100px;
+}
+
+.visualizations-modal h5 {
+    font-size: 16px;
 }
 
 /************************* End Visualization ******************************/
