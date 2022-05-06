@@ -65,8 +65,10 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				tagScore = excludedTag.get('score');
 			}
 			else{
-				isUnusedTag = true;
-				tagScore = tagFilterModel.get("unusedTags").models.find(function(tag) {return tag.get('tag').toLowerCase() === response.metadata.columnmeta_study_id.toLowerCase()}).get('score');
+
+				let unusedTag = tagFilterModel.get("unusedTags").models.find(function(tag) {return tag.get('tag').toLowerCase() === response.metadata.columnmeta_study_id.toLowerCase()});
+				isUnusedTag = (unusedTag) ? true : false ;
+				tagScore = (unusedTag) ? unusedTag.get('score') : "" ;
 			}
 			variableInfoCache[variableId] = {
 					studyDescription: response.metadata.study_description,
@@ -234,6 +236,10 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 
 			if (tagFilterModel.get("searchResults")) {
 				let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
+				filteredResults = _.filter(filteredResults, function(result) {
+					let metadata = result.result.metadata;
+					return (metadata.columnmeta_var_id !== '_Parent Study Accession with Subject ID' && metadata.columnmeta_var_id !== '_Topmed Study Accession with Subject ID')
+				})
 				if (!this.isAuthorized) {
 					filteredResults = _.filter(filteredResults, function(result) {
 						return result.result.metadata.columnmeta_is_stigmatized === "false";
@@ -246,16 +252,17 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				}
 				let results = _.map(filteredResults, function(result, i){
 					let metadata = result.result.metadata;
-					return {
-						abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.columnmeta_study_id),
-						study_id: metadata.columnmeta_study_id,
-						table_id: metadata.columnmeta_var_group_id,
-						variable_id: result.result.varId,
-						name: metadata.columnmeta_name,
-						dataTableDescription: metadata.columnmeta_var_group_description,
-						description: metadata.columnmeta_description,
-						result_index: i
-					}
+						return {
+							abbreviation: searchUtil.findStudyAbbreviationFromId(metadata.columnmeta_study_id),
+							study_id: metadata.columnmeta_study_id,
+							table_id: metadata.columnmeta_var_group_id,
+							variable_id: metadata.columnmeta_var_id,
+							name: metadata.columnmeta_name,
+							dataTableDescription: metadata.columnmeta_var_group_description,
+							description: metadata.columnmeta_description,
+							result_index: i
+						}
+
 				});
 				let pageSize = tagFilterModel.get("limit");
 				let pages = [];
@@ -300,7 +307,11 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						{
 							render: function (data, type, row, meta) {
 								if (isAuthorized) {
-									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to add this variable to your data retrieval." class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i></span>';
+									let exportClass = 'glyphicon glyphicon-log-out';
+									if(filterModel.isExportFieldFromId(row.variable_id)){
+										exportClass = 'fa fa-check-square-o';
+									}
+									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to add this variable to your data retrieval." class="'+ exportClass + ' export-icon search-result-action-btn"></i></span>';
 								}
 								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
 							},

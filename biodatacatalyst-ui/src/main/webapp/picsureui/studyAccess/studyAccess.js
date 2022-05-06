@@ -121,7 +121,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
 
                 // query for participant counts of authorized and open access resources
                 if (studyAccess.resources.auth) {
-                    var query = queryBuilder.createQuery({}, studyAccess.resources.auth);
+                    var query = queryBuilder.createQueryNew({},{}, studyAccess.resources.auth);
                     query.query.expectedResultType = "COUNT";
                     queryBuilder.updateConsentFilters(query, settings);
                     var deferredParticipants = $.ajax({
@@ -151,7 +151,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             let openStudies = response.suggestions.length;
                             $('#open-studies-count').html(openStudies + " Studies");
 
-                            var query = queryBuilder.generateQuery({}, null, studyAccess.resources.open);
+                            var query = queryBuilder.generateQueryNew({}, {}, null, studyAccess.resources.open);
                             query.query.expectedResultType = "COUNT";
                             var deferredParticipants = $.ajax({
                                 url: window.location.origin + "/picsure/query/sync",

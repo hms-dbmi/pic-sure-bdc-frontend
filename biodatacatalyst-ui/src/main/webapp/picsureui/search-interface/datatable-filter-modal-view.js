@@ -121,6 +121,14 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 				title: "\\" + this.model.dtVariables[0].result.metadata.columnmeta_study_id + "\\" + this.model.dtId + "\\",
 				searchResult: this.model.dtVariables[0]
 			});
+			_.each(selectedVariables, (selection)=>{
+				let varId = selection[1];
+				let target = _.find(this.model.dtVariables,(variable)=>{
+					return varId === variable.result.metadata.columnmeta_var_id;
+				});
+				filterModel.addExportColumn(target, 'filter', this.model.dtId);
+			});
+			filterModel.updateConsents();
             $('.close').click();
 		},
 		openVariableValues: function(event){
