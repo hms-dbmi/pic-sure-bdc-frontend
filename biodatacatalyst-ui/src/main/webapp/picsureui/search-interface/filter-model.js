@@ -268,13 +268,13 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     if(queryTemplate.categoryFilters){
                         for(varId in queryTemplate.categoryFilters){
                             let values = queryTemplate.categoryFilters[varId];
-                            if(varId === '\\_consents\\'){
+                            if(varId.includes('\\_consents\\') ){
                                 this.get('autoFilters').add(this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', '_consents', values));
                             }
-                            else if (varId === '\\_harmonized_consent\\'){
+                            else if (varId.includes('\\_harmonized_consent\\')){
                                 this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', '_harmonized_consent', values));
                             }
-                            else if (varId === '\\_topmed_consents\\'){
+                            else if (varId.includes('\\_topmed_consents\\') ){
                                 this.get('autoFilters').add(this.createResultModel('_topmed_consent', 'TOPMed consent groups', 'Consent code for TOPMed data', 'categorical', '_topmed_consent', values));
                             }
                         }
@@ -290,13 +290,13 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             				return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('harmonized_consent')
             		}).length == 0
         		){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('harmonized_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('harmonized_consent')});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
         		}
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('harmonized_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('harmonized_consent')});
                     if(existingColumn){
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
@@ -308,13 +308,13 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 && _.filter(this.get('activeFilters').models, function(filter) {
                         return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('topmed_consents')
                 }).length == 0){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('topmed_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('topmed_consent')});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
                 }
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('topmed_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('topmed_consent')});
                     if(existingColumn){
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
@@ -322,14 +322,15 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 if (_.filter(this.get('activeFilters').models, function(filter) {
                         return filter.attributes.searchResult.result.metadata.columnmeta_var_id === ('_consents')
                 }).length == 0){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('\\_consents')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('_consents')});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
                 }
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('_consents')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('_consents')});
                     if(existingColumn){
+                        console.log('removed consents filter');
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
                 }

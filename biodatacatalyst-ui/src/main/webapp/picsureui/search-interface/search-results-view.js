@@ -238,7 +238,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
 				filteredResults = _.filter(filteredResults, function(result) {
 					let metadata = result.result.metadata;
-					return (metadata.columnmeta_var_id !== '_Parent Study Accession with Subject ID' && metadata.columnmeta_var_id !== '_Topmed Study Accession with Subject ID')
+					return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
 				})
 				if (!this.isAuthorized) {
 					filteredResults = _.filter(filteredResults, function(result) {
