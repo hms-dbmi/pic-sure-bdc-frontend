@@ -24,8 +24,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 _.each(this.get('autoFilters').models, function(variable){
                     model.addExportColumn(variable.attributes, 'auto');
                 })
-                this.initializeConsents();
-                this.updateConsents();
                 HBS.registerHelper("filter_type_is", function(type, context){
                     return context.type===type;
                 });
@@ -268,7 +266,8 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                         for(varId in queryTemplate.categoryFilters){
                             let values = queryTemplate.categoryFilters[varId];
                             if(varId.includes('\\_consents\\') ){
-                                this.get('autoFilters').add(this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', '_consents', values));
+                                let consentsFilter = this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', '_consents', values);
+                                this.get('autoFilters').add(consentsFilter);
                             }
                             else if (varId.includes('\\_harmonized_consent\\')){
                                 this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', '_harmonized_consent', values));
@@ -278,6 +277,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                             }
                         }
                     }
+                    this.updateExportValues();
 
                 }
             },
@@ -329,7 +329,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 else{
                     let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id.includes('_consents')});
                     if(existingColumn){
-                        console.log('removed consents filter');
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
                 }

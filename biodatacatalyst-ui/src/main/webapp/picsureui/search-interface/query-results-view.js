@@ -27,6 +27,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                 overrides.update ? this.update = overrides.update.bind(this) : undefined;
                 this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
                 this.listenTo(filterModel, 'change:totalVariables', this.updateVariableCount);
+                filterModel.initializeConsents();
             },
             events:{
                 'click #data-summary-help' : 'openHelp',
@@ -45,7 +46,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             tagName: "div",
             dataCallback: function(result){
                 //default function to update a single patient count element in the output panel
-                filterModel.updateExportValues();
+                filterModel.updateConsents();
                 var patientCount = parseInt(result);
                 var totalVariables = filterModel.get('totalVariables');
                 var estDataPoints = patientCount*totalVariables;
