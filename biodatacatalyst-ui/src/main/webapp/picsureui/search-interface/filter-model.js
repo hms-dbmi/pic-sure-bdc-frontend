@@ -132,7 +132,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 var existingField = this.get("exportFields").find((filter) => {
                     return filter.attributes.metadata.columnmeta_var_id === varId;
                 });
-                console.log(existingField);
                 return existingField !== undefined;
             },
 			addExportField: function (searchResult) {

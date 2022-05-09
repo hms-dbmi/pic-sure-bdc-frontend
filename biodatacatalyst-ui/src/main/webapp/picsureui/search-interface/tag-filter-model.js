@@ -1,7 +1,7 @@
 define(["backbone", "handlebars", "search-interface/search-util"],
     function(BB, HBS, searchUtil){
         let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
-        let dccHarmonizedTag = 'DCC Harmonized data set';
+        let dccHarmonizedTag = 'dcc harmonized data set';
         let defaultTagLimit = 12;
 
         let TagCollection = BB.Collection.extend({
@@ -139,7 +139,8 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                     return tag.score;
                 }).sortBy(function(tag){
                     return tag.tag.toLowerCase();
-                }).uniq(function(tag){return tag.tag.toLowerCase();
+                }).value();
+                filteredTags = _.chain(filteredTags).uniq(function(tag){return tag.tag.toLowerCase();
                 }).filter((tag)=>{
                     return (this.get('requiredTags').findWhere({tag:tag.tag.toUpperCase()}) === undefined && this.get('requiredTags').findWhere({tag:tag.tag.toLowerCase()}) === undefined &&
                         this.get('excludedTags').findWhere({tag:tag.tag.toUpperCase()}) === undefined &&

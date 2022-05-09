@@ -4,7 +4,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let tableRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d$');
 	let tableVersionRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d');
-    let dccHarmonizedTag = '[dD][cC][cC] [hH]armonized data set';
+    let dccHarmonizedTag = 'dcc harmonized data set';
 	let defaultTagLimit = 12;
 
 	let TagFilterView = BB.View.extend({
@@ -189,7 +189,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 		determineStudyTags: function(unusedTags){
 
 			let studyTags = _.chain(unusedTags).filter(function(tag){
-				return (tag.get('tag')===dccHarmonizedTag || studyRegex.test(tag.get('tag')));
+				return (tag.get('tag').toLowerCase()===dccHarmonizedTag || studyRegex.test(tag.get('tag')));
 			}).map(function(tag){
 				tag.set('tag', tag.get('tag').toLowerCase());
 				return tag.toJSON();

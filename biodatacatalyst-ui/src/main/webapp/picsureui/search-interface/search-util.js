@@ -10,7 +10,7 @@ define(["jquery","text!studyAccess/studies-data.json"],
             findStudyAbbreviationFromId: function(study_id){
                 let study = _.find(studiesData.bio_data_catalyst,
                     function(studyData){
-                        return studyData.study_identifier === study_id.toLowerCase();
+                        return studyData.study_identifier.toLowerCase() === study_id.toLowerCase();
                     });
                 if (study) {
                     return study.abbreviated_name;
@@ -19,7 +19,7 @@ define(["jquery","text!studyAccess/studies-data.json"],
             },
 
             /*
-                This function detects if the passed in element is in the current viewport and 
+                This function detects if the passed in element is in the current viewport and
                 if it is not scrolls the element into view.
             */
             ensureElementIsInView: function(element){
