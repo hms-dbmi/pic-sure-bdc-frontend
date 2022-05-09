@@ -14,7 +14,7 @@
   "advancedSearchLink": "/transmart/login/callback_processor",
   "logoPath": "/DataStage-logo.png",
   "categoryAliases": {
-			"dcc_harmonized_data_set" : "HarmonizedVariables",
+			"dcc harmonized data set" : "DCC Harmonized data set",
 			"Atherosclerosis_Risk_in_Communities_ARIC_Cohort":"ARIC",
 			"CCF_AFIB_GWAS_study":"CCFx",
 			"Cardiovascular_Health_Study_CHS_Cohort":"CHS",

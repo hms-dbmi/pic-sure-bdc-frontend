@@ -1,6 +1,7 @@
-define(["jquery","text!studyAccess/studies-data.json"],
-    function($, studiesDataJson){
+define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.json"],
+    function($, studiesDataJson, settingsJson){
         let studiesData = JSON.parse(studiesDataJson);
+        let settings = JSON.parse(settingsJson);
 
         return {
 
@@ -14,6 +15,9 @@ define(["jquery","text!studyAccess/studies-data.json"],
                     });
                 if (study) {
                     return study.abbreviated_name;
+                }
+                else if (settings.categoryAliases.hasOwnProperty(study_id)){
+                    return settings.categoryAliases[study_id];
                 }
                 return study_id;
             },
