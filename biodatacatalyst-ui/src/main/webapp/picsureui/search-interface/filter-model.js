@@ -81,7 +81,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             addRequiredFilter: function(searchResult) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
                 if(existingFilterForVariable!==undefined){
-                    this.get('activeFilters').remove(existingFilterForVariable);
+                    this.get('activeFilters').remove(existingFilterForVariable, {silent:true});
                 }
                 this.get('activeFilters').add({
                     type: 'required',

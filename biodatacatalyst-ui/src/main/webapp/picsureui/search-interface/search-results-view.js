@@ -287,7 +287,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.searchResultsTable = $('#search-results-datatable').DataTable({
                     data: results,
 					"searching": false,
-					"sorting": false,
+					"ordering": false,
 					"bAutoWidth": false,
 					"tabIndex": -1,
                     columns: [
