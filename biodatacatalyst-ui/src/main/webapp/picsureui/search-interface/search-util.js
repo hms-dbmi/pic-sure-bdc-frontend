@@ -1,6 +1,7 @@
-define(["jquery","text!studyAccess/studies-data.json"],
-    function($, studiesDataJson){
+define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.json"],
+    function($, studiesDataJson, settingsJson){
         let studiesData = JSON.parse(studiesDataJson);
+        let settings = JSON.parse(settingsJson);
 
         return {
 
@@ -10,16 +11,19 @@ define(["jquery","text!studyAccess/studies-data.json"],
             findStudyAbbreviationFromId: function(study_id){
                 let study = _.find(studiesData.bio_data_catalyst,
                     function(studyData){
-                        return studyData.study_identifier === study_id.toLowerCase();
+                        return studyData.study_identifier.toLowerCase() === study_id.toLowerCase();
                     });
                 if (study) {
                     return study.abbreviated_name;
+                }
+                else if (settings.categoryAliases.hasOwnProperty(study_id)){
+                    return settings.categoryAliases[study_id];
                 }
                 return study_id;
             },
 
             /*
-                This function detects if the passed in element is in the current viewport and 
+                This function detects if the passed in element is in the current viewport and
                 if it is not scrolls the element into view.
             */
             ensureElementIsInView: function(element){

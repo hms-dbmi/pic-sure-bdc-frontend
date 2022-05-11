@@ -24,8 +24,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 _.each(this.get('autoFilters').models, function(variable){
                     model.addExportColumn(variable.attributes, 'auto');
                 })
-                this.initializeConsents();
-                this.updateConsents();
                 HBS.registerHelper("filter_type_is", function(type, context){
                     return context.type===type;
                 });
@@ -83,7 +81,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             addRequiredFilter: function(searchResult) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
                 if(existingFilterForVariable!==undefined){
-                    this.get('activeFilters').remove(existingFilterForVariable);
+                    this.get('activeFilters').remove(existingFilterForVariable, {silent:true});
                 }
                 this.get('activeFilters').add({
                     type: 'required',
@@ -132,7 +130,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 var existingField = this.get("exportFields").find((filter) => {
                     return filter.attributes.metadata.columnmeta_var_id === varId;
                 });
-                console.log(existingField);
                 return existingField !== undefined;
             },
 			addExportField: function (searchResult) {
@@ -268,35 +265,37 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     if(queryTemplate.categoryFilters){
                         for(varId in queryTemplate.categoryFilters){
                             let values = queryTemplate.categoryFilters[varId];
-                            if(varId === '\\_consents\\'){
-                                this.get('autoFilters').add(this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', '_consents', values));
+                            if(varId.includes(settings.consentsPath) ){
+                                let consentsFilter = this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', settings.consentsPath, values);
+                                this.get('autoFilters').add(consentsFilter);
                             }
-                            else if (varId === '\\_harmonized_consent\\'){
-                                this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', '_harmonized_consent', values));
+                            else if (varId.includes(settings.harmonizedConsentPath)){
+                                this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', settings.harmonizedConsentPath, values));
                             }
-                            else if (varId === '\\_topmed_consents\\'){
-                                this.get('autoFilters').add(this.createResultModel('_topmed_consent', 'TOPMed consent groups', 'Consent code for TOPMed data', 'categorical', '_topmed_consent', values));
+                            else if (varId.includes(settings.topmedConsentPath) ){
+                                this.get('autoFilters').add(this.createResultModel('_topmed_consent', 'TOPMed consent groups', 'Consent code for TOPMed data', 'categorical', settings.topmedConsentPath, values));
                             }
                         }
                     }
+                    this.updateExportValues();
 
                 }
             },
             updateConsents: function(){
                 if(_.filter(this.get('exportColumns').models, function(column) {
-        				return column.attributes.variable.metadata.columnmeta_hpds_path.includes(settings.harmonizedPath)
+        				return column.attributes.variable.metadata.columnmeta_hpds_path.toLowerCase().includes(settings.harmonizedPath.toLowerCase())
         			}).length > 0 &&
                     _.filter(this.get('activeFilters').models, function(filter) {
             				return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('harmonized_consent')
             		}).length == 0
         		){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('harmonized_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedConsentPath)});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
         		}
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('harmonized_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedConsentPath)});
                     if(existingColumn){
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
@@ -308,13 +307,13 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 && _.filter(this.get('activeFilters').models, function(filter) {
                         return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('topmed_consents')
                 }).length == 0){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('topmed_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.topmedConsentPath)});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
                 }
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('topmed_consent')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.topmedConsentPath)});
                     if(existingColumn){
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
@@ -322,13 +321,13 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 if (_.filter(this.get('activeFilters').models, function(filter) {
                         return filter.attributes.searchResult.result.metadata.columnmeta_var_id === ('_consents')
                 }).length == 0){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('\\_consents')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.consentsPath)});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
                 }
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_var_id .includes('_consents')});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.consentsPath)});
                     if(existingColumn){
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }

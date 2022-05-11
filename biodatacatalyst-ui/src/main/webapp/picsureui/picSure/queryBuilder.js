@@ -79,9 +79,8 @@ define(["underscore", "picSure/settings"],
 		if (Array.isArray(query.query.expectedResultType)) {
 			query.query.expectedResultType = "COUNT";
 		}
-
 		_.each(exportFields, function(field){
-			query.query.fields.push(field.metadata.columnmeta_HPDS_PATH);
+				query.query.fields.push(field.metadata.columnmeta_HPDS_PATH);
 		});
 
 		_.each(filters, function(filter){

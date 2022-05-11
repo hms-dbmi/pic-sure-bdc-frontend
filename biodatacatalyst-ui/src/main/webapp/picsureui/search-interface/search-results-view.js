@@ -73,8 +73,8 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			variableInfoCache[variableId] = {
 					studyDescription: response.metadata.study_description,
 					studyAccession: this.generateStudyAccession(response),
-					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.columnmeta_study_id),
-					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id),
+					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.columnmeta_study_id.toLowerCase()),
+					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id.toLowerCase()),
 					variableId: variableId,
 					variableMetadata: response.variables[variableId].metadata,
 					isRequiredTag: isRequiredTag,
@@ -238,7 +238,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
 				filteredResults = _.filter(filteredResults, function(result) {
 					let metadata = result.result.metadata;
-					return (metadata.columnmeta_var_id !== '_Parent Study Accession with Subject ID' && metadata.columnmeta_var_id !== '_Topmed Study Accession with Subject ID')
+					return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
 				})
 				if (!this.isAuthorized) {
 					filteredResults = _.filter(filteredResults, function(result) {
@@ -287,7 +287,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.searchResultsTable = $('#search-results-datatable').DataTable({
                     data: results,
 					"searching": false,
-					"sorting": false,
+					"ordering": false,
 					"bAutoWidth": false,
 					"tabIndex": -1,
                     columns: [
