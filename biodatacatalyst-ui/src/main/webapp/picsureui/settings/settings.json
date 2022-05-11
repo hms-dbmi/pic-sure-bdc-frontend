@@ -19,6 +19,7 @@
   "harmonizedPath": "\\DCC Harmonized data set",
   "harmonizedConsentPath": "\\_harmonized_consent\\",
   "topmedConsentPath": "\\_topmed_consents\\",
+  "consentsPath": "\\_consents",
   "logoPath": "/DataStage-logo.png",
   "categoryAliases": {
 			"dcc harmonized data set" : "DCC Harmonized data set",

@@ -206,9 +206,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 }
             },
             render: function(){
-                const resourceUUID = this.isOpenAccess ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140"
-                const hasExportFields = this.isOpenAccess ? null:filterModel.get("exportFields").toJSON();
-                const query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), hasExportFields, resourceUUID);
+                const resourceUUID = this.isOpenAccess ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140";
+                //establishes query with or without exportfields for authorized and open access respectively
+                const query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), this.isOpenAccess ? null:filterModel.get("exportFields").toJSON(), resourceUUID);
                 this.outputPanelView.runQuery(query);
                 this.$el.html(this.filterListViewTemplate({
                     activeFilters: filterModel.get('activeFilters').map(function(filter){return filter.toJSON();})
