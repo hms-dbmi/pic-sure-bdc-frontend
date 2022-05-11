@@ -269,8 +269,8 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                                 let consentsFilter = this.createResultModel('_consents', 'Consent Groups', 'Study accession number and consent code', 'categorical', settings.consentsPath, values);
                                 this.get('autoFilters').add(consentsFilter);
                             }
-                            else if (varId.includes(settings.harmonizedPath)){
-                                this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', settings.harmonizedPath, values));
+                            else if (varId.includes(settings.harmonizedConsentPath)){
+                                this.get('autoFilters').add(this.createResultModel('_harmonized_consent', 'Harmonized consent groups', 'Consent code for harmonized data', 'categorical', settings.harmonizedConsentPath, values));
                             }
                             else if (varId.includes(settings.topmedConsentPath) ){
                                 this.get('autoFilters').add(this.createResultModel('_topmed_consent', 'TOPMed consent groups', 'Consent code for TOPMed data', 'categorical', settings.topmedConsentPath, values));
@@ -283,19 +283,19 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             },
             updateConsents: function(){
                 if(_.filter(this.get('exportColumns').models, function(column) {
-        				return column.attributes.variable.metadata.columnmeta_hpds_path.includes(settings.harmonizedPath) && column.attributes.type != 'auto'
+        				return column.attributes.variable.metadata.columnmeta_hpds_path.toLowerCase().includes(settings.harmonizedPath.toLowerCase())
         			}).length > 0 &&
                     _.filter(this.get('activeFilters').models, function(filter) {
             				return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('harmonized_consent')
             		}).length == 0
         		){
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedPath)});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedConsentPath)});
                     if(existingColumn){
                         this.addExportColumn(existingColumn.attributes, 'auto');
                     }
         		}
                 else{
-                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedPath)});
+                    let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedConsentPath)});
                     if(existingColumn){
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
