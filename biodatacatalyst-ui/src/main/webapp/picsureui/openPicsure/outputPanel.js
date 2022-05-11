@@ -132,8 +132,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 				var sorted_found = [];
 				var sorted_unfound = [];
 				for (var x in studiesInfo) {
-					let key = x.startsWith("phs") ? '\\_studies_consents\\'+ x + ' (' + x + ')\\': '\\_studies_consents\\'+ x + '\\';
-					let cnt = String(response[key]);
+					let cnt = String(response[studiesInfo[x].study_concept]);
 					if (cnt) {
 						studiesInfo[x].study_matches = String(cnt);
 						if (cnt.includes("<") || cnt.includes("\u00B1") || cnt > 0) {
@@ -163,10 +162,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					studiesInfo[code].consents.forEach((x) => {
 						// todo: remove consents if not found? or 0?
 						// yes
-						let key = (code.startsWith("phs")) ? 
-							'\\_studies_consents\\'+ x.study_identifier +' (' + x.study_identifier + ')\\'+ x.short_title + "\\" : 
-							'\\_studies_consents\\'+ x.abbreviated_name +' (' + x.abbreviated_name + ')\\'+ x.short_title + "\\";
-						x.study_matches = response[key];
+						x.study_matches = response[studiesInfo[code].study_concept + x.short_title + '\\'];
 					});
 				}
 				outputModel.set("studies",sorted_final);
