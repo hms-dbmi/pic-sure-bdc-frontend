@@ -160,7 +160,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
                     return `<input class="categorical-filter-input selectable list-item" type="checkbox" value="${item}" checked/>${item}<br/>`;
                 });      
                 this.$el.find('.selections').html(newHTMLRSelectionList).fadeIn('fast');
-                const search = this.$el.find('#'+this.data.searchId)[0].value;
+                const search = this.$el.find('#'+this.data.searchId)[0] ? this.$el.find('#'+this.data.searchId)[0].value : '';
                 if (this.data.searchResultOptions.length <= 0 && search) {
                     this.$el.find('.genomic-value-container.selection-search-results').html('<span>No results found</span>');
                 } else if (this.data.searchResultOptions.length <= 0 && !search && this.data.results.length > this.data.selectedResults.length) {
