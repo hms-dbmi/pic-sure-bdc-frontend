@@ -71,7 +71,8 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				tagScore = (unusedTag) ? unusedTag.get('score') : "" ;
 			}
 			variableInfoCache[variableId] = {
-					studyDescription: response.metadata.study_description,
+					studyDescription: response.metadata.study_description.length > 0 ? response.metadata.study_description :
+					searchUtil.findStudyNameFromId(response.metadata.columnmeta_study_id.toLowerCase()),
 					studyAccession: this.generateStudyAccession(response),
 					studyAccessionTagId: this.generateStudyAccessionTagId(response.metadata.columnmeta_study_id.toLowerCase()),
 					studyAccessionTagName: searchUtil.findStudyAbbreviationFromId(response.metadata.columnmeta_study_id.toLowerCase()),
