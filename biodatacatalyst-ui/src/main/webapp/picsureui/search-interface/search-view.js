@@ -107,6 +107,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
+			$('#search-button').attr('disabled', 'disabled');
+
 			//let deferredSearchResults = $.Deferred();
 			let deferredSearchResults = $.ajax({
 				url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
@@ -124,11 +126,13 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					this.updateTags(response);
 					$('#tag-filters').show();
 					$('#search-results').show();
+					$('#search-button').removeAttr('disabled');
 					$('#spinner-holder').removeClass('big-grow');
 				}.bind(this),
 				error: function(response){
 					//deferredSearchResults.resolve();
 					$("#spinner-holder").html("");
+					$('#search-button').removeAttr('disabled');
 					const helpTemplate = HBS.compile(helpViewTemplate);
 					this.$el.html(helpTemplate());
 					console.log(response);
