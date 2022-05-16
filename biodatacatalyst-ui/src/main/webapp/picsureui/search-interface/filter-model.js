@@ -262,7 +262,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     else{
                         queryTemplate = queryBuilder.getDefaultQueryTemplate();
                     }
-                    if(queryTemplate.categoryFilters){
+                    if(queryTemplate && queryTemplate.categoryFilters){
                         for(varId in queryTemplate.categoryFilters){
                             let values = queryTemplate.categoryFilters[varId];
                             if(varId.includes(settings.consentsPath) ){
