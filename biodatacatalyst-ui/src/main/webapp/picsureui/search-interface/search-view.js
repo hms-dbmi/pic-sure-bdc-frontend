@@ -85,9 +85,15 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		},
 
 		submitSearch: function(e) {
-			this.searchTerm = $('#search-box').val();
-			if(tagFilterModel.get("term")!==this.searchTerm){
-				tagFilterModel.set("term", this.searchTerm, {silent:true});
+			if(e){
+				this.searchTerm = $('#search-box').val();
+				if(tagFilterModel.get("term")!==this.searchTerm){
+					tagFilterModel.set("term", this.searchTerm, {silent:true});
+				}
+			}
+			else{
+				this.searchTerm = tagFilterModel.get("term");
+				$('#search-box').val(this.searchTerm);
 			}
 			this.requiredTags = tagFilterModel.get('requiredTags').models.map(function(x) {
 				return x.get('tag');
