@@ -13,8 +13,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
                 "click #add-filter-button": "addFilter",
             },
             addFilter: function(event) {
-                let min = $('#min-value-input').val().length > 0 ? $('#min-value-input').val() : this.data.min;
-                let max = $('#max-value-input').val().length > 0 ? $('#max-value-input').val() : this.data.max;
+                let min = $('#min-value-input').val();
+                let max = $('#max-value-input').val();
                 filterModel.addNumericFilter(
                     this.data.searchResult,
                     min,

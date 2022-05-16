@@ -96,7 +96,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             addDatatableFilter: function(datatableSelections) {
                 let existingFilterForVariable = this.getByDatatableId(datatableSelections.searchResult.result.dtId);
                 if(existingFilterForVariable!==undefined){
-                    this.get('activeFilters').remove(existingFilterForVariable);
+                    this.get('activeFilters').remove(existingFilterForVariable, {silent:true});
                 }
                 this.get('activeFilters').add({
                     type: 'datatable',
@@ -169,7 +169,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 if(removedFilter.attributes.type === 'datatable'){
                     this.removeExportColumn(null, null, removedFilter.attributes.dtId);
                 }
-                else{
+                else if(removedFilter.attributes.type !== 'genomic'){
                     this.removeExportColumn(removedFilter.attributes.searchResult.result, 'filter');
                 }
 
@@ -282,11 +282,19 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 }
             },
             updateConsents: function(){
+
+
+                //if a variable is added to export which is harmonized, and the user has not chosen specific harmonized consent values in a filter, the harmonized consent field is added to export as an automatic field. otherwise, initiate check for/removal of existing automatic harmonized consent field
                 if(_.filter(this.get('exportColumns').models, function(column) {
         				return column.attributes.variable.metadata.columnmeta_hpds_path.toLowerCase().includes(settings.harmonizedPath.toLowerCase())
         			}).length > 0 &&
                     _.filter(this.get('activeFilters').models, function(filter) {
-            				return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('harmonized_consent')
+                            if (filter.attributes.filterType === 'genomic'){
+                                return false;
+                            }
+                            else{
+                                return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('harmonized_consent')
+                            }
             		}).length == 0
         		){
                     let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.harmonizedConsentPath)});
@@ -301,11 +309,19 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     }
                 }
 
+
+
+                //checks for filters tagged as genomic, and that topmed consents have not been specified, and adds topmed consents as auto export column if both conditions are met. Otherwise removes any pre-existing automatic topmed consents column
         	    if(_.filter(this.get('activeFilters').models, function(column) {
-        				return column.attributes.filterType === 'genomic';
+                        return column.attributes.filterType === 'genomic';
         			}).length > 0
                 && _.filter(this.get('activeFilters').models, function(filter) {
-                        return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('topmed_consents')
+                        if(filter.attributes.filterType !== 'genomic'){
+                            return filter.attributes.searchResult.result.metadata.columnmeta_var_id.includes('topmed_consents')
+                        }
+                        else{
+                            return false
+                        }
                 }).length == 0){
                     let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.topmedConsentPath)});
                     if(existingColumn){
@@ -318,8 +334,16 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
                 }
+
+
+                //checks if a _consents filter has been manually applied by the user, and if so initiates removal of any potential pre-existing automatic _consents column. If not, the _consents column is added to the export columns as an automatic export field
                 if (_.filter(this.get('activeFilters').models, function(filter) {
+                    if(filter.attributes.filterType !== 'genomic'){
                         return filter.attributes.searchResult.result.metadata.columnmeta_var_id === ('_consents')
+                    }
+                    else{
+                        return false;
+                    }
                 }).length == 0){
                     let existingColumn = _.find(this.get('autoFilters').models, function(filter) { return filter.attributes.result.metadata.columnmeta_hpds_path.includes(settings.consentsPath)});
                     if(existingColumn){
@@ -332,6 +356,9 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                         this.removeExportColumn(existingColumn.attributes.result, 'auto');
                     }
                 }
+
+
+
                 this.updateExportValues();
             }
         });

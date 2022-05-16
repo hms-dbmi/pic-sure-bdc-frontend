@@ -332,7 +332,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 					metadata.columnmeta_var_id,
 					metadata.columnmeta_name,
 					metadata.columnmeta_description,
-					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'continuous' : 'categorical',
+					(metadata.columnmeta_data_type.toLowerCase() == 'continuous')  ? metadata.columnmeta_data_type.toLowerCase() : 'categorical',
 					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ metadata.columnmeta_min + ', Max: ' + metadata.columnmeta_max : '',
 					(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + values + ' ]' :  "",
 					variable.type,
