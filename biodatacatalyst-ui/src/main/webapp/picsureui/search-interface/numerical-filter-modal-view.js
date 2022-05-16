@@ -11,26 +11,16 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
             },
             events: {
                 "click #add-filter-button": "addFilter",
-                "keyup #min-value-input": "checkForEntry",
-                "keyup #max-value-input": "checkForEntry"
             },
             addFilter: function(event) {
-                let min = $('#min-value-input').val();
-                let max = $('#max-value-input').val();
+                let min = $('#min-value-input').val().length > 0 ? $('#min-value-input').val() : this.data.min;
+                let max = $('#max-value-input').val().length > 0 ? $('#max-value-input').val() : this.data.max;
                 filterModel.addNumericFilter(
                     this.data.searchResult,
                     min,
                     max
                 );
                 $('.close').click();
-            },
-            checkForEntry: function(event){
-                if($('#min-value-input').val().length != 0 && $('#max-value-input').val().length != 0){
-                    $('#add-filter-button').removeAttr('disabled');
-                }
-                else{
-                    $('#add-filter-button').attr('disabled', 'disabled');
-                }
             },
             render: function(){
                 search.dictionary(

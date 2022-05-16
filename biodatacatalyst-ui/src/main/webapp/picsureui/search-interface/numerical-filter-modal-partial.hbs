@@ -1,10 +1,16 @@
+<style>
+#min-value-input, #max-value-input{
+    width: 20em;
+}
+</style>
+
 <div class="value-container">
     <div class="min-value-container col">
         <div class="min-value">Min: {{min}}</div>
-        <input id="min-value-input" tabindex="1000000" type="number" placeholder="Enter min"/>
+        <input id="min-value-input" tabindex="1000000" type="number" placeholder="Enter value or leave blank for variable min"/>
     </div>
     <div class="max-value-container col">
         <div class="max-value">Max: {{max}}</div>
-        <input id="max-value-input" tabindex="1000001" type="number" placeholder="Enter max"/>
+        <input id="max-value-input" tabindex="1000001" type="number" placeholder="Enter value or leave blank for variable max"/>
     </div>
 </div>
