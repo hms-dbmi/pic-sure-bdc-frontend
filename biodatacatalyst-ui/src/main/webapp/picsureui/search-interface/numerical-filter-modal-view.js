@@ -10,19 +10,21 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
                 HBS.registerPartial('numerical-filter-partial', this.partialTemplate);
             },
             events: {
-                "click #add-filter-button": "addFilter"
+                "click #add-filter-button": "addFilter",
             },
             addFilter: function(event) {
+                let min = $('#min-value-input').val();
+                let max = $('#max-value-input').val();
                 filterModel.addNumericFilter(
                     this.data.searchResult,
-                    $('#min-value-input').val(),
-                    $('#max-value-input').val()
+                    min,
+                    max
                 );
                 $('.close').click();
             },
             render: function(){
                 search.dictionary(
-                    this.data.searchResult.result.metadata.columnmeta_HPDS_PATH, 
+                    this.data.searchResult.result.metadata.columnmeta_HPDS_PATH,
                     function(searchResponse){
                         let concept = _.values(searchResponse.results.phenotypes)[0];
                         this.data.min = concept.min;
@@ -31,15 +33,13 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
                         if(this.data.filter!==undefined){
                             this.$('#max-value-input').val(this.data.filter.max);
                             this.$('#min-value-input').val(this.data.filter.min);
-                        } else {
-                            this.$('#max-value-input').val(concept.max);
-                            this.$('#min-value-input').val(concept.min);
                         }
-                    }.bind(this), 
+                    }.bind(this),
                     function(){
                         console.log(arguments);
-                    }, 
+                    },
                     settings.picSureResourceId)
+
             }
         });
 

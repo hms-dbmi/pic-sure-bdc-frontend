@@ -21,7 +21,19 @@ define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.j
                 }
                 return study_id;
             },
-
+            findStudyNameFromId: function(study_id){
+                let study = _.find(studiesData.bio_data_catalyst,
+                    function(studyData){
+                        return studyData.study_identifier.toLowerCase() === study_id.toLowerCase();
+                    });
+                if (study) {
+                    return study.full_study_name;
+                }
+                else if (settings.categoryAliases.hasOwnProperty(study_id)){
+                    return settings.categoryAliases[study_id];
+                }
+                return study_id;
+            },
             /*
                 This function detects if the passed in element is in the current viewport and
                 if it is not scrolls the element into view.
