@@ -78,7 +78,9 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 }).length>0;
             },
             requireTag: function(tagName){
-                if (tagName) tagName = tagName.toLowerCase();
+                if (tagName) {
+                    tagName = tagName.toLowerCase();
+                } 
                 this.removeExcludedTag(tagName);
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
                     return;
@@ -150,8 +152,8 @@ define(["backbone", "handlebars", "search-interface/search-util"],
 
                 this.get('requiredTags').models.forEach((currentTag)=>{
                     _.each(tags, (tag) => {
-                        if (currentTag.attributes.tag.toLowerCase() === tag.tag.toLowerCase() ) {
-                            currentTag.attributes.score = tag.score;
+                        if (currentTag.get('tag').toLowerCase() === tag.tag.toLowerCase()) {
+                            currentTag.set('score', tag.score, options);
                         }
                     });
                 });
