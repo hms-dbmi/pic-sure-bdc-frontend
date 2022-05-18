@@ -148,6 +148,14 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                         this.get('excludedTags').findWhere({tag:tag.tag.toLowerCase()}) === undefined);
                 }).value();
 
+                this.get('requiredTags').models.forEach((currentTag)=>{
+                    _.each(tags, (tag) => {
+                        if (currentTag.attributes.tag.toLowerCase() === tag.tag.toLowerCase() ) {
+                            currentTag.attributes.score = tag.score;
+                        }
+                    });
+                });
+
                 this.get('unusedTags').set(filteredTags, options);
                 this.get('unusedTags').remove(this.get('requiredTags').models, options);
             }
