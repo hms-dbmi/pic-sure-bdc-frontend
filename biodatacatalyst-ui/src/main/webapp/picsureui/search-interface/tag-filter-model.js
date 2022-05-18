@@ -72,11 +72,6 @@ define(["backbone", "handlebars", "search-interface/search-util"],
             hasExcludedTags: function(){
                 return this.get('excludedTags').length>0;
             },
-            hasInactiveStudyTags: function(){
-                return this.get("unusedTags").filter(function(tag){
-                        return tag.get('tag')===dccHarmonizedTag || studyVersionRegex.test(tag.get('tag'));
-                }).length>0;
-            },
             requireTag: function(tagName){
                 this.removeExcludedTag(tagName);
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
