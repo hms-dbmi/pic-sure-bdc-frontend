@@ -187,13 +187,18 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.onTagChange();
 		},
 		determineStudyTags: function(unusedTags){
-
-			let studyTags = _.chain(unusedTags).filter(function(tag){
-				return (tag.get('tag').toLowerCase()===dccHarmonizedTag || studyRegex.test(tag.get('tag')));
-			}).map(function(tag){
+			let activeStudyList = searchUtil.getActiveStudyList();
+			let studyTags =
+			_.chain(unusedTags)
+			.filter(function(tag){
+				return (tag.get('tag').toLowerCase()===dccHarmonizedTag ||
+				 activeStudyList.find((study)=> {return tag.get('tag').toLowerCase() === study.studyId;}) != undefined)
+			})
+			.map(function(tag){
 				tag.set('tag', tag.get('tag').toLowerCase());
 				return tag.toJSON();
-			}).value();
+			})
+			.value();
 			return studyTags;
 		},
 		render: function(){
@@ -217,7 +222,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
 					hasExcludedTags:this.model.hasExcludedTags(),
-					hasInactiveStudyTags:this.model.hasInactiveStudyTags(),
+					hasInactiveStudyTags:studyTags.length>0,
 					hasActiveTags: this.model.hasExcludedTags() || this.model.hasRequiredTags(),
 					requiredTags:this.model.get("requiredTags").map(function(tag){
 						return tag.toJSON();

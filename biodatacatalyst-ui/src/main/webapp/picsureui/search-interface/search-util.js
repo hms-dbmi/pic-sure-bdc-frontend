@@ -34,6 +34,16 @@ define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.j
                 }
                 return study_id;
             },
+            getActiveStudyList: function(){
+                let activeStudiesList = _.map(studiesData.bio_data_catalyst, function(studyData){
+                    let studyId = studyData.study_identifier.toLowerCase();
+                    return {
+                        studyId: studyId
+                    }
+
+                })
+                return activeStudiesList;
+            },
             /*
                 This function detects if the passed in element is in the current viewport and
                 if it is not scrolls the element into view.
