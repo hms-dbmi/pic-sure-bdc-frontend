@@ -73,6 +73,9 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 return this.get('excludedTags').length>0;
             },
             requireTag: function(tagName){
+                if (tagName) {
+                    tagName = tagName.toLowerCase();
+                } 
                 this.removeExcludedTag(tagName);
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
                     return;
@@ -141,6 +144,14 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                         this.get('excludedTags').findWhere({tag:tag.tag.toUpperCase()}) === undefined &&
                         this.get('excludedTags').findWhere({tag:tag.tag.toLowerCase()}) === undefined);
                 }).value();
+
+                this.get('requiredTags').models.forEach((currentTag)=>{
+                    _.each(tags, (tag) => {
+                        if (currentTag.get('tag').toLowerCase() === tag.tag.toLowerCase()) {
+                            currentTag.set('score', tag.score, options);
+                        }
+                    });
+                });
 
                 this.get('unusedTags').set(filteredTags, options);
                 this.get('unusedTags').remove(this.get('requiredTags').models, options);
