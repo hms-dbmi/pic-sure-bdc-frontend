@@ -78,6 +78,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 }).length>0;
             },
             requireTag: function(tagName){
+                if (tagName) tagName = tagName.toLowerCase();
                 this.removeExcludedTag(tagName);
                 if (this.get('requiredTags').findWhere({tag: tagName})) {
                     return;
