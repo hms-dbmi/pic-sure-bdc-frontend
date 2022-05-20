@@ -169,9 +169,10 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								limit: 100000
 						}}),
 						success: function(response){
+							const varInfo = variableInfoCache[this.varId];
 							let dataTableInfo = {
-								studyId: this.dataTableData.metadata.columnmeta_study_id,
-								dataTableName: this.dataTableData.metadata.study_description
+								studyId: varInfo.studyAccession,
+								dataTableName: varInfo.studyDescription
 							};
 							let exportViewData = {
 								dtId: event.target.dataset.id,
