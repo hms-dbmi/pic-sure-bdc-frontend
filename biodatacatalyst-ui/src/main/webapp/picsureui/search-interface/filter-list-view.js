@@ -135,7 +135,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         el: $(".modal-body")
                     });
                     modalView.render();
-                    modal.displayModal(modalView, "Variable Information for " + data.variableMetadata.name,  ()=>{
+                    modal.displayModal(modalView, "Variable Information for " + data.variableMetadata.derived_var_name,  ()=>{
                         $('#filter-list').focus();
                     });
                 }
