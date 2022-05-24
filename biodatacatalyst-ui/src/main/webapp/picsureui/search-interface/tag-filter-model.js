@@ -27,13 +27,16 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 this.set('focusedSection', undefined);
                 this.set('numTags', 0);
                 HBS.registerHelper("aliasIfStudy", function(tag){
-                    if(tag===dccHarmonizedTag || studyVersionRegex.test(tag)){
+                    if (tag===dccHarmonizedTag) {
+                        return 'DCC Harmonized data set';
+                    }
+                    if(studyVersionRegex.test(tag)){
                         return searchUtil.findStudyAbbreviationFromId(tag);
                     }
                     return tag;
                 });
                 HBS.registerHelper("ariaAliasIfStudy", function(tag){
-                    if(tag===dccHarmonizedTag || studyVersionRegex.test(tag)){
+                    if(studyVersionRegex.test(tag)){
                         return "Study " + searchUtil.findStudyAbbreviationFromId(tag).split('').join('.');
                     }
                     return tag;

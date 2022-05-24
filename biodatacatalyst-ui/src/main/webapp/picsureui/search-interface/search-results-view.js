@@ -2,16 +2,17 @@ define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs
 		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util",
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
 		"search-interface/filter-model", "search-interface/tag-filter-model",
-		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",],
+		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",
+		"text!search-interface/no-results-partial.hbs", "search-interface/no-results-help-view",],
 function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel,
-		 modal, variableInfoCache, keyboardNav, tableView){
+		 modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView){
 
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
 			this.modalTemplate = HBS.compile(modalTemplate);
-			this.isAuthorized = !opts.isOpenAccess;
+			this.noResultHelpView = new noResultHelpView();
 			keyboardNav.addNavigableView("searchResults",this);
 			this.on({
 				'keynav-arrowup document': this.previousSearchResult,
@@ -24,6 +25,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			"click .search-result": "infoClickHandler",
 			"click #search-results-datatable tr": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
+			"click .fa-question-circle": "helpViewClickHandler",
 			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-datatable': 'resultsDatatableFocus',
@@ -110,7 +112,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: rowData.variable_id,
 					dataTableData: response,
-					isOpenAccess: !this.isAuthorized,
+					isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -139,7 +141,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			let filter = filterModel.getByVarId(searchResult.result.varId);
 
 			let filterViewData = {
-				isOpenAccess: !this.isAuthorized,
+				isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
 				data: {
 					searchResult: searchResult,
 					filter: filter ? filter.toJSON() : undefined
@@ -230,6 +232,16 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 
 			searchUtil.ensureElementIsInView(results[focusedVariable]);
 		},
+		helpViewClickHandler: function() {
+			console.log("helpViewClickHandler");
+			modal.displayModal(
+                new noResultHelpView,
+                'Why might I see unexpected search results?',
+                () => {
+                    $('search-box').focus();
+                }
+            );
+		},
 		render: function(){
 			if($('#search-results-div')[0]===undefined){
 				this.$el.html(HBS.compile(searchResultsViewTemplate));
@@ -241,13 +253,15 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					let metadata = result.result.metadata;
 					return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
 				})
-				if (!this.isAuthorized) {
+				if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 					filteredResults = _.filter(filteredResults, function(result) {
 						return result.result.metadata.columnmeta_is_stigmatized === "false";
 					})
 				}
 				if (filteredResults.length === 0) {
-					$('#no-results').length === 0 && $("#search-area").append('<div id="no-results" style="margin-right: 20px;" aria-label="0 results match your search">0 results match your search</div>');
+					$('#no-results').length === 0 && 
+						$("#search-area").append(HBS.compile(noResultsTemplate)) &&
+						$('.fa-question-circle').on('click', this.helpViewClickHandler);
 				} else {
 					$('#no-results').remove();
 				}
@@ -275,7 +289,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					});
 				}
 				let searchResultData = {
-					"isAuthorized": this.isAuthorized,
+					"isAuthorized": !JSON.parse(sessionStorage.getItem('isOpenAccess')),
 					"results": results,
 					"variableCount": tagFilterModel.get("searchResults").results.numResults,
 					"pages": pages
@@ -284,7 +298,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				let searchResultsView = new tableView(searchResultData);
 				searchResultsView.render();
 				$('#search-results-div').html(searchResultsView.$el);
-				const isAuthorized = this.isAuthorized;
 				this.searchResultsTable = $('#search-results-datatable').DataTable({
                     data: results,
 					"searching": false,
@@ -307,7 +320,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						},
 						{
 							render: function (data, type, row, meta) {
-								if (isAuthorized) {
+								if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 									let exportClass = 'glyphicon glyphicon-log-out';
 									if(filterModel.isExportFieldFromId(row.variable_id)){
 										exportClass = 'fa fa-check-square-o';

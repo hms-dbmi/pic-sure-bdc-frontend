@@ -24,6 +24,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                  */
                 "picsureui/dataAccess" : displayDataAccess,
                 "picsureui/openAccess" : function() {
+                    sessionStorage.setItem("isOpenAccess", true);
                     $(".header-btn.active").removeClass('active');
                     $(".header-btn[data-href='/picsureui/openAccess']").addClass('active');
                     $('#main-content').empty();
@@ -41,13 +42,11 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     const searchView = new SearchView({
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
 						queryScopes: parsedSess.queryScopes,
-                        isOpenAccess: true,
                         el : $('#filter-list')
                     });
 
                     const filterListView = new FilterListView({
                         outputPanelView : outputPanelView,
-                        isOpenAccess: true,
                         el : $('#filter-list-panel')
                     });
                     filterListView.render();
@@ -63,6 +62,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     // }
                 },
                 "picsureui/queryBuilder(/)" : function() {
+                    sessionStorage.setItem("isOpenAccess", false);
                     $(".header-btn.active").removeClass('active');
                     $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
 
@@ -70,7 +70,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     let parsedSettings = this.settings;
                     $('#main-content').append(this.layoutTemplate(parsedSettings));
 
-                    var queryView = new queryResultsView.View({model: new queryResultsView.Model(), isOpenAccess: false});
+                    var queryView = new queryResultsView.View({model: new queryResultsView.Model()});
 
                     queryView.render();
                     $('#query-results').append(queryView.$el);
@@ -83,20 +83,17 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     let searchView = new SearchView({
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
 						queryScopes: parsedSess.queryScopes,
-                        isOpenAccess: false,
                         el : $('#filter-list')
                     });
 
                     let filterListView = new FilterListView({
                         outputPanelView : queryView,
-                        isOpenAccess: false,
                         el : $('#filter-list-panel')
                     });
 
                     filterListView.render();
 
                     let toolSuiteView = new ToolSuiteView({
-
                         el: $('#tool-suite-panel')
                     });
 

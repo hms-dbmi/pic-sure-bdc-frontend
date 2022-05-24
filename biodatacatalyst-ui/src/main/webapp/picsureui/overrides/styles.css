@@ -326,6 +326,10 @@
     background-color: #fff;
 }
 
+.filter-container:not(:last-child) {
+    margin-bottom: 8px;
+}
+
 .filter-container:not(:first-of-type) {
     border-top-width: 1px;
     border-top-color: #aaa;
@@ -449,7 +453,6 @@ input[type='checkbox'].categorical-filter-input {
 }
 
 .space-out i {
-    margin-left: 10px;
     color: #337ab7;
     font-weight: bold;
 }
@@ -742,4 +745,11 @@ remove when above bug is fixed */
 
 .focused-search-result {
     border: 4px solid #a73039!important;
+}
+
+.no-results {
+    color: #337ab7;
+    margin-right: 20px;
+    line-height: 1;
+    height: fit-content;
 }

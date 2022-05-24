@@ -12,10 +12,10 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 		var View = BB.View.extend({
 			initialize: function(opts){
 				this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
-				this.isOpenAccess = opts.isOpenAccess;
+				this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
 				this.modalTemplate = HBS.compile(modalTemplate);
 				this.varId = opts.varId;
-				variableInfoCache[opts.varId].isAuthorized = !opts.isOpenAccess;
+				variableInfoCache[opts.varId].isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
 				this.dataTableData = opts.dataTableData;
 				tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
 				tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
