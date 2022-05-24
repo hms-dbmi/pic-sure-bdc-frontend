@@ -11,7 +11,7 @@
 <div class="panel">
   <div class="space-out panel-heading">
     <h4>Search Results:</h4>
-    <span>{{variableCount}} variables match your search</span>
+    <div class="results-container">{{variableCount}} variables match your search <i id="no-results-help" class="fa fa-question-circle fa-lg btn btn-icon m-0" tabindex="0" title="No results help"></i></div>
   </div>
   <table id="search-results-datatable" tabindex="0" class="table table-striped row-border hover" role="region" aria-label="You are in the results region. Use the up and down arrows to move between search results. Use the left and right arrows to move between pages of search results. You are currently on page {{pageNum}} out of {{numPages}} pages of search results with up to 10 results per page.">
     <thead>

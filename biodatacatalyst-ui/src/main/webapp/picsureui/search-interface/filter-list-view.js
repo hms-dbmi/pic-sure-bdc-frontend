@@ -12,7 +12,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
         var View = BB.View.extend({
             initialize: function(opts){
-                this.isOpenAccess = opts.isOpenAccess || false;
                 HBS.registerHelper('getFilterTypeDescription', this.getFilterTypeDescription);
                 HBS.registerHelper('getVariableDescription', this.getVariableDescription);
                 HBS.registerPartial('genomic-filter-partial', genomicFilterPartialTemplate);
@@ -130,7 +129,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 if (data) {
                     console.log('Filter: ', filter);
                     const modalView = new variableInfoModalView({
-                        isOpenAccess: this.isOpenAccess,
                         varId: data.variableId,
                         el: $(".modal-body")
                     });
@@ -164,7 +162,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                             };
                             this.filterModalView = new datatableFilterModalView({
                                 model: filterViewData,
-                                isOpenAccess: this.isOpenAccess,
                                 dataTableInfo: filterViewData.filter.searchResult.result,
                                 el: $(".modal-body"),
                             });
@@ -186,7 +183,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                     let filterViewData = {
                         el: $('.modal-body'),
-                        isOpenAccess: this.isOpenAccess,
+                        isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
                         data: {
                             searchResult: searchResult,
                             filter: filter
@@ -206,7 +203,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 }
             },
             render: function(){
-                const resourceUUID = this.isOpenAccess ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140";
+                const resourceUUID = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140";
                 const query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), null, resourceUUID);
                 this.outputPanelView.runQuery(query);
                 this.$el.html(this.filterListViewTemplate({

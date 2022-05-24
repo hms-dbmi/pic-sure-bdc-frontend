@@ -112,5 +112,6 @@ define(["underscore", "picSure/settings"],
 		createQueryNew:createQueryNew,
 		generateQueryNew: generateQueryNew,
 		updateConsentFilters: updateConsentFilters,
+		getDefaultQueryTemplate: getDefaultQueryTemplate,
 	}
 });

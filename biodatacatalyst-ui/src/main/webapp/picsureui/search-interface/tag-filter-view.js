@@ -9,7 +9,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 
 	let TagFilterView = BB.View.extend({
 		initialize: function(opts){
-			this.isOpenAccess = opts.isOpenAccess;
+			this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
 			this.model = tagFilterModel;
 			this.clicked = false;
 			this.helpView = new helpView();
@@ -221,7 +221,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.$el.html(HBS.compile(tagFilterViewTemplate)(
 				{
 					tags: tags,
-					isOpenAccess: this.isOpenAccess,
+					isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
 					searchTerm: $('#search-box').val(),
 					numSearchResults: this.model.get("searchResults") ? this.model.get("searchResults").results.numResults : 0,
 					numActiveTags: this.model.get("requiredTags").size() + this.model.get("excludedTags").size(),

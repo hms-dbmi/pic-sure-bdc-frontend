@@ -253,7 +253,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             },
             initializeConsents: function(){
                 var parsedSess = JSON.parse(sessionStorage.getItem("session"));
-                const resourceUUID = this.isOpenAccess ? settings.openAccessResourceId:settings.picSureResourceId;
+                const resourceUUID = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? settings.openAccessResourceId:settings.picSureResourceId;
                 var queryTemplate;
                 if(parsedSess){
                     if(parsedSess.queryTemplate && resourceUUID !== settings.openAccessResourceId){
