@@ -199,7 +199,15 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				return tag.toJSON();
 			})
 			.value();
-			return studyTags;
+			return this.moveHarmonizedTag(studyTags);
+		},
+		moveHarmonizedTag: function(tags){
+			let harmonizedTag = _.find(tags, (tag)=>{return tag.tag.toLowerCase() === dccHarmonizedTag;});
+			if(harmonizedTag){
+				tags = tags.filter(tag => tag.tag.toLowerCase() !== dccHarmonizedTag.toLowerCase());
+				tags.unshift(harmonizedTag);
+			}
+			return tags;
 		},
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();
