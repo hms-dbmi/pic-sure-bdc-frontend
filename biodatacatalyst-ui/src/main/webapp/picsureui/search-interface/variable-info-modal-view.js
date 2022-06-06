@@ -123,7 +123,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 							let filterViewData = {
 								dtId: event.target.dataset.id,
 								filter: filter ? filter.toJSON() : undefined,
-								dtVariables: response.results.searchResults,
+								dtVariables: JSON.parse(sessionStorage.getItem('isOpenAccess')) ? 
+									this.filterStigmatizedVariables(response.results.searchResults) : 
+									response.results.searchResults,
 								dataTableInfo: dataTableInfo
 							};
 							this.filterModalView = new datatableFilterModalView({
@@ -138,6 +140,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 						}.bind(this)
 					});
 				}
+			},
+			filterStigmatizedVariables: function(results){
+				return results.filter(searchResult => !searchResult.result.metadata.columnmeta_is_stigmatized);
 			},
 			filterKeypressHandler: function(event){
 				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
