@@ -44,6 +44,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		},
 		resultsDatatableFocus: function(event){
 			this.focusedSection = '#search-results-datatable';
+			this.updateExportIcons();
 			keyboardNav.setCurrentView("searchResults");
 		},
 		resultsBlur: function(){
@@ -242,6 +243,22 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
                 }
             );
 		},
+		updateExportIcons() {
+			let results = this.$("#search-results-datatable tbody tr");
+			_.each(results, (result) => {
+				if (filterModel.isExportFieldFromId(result.dataset.varId) || filterModel.isExportColFromId(result.dataset.varId)) {
+					let test = $(result).find('.export-icon');
+					test.removeClass('glyphicon glyphicon-log-out');
+					test.addClass('fa fa-check-square-o');
+				} else {
+					let resultIcon = $(result).find('.export-icon');
+					if (resultIcon.hasClass('fa-check-square-o')) {
+						resultIcon.removeClass('fa fa-check-square-o');
+						resultIcon.addClass('glyphicon glyphicon-log-out');
+					}
+				}
+			});
+		},
 		render: function(){
 			if($('#search-results-div')[0]===undefined){
 				this.$el.html(HBS.compile(searchResultsViewTemplate));
@@ -275,6 +292,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 							name: metadata.columnmeta_name,
 							dataTableDescription: metadata.columnmeta_var_group_description,
 							description: metadata.columnmeta_description,
+							hashed_var_id: metadata.hashed_var_id,
 							result_index: i
 						}
 
@@ -312,6 +330,9 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
                         {title:'Variable Description',data:'description'},
 						{title:'Actions'},
                     ],
+					createdRow: function(row, data, dataIndex) {
+						$(row).attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id);
+					},
 					columnDefs: [
 						{
 							targets: [0, 1, 2, 3, 4, 5],

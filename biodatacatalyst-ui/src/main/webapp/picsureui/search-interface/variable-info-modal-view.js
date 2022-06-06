@@ -97,7 +97,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 						});
 					}
 					this.filterModalView.render();
-					modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name);
+					modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name, ()=>{
+						$('#search-results-datatable').focus();
+					});
 				}
 				else if(event.target.dataset.target==='datatable'){
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
@@ -131,7 +133,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								el: $(".modal-body"),
 							});
 							this.filterModalView.render();
-							modal.displayModal(this.filterModalView, "Dataset : " + dataTableInfo.dataTableName);
+							modal.displayModal(this.filterModalView, "Dataset : " + dataTableInfo.dataTableName, () => {
+								$('#search-results-datatable').focus();
+							});
 						}.bind(this),
 						error: function(response){
 							console.log(response);
@@ -185,7 +189,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								el: $(".modal-body"),
 							});
 							this.exportModalView.render();
-							modal.displayModal(this.exportModalView, "Dataset : " + dataTableInfo.dataTableName);
+							modal.displayModal(this.exportModalView, "Dataset : " + dataTableInfo.dataTableName, () => {
+								$('#search-results-datatable').focus();
+							});
 						}.bind(this),
 						error: function(response){
 							console.log(response);
