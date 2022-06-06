@@ -132,6 +132,12 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 });
                 return existingField !== undefined;
             },
+            isExportColFromId: function(varId) {
+                const existingField = this.get("exportColumns").find((filter) => {
+                    return filter.get('variable').metadata.columnmeta_var_id === varId;
+                });
+                return existingField !== undefined;
+            },
 			addExportField: function (searchResult) {
 				this.get("exportFields").add(searchResult.result);
                 this.addExportColumn(searchResult, 'export');
