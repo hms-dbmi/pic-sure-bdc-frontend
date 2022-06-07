@@ -20,7 +20,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
             let shouldDisablePackageData = true;
             let shouldDisableDistributions = true;
-            if (filters.length) {
+            if (filters.length && filterModel.get('totalPatients') !== 0) {
                 if (anyRecordOf.length + genomic.length < filters.length) {
                     shouldDisablePackageData = false;
                     shouldDisableDistributions = false;

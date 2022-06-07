@@ -1,5 +1,18 @@
 /* Add your style overrides here */
 
+:root {
+    /*BDC Primary*/
+    --nhlbi-red: #c31f3f;
+    --nhlbi-grey: #616265;
+    
+    /*BDC Secondary*/
+    --background-grey: #f4f4f6;
+    --catalyst-blue: #1a568C;
+    --catalyst-dark-blue: #12385a;
+    --catalyst-bright-blue: #41abf5;
+    --catalyst-dark-grey: #393939;
+}
+
 #main-content {
     width: 95%;
     position: relative;
@@ -61,15 +74,32 @@
     border-radius: unset;
 }
 
+/* HEADER BUTTON OVERRIDES */
 .header-btn {
-    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-    border-bottom-style: solid;
-    border-bottom-width: 10px;
-    border-bottom-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-bottom-style: none;
+    padding: 20px 0px;
+    height: 90px;
+    border-bottom-width: 0px;
+    box-shadow: none;
+    color: var(--catalyst-dark-grey);
+    font-size: 18px;
+    flex-grow: 1;
+    width: 125px;
+}
+
+.header-btn.active {
+    color: white;
+    background-color: var(--nhlbi-grey);
 }
 
 .header-btn:hover {
-     border-bottom-color: #6d6e70;
+    background-color: var(--nhlbi-red);
+    color: white;
+    text-decoration: none;
 }
 
 #header-content {
@@ -78,6 +108,8 @@
     padding-left: 0;
     padding-right: 0;
 }
+
+/* ==== END HEADER BUTTON OVERRIDES ==== */
 
 .fence-login-btn {
     display: block;
