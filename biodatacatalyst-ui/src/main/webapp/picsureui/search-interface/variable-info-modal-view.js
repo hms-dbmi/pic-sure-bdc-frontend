@@ -98,7 +98,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 					}
 					this.filterModalView.render();
 					modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name, ()=>{
-						$('#search-results-datatable').focus();
+						$('#search-results-div').focus();
 					});
 				}
 				else if(event.target.dataset.target==='datatable'){
@@ -136,7 +136,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 							});
 							this.filterModalView.render();
 							modal.displayModal(this.filterModalView, "Dataset : " + dataTableInfo.dataTableName, () => {
-								$('#search-results-datatable').focus();
+								$('#search-results-div').focus();
 							});
 						}.bind(this),
 						error: function(response){
@@ -195,7 +195,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 							});
 							this.exportModalView.render();
 							modal.displayModal(this.exportModalView, "Dataset : " + dataTableInfo.dataTableName, () => {
-								$('#search-results-datatable').focus();
+								$('#search-results-div').focus();
 							});
 						}.bind(this),
 						error: function(response){

@@ -49,6 +49,7 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                 }.bind(this),
 				error: function(response){
                     this.model.set('spinning', false);
+                    this.render();
                     console.error("Viusalzation failed with query: " + JSON.stringify(query));
 					console.error(response);
 				}.bind(this)

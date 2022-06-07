@@ -3,10 +3,16 @@
         padding: 0;
     }
     .dropdown-toggle {
-        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        padding: 32px 35px;
+        cursor: pointer;
+    }
+    .dropdown-toggle i {
+        margin-left: 8px;
     }
     .selected {
-        border: 4px solid red;
+        border: 4px solid var(--nhlbi-red);
     }
     .nav-dropdown-menu.open {
         display: block;
@@ -45,49 +51,51 @@
         color: #262626;
         background-color: #f5f5f5;
     }
-</style>
-<div class="row header-row">
-	<img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
-</div>
-<div class="row" style="margin-top: 6px" tabindex="-1">
-        <span class="col-md-1" role="separator"></span>
-    <div id="header-tabs" style="display: inline-block; width:auto" role="menubar" aria-label="tab menu" tabindex="0">
-        {{#not_empty applications}}
-        <div class="col dropdown" id="applications-dropdown" role="none">
-            <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Applications">Applications</button>
-            <ul class="dropdown-menu" role="menu">
-            {{#each applications}}
-                <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
-            {{/each}}
-            </ul>
-        </div>
-        {{/not_empty}}
+    #top-header {
+        display: flex;
+        flex-direction: row;
+        background-color: #f4f4f6;
+        padding: 10px;
+    }
+     #top-header img {
+        padding-top: 0px;
+     }
+    #top-header .nav-menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left: 10px;
+    }
+    @media only screen and (max-width: 1470px) {
+        #top-header img {
+            padding-top: 0px;
+            max-width: 500px;
+            height: fit-content;
+        }
+    }
 
-        {{#contains privileges "SUPER_ADMIN"}}
-            <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
-                <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Super Admin Console">Super Admin Console</span>
-                <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown" title="Applications"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#" >Applications</a></li>
-                    <li class="dropdown" title="Connections"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement" >Connections</a></li>
-                    <li class="dropdown" title="Privileges"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement" >Privileges</a></li>
-                    <li class="dropdown" title="Roles"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement" >Roles</a></li>
-                </ul>
-            </div>
-        {{/contains}}
+     @media only screen and (max-width: 990px) {
+        #top-header {
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f4f6;
+            padding: 10px;
+        }
+    }
+</style>
+<header id="top-header">
+    <img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
+    <nav id="header-tabs" class="nav-menu" role="menubar" aria-label="tab menu" tabindex="0">
         {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
-            <a class="col btn btn-default header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" role="menuitem" tabindex="-1" title="Authorized Access">Authorized Access</a>
+            <a class="header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" role="menuitem" tabindex="-1" title="Authorized Access">Authorized Access</a>
         {{/contains}}
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" role="menuitem" tabindex="-1" title="Open Access">Open Access</a>
-            <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" role="menuitem" tabindex="-1" title="Data Access">Data Access</a>
-        {{/contains}}
-        {{#contains privileges 'ADMIN'}}
-            <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#" role="menuitem" title="Users">Users</a>
-        {{/contains}}
-        {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-            <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile">User Profile</a>
-            <div tabindex="-1" class="col nav-dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1" title="Help">Help</div>
+            <a class="header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" role="menuitem" tabindex="-1" title="Open Access">Open Access</a>
+            <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" role="menuitem" tabindex="-1" title="Data Access">Data Access</a>
+            <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile">User Profile</a>
+            <div tabindex="-1" class="nav-dropdown header-btn authenticated-visible" id="help-dropdown">
+                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1" title="Help">Help <i class="fa fa-caret-down" aria-hidden="true"></i></div>
                 <ul class="nav-dropdown-menu" aria-labelledby="dropdownMenuLink" tabindex="-1" role="menu">
                     {{#if videoLink}}<li class="dropdown" title="Video Demonstration"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
                     {{#if pdfLink}}<li class="dropdown" title="User Guide"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
@@ -95,7 +103,7 @@
                     {{#if helpLink}}<li class="dropdown" title="Contact Us"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
                 </ul>
             </div>
-            <a href="#" id="logout-btn" class="col btn btn-default header-btn authenticated-visible" tabindex="-1" title="Log Out">Log Out</a>
+            <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out">Log Out</a>
         {{/contains}}
-    </div>
-</div>
+    </nav>
+</header>
