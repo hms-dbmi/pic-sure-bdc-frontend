@@ -30,6 +30,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             },
             events:{
                 'click #data-summary-help' : 'openHelp',
+                'keypress #data-summary-help' : 'openHelp',
             },
             queryRunning: function(query){
                 this.model.set('spinning', true);
