@@ -110,7 +110,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             }
         },
         openHelpModal: function(event) {
-            if (event.type === "keyboard" && !(event.key === ' ' || event.key === 'Enter')) {
+            if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
 				return;
 			}
 			modal.displayModal(
