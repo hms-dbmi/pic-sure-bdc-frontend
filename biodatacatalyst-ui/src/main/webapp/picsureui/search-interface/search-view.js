@@ -103,7 +103,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			});
 
 			//exclude the user selected tags as well as tags not in scope
-			searchExcludeTags= [...this.excludedTags, ...this.antiScopeTags];
+			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
 
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
