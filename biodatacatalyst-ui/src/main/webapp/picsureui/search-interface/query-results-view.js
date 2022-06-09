@@ -30,6 +30,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             },
             events:{
                 'click #data-summary-help' : 'openHelp',
+                'keypress #data-summary-help' : 'openHelp',
             },
             queryRunning: function(query){
                 this.model.set('spinning', true);
@@ -91,7 +92,10 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             updateVariableCount: function(){
                 $('#export-count').html(filterModel.get('totalVariables')+' Variables');
             },
-            openHelp: function(){
+            openHelp: function(event){
+                if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+                    return;
+                }
                 modal.displayModal(
                     JSON.parse(sessionStorage.getItem('isOpenAccess')) ?  this.openHelpView : this.helpView,
                     'Data Summary Help',

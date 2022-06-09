@@ -30,7 +30,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-datatable': 'resultsDatatableFocus',
 			'blur #search-results-datatable': 'resultsBlur',
-			'keypress #search-results-div': 'resultKeyHandler'
+			'keypress #search-results-div': 'resultKeyHandler',
 		},
 		pageLinkHandler: function(event){
 			tagFilterModel.set("currentPage", event.target.innerText);
@@ -233,8 +233,10 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 
 			searchUtil.ensureElementIsInView(results[focusedVariable]);
 		},
-		helpViewClickHandler: function() {
-			console.log("helpViewClickHandler");
+		helpViewClickHandler: function(event) {
+			if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
 			modal.displayModal(
                 new noResultHelpView,
                 'Why might I see unexpected search results?',
@@ -278,7 +280,10 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				if (filteredResults.length === 0) {
 					$('#no-results').length === 0 && 
 						$("#search-area").append(HBS.compile(noResultsTemplate)) &&
-						$('.fa-question-circle').on('click', this.helpViewClickHandler);
+						$('#no-results-help').on({
+							'click': this.helpViewClickHandler,
+							'keypress': this.helpViewClickHandler
+						});
 				} else {
 					$('#no-results').remove();
 				}

@@ -13,6 +13,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             'click #distributions' : 'openDistributions',
             'click #tool-suite-help' : 'openHelp',
             'click #export-to-seven-bridges' : 'exportToSevenBridges',
+            'keypress #tool-suite-help' : 'openHelp',
         },
         handleFilterChange: function(){
             const filters = filterModel.get('activeFilters');
@@ -39,7 +40,10 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 () => {this.$el.focus();}
             );
         },
-        openHelp: function(){
+        openHelp: function(event){
+            if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+                return;
+            }
             modal.displayModal(
                 this.helpView,
                 'Tool Suite Help',

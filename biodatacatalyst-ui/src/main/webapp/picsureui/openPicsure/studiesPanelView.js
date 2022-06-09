@@ -26,7 +26,8 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
 			"mouseout .request-access": "unhighlightConsent",
             "focus .panel-body": "focusBody",
             "blur .panel-body": "blurBody",
-			'click #studies-help' : 'openHelpModal'
+			'click #studies-help' : 'openHelpModal',
+            "keypress #studies-help": "openHelpModal",
 		},
 		toggleConsentGroup: function(event) {
 			var studyRoot = event.currentTarget.parentElement.parentElement;
@@ -109,6 +110,9 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             }
         },
         openHelpModal: function(event) {
+            if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
 			modal.displayModal(
                 this.helpView,
                 'Filtered Results by Study',
@@ -118,6 +122,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             );
 		},
         render: function() {
+            console.log("rendering studies panel   ", outputModel.toJSON());
             this.$el.html(this.template(outputModel.toJSON()));
             return this;
         }
