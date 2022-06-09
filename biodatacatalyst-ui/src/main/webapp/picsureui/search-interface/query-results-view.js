@@ -92,7 +92,10 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             updateVariableCount: function(){
                 $('#export-count').html(filterModel.get('totalVariables')+' Variables');
             },
-            openHelp: function(){
+            openHelp: function(event){
+                if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+                    return;
+                }
                 modal.displayModal(
                     JSON.parse(sessionStorage.getItem('isOpenAccess')) ?  this.openHelpView : this.helpView,
                     'Data Summary Help',

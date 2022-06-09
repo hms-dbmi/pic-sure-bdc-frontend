@@ -40,7 +40,10 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 () => {this.$el.focus();}
             );
         },
-        openHelp: function(){
+        openHelp: function(event){
+            if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+                return;
+            }
             modal.displayModal(
                 this.helpView,
                 'Tool Suite Help',

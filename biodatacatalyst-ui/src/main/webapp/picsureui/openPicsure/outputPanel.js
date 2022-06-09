@@ -222,6 +222,9 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
             window.history.pushState({}, "", "picsureui/queryBuilder");
         },
 		openHelpModal: function(event) {
+			if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
 			modal.displayModal(
                 this.helpView,
                 'Welcome to Open Access!',

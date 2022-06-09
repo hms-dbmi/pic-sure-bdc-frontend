@@ -110,6 +110,9 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             }
         },
         openHelpModal: function(event) {
+            if (event.type === "keyboard" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
 			modal.displayModal(
                 this.helpView,
                 'Filtered Results by Study',
@@ -119,6 +122,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             );
 		},
         render: function() {
+            console.log("rendering studies panel   ", outputModel.toJSON());
             this.$el.html(this.template(outputModel.toJSON()));
             return this;
         }
