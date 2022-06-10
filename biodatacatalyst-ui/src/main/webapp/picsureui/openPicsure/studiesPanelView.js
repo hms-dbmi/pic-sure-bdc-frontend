@@ -28,6 +28,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             "blur .panel-body": "blurBody",
 			'click #studies-help' : 'openHelpModal',
             "keypress #studies-help": "openHelpModal",
+            'click .request-access': 'requestAccess',
 		},
 		toggleConsentGroup: function(event) {
 			var studyRoot = event.currentTarget.parentElement.parentElement;
