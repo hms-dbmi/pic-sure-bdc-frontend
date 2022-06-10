@@ -26,7 +26,8 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
 			"mouseout .request-access": "unhighlightConsent",
             "focus .panel-body": "focusBody",
             "blur .panel-body": "blurBody",
-			'click #studies-help' : 'openHelpModal'
+			'click #studies-help' : 'openHelpModal',
+            'click .request-access': 'requestAccess',
 		},
 		toggleConsentGroup: function(event) {
 			var studyRoot = event.currentTarget.parentElement.parentElement;
