@@ -6,6 +6,7 @@ define(['common/pic-dropdown'], function (dropdown) {
     const OPEN = 'open';
     
     //CSS CLASS CONSANTS
+    const NAV_ELEMENT_CLASS = '.nav-menu';
     const NAV_DROPDOWN_MENU_CLASS = '.nav-dropdown-menu';
     const HEADER_BTN_CLASS = '.header-btn';
     const DROPDOWN_CLASS = '.dropdown';
@@ -183,11 +184,14 @@ define(['common/pic-dropdown'], function (dropdown) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab) && selectedTab.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
                 selectedTab.querySelector(SELECTED_DROPDOWN_ITEM_CLASS).classList.remove(SELECTED);
-                selectedTab.querySelector('.dropdown:first-child').classList.add(SELECTED);
+                const drowpdownFirstItem = selectedTab.querySelector('.dropdown:first-child');
+                drowpdownFirstItem.classList.add(SELECTED);
+                setActivedescendant(drowpdownFirstItem);
             } else {
                 const tabs = getView().el.querySelectorAll(HEADER_BTN_CLASS);
                 selectedTab.classList.remove(SELECTED);
                 tabs[0].classList.add(SELECTED);
+                setActivedescendant(tabs[0]);
             }
         } else {
             console.error('view is undefined');
@@ -207,11 +211,14 @@ define(['common/pic-dropdown'], function (dropdown) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab) && selectedTab.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
                 selectedTab.querySelector(SELECTED_DROPDOWN_ITEM_CLASS).classList.remove(SELECTED);
-                selectedTab.querySelector('.dropdown:last-child').classList.add(SELECTED);
+                const item = selectedTab.querySelector('.dropdown:last-child');
+                item.classList.add(SELECTED);
+                setActivedescendant(item);
             } else {
                 const tabs = getView().el.querySelectorAll(HEADER_BTN_CLASS);
                 selectedTab.classList.remove(SELECTED);
                 tabs[tabs.length - 1].classList.add(SELECTED);
+                setActivedescendant(tabs[tabs.length - 1]);
             }
         } else {
             console.error('view is undefined');
@@ -237,6 +244,7 @@ define(['common/pic-dropdown'], function (dropdown) {
             if (isDropdown(selectedItem) && selectedItem.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
                 itemList = selectedItem.querySelectorAll(DROPDOWN_CLASS);
                 selectedItem = selectedItem.querySelector(SELECTED_DROPDOWN_ITEM_CLASS);
+                setActivedescendant(selectedItem);
             } else {
                 itemList = getView().el.querySelectorAll(HEADER_BTN_CLASS);
             }
@@ -244,6 +252,7 @@ define(['common/pic-dropdown'], function (dropdown) {
                 if (itemList[i].innerText.toUpperCase().startsWith(letter) && !itemList[i].classList.contains(SELECTED)) {
                     selectedItem.classList.remove(SELECTED);
                     itemList[i].classList.add(SELECTED);
+                    setActivedescendant(itemList[i]);
                     break;
                 }
             }
@@ -281,14 +290,32 @@ define(['common/pic-dropdown'], function (dropdown) {
         @param {array} tabs - an array of all the tabs in the nav-menu
         @param {number} i - the index of the current selected tab
     */
-    let selectPrev = (tabs, i) => (i > 0) ? tabs[i - 1].classList.add(SELECTED) : tabs[tabs.length - 1].classList.add(SELECTED);
+    let selectPrev = (tabs, i) => {
+        if (i > 0) {
+            tabs[i - 1].classList.add(SELECTED);
+            setActivedescendant(tabs[i - 1]);
+        } else {
+            tabs[tabs.length - 1].classList.add(SELECTED);
+            setActivedescendant(tabs[tabs.length - 1]);
+        }
+    }
+    
+    // (i > 0) ? tabs[i - 1].classList.add(SELECTED) && setActivedescendant(tabs[i - 1].innerText) : tabs[tabs.length - 1].classList.add(SELECTED) && setActivedescendant(tabs[length - 1].innerText);
 
     /*
         Moves the selected tab to the right. If it is the last tab, it will move to the first tab.
         @param {array} tabs - an array of all the tabs in the nav-menu
         @param {number} i - the index of the  current selected tab
     */
-    let selectNext = (tabs, i) => (i < tabs.length - 1) ? tabs[i + 1].classList.add(SELECTED) : tabs[0].classList.add(SELECTED);
+    let selectNext = (tabs, i) => {
+        if (i < tabs.length - 1) {
+            tabs[i + 1].classList.add(SELECTED);
+            setActivedescendant(tabs[i + 1]);
+        } else {
+            tabs[0].classList.add(SELECTED) 
+            setActivedescendant(tabs[0])
+        }
+    };
 
     /*
     
@@ -324,6 +351,14 @@ define(['common/pic-dropdown'], function (dropdown) {
     let handleLooping = (direction, length, index) => {
         return index === -1 ? (direction === FORWARD ? -1 : length) : index;
     }
+
+    let setActivedescendant = (element) => {
+        if (getView()) {
+            getView().el.querySelector(NAV_ELEMENT_CLASS).setAttribute('aria-activedescendant', element.id);
+        }
+    }
+
+
 
     return {
         init: init,

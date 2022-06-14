@@ -47,8 +47,10 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
         toggleArrow(tab);
         if (dropdown.classList.contains(OPEN)) {
             dropdown.classList.remove(OPEN);
+            dropdown.setAttribute('aria-expanded', false);
         } else {
             dropdown.classList.add(OPEN);
+            dropdown.setAttribute('aria-expanded', true);
             $(dropdown).offset({
                 top: $(tab).parent().offset().top + $(tab).parent().outerHeight(), 
                 left: $(tab).offset().left
@@ -69,6 +71,7 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
                 icon.classList.add('fa-caret-down');			
             }
             dropdown.classList.remove(OPEN);
+            dropdown.setAttribute('aria-expanded', false);
         }
     }
 

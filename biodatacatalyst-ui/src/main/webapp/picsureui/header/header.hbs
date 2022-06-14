@@ -86,24 +86,24 @@
 </style>
 <header id="top-header">
     <img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
-    <nav id="header-tabs" class="nav-menu" role="menubar" aria-label="tab menu" tabindex="0">
+    <nav id="header-tabs" class="nav-menu" role="navigation" aria-label="Main Navigation. You are on the main navigation of Pic-sure. Please use the arrow keys to navigate through the tabs. Use Enter or space to select the tab." tabindex="0">
         {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
-            <a class="header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" role="menuitem" tabindex="-1" title="Authorized Access">Authorized Access</a>
+            <a class="header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" tabindex="-1" title="Authorized Access" aria-label="Authorized Access">Authorized Access</a>
         {{/contains}}
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-            <a class="header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" role="menuitem" tabindex="-1" title="Open Access">Open Access</a>
-            <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" role="menuitem" tabindex="-1" title="Data Access">Data Access</a>
-            <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile">User Profile</a>
-            <div tabindex="-1" class="nav-dropdown header-btn authenticated-visible" id="help-dropdown">
-                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" role="menuitem" tabindex="-1" title="Help">Help <i class="fa fa-caret-down" aria-hidden="true"></i></div>
-                <ul class="nav-dropdown-menu" aria-labelledby="dropdownMenuLink" tabindex="-1" role="menu">
-                    {{#if videoLink}}<li class="dropdown" title="Video Demonstration"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                    {{#if pdfLink}}<li class="dropdown" title="User Guide"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
-                    {{#if jupyterExampleLink}}<li class="dropdown" title="Jupyter Examples"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
-                    {{#if helpLink}}<li class="dropdown" title="Contact Us"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
+            <a class="header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" tabindex="-1" title="Open Access" aria-label="Open Access">Open Access</a>
+            <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" tabindex="-1" title="Data Access" aria-label="Data Access">Data Access</a>
+            <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile" aria-haspopup="true" aria-label="User Profile">User Profile</a>
+            <div tabindex="-1" class="nav-dropdown header-btn authenticated-visible" id="help-dropdown" aria-labelledby="help-dropdown-toggle">
+                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" tabindex="-1" title="Help" aria-label="Help dropwdown">Help <i class="fa fa-caret-down" aria-hidden="true"></i></div>
+                <ul class="nav-dropdown-menu" tabindex="-1" aria-expanded="false">
+                    {{#if videoLink}}<li id="video-demo-option" class="dropdown" aria-label="Video Demonstration, clicking here will open a link in a new tab"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
+                    {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                    {{#if jupyterExampleLink}}<li id="jupyter-examples-option" class="dropdown" aria-label="Jupyter Examples, clicking here will open a link  in a new tab"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
+                    {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
                 </ul>
             </div>
-            <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out">Log Out</a>
+            <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out" aria-label="Log Out">Log Out</a>
         {{/contains}}
     </nav>
 </header>
