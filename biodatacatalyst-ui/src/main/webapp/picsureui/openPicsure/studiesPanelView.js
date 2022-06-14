@@ -20,15 +20,16 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             });
         },
         events:{
-			"click .study-glyph": "toggleConsentGroup",
-			"click .consent-grouping": "toggleConsentGroup",
-			"mouseover .request-access": "highlightConsent",
-			"mouseout .request-access": "unhighlightConsent",
-            "focus .panel-body": "focusBody",
-            "blur .panel-body": "blurBody",
-			'click #studies-help' : 'openHelpModal',
-            "keypress #studies-help": "openHelpModal",
-		},
+          "click .study-glyph": "toggleConsentGroup",
+          "click .consent-grouping": "toggleConsentGroup",
+          "mouseover .request-access": "highlightConsent",
+          "mouseout .request-access": "unhighlightConsent",
+          "focus .panel-body": "focusBody",
+          "blur .panel-body": "blurBody",
+          'click #studies-help' : 'openHelpModal',
+          "keypress #studies-help": "openHelpModal",
+          'click .request-access': 'requestAccess',
+        },
 		toggleConsentGroup: function(event) {
 			var studyRoot = event.currentTarget.parentElement.parentElement;
 			$(studyRoot).toggleClass("study-shown");
