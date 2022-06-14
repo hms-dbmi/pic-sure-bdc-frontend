@@ -97,7 +97,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 						});
 					}
 					this.filterModalView.render();
-					modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name);
+					modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name, ()=>{
+						$('#search-results-div').focus();
+					});
 				}
 				else if(event.target.dataset.target==='datatable'){
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
@@ -123,7 +125,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 							let filterViewData = {
 								dtId: event.target.dataset.id,
 								filter: filter ? filter.toJSON() : undefined,
-								dtVariables: response.results.searchResults,
+								dtVariables: JSON.parse(sessionStorage.getItem('isOpenAccess')) ? 
+									this.filterStigmatizedVariables(response.results.searchResults) : 
+									response.results.searchResults,
 								dataTableInfo: dataTableInfo
 							};
 							this.filterModalView = new datatableFilterModalView({
@@ -131,13 +135,18 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								el: $(".modal-body"),
 							});
 							this.filterModalView.render();
-							modal.displayModal(this.filterModalView, "Dataset : " + dataTableInfo.dataTableName);
+							modal.displayModal(this.filterModalView, "Dataset : " + dataTableInfo.dataTableName, () => {
+								$('#search-results-div').focus();
+							});
 						}.bind(this),
 						error: function(response){
 							console.log(response);
 						}.bind(this)
 					});
 				}
+			},
+			filterStigmatizedVariables: function(results){
+				return results.filter(searchResult => !searchResult.result.metadata.columnmeta_is_stigmatized);
 			},
 			filterKeypressHandler: function(event){
 				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
@@ -185,7 +194,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 								el: $(".modal-body"),
 							});
 							this.exportModalView.render();
-							modal.displayModal(this.exportModalView, "Dataset : " + dataTableInfo.dataTableName);
+							modal.displayModal(this.exportModalView, "Dataset : " + dataTableInfo.dataTableName, () => {
+								$('#search-results-div').focus();
+							});
 						}.bind(this),
 						error: function(response){
 							console.log(response);

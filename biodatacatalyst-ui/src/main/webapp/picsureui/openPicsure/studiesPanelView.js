@@ -20,15 +20,16 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             });
         },
         events:{
-			"click .study-glyph": "toggleConsentGroup",
-			"click .consent-grouping": "toggleConsentGroup",
-			"mouseover .request-access": "highlightConsent",
-			"mouseout .request-access": "unhighlightConsent",
-            "focus .panel-body": "focusBody",
-            "blur .panel-body": "blurBody",
-			'click #studies-help' : 'openHelpModal',
-            'click .request-access': 'requestAccess',
-		},
+          "click .study-glyph": "toggleConsentGroup",
+          "click .consent-grouping": "toggleConsentGroup",
+          "mouseover .request-access": "highlightConsent",
+          "mouseout .request-access": "unhighlightConsent",
+          "focus .panel-body": "focusBody",
+          "blur .panel-body": "blurBody",
+          'click #studies-help' : 'openHelpModal',
+          "keypress #studies-help": "openHelpModal",
+          'click .request-access': 'requestAccess',
+        },
 		toggleConsentGroup: function(event) {
 			var studyRoot = event.currentTarget.parentElement.parentElement;
 			$(studyRoot).toggleClass("study-shown");
@@ -110,6 +111,9 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             }
         },
         openHelpModal: function(event) {
+            if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
 			modal.displayModal(
                 this.helpView,
                 'Filtered Results by Study',
@@ -119,6 +123,7 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             );
 		},
         render: function() {
+            console.log("rendering studies panel   ", outputModel.toJSON());
             this.$el.html(this.template(outputModel.toJSON()));
             return this;
         }

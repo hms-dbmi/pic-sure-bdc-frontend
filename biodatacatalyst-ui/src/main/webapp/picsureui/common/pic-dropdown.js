@@ -44,6 +44,7 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
         console.debug("toggleDropdown", e.target);
         const tab = e.target.closest('.header-btn');
         const dropdown = tab.querySelector(NAV_DROPDOWN_MENU_CLASS);
+        toggleArrow(tab);
         if (dropdown.classList.contains(OPEN)) {
             dropdown.classList.remove(OPEN);
         } else {
@@ -61,7 +62,12 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
         const dropdown = getView().el.querySelector(OPEN_NAV_DROPDOWN_CLASS);
         if (dropdown) {
             const selectedOption = dropdown.querySelector(SECLECTED_CLASS);
-            selectedOption && selectedOption.classList.remove(SELECTED);			
+            selectedOption && selectedOption.classList.remove(SELECTED);
+            const icon = dropdown.parentNode.querySelector('i.fa');
+            if (icon) {
+                icon.classList.remove('fa-caret-up');
+                icon.classList.add('fa-caret-down');			
+            }
             dropdown.classList.remove(OPEN);
         }
     }
@@ -78,6 +84,17 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
         const openDropdown = getView().el.querySelector(OPEN_NAV_DROPDOWN_CLASS);
         return openDropdown !== null && openDropdown !== undefined;
     }
+
+    let toggleArrow = (target) => {
+        const icon = target.querySelector('i.fa');
+        if (icon && icon.classList.contains('fa-caret-down')) {
+            icon.classList.remove('fa-caret-down');
+            icon.classList.add('fa-caret-up');
+        } else if (icon && icon.classList.contains('fa-caret-up')) {
+            icon.classList.remove('fa-caret-up');
+            icon.classList.add('fa-caret-down');
+        }
+    };
 
     return {
         init: init,

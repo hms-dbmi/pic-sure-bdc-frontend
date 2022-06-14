@@ -192,7 +192,8 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			"keypress .request-access": "keyRequestAccess",
 			"click .request-access": "requestAccess",
             "click .explore-access": "exploreAccess",
-			"click #open-access-output-help": "openHelpModal"
+			"click #open-access-output-help": "openHelpModal",
+			"keypress #open-access-output-help": "openHelpModal",
 		},
 		keyToggleConsentGroup: function(event) {
 			if (event.key === "Enter") this.toggleConsentGroup(event);
@@ -221,6 +222,9 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
             window.history.pushState({}, "", "picsureui/queryBuilder");
         },
 		openHelpModal: function(event) {
+			if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
 			modal.displayModal(
                 this.helpView,
                 'Welcome to Open Access!',
