@@ -166,6 +166,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					});
 				}
 				outputModel.set("studies",sorted_final);
+				outputModel.set('renderCount', outputModel.get('renderCount') + 1);
 				this.render();
 			}).bind(this),
 			error: (function(response) {
