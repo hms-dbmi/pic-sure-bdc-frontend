@@ -135,11 +135,13 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 		},
 		filterClickHandler: function(event) {
-			let resultIndex = $(event.target).data('result-index');
+			const varId = $(event.target).data('variable-id');
 
-			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
+			let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
+				return varId === result.result.varId;
+			});
 
-			let filter = filterModel.getByVarId(searchResult.result.varId);
+			let filter = filterModel.getByVarId(varId);
 
 			let filterViewData = {
 				isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
