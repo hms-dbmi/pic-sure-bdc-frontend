@@ -5,7 +5,6 @@ define(["backbone"], function(BB) {
         spinnerClasses: "spinner-medium spinner-medium-center ",
         spinning: false,
         studies: studiesInfo,
-        renderCount : 0, 
         resources : {}
     };
     
