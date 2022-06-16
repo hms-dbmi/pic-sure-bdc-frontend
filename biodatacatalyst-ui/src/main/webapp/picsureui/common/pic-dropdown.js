@@ -8,7 +8,8 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
     const OPEN_NAV_DROPDOWN_CLASS = NAV_DROPDOWN_MENU_CLASS + '.' + OPEN;
 
     /*
-        Initialize the dropdown menu with the provided view. Adds any events needed for the dropddown to the view.
+        Initialize the dropdown menu with the provided view. Adds any events needed for the dropddown to the view. 
+        To find the nav-dropdown-menu we need to find the parent element as the dropdown button is its sibling.
 
         @param {view} The view that the dropdown menu is being added to.
         @param {events} An array of events that the dropdown menu should listen for.
@@ -49,7 +50,6 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
             dropdown.classList.remove(OPEN);
             dropdown.setAttribute('aria-expanded', false);
         } else {
-            tab.classList.add('.active')
             dropdown.classList.add(OPEN);
             dropdown.setAttribute('aria-expanded', true);
             $(dropdown).offset({
