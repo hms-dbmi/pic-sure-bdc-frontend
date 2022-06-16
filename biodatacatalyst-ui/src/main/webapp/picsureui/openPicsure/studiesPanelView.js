@@ -8,7 +8,6 @@ define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "te
             this.data = opts || {};
             this.helpView = new helpView();
             this.template = HBS.compile(studiesPanelTemplate);
-            outputModel.on('change:renderCount', this.render.bind(this));
             keyboardNav.addNavigableView('studies-list',this);
             this.on({
                 'keynav-arrowup document': this.navigateUp.bind(this),

@@ -32,7 +32,7 @@ define(["handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "
                     const studiesPanel = new studiesPanelView();
                     studiesPanel.render();
                     $('#studies-list-panel').append(studiesPanel.$el);
-                    const outputPanelView = new outputPanel.View();
+                    const outputPanelView = new outputPanel.View({studiesPanel: studiesPanel});
                     const query = queryBuilder.generateQueryNew({}, {}, null, JSON.parse(settings).openAccessResourceId);
                     outputPanelView.render();
                     $('#query-results').append(outputPanelView.$el);

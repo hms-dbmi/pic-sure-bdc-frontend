@@ -1,7 +1,7 @@
 define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs",
 		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "search-interface/modal", "openPicsure/openPicsureHelpView"],
 		function($, settings, outputTemplate,
-				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView){
+				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView) {
 
 	let studiesInfo = {};
 	var studyConcepts = [];
@@ -166,22 +166,24 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					});
 				}
 				outputModel.set("studies",sorted_final);
-				outputModel.set('renderCount', outputModel.get('renderCount') + 1);
+				this.studiesAccessPanelView.render();
 				this.render();
 			}).bind(this),
 			error: (function(response) {
 				for (var x in studiesInfo) {
 					studiesInfo[x].study_matches = "(error)";
 				}
+				this.studiesAccessPanelView.render();
 				this.render();
 			}).bind(this)
 		});
 	}
 
 	var outputView = BB.View.extend({
-		initialize: function(){
+		initialize: function(opts){
 			this.template = HBS.compile(outputTemplate);
 			this.helpView = new helpView();
+			this.studiesAccessPanelView = opts.studiesPanel;
 			loadConcepts();
 		},
 		events:{
