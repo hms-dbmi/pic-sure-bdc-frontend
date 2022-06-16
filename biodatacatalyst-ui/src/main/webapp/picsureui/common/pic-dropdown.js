@@ -43,12 +43,13 @@ define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
     let toggleDropdown = (e) => {
         console.debug("toggleDropdown", e.target);
         const tab = e.target.closest('.header-btn');
-        const dropdown = tab.querySelector(NAV_DROPDOWN_MENU_CLASS);
+        const dropdown = tab.parentElement.querySelector(NAV_DROPDOWN_MENU_CLASS);
         toggleArrow(tab);
         if (dropdown.classList.contains(OPEN)) {
             dropdown.classList.remove(OPEN);
             dropdown.setAttribute('aria-expanded', false);
         } else {
+            tab.classList.add('.active')
             dropdown.classList.add(OPEN);
             dropdown.setAttribute('aria-expanded', true);
             $(dropdown).offset({

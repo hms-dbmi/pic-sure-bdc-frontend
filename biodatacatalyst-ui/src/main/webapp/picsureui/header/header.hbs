@@ -7,6 +7,8 @@
         align-items: center;
         padding: 32px 35px;
         cursor: pointer;
+        background-color: var(--background-grey);
+        border: none;
     }
     .dropdown-toggle i {
         margin-left: 8px;
@@ -94,15 +96,15 @@
             <a class="header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn" tabindex="-1" title="Open Access" aria-label="Open Access">Open Access</a>
             <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" tabindex="-1" title="Data Access" aria-label="Data Access">Data Access</a>
             <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile" aria-haspopup="true" aria-label="User Profile">User Profile</a>
-            <div tabindex="-1" class="nav-dropdown header-btn authenticated-visible" id="help-dropdown" aria-labelledby="help-dropdown-toggle">
-                <div class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle" tabindex="-1" title="Help" aria-label="Help dropwdown">Help <i class="fa fa-caret-down" aria-hidden="true"></i></div>
-                <ul class="nav-dropdown-menu" tabindex="-1" aria-expanded="false">
-                    {{#if videoLink}}<li id="video-demo-option" class="dropdown" aria-label="Video Demonstration, clicking here will open a link in a new tab"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                    {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
-                    {{#if jupyterExampleLink}}<li id="jupyter-examples-option" class="dropdown" aria-label="Jupyter Examples, clicking here will open a link  in a new tab"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
-                    {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
-                </ul>
-            </div>
+            <button class="dropdown-toggle nav-dropdown header-btn authenticated-visible" aria-expanded="false" id="help-dropdown-toggle" tabindex="-1" title="Help" aria-label="Help dropwdown" aria-controls="help-menu-list">
+                Help <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </button>
+            <ul id="help-menu-list" class="nav-dropdown-menu" tabindex="-1">
+                {{#if videoLink}}<li id="video-demo-option" class="dropdown" aria-label="Video Demonstration, clicking here will open a link in a new tab"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
+                {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                {{#if jupyterExampleLink}}<li id="jupyter-examples-option" class="dropdown" aria-label="Jupyter Examples, clicking here will open a link  in a new tab"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
+                {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
+            </ul>
             <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out" aria-label="Log Out">Log Out</a>
         {{/contains}}
     </nav>
