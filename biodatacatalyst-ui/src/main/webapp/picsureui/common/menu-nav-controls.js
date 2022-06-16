@@ -55,9 +55,9 @@ define(['common/pic-dropdown'], function (dropdown) {
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab)) {
-                const selectedSubMenu = selectedTab.querySelector(NAV_DROPDOWN_MENU_CLASS);
+                const selectedSubMenu = selectedTab.parentElement.querySelector(NAV_DROPDOWN_MENU_CLASS);
                 if (selectedSubMenu) {
-                    const dropdownItems = selectedTab.querySelectorAll(DROPDOWN_CLASS);
+                    const dropdownItems = selectedTab.parentElement.querySelectorAll(DROPDOWN_CLASS);
                     !selectedSubMenu.classList.contains(OPEN) && getDropdownToggle(selectedTab).click();
                     move(BACKWARD, dropdownItems);
                 }
@@ -79,9 +79,9 @@ define(['common/pic-dropdown'], function (dropdown) {
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab)) {
-                const selectedSubMenu = selectedTab.querySelector(NAV_DROPDOWN_MENU_CLASS);
+                const selectedSubMenu = selectedTab.parentElement.querySelector(NAV_DROPDOWN_MENU_CLASS);
                 if (selectedSubMenu) {
-                    const dropdownItems = selectedTab.querySelectorAll(DROPDOWN_CLASS);
+                    const dropdownItems = selectedTab.parentElement.querySelectorAll(DROPDOWN_CLASS);
                     !selectedSubMenu.classList.contains(OPEN) && getDropdownToggle(selectedTab).click();
                     move(FORWARD, dropdownItems);
                 }
@@ -138,7 +138,7 @@ define(['common/pic-dropdown'], function (dropdown) {
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             if (isDropdown(selectedTab)) {
-                const selectedSubMenu = selectedTab.querySelector(NAV_DROPDOWN_MENU_CLASS);
+                const selectedSubMenu = selectedTab.parentElement.querySelector(NAV_DROPDOWN_MENU_CLASS);
                 if (selectedSubMenu.classList.contains(OPEN)) {
                     const selectedOption = selectedSubMenu.querySelector('.selected');
                     if (selectedOption) {
@@ -182,9 +182,9 @@ define(['common/pic-dropdown'], function (dropdown) {
         console.debug('nav-menu.js: homeKeyPressed');
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
-            if (isDropdown(selectedTab) && selectedTab.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
-                selectedTab.querySelector(SELECTED_DROPDOWN_ITEM_CLASS).classList.remove(SELECTED);
-                const drowpdownFirstItem = selectedTab.querySelector('.dropdown:first-child');
+            if (isDropdown(selectedTab) && selectedTab.parentElement.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
+                selectedTab.parentElement.querySelector(SELECTED_DROPDOWN_ITEM_CLASS).classList.remove(SELECTED);
+                const drowpdownFirstItem = selectedTab.parentElement.querySelector('.dropdown:first-child');
                 drowpdownFirstItem.classList.add(SELECTED);
                 setActivedescendant(drowpdownFirstItem);
             } else {
@@ -209,9 +209,9 @@ define(['common/pic-dropdown'], function (dropdown) {
         console.debug('nav-menu.js: endKeyPressed');
         if (getView()) {
             const selectedTab = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
-            if (isDropdown(selectedTab) && selectedTab.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
-                selectedTab.querySelector(SELECTED_DROPDOWN_ITEM_CLASS).classList.remove(SELECTED);
-                const item = selectedTab.querySelector('.dropdown:last-child');
+            if (isDropdown(selectedTab) && selectedTab.parentElement.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
+                selectedTab.parentElement.querySelector(SELECTED_DROPDOWN_ITEM_CLASS).classList.remove(SELECTED);
+                const item = selectedTab.parentElement.querySelector('.dropdown:last-child');
                 item.classList.add(SELECTED);
                 setActivedescendant(item);
             } else {
@@ -241,9 +241,9 @@ define(['common/pic-dropdown'], function (dropdown) {
             const letter = String.fromCharCode(e.which);
             let selectedItem = getView().el.querySelector(SELECTED_HEADER_TAB_CLASS);
             let itemList = [];
-            if (isDropdown(selectedItem) && selectedItem.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
-                itemList = selectedItem.querySelectorAll(DROPDOWN_CLASS);
-                selectedItem = selectedItem.querySelector(SELECTED_DROPDOWN_ITEM_CLASS);
+            if (isDropdown(selectedItem) && selectedItem.parentElement.querySelector(OPEN_NAV_DROPDOWN_CLASS)) {
+                itemList = selectedItem.parentElement.querySelectorAll(DROPDOWN_CLASS);
+                selectedItem = selectedItem.parentElement.querySelector(SELECTED_DROPDOWN_ITEM_CLASS);
                 setActivedescendant(selectedItem);
             } else {
                 itemList = getView().el.querySelectorAll(HEADER_BTN_CLASS);
@@ -275,7 +275,7 @@ define(['common/pic-dropdown'], function (dropdown) {
 
     let getDropdownToggle = (el) => {
         if (el) {
-            const toggleEl = el.querySelector(DROPDOWN_TOGGLE_CLASS);
+            const toggleEl = el.parentElement.querySelector(DROPDOWN_TOGGLE_CLASS);
             if (toggleEl) {
                 return toggleEl;
             }
