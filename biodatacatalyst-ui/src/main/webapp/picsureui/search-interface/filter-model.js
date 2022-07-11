@@ -212,7 +212,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     //tree for hierarchy of replacement
                     if(type == 'filter' && existingColumn.type === 'export'){
                         this.removeExportColumn(searchResult.result, existingColumn.type);
-                        //this.toggleExportField(searchResult);
                         this.get('exportColumns').add({
                             type: type,
                             variable: searchResult.result,
@@ -225,8 +224,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                             source: source
                         });
                     }
-                }
-                else{
+                } else {
                     this.get('exportColumns').add({
                         type: type,
                         variable: searchResult.result,
