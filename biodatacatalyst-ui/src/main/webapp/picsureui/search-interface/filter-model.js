@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel", "search-interface/tag-filter-model"],
-    function(BB, HBS, settings, queryBuilder, output, tagFilterModel){
+define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel", "search-interface/tag-filter-model",  "search-interface/search-util"],
+    function(BB, HBS, settings, queryBuilder, output, tagFilterModel, searchUtil){
 
         let FilterModel = BB.Model.extend({
             defaults:{
@@ -41,8 +41,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                                     columnmeta_hpds_path: hpdsPath
                                 }
                             }
-
-
                 };
             },
             addCategoryFilter: function(searchResult, values) {
@@ -56,6 +54,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     values: values,
                     searchResult: searchResult,
                     filterType: "restrict",
+                    isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
                 tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
@@ -73,10 +72,12 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     min: min,
                     max: max,
                     filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
+                    isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
                     topmed: searchResult.result.varId.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
                     this.addExportColumn(searchResult, 'filter');
+                    this.trigger('change', this, {});
             },
             addRequiredFilter: function(searchResult) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -88,10 +89,12 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     searchResult: searchResult,
                     category: this.generateVariableCategory(searchResult),
                     filterType: "any",
+                    isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
                     this.addExportColumn(searchResult, 'filter');
+                    this.trigger('change', this, {});
             },
             addDatatableFilter: function(datatableSelections) {
                 let existingFilterForVariable = this.getByDatatableId(datatableSelections.searchResult.result.dtId);
@@ -105,10 +108,12 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     category: datatableSelections.title,
                     filterType: "anyRecordOf",
                     datatable: true,
+                    isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
                     topmed: datatableSelections.searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                     searchResult: datatableSelections.searchResult
                 });
                 tagFilterModel.requireTag(datatableSelections.searchResult.result.metadata.columnmeta_study_id);
+                this.trigger('change', this, {});
             },
 			toggleExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
@@ -206,22 +211,19 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     //tree for hierarchy of replacement
                     if(type == 'filter' && existingColumn.type === 'export'){
                         this.removeExportColumn(searchResult.result, existingColumn.type);
-                        this.toggleExportField(searchResult);
+                        this.get('exportColumns').add({
+                            type: type,
+                            variable: searchResult.result,
+                            source: source
+                        });
+                    } else if (type == 'filter' && existingColumn.type === 'auto'){
                         this.get('exportColumns').add({
                             type: type,
                             variable: searchResult.result,
                             source: source
                         });
                     }
-                    else if(type == 'filter' && existingColumn.type === 'auto'){
-                        this.get('exportColumns').add({
-                            type: type,
-                            variable: searchResult.result,
-                            source: source
-                        });
-                    }
-                }
-                else{
+                } else {
                     this.get('exportColumns').add({
                         type: type,
                         variable: searchResult.result,
@@ -234,28 +236,27 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 }
             },
             removeExportColumn: function(result, type, source){
-            if(source){
-                let columns = _.filter(this.get('exportColumns').models, (model)=>{
-                        return model.attributes.source === source;
-                });
-                this.get('exportColumns').remove(columns);
-            }
-            else{
-                let column =  type ?
-                 _.find(this.get('exportColumns').models, (model)=>{
-                         return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id && model.attributes.type === type;
-                }) :
-                _.find(this.get('exportColumns').models, (model)=>{
-                        return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id;
-                });
-                if(column){
-                    this.get('exportColumns').remove(column);
-                    if(column.attributes.type != 'auto'){
-                        this.updateConsents();
+                if(source){
+                    let columns = _.filter(this.get('exportColumns').models, (model)=>{
+                            return model.attributes.source === source;
+                    });
+                    this.get('exportColumns').remove(columns);
+                }
+                else{
+                    let column =  type ?
+                    _.find(this.get('exportColumns').models, (model)=>{
+                            return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id && model.attributes.type === type;
+                    }) :
+                    _.find(this.get('exportColumns').models, (model)=>{
+                            return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id;
+                    });
+                    if(column){
+                        this.get('exportColumns').remove(column);
+                        if(column.attributes.type != 'auto'){
+                            this.updateConsents();
+                        }
                     }
                 }
-            }
-
             },
             initializeConsents: function(){
                 var parsedSess = JSON.parse(sessionStorage.getItem("session"));

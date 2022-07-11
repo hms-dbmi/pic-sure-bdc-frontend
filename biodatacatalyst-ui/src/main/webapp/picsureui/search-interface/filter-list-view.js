@@ -118,7 +118,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
             },
             removeFilterHandler: function(event) {
                 filterModel.removeByIndex($(event.target).data('index'));
-                filterModel.get('activeFilters').length === 0 && $('#search-results-div').focus();
+                filterModel.trigger('change', filterModel, {});
             },
             onInfoClick: function(event){
                 //get cached data via id

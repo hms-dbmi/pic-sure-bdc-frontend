@@ -7,13 +7,32 @@ define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs
 function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel,
-		 modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView){
+		 modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView,) {
 
+	let shouldDisableActions = function(isHarmonized) {
+		if (isHarmonized) {
+			let nonHarmonizedFitlers = filterModel.get('activeFilters').filter(filter=>{
+				return filter.get('type') !== 'genomic' && !filter.get('isHarmonized');
+			});
+			if (nonHarmonizedFitlers && nonHarmonizedFitlers.length>0) {
+				return true;
+			}
+		} else {
+			let harmonizedFitlers = filterModel.get('activeFilters').filter(filter=>{
+				return filter.get('type') !== 'genomic' && filter.get('isHarmonized');
+			});
+			if (harmonizedFitlers && harmonizedFitlers.length>0) {
+				return true;
+			}
+		}
+		return false;
+	}
 	let StudyResultsView = BB.View.extend({
 		initialize: function(opts){
 			this.modalTemplate = HBS.compile(modalTemplate);
 			this.noResultHelpView = new noResultHelpView();
 			keyboardNav.addNavigableView("searchResults",this);
+			filterModel.on('change reset add remove', this.updateExportIcons.bind(this));
 			this.on({
 				'keynav-arrowup document': this.previousSearchResult,
 				'keynav-arrowdown document': this.nextSearchResult,
@@ -44,7 +63,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		},
 		resultsDatatableFocus: function(event){
 			this.focusedSection = '#search-results-datatable';
-			this.updateExportIcons();
 			keyboardNav.setCurrentView("searchResults");
 		},
 		resultsBlur: function(){
@@ -85,7 +103,8 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					isExcludedTag: isExcludedTag,
 					isUnusedTag: isUnusedTag,
 					tagScore: tagScore,
-					isExportField: filterModel.isExportFieldFromId(variableId)
+					isExportField: filterModel.isExportFieldFromId(variableId),
+					isHarmonized: searchUtil.isStudyHarmonized(response.metadata.columnmeta_study_id.toLowerCase())
 			}
 			variableInfoCache[variableId].columnmeta_var_id = variableId;
 		},
@@ -114,6 +133,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					varId: rowData.variable_id,
 					dataTableData: response,
 					isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
+					shouldDisableActions: shouldDisableActions(searchUtil.isStudyHarmonized(rowData.study_id)),
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -135,6 +155,9 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 		},
 		filterClickHandler: function(event) {
+			if (event.target.classList.contains('disabled-icon')) {
+				return;
+			}
 			const varId = $(event.target).data('variable-id');
 
 			let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
@@ -165,19 +188,12 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}.bind(this));
 		},
 		databaseClickHandler: function(event) {
+			if (event.target.classList.contains('disabled-icon')) {
+				return;
+			}
 			let resultIndex = $(event.target).data("result-index");
-			this.toggleExportClasses(event.target);
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
-		},
-		toggleExportClasses: function(target) {
-			if (target.classList.contains('glyphicon-log-out')) {
-				target.classList.remove('glyphicon', 'glyphicon-log-out');
-				target.classList.add('fa', 'fa-check-square-o');
-			} else {
-				target.classList.remove('fa', 'fa-check-square-o');
-				target.classList.add('glyphicon', 'glyphicon-log-out');
-			}
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.columnmeta_study_id;
@@ -300,6 +316,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 							dataTableDescription: metadata.columnmeta_var_group_description,
 							description: metadata.columnmeta_description,
 							hashed_var_id: metadata.hashed_var_id,
+							is_harmonized: searchUtil.isStudyHarmonized(metadata.columnmeta_study_id.toLowerCase()),
 							result_index: i
 						}
 
@@ -348,14 +365,18 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						},
 						{
 							render: function (data, type, row, meta) {
+								let shouldDisable = shouldDisableActions(row.is_harmonized);
+								let disabledClass = shouldDisable ? "disabled-icon" : "";
+								let filterTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to configure a filter using this variable.";
+								let exportTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to add this variable to your data retrieval.";
 								if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 									let exportClass = 'glyphicon glyphicon-log-out';
 									if(filterModel.isExportFieldFromId(row.variable_id)){
 										exportClass = 'fa fa-check-square-o';
 									}
-									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to add this variable to your data retrieval." class="'+ exportClass + ' export-icon search-result-action-btn"></i></span>';
+									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
 								}
-								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
+								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
 							},
 							type: 'string',
 							targets: 5
@@ -370,6 +391,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					" Use the up and down arrows to move between search results." +
 					" Use the left and right arrows to move between pages of search results. You are currently on page ");
 			}
+			this.updateExportIcons();
 		}
 	});
 	return StudyResultsView;

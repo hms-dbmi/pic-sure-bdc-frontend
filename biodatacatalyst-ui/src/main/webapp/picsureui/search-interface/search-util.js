@@ -1,5 +1,5 @@
-define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.json"],
-    function($, studiesDataJson, settingsJson){
+define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.json", "search-interface/studies-data-cache"],
+    function($, studiesDataJson, settingsJson, cache){
         let studiesData = JSON.parse(studiesDataJson);
         let settings = JSON.parse(settingsJson);
 
@@ -9,14 +9,20 @@ define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.j
                 This function looks up the study abbreviation for a given study id
             */
             findStudyAbbreviationFromId: function(study_id){
+                if (cache.has(study_id)) {
+                    return cache.get(study_id).abbreviated_name;
+                }
                 let study = _.find(studiesData.bio_data_catalyst,
                     function(studyData){
                         return studyData.study_identifier.toLowerCase() === study_id.toLowerCase();
                     });
                 if (study) {
+                    cache.set(study_id, study);
                     return study.abbreviated_name;
-                }
-                else if (settings.categoryAliases.hasOwnProperty(study_id)){
+                } else if (study_id.toLowerCase() === 'dcc harmonized data set') {
+                    cache.set(study_id, {study_identifier: study_id, abbreviated_name: study_id, is_harmonized: 'Y'});
+                    return study.abbreviated_name;
+                } else if (settings.categoryAliases.hasOwnProperty(study_id)){
                     return settings.categoryAliases[study_id];
                 }
                 return study_id;
@@ -43,6 +49,24 @@ define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.j
 
                 })
                 return activeStudiesList;
+            },
+            isStudyHarmonized: function(study_id) {
+                if (cache.has(study_id)) {
+                    return cache.get(study_id).is_harmonized === 'Y';
+                } else {
+                    let study = _.find(studiesData.bio_data_catalyst,
+                        function(studyData){
+                            return studyData.study_identifier.toLowerCase() === study_id.toLowerCase();
+                        });
+                    if (study) {
+                        cache.set(study_id, study);
+                        return study.is_harmonized === 'Y';
+                    } else if (study_id.toLowerCase() === 'dcc harmonized data set') {
+                        cache.set(study_id, {study_identifier: study_id, abbreviated_name: study_id, is_harmonized: 'Y'});
+                        return true;
+                    }
+                }
+                return false;
             },
             /*
                 This function detects if the passed in element is in the current viewport and
