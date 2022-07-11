@@ -12,14 +12,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 	let shouldDisableActions = function(isHarmonized) {
 		if (isHarmonized) {
 			let nonHarmonizedFitlers = filterModel.get('activeFilters').filter(filter=>{
-				return !filter.get('isHarmonized') && filter.get('type') !== 'genomic';
+				return filter.get('type') !== 'genomic' && !filter.get('isHarmonized');
 			});
 			if (nonHarmonizedFitlers && nonHarmonizedFitlers.length>0) {
 				return true;
 			}
 		} else {
 			let harmonizedFitlers = filterModel.get('activeFilters').filter(filter=>{
-				return filter.get('isHarmonized') && filter.get('type') !== 'genomic';
+				return filter.get('type') !== 'genomic' && filter.get('isHarmonized');
 			});
 			if (harmonizedFitlers && harmonizedFitlers.length>0) {
 				return true;
@@ -192,18 +192,8 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				return;
 			}
 			let resultIndex = $(event.target).data("result-index");
-			// this.toggleExportClasses(event.target);
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
-		},
-		toggleExportClasses: function(target) {
-			if (target.classList.contains('glyphicon-log-out')) {
-				target.classList.remove('glyphicon', 'glyphicon-log-out');
-				target.classList.add('fa', 'fa-check-square-o');
-			} else {
-				target.classList.remove('fa', 'fa-check-square-o');
-				target.classList.add('glyphicon', 'glyphicon-log-out');
-			}
 		},
 		generateStudyAccession: function(response) {
 			let studyAccession = response.metadata.columnmeta_study_id;

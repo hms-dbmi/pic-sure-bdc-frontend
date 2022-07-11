@@ -172,7 +172,6 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     filterType: 'genomic',
                     genomic: true,
                     variantInfoFilters: variantInfoFilters,
-                    isHarmonized: false,
                     topmed: false
                 });
             },
