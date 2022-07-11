@@ -5,7 +5,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"search-interface/modal",
 	"search-interface/genomic-filter-view",
 	"common/spinner",
-	"text!common/unexpected_error.hbs"
+	"text!common/unexpected_error.hbs",
+	"search-interface/search-util",
+	"search-interface/filter-model",
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -14,7 +16,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			modal,
 			genomicFilterView,
 			spinner,
-			helpViewTemplate
+			helpViewTemplate,
+			searchUtil,
+			filterModel,
 		){
 
 	var SearchView = BB.View.extend({
@@ -123,6 +127,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				}}),
 				success: function(response){
 					//deferredSearchResults.resolve();
+					this.processResults(response);
 					this.updateTags(response);
 					$('#tag-filters').show();
 					$('#search-results').show();
@@ -142,7 +147,36 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			spinner.medium(deferredSearchResults, '#spinner-holder', '');
 			$('#spinner-holder').addClass('big-grow');
 		},
-
+		// Reorders the results where the variables that are not compatible with the filters are moved to the end of the list.
+		processResults: function(response){
+			response.results.searchResults =  _.map(response.results.searchResults, function(searchResult){
+				searchResult.result.is_harmonized = searchUtil.isStudyHarmonized(searchResult.result.studyId);
+				return searchResult;
+			});
+			const nonHarmonizedFitlers = filterModel.get('activeFilters').filter(filter=>{
+				return !filter.get('isHarmonized') && filter.get('type') !== 'genomic';
+			});
+			const harmonizedFilters = filterModel.get('activeFilters').filter(filter=>{
+				return filter.get('isHarmonized') && filter.get('type') !== 'genomic';
+			});
+			if (nonHarmonizedFitlers && nonHarmonizedFitlers.length>0) {
+				const harmonizedSearchResults = response.results.searchResults.filter(searchResult => {
+					return searchResult.result.is_harmonized;
+				});
+				const nonHarmonizedResults = response.results.searchResults.filter(searchResult => {
+					return !searchResult.result.is_harmonized;
+				});
+				response.results.searchResults = nonHarmonizedResults.concat(harmonizedSearchResults);
+			} else if (harmonizedFilters && harmonizedFilters.length>0) {
+				const harmonizedSearchResults = response.results.searchResults.filter(searchResult => {
+					return searchResult.result.is_harmonized;
+				});
+				const nonHarmonizedResults = response.results.searchResults.filter(searchResult => {
+					return !searchResult.result.is_harmonized;
+				});
+				response.results.searchResults = harmonizedSearchResults.concat(nonHarmonizedResults);
+			}
+		},
 		openGenomicFilteringModal: function() {
 			const genomicFilter = new genomicFilterView({el: $(".modal-body")});
 			genomicFilter.render()

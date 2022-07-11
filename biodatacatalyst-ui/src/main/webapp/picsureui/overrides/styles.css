@@ -785,3 +785,7 @@ remove when above bug is fixed */
     line-height: 1;
     height: fit-content;
 }
+
+.disabled-icon {
+    color: #adadad;
+}

@@ -15,7 +15,13 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
 				this.modalTemplate = HBS.compile(modalTemplate);
 				this.varId = opts.varId;
+				const disabledClass =  opts.shouldDisableActions ? "disabled-icon" : "";
+				const filterTitleText = opts.shouldDisableActions ? "Variable conflicts with current filter parameters." : "Click to configure a filter using this variable.";
+				const exportTitleText = opts.shouldDisableActions ? "Variable conflicts with current filter parameters." : "Click to add this variable to your data retrieval.";
 				variableInfoCache[opts.varId].isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
+				variableInfoCache[opts.varId].disabledClass = disabledClass;
+				variableInfoCache[opts.varId].filterTitleText = filterTitleText;
+				variableInfoCache[opts.varId].exportTitleText = exportTitleText;
 				this.dataTableData = opts.dataTableData;
 				tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
 				tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
@@ -71,6 +77,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 					this.render();
 			},
 			filterClickHandler: function(event) {
+				if (event.target.classList.contains('disabled-icon')) {
+					return;
+				}
 				let variableId = _.find($('.modal .fa-filter'),
 					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset.id;
 
@@ -154,6 +163,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				}
 			},
 			databaseClickHandler: function(event) {
+				if (event.target.classList.contains('disabled-icon')) {
+					return;
+				}
 
 				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
 					return filterButton.dataset.target === "variable";
