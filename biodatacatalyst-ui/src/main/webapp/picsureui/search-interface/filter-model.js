@@ -108,7 +108,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     category: datatableSelections.title,
                     filterType: "anyRecordOf",
                     datatable: true,
-                    isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
+                    isHarmonized: searchUtil.isStudyHarmonized(datatableSelections.searchResult.result.metadata.columnmeta_study_id),
                     topmed: datatableSelections.searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                     searchResult: datatableSelections.searchResult
                 });
