@@ -789,3 +789,18 @@ remove when above bug is fixed */
 .disabled-icon {
     color: #adadad;
 }
+
+.results-panel {
+    background-color: #e3eefd;
+    height: fit-content;
+}
+
+.panel .results-panel-header {
+    color: var(--catalyst-dark-grey);
+    border-bottom: none;
+    padding: 2px 15px;
+}
+
+.panel .search-resutls-panel-heading {
+    padding: 5px;
+}
