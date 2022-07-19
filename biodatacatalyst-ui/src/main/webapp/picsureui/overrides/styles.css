@@ -13,6 +13,17 @@
     --catalyst-dark-grey: #393939;
 }
 
+/*Overrides for bootstrap*/
+.btn-primary {
+    background-color: var(--catalyst-blue);
+    border-color: var(--catalyst-blue);
+}
+.btn-primary:hover {
+    background-color: var(--catalyst-dark-blue);
+    border-color: var(--catalyst-dark-blue);
+}
+/*************************/
+
 #main-content {
     width: 95%;
     position: relative;
@@ -484,7 +495,7 @@ input[type='checkbox'].categorical-filter-input {
     align-items: center;
 }
 
-.space-out i {
+.space-out i:not(.fa-caret-down) {
     color: #337ab7;
     font-weight: bold;
 }
@@ -804,3 +815,35 @@ remove when above bug is fixed */
 .panel .search-resutls-panel-heading {
     padding: 5px 15px;
 }
+
+/************************* Outline Buttons ******************************/
+.btn-outline {
+    border: 1px solid #e5e5e5;
+    background-color: transparent;
+    border-radius: 4px;
+}
+
+.btn-outline.danger:hover {
+    border: 1px solid var(--nhlbi-red);
+    background-color: var(--nhlbi-red);
+    color: white;
+}
+
+.btn-outline.danger {
+    border: 1px solid var(--nhlbi-red);
+    background-color: white;
+    color: var(--nhlbi-red);
+}
+
+.btn-outline.primary {
+    border: 1px solid var(--catalyst-blue);
+    background-color: white;
+    color: var(--catalyst-blue);
+}
+
+.btn-outline.primary:hover {
+    border: 1px solid var(--catalyst-blue);
+    background-color: var(--catalyst-blue);
+    color: white;
+}
+/************************* End Outline Buttons ***************************/
