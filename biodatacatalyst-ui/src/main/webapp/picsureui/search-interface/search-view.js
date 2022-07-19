@@ -77,6 +77,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			"click #search-button": "submitSearch",
 			"keypress #search-box": "handleSearchKeypress",
 			"click #genomic-filter-btn": "openGenomicFilteringModal",
+			"click #search-reset-button": "resetPage",
 		},
 
 		updateTags: function(response) {
@@ -87,7 +88,9 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.updateResponse(response);
 			this.searchResultsView.render();
 		},
-
+		resetPage: function(){
+			confirm() ? window.location.reload() : null;
+		},
 		submitSearch: function(e) {
 			if(e){
 				this.searchTerm = $('#search-box').val();
