@@ -155,7 +155,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 				}
 			},
 			filterStigmatizedVariables: function(results){
-				return results.filter(searchResult => !searchResult.result.metadata.columnmeta_is_stigmatized);
+				return results.filter(searchResult => searchResult.result.metadata.columnmeta_is_stigmatized !== true);
 			},
 			filterKeypressHandler: function(event){
 				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
