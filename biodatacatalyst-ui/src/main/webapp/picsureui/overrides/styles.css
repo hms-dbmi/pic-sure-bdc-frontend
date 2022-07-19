@@ -484,7 +484,7 @@ input[type='checkbox'].categorical-filter-input {
     align-items: center;
 }
 
-.space-out i {
+.space-out i:not(.fa-caret-down) {
     color: #337ab7;
     font-weight: bold;
 }
