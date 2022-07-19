@@ -89,7 +89,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.render();
 		},
 		resetPage: function(){
-			confirm() ? window.location.reload() : null;
+			confirm("By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.") ? window.location.reload() : null;
 		},
 		submitSearch: function(e) {
 			if(e){
