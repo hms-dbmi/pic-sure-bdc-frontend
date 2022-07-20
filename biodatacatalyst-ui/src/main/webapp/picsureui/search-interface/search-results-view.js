@@ -348,8 +348,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					"tabIndex": -1,
                     columns: [
                         {title:'Study', data:'abbreviation'},
-						{title:'Dataset ID', data:'table_id'},
-                        {title:'Variable ID', data:'variable_id'},
                         {title:'Variable Name', data:'name'},
                         {title:'Variable Description',data:'description'},
 						{title:'Actions'},
@@ -359,7 +357,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					},
 					columnDefs: [
 						{
-							targets: [0, 1, 2, 3, 4, 5],
+							targets: [0, 1, 2, 3],
 							className: 'dt-center',
 							type: 'string'
 						},
@@ -379,7 +377,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
 							},
 							type: 'string',
-							targets: 5
+							targets: 3
 						}
 					],
                 });
