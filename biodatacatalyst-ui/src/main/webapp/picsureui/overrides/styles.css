@@ -240,10 +240,12 @@
 }
 
 #studies-access .studies-sub-title {
-    max-width: 60%;
+    max-width: 70%;
+    font-size: 16px;
     margin: 0;
 }
 #studies-access .studies-title {
+    font-size: 28px;
     margin: 0;
 }
 #studies-access .freeze-message {
@@ -898,7 +900,7 @@ remove when above bug is fixed */
 }
 .explor-panel {
     width: 1000px;
-    height: 340px;
+    height: 350px;
     margin-bottom: 0;
 }
 .explor-panel:not(:first-child) {
@@ -927,6 +929,15 @@ remove when above bug is fixed */
     width: 50%;
     display: flex;
     flex-direction: row;
+}
+.access-title {
+    font-size: 24px;
+}
+.participants-container h4{
+    font-size: 22px;
+}
+.participants-container h5{
+    font-size: 16px;
 }
 .body-spacee:not(:last-child) {
     padding-right: 20px;

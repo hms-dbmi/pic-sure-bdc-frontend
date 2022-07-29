@@ -3,7 +3,7 @@
         <div class="panel-heading no-border center-panel">
             <div class="side-border heading-space">
                 <div>
-                    <h4>Authorized Access</h4>
+                    <h4 class="access-title">Authorized Access</h4>
                     <button type="button" data-href="/picsureui/queryBuilder" aria-label="Explore Authorized Access"
                         {{#if authorizedAccess}}class="btn btn-primary btn-blue clickable-button"{{/if}}
                         {{#unless authorizedAccess}}class="btn btn-primary btn-grey"{{/unless}}
@@ -11,7 +11,7 @@
                         Explore Now
                     </button>
                 </div>
-                <div>
+                <div class="participants-container">
                     <h4 class="">{{auth_studies_cnt}} Studies</h4>
                     <h5 class="" id="authorized-participants"></h5>
                     <div id="authorized-participants-spinner"></div>
@@ -19,10 +19,10 @@
             </div>
             <div class="heading-space">
                 <div>
-                    <h4>Open Access</h4>
+                    <h4 class="access-title">Open Access</h4>
                     <button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/openAccess" aria-label="Explore Open Access">Explore Now</button>
                 </div>
-                <div>
+                <div class="participants-container">
                     <h4 id="open-studies-count" class=""></h4>
                     <h5 id="open-participants" class=""></h5>
                     <div id="open-participants-spinner"></div>
