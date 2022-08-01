@@ -14,10 +14,21 @@
         margin-left: 2px;
         cursor: pointer;
     }
+    .heading-sub-text {
+        font-size: 0.75em;
+    }
+    .var-heading {
+        font-weight: 700;
+    }
+    .filter-buttons-container {
+        min-width: fit-content;
+        align-self: flex-start;
+    }
 </style>
 <div class="panel">
     <div class="panel-heading">
-        Added Variable Filters
+        <span>Added Variable Filters</span>
+        <div class="heading-sub-text">Active filters applied to your cohort.</div>
     </div>
     <div id="filter-list" class="panel-body" tabindex=0 aria-activedescendent="">
     {{#each activeFilters}}
@@ -25,7 +36,7 @@
             <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_group_id}}">
                 <div class="filter-header">
                     <div>
-                        <span>Filter: </span> {{variables.length}} variable(s) in {{this.searchResult.result.metadata.columnmeta_var_group_id}}
+                        <span>Filter on {{variables.length}} variable(s) in {{this.searchResult.result.metadata.derived_group_name}} </span> 
                     </div>
                     <div class="filter-buttons-container">
                         <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
@@ -33,13 +44,7 @@
                     </div>
                 </div>
                 <div class="filter">
-                    {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
-                        <div><span>Dataset Name:</span> {{this.searchResult.result.metadata.columnmeta_var_group_description}}</div>
-                    {{/if}}
-                    {{#if this.searchResult.result.metadata.columnmeta_var_group_id}}
-                        <div><span>Dataset Accession:</span> {{this.searchResult.result.metadata.columnmeta_var_group_id}}</div>
-                    {{/if}}
-                    <div class="study"><span>Study: </span>{{this.searchResult.result.metadata.columnmeta_study_id}}</div>
+                    <div><span>Study: </span>{{this.searchResult.result.metadata.derived_study_abv_name}} ({{this.searchResult.result.metadata.columnmeta_study_id}})</div>
                 </div>
                 <div class="value"> Participants with any value recorded for any of these variables will be included if they match all other defined filters</div>
             </div>
@@ -47,7 +52,7 @@
             <div class="filter-container with-wrap" id="genomic">
                 <div class="filter-header">
                     <div>
-                        <div>Genomic Filter</div>
+                        <span>Genomic Filter</span>
                     </div>
                     <div class="filter-buttons-container">
                         <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
@@ -60,24 +65,17 @@
             <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_id}}">
                     <div class="filter-header">
                         <div>
-                            <span>Filter: </span> {{#if this.searchResult.result.metadata.columnmeta_name}}<span class="var-name">{{this.searchResult.result.metadata.columnmeta_name}}</span>{{/if}}
+                            <span class="var-heading">Filter on variable {{#if this.searchResult.result.metadata.columnmeta_name}}{{this.searchResult.result.metadata.columnmeta_name}}</span>{{/if}}
                         </div>
-                        <div>
+                        <div class="filter-buttons-container">
                             <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
                             <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
                             <i class="fa fa-pencil-square-o edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
                         </div>
                     </div>
                 <div class="filter">
-                    <div><span>Variable Accession: </span>{{this.searchResult.result.metadata.columnmeta_var_id}}</div>
-                    <div><span>Variable Name: </span>{{this.searchResult.result.metadata.columnmeta_name}}</div>
+                    <div><span>Study: </span>{{this.searchResult.result.metadata.derived_study_abv_name}} ({{this.searchResult.result.metadata.columnmeta_study_id}})</div>
                     <div class="value"><span>Value: </span>{{getFilterTypeDescription this}}</div>
-                    <div class="study"><span>Study: </span>{{this.searchResult.result.metadata.columnmeta_study_id}}</div>
-                    {{#if this.searchResult.result.metadata.columnmeta_var_group_description}}
-                        <div class="dataset">
-                            <span>Dataset Name: </span>{{this.searchResult.result.metadata.columnmeta_var_group_description}}
-                        </div>
-                    {{/if}}
                 </div>
             </div>
         {{/if}}

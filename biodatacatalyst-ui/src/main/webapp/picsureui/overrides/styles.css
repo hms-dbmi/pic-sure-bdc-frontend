@@ -230,14 +230,28 @@
 }
 
 #studies-access {
-      margin-top: 30px;
-      width:100%;
-      border: 1px solid #aaa;
-      border-radius: 8px;
-      padding: 8px 0px;
-      background: #fff;
-      min-width: 1200px;
-  }
+    margin-top: 30px;
+    width:100%;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    padding: 8px 0px;
+    background: #fff;
+    min-width: 1200px;
+}
+
+#studies-access .studies-sub-title {
+    max-width: 70%;
+    font-size: 16px;
+    margin: 0;
+}
+#studies-access .studies-title {
+    font-size: 28px;
+    margin: 0;
+}
+#studies-access .freeze-message {
+    text-align: right;
+    min-width: 525px;
+}
 
 #studies-access > div {
     margin: 10px 0px;
@@ -847,3 +861,88 @@ remove when above bug is fixed */
     color: white;
 }
 /************************* End Outline Buttons ***************************/
+
+/**************** Explore Page ****************/
+.panel .panel-heading.no-border {
+    border-bottom: none;
+}
+.plain-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    list-style-type: none;
+    font-size: 1.2em;
+    padding: 0;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+.plain-list li {
+    display: flex;
+    width: 100%;
+    margin-bottom: 2.5px;
+    align-items: center;
+}
+.plain-list li i {
+    width: 20%;
+    font-size: 2.5em;
+    text-align: center;
+}
+.plain-list li span {
+    width: 80%;
+}
+.panel-outline {
+    border: 1px solid #aaa;
+    border-radius: 8px;
+}
+.side-border {
+    border-right: 1px solid #aaa;
+}
+.explor-panel {
+    width: 1000px;
+    height: 350px;
+    margin-bottom: 0;
+}
+.explor-panel:not(:first-child) {
+    margin-left: 20px;
+}
+.access-info {
+    width: 50%;
+}
+.center-panel {
+    display: flex;
+    justify-content: center;
+}
+.heading-space {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.heading-space:not(:last-child) {
+    padding-right: 20px;
+}
+.heading-space:not(:first-child) {
+    margin-left: 20px;
+}
+.body-space {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+}
+.access-title {
+    font-size: 24px;
+}
+.participants-container h4{
+    font-size: 22px;
+}
+.participants-container h5{
+    font-size: 16px;
+}
+.body-spacee:not(:last-child) {
+    padding-right: 20px;
+}
+.body-space:not(:first-child) {
+    margin-left: 20px;
+}
+/*************** End Explore Page ****************/

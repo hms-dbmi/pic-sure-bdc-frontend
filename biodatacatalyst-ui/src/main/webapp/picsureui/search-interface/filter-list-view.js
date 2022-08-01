@@ -106,6 +106,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         }
                         if (filter.max) {
                             return "Include only participants with values less than " + filter.max;
+                        } 
+                        if (!filter.min && !filter.max) {
+                            return "Include only participants with values";
                         }
                         break;
                     case 'required':
