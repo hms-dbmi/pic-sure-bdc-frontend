@@ -20,7 +20,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			searchUtil,
 			filterModel,
 		){
-
+	const authMessage = "By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.";
+	const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
 	var SearchView = BB.View.extend({
 
 		initialize: function(opts){
@@ -89,7 +90,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.render();
 		},
 		resetPage: function(){
-			confirm("By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.") ? window.location.reload() : null;
+			confirm(this.isOpenAccess ? openAccessMessage : authMessage) ? window.location.reload() : null;
 		},
 		submitSearch: function(e) {
 			if(e){
