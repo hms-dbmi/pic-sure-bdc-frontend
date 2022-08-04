@@ -67,7 +67,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                         } else  {
                             // If firefox use this.navigate() to go back to the previous page otherwise use window.history.back()
                             // Firefox does not handle window.history.back() well for this use case.
-                            if (navigator.userAgent.indexOf("Firefox") !== -1) {
+                            if (navigator.userAgent && navigator.userAgent.indexOf("Firefox") !== -1) {
                                 this.navigate('picsureui/queryBuilder#', {trigger:true, replace:false});
                             } else {
                                 window.history.back();
