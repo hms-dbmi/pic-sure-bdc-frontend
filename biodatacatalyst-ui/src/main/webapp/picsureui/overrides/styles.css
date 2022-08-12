@@ -509,7 +509,7 @@ input[type='checkbox'].categorical-filter-input {
     align-items: center;
 }
 
-.space-out i:not(.fa-caret-down) {
+.space-out i.fa-question-circle {
     color: #337ab7;
     font-weight: bold;
 }
@@ -726,21 +726,13 @@ remove when above bug is fixed */
     margin-bottom: 20px;
 }
 
-.image-container img {
-    max-width: 600px;
+.image-container {
     border: 1px solid black;
-}
-
-.image-container .download-button {
-    position: relative;
-    font-size: 1.2em;
-    left: -39px;
-    top: -1px;
-    height: fit-content;
+    margin-right: 8px;
 }
 
 .visualization-body {
-    min-height: 100px;
+    min-height: 300px;
 }
 
 .visualizations-modal h5 {
