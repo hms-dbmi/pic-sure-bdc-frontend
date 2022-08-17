@@ -48,8 +48,6 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
             let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, "ca0ad4a9-130a-3a8a-ae00-e35b07f1108b");
             query.resourceCredentials = {"Authorization" : "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
             queryBuilder.updateConsentFilters(query, settings);
-            //$('#images-spinner-holder').html(spinner.getSpinner());
-            //let data = JSON.parse(imageJson);
             this.model.set('spinning', true);
             let deferredResults = $.ajax({
 				url: window.location.origin + '/picsure/query/sync',
