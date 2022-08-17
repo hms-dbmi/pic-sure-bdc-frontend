@@ -38,7 +38,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/numerical-filte
                     function(){
                         console.log(arguments);
                     },
-                    settings.picSureResourceId)
+                    JSON.parse(sessionStorage.getItem('isOpenAccess')) ? 
+                        settings.openAccessResourceId : 
+                        settings.picSureResourceId)
 
             }
         });
