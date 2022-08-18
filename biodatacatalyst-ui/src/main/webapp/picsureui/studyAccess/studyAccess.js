@@ -1,8 +1,8 @@
 define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json",
-        "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner", "picSure/settings",
+        "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner",
         "overrides/outputPanel", "picSure/search"],
     function($, BB, HBS, studyAccessTemplate, studyAccessConfiguration,
-             transportErrors, queryBuilder, picSureSettings, spinner, settings,
+             transportErrors, queryBuilder, settings, spinner,
              outputPanelOverrides, search){
 
         var studyAccess = {
@@ -10,8 +10,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
             open_cnts: {},
             auth_cnts: {},
             resources: {
-                open: picSureSettings.openAccessResourceId,
-                auth: picSureSettings.picSureResourceId
+                open: settings.openAccessResourceId,
+                auth: settings.picSureResourceId
             }
         };
 

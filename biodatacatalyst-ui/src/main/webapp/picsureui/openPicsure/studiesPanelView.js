@@ -1,5 +1,5 @@
-define(["jquery","backbone", "handlebars", "text!../settings/settings.json", "text!../studyAccess/studies-data.json", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel", "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",],
-		function($, BB, HBS, settings, studiesDataJson, studiesPanelTemplate, outputModel, keyboardNav, helpView, modal) {
+define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel", "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",],
+		function($, BB, HBS, studiesPanelTemplate, outputModel, keyboardNav, helpView, modal) {
     const LIST_ITEM = 'study-container'
     const SELECTED = 'selected';
 

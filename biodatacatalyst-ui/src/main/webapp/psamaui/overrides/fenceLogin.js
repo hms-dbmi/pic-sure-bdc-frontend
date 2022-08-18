@@ -1,8 +1,21 @@
-define(['picSure/psamaSettings', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
-        'common/session', 'picSure/settings', 'common/transportErrors', 'util/notification', 'common/searchParser'],
-    function(psamaSettings, $, HBS, loginTemplate,
-             session, picSureSettings, transportErrors, notification, searchParser){
-        var loginTemplate = HBS.compile(loginTemplate);
+define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs',
+        'common/session', 'common/transportErrors', 'util/notification', 'common/searchParser'],
+    function(settings, $, HBS, loginTemplate,
+             session, transportErrors, notification, searchParser){
+        let loginTemplate = HBS.compile(loginTemplate);
+
+        let sessionInit = function(data) {
+            session.sessionInit(data);
+            let currentSession = JSON.parse(sessionStorage.getItem("session"));
+            if (!currentSession.privileges || currentSession.privileges.length === 0) {
+                history.pushState({}, "", "/picsureui/not_authorized");
+                return;
+            }
+            if (currentSession.privileges && currentSession.privileges.length > 1) {
+                currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
+            }
+            sessionStorage.setItem("session", JSON.stringify(currentSession));
+        }
 
         return {
             showLoginPage : function () {
@@ -20,7 +33,7 @@ define(['picSure/psamaSettings', 'jquery', 'handlebars', 'text!login/fence_login
                             code: code
                         }),
                         contentType: 'application/json',
-                        success: session.sessionInit,
+                        success: sessionInit,
                         error: function(data){
                             notification.showFailureMessage("Failed to authenticate with provider. Try again or contact administrator if error persists.")
                             history.pushState({}, "", sessionStorage.not_authorized_url? sessionStorage.not_authorized_url : "/psamaui/not_authorized?redirection_url=/picsureui");
@@ -31,10 +44,10 @@ define(['picSure/psamaSettings', 'jquery', 'handlebars', 'text!login/fence_login
 
                     // Show the fence_login template, with the generated fenceLoginURL
                     $('#main-content').html(loginTemplate({
-                        fenceURL : psamaSettings.idp_provider_uri + "/user/oauth2/authorize"+
+                        fenceURL : settings.idp_provider_uri + "/user/oauth2/authorize"+
                             "?response_type=code"+
                             "&scope=user+openid"+
-                            "&client_id=" + psamaSettings.fence_client_id +
+                            "&client_id=" + settings.fence_client_id +
                             "&redirect_uri=" + window.location.protocol
                             + "//"+ window.location.hostname
                             + (window.location.port ? ":"+window.location.port : "")
