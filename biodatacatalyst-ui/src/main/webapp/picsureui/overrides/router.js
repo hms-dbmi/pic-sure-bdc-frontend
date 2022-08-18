@@ -1,4 +1,4 @@
-define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "text!../settings/settings.json", "filter/filterList",
+define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "picSure/settings", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "overrides/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
         "search-interface/query-results-view", "text!openPicsure/openMainLayout.hbs", "openPicsure/studiesPanelView", "search-interface/filter-model"],
@@ -25,12 +25,12 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/openAccess']").addClass('active');
             $('#main-content').empty();
-            $('#main-content').append(HBS.compile(openLayout)(JSON.parse(settings)));
+            $('#main-content').append(HBS.compile(openLayout)(settings));
             const studiesPanel = new studiesPanelView();
             studiesPanel.render();
             $('#studies-list-panel').append(studiesPanel.$el);
             const outputPanelView = new outputPanel.View({studiesPanel: studiesPanel});
-            const query = queryBuilder.generateQueryNew({}, {}, null, JSON.parse(settings).openAccessResourceId);
+            const query = queryBuilder.generateQueryNew({}, {}, null, settings.openAccessResourceId);
             outputPanelView.render();
             $('#query-results').append(outputPanelView.$el);
 

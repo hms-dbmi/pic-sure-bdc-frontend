@@ -1,6 +1,5 @@
-define(["output/outputPanel", "jquery", "text!../settings/settings.json", "underscore"], function(outputPanel, $, settingsJson, _){
+define(["output/outputPanel", "jquery", "picSure/settings", "underscore"], function(outputPanel, $, settings, _){
 	jasmine.pp = function(obj){return JSON.stringify(obj, undefined, 2);};
-	var settings = JSON.parse(settingsJson);
 	describe("outputPanel", function(){
 
 		var outputPanelInstance;

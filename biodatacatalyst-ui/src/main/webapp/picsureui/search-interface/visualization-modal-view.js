@@ -33,7 +33,7 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
         },
         getInfo: function() {
             $.ajax({
-				url: window.location.origin + '/picsure/info/ca0ad4a9-130a-3a8a-ae00-e35b07f1108b',
+				url: window.location.origin + '/picsure/info/' + settings.visualizationResourceId,
 				type: 'POST',
 				contentType: 'application/json',
 				success: function(response){
@@ -45,13 +45,11 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
 			});
         },
         getImages: function(){
-            let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, "ca0ad4a9-130a-3a8a-ae00-e35b07f1108b");
+            let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, settings.visualizationResourceId);
             query.resourceCredentials = {"Authorization" : "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
             queryBuilder.updateConsentFilters(query, settings);
-            //$('#images-spinner-holder').html(spinner.getSpinner());
-            //let data = JSON.parse(imageJson);
             this.model.set('spinning', true);
-            let deferredResults = $.ajax({
+            $.ajax({
 				url: window.location.origin + '/picsure/query/sync',
 				type: 'POST',
 				contentType: 'application/json',

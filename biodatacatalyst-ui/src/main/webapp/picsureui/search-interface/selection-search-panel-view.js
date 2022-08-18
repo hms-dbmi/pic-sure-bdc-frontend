@@ -1,5 +1,13 @@
-define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-search-panel.hbs', 'common/keyboard-nav'],
-    function($, BB, HBS, searchPanelTemplate, keyboardNav) {
+define(['jquery',
+        'backbone',
+        'handlebars', 
+        'text!search-interface/selection-search-panel.hbs', 
+        'common/keyboard-nav',
+    ],
+    function($, BB, HBS, 
+            searchPanelTemplate, 
+            keyboardNav,
+    ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';
         let selectionSearchView = BB.View.extend({
@@ -39,8 +47,8 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
             search: function(e) {
                 console.debug('search', e.target.value);
                 if (e.target.value.length > 1) {
-                    this.data.searchResultOptions = this.data.results.filter((gene) => {
-                        return gene.toLowerCase().startsWith(e.target.value.toLowerCase());
+                    this.data.searchResultOptions = this.data.results.filter((result) => {
+                        return result.toLowerCase().includes(e.target.value.toLowerCase());
                     });
                     this.renderLists();
                 }else if (e.target.value.length === 0) {
@@ -77,7 +85,7 @@ define(['jquery', 'backbone','handlebars', 'text!search-interface/selection-sear
             clearSelection: function() {
                 console.debug('clearSelection from here');
                 this.$el.find('#'+this.data.searchId).val('');
-                this.data.selectedResults.forEach((item) => {
+                this.data.selectedResults.reverse().forEach((item) => {
                     this.data.searchResultOptions.indexOf(item) === -1 && this.data.searchResultOptions.unshift(item);
                 });
                 this.data.selectedResults = [];

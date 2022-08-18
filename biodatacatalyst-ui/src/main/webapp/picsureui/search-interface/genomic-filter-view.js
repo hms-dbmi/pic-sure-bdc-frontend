@@ -31,6 +31,8 @@ define(['jquery', 'backbone','handlebars',
                     this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.split('"')[1];
                     this.data.classDescription = this.infoColumns.find(col => col.key === classKey).description.split('"')[1];
                     this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.split('"')[1];
+                    // TODO: Do this in the backend at some point
+                    this.data.severityDescription = this.data.severityDescription.substring(0, this.data.severityDescription.lastIndexOf(','))+'.';
                     isLoading = false;
                     this.render();
                 }.bind(this));
