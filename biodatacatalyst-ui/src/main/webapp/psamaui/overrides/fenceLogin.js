@@ -2,7 +2,7 @@ define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs'
         'common/session', 'common/transportErrors', 'util/notification', 'common/searchParser'],
     function(settings, $, HBS, loginTemplate,
              session, transportErrors, notification, searchParser){
-        let loginTemplate = HBS.compile(loginTemplate);
+        let compiledLoginTemplate = HBS.compile(loginTemplate);
 
         let sessionInit = function(data) {
             session.sessionInit(data);
@@ -43,7 +43,7 @@ define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs'
                     console.log("FENCE-showLoginPage() no code in query string, redirecting to FENCE");
 
                     // Show the fence_login template, with the generated fenceLoginURL
-                    $('#main-content').html(loginTemplate({
+                    $('#main-content').html(compiledLoginTemplate({
                         fenceURL : settings.idp_provider_uri + "/user/oauth2/authorize"+
                             "?response_type=code"+
                             "&scope=user+openid"+
