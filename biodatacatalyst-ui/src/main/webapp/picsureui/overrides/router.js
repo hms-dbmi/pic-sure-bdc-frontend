@@ -83,8 +83,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                     $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
 
                     $('#main-content').empty();
-                    let parsedSettings = this.settings;
-                    $('#main-content').append(this.layoutTemplate(parsedSettings));
+                    $('#main-content').append(this.layoutTemplate(settings));
 
                     var queryView = new queryResultsView.View({model: new queryResultsView.Model()});
 
@@ -93,7 +92,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
 
                     var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 
-                    var query = queryBuilder.generateQueryNew({},{}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
+                    var query = queryBuilder.generateQueryNew({},{}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
 
                     let searchView = new SearchView({
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),

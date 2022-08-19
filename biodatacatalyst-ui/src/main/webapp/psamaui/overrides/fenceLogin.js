@@ -3,20 +3,6 @@ define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs'
     function(settings, $, HBS, loginTemplate,
              session, transportErrors, notification, searchParser){
         let compiledLoginTemplate = HBS.compile(loginTemplate);
-
-        let sessionInit = function(data) {
-            session.sessionInit(data);
-            let currentSession = JSON.parse(sessionStorage.getItem("session"));
-            if (!currentSession.privileges || currentSession.privileges.length === 0) {
-                history.pushState({}, "", "/picsureui/not_authorized");
-                return;
-            }
-            if (currentSession.privileges && currentSession.privileges.length > 1) {
-                currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
-            }
-            sessionStorage.setItem("session", JSON.stringify(currentSession));
-        }
-
         return {
             showLoginPage : function () {
                 var queryObject = searchParser();
@@ -33,7 +19,7 @@ define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs'
                             code: code
                         }),
                         contentType: 'application/json',
-                        success: sessionInit,
+                        success: session.sessionInit,
                         error: function(data){
                             notification.showFailureMessage("Failed to authenticate with provider. Try again or contact administrator if error persists.")
                             history.pushState({}, "", sessionStorage.not_authorized_url? sessionStorage.not_authorized_url : "/psamaui/not_authorized?redirection_url=/picsureui");
