@@ -1,10 +1,11 @@
 define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "picSure/settings", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "overrides/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
-        "search-interface/query-results-view", "text!openPicsure/openMainLayout.hbs", "openPicsure/studiesPanelView", "search-interface/filter-model"],
+        "search-interface/query-results-view", "text!openPicsure/openMainLayout.hbs", "openPicsure/studiesPanelView", "search-interface/filter-model",
+        "search-interface/tag-filter-model"],
     function(BB, HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
-             FilterListView, SearchView, ToolSuiteView, queryResultsView, openLayout, studiesPanelView, filterModel){
+             FilterListView, SearchView, ToolSuiteView, queryResultsView, openLayout, studiesPanelView, filterModel, tagFilterModel){
         const genomicFilterWarningText = 'Genomic filters will be removed from your query as they are not currently supported in Open Access. Are you sure you would like to proceed to Open Access? \n\nClick OK to proceed to open access or cancel to reutrn to authorized access.';
         let displayDataAccess = function() {
             $(".header-btn.active").removeClass('active');
@@ -20,10 +21,17 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
             });
             return genomicFilters;
         };
+        let getInvalidActiveFilters = function() {
+            const session = JSON.parse(sessionStorage.getItem("session"));
+            return filterModel.get('activeFilters').filter(filter => {
+                const filterStudyId = '\\\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\\\'
+                return !session.queryScopes.includes(filterStudyId);
+            });
+        };
         let displayOpenAccess = function() {
             sessionStorage.setItem("isOpenAccess", true);
             $(".header-btn.active").removeClass('active');
-            $(".header-btn[data-href='/picsureui/openAccess']").addClass('active');
+            $(".header-btn[data-href='/picsureui/openAccess#']").addClass('active');
             $('#main-content').empty();
             $('#main-content').append(HBS.compile(openLayout)(settings));
             const studiesPanel = new studiesPanelView();
@@ -72,6 +80,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                             } else {
                                 window.history.back();
                             }
+                            return;
                         }
                     } else {
                         displayOpenAccess();
@@ -79,6 +88,19 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                 },
                 "picsureui/queryBuilder(/)" : function() {
                     sessionStorage.setItem("isOpenAccess", false);
+                    let antiScopes = getInvalidActiveFilters();
+                    if (antiScopes && antiScopes.length > 0) {
+                        if(confirm('Got bad stuff, remove?')) {
+                            filterModel.get('activeFilters').remove(antiScopes, {silent: true});
+                            antiScopes.forEach(filter => {
+                                tagFilterModel.removeRequiredTag(filter.get('searchResult').result.metadata.columnmeta_study_id);
+                                tagFilterModel.removeExcludedTag(filter.get('searchResult').result.metadata.columnmeta_study_id);
+                            });
+                        } else {
+                            this.navigate('picsureui/openAccess#', {trigger:true, replace:false});
+                            return;
+                        }  
+                    } 
                     $(".header-btn.active").removeClass('active');
                     $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
 
