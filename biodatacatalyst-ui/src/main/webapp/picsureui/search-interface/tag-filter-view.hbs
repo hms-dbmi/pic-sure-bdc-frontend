@@ -140,7 +140,7 @@
 		<span>Filter Search Results by Study Tags</span>
 	</div>
 	<div class='panel-body section-body'>
-		<p>Refine results by using study based filters:</p>
+		<p>Refine results using study filters:</p>
 		{{#each studyTags}}
 
 		<div class="badge fat-badge {{colorClass this.tag}}" id="tag-{{this.tag}}" >
@@ -162,7 +162,7 @@
 		Filter Search Results by Variable Tags
 	</div>
 	<div class='panel-body section-body unused-tags'>
-		<p>Refine results by using tag based filters. Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that
+		<p>Refine results using tag based filters. Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that
 			have variables which match your search term:</p>
 		{{#each tags}}
 		<div class="badge {{colorClass this.tag}}" id="tag-{{this.tag}}">

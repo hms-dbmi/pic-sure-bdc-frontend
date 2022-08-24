@@ -232,7 +232,7 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 			}
 			modal.displayModal(
                 this.helpView,
-                'Welcome to Open Access!',
+                'Data Summary Help',
                 () => {
                     $('#patient-count-box').focus();
                 }
