@@ -90,7 +90,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                     sessionStorage.setItem("isOpenAccess", false);
                     let antiScopes = getInvalidActiveFilters();
                     if (antiScopes && antiScopes.length > 0) {
-                        if(confirm('Got bad stuff, remove?')) {
+                        if(confirm('Filters on studies you are not authorized to access will be removed as they are not supported in Authorized Access. Are you sure you would like to proceed to Authorized Access?')) {
                             filterModel.get('activeFilters').remove(antiScopes, {silent: true});
                             antiScopes.forEach(filter => {
                                 tagFilterModel.removeRequiredTag(filter.get('searchResult').result.metadata.columnmeta_study_id);
