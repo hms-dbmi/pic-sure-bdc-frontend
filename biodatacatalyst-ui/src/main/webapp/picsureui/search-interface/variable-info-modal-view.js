@@ -226,9 +226,9 @@ define(["jquery","backbone","handlebars", "text!search-interface/variable-info-m
 			toggleExportClasses: function(target) {
 				if (target.classList.contains('glyphicon-log-out')) {
 					target.classList.remove('glyphicon', 'glyphicon-log-out');
-					target.classList.add('fa', 'fa-check-square-o');
+					target.classList.add('fa-regular', 'fa-square-check');
 				} else {
-					target.classList.remove('fa', 'fa-check-square-o');
+					target.classList.remove('fa-regular', 'fa-square-check');
 					target.classList.add('glyphicon', 'glyphicon-log-out');
 				}
 			},

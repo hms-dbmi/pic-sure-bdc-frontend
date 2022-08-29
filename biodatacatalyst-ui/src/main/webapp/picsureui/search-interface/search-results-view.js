@@ -44,7 +44,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			"click .search-result": "infoClickHandler",
 			"click #search-results-datatable tr": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
-			"click .fa-question-circle": "helpViewClickHandler",
+			"click #no-results-help": "helpViewClickHandler",
 			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-datatable': 'resultsDatatableFocus',
@@ -269,11 +269,11 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				if (filterModel.isExportFieldFromId(result.dataset.varId) || filterModel.isExportColFromId(result.dataset.varId)) {
 					let test = $(result).find('.export-icon');
 					test.removeClass('glyphicon glyphicon-log-out');
-					test.addClass('fa fa-check-square-o');
+					test.addClass('fa-regular fa-square-check');
 				} else {
 					let resultIcon = $(result).find('.export-icon');
-					if (resultIcon.hasClass('fa-check-square-o')) {
-						resultIcon.removeClass('fa fa-check-square-o');
+					if (resultIcon.hasClass('fa-square-check')) {
+						resultIcon.removeClass('fa-regular fa-square-check');
 						resultIcon.addClass('glyphicon glyphicon-log-out');
 					}
 				}
@@ -296,12 +296,20 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					})
 				}
 				if (filteredResults.length === 0) {
-					$('#no-results').length === 0 && 
-						$("#search-area").append(HBS.compile(noResultsTemplate)) &&
+					if ($('#no-results').length === 0) {
+						$("#search-area").append(HBS.compile(noResultsTemplate));
+						setTimeout(() => {
+							$('#no-results-help').on({
+								'click': this.helpViewClickHandler,
+								'keypress': this.helpViewClickHandler
+							});
+						}, 100);
+					} else {
 						$('#no-results-help').on({
 							'click': this.helpViewClickHandler,
 							'keypress': this.helpViewClickHandler
 						});
+					}
 				} else {
 					$('#no-results').remove();
 				}
@@ -370,7 +378,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 								if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 									let exportClass = 'glyphicon glyphicon-log-out';
 									if(filterModel.isExportFieldFromId(row.variable_id)){
-										exportClass = 'fa fa-check-square-o';
+										exportClass = 'fa-regular fa-square-check';
 									}
 									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
 								}
