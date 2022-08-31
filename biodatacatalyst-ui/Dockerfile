@@ -32,6 +32,7 @@ COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui /usr/local/apache2/h
 COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui/
 COPY src/main/webapp/psamaui /usr/local/apache2/htdocs/picsureui/psamaui/
 COPY src/main/resources/favicon.ico /usr/local/apache2/htdocs/
+COPY src/main/resources/ /usr/local/apache2/htdocs/picsureui/images/
 
 COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui/index.html /usr/local/apache2/htdocs/picsureui/index_${FILE_SUFFIX}.html
 COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui/main.js /usr/local/apache2/htdocs/picsureui/main_${FILE_SUFFIX}.js
