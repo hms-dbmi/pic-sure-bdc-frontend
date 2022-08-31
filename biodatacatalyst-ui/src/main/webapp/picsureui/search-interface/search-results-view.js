@@ -44,7 +44,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			"click .search-result": "infoClickHandler",
 			"click #search-results-datatable tr": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
-			"click #no-results-help": "helpViewClickHandler",
+			"click #no-results-help, #no-results-help-empty": "helpViewClickHandler",
 			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-datatable': 'resultsDatatableFocus',
@@ -298,14 +298,12 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				if (filteredResults.length === 0) {
 					if ($('#no-results').length === 0) {
 						$("#search-area").append(HBS.compile(noResultsTemplate));
-						setTimeout(() => {
-							$('#no-results-help').on({
-								'click': this.helpViewClickHandler,
-								'keypress': this.helpViewClickHandler
-							});
-						}, 100);
+						$('#no-results-help-empty').on({
+							'click': this.helpViewClickHandler,
+							'keypress': this.helpViewClickHandler
+						});
 					} else {
-						$('#no-results-help').on({
+						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
 							'keypress': this.helpViewClickHandler
 						});
