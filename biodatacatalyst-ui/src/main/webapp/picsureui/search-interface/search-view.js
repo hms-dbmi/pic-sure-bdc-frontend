@@ -8,6 +8,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"text!common/unexpected_error.hbs",
 	"search-interface/search-util",
 	"search-interface/filter-model",
+	"search-interface/pic-image-modal-view",
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -19,6 +20,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			helpViewTemplate,
 			searchUtil,
 			filterModel,
+			imageViewer,
 		){
 	const authMessage = "By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.";
 	const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
@@ -79,8 +81,28 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			"keypress #search-box": "handleSearchKeypress",
 			"click #genomic-filter-btn": "openGenomicFilteringModal",
 			"click #search-reset-button": "resetPage",
+			"click #guide-me-button": "openGuideModal",
 		},
-
+		openGuideModal: function() {
+			let images = [];
+			let titles = [];
+			if(!this.isOpenAccess) {
+                images = ['./images/guideme_AA_1.png', './images/guideme_AA_2.png'];
+                titles = ['Authorized Access - Search', 'Authorized Access - Results'];
+            } else {
+                images = ['./images/guideme_OA_1.png', './images/guideme_OA_2.png'];
+                titles = ['Open Access - Search', 'Open Access - Results'];
+            }
+			const viewOpts = {
+				el: $(".modal-body"),
+				images: images,
+				titles: titles,
+			}
+			const imageViewerView = new imageViewer(viewOpts);
+			modal.displayModal(imageViewerView, titles[0], function() {
+				$('#guide-me-button').focus();
+			});
+		},
 		updateTags: function(response) {
 			if(!tagFilterModel.changed.currentPage){
 				this.tagFilterView.updateTags(response);
@@ -112,7 +134,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 			//exclude the user selected tags as well as tags not in scope
 			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
-
+			$('#guide-me-button').hide();
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			$('#search-button').attr('disabled', 'disabled');
@@ -183,7 +205,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		},
 		openGenomicFilteringModal: function() {
 			const genomicFilter = new genomicFilterView({el: $(".modal-body")});
-			genomicFilter.render()
 			modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 				$('#filter-list').focus();
 			});

@@ -25,7 +25,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
             const session = JSON.parse(sessionStorage.getItem("session"));
             return filterModel.get('activeFilters').filter(filter => {
                 const filterStudyId = '\\\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\\\'
-                return !session.queryScopes.includes(filterStudyId);
+                return session.queryScopes && !session.queryScopes.includes(filterStudyId);
             });
         };
         let displayOpenAccess = function() {
