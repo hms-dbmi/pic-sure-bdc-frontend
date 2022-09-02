@@ -297,18 +297,21 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				}
 				if (filteredResults.length === 0) {
 					if ($('#no-results').length === 0) {
+						$('#guide-me-button').show();
 						$("#search-area").append(HBS.compile(noResultsTemplate));
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
 							'keypress': this.helpViewClickHandler
 						});
 					} else {
+						$('#guide-me-button').show();
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
 							'keypress': this.helpViewClickHandler
 						});
 					}
 				} else {
+					$('#guide-me-button').hide();
 					$('#no-results').remove();
 				}
 				let results = _.map(filteredResults, function(result, i){

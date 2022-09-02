@@ -50,6 +50,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                 el : $('#filter-list')
             });
 
+            if($('#search-results-panel').is(":visible")) {
+                $('#guide-me-button').hide();
+            }
+
             const filterListView = new FilterListView({
                 outputPanelView : outputPanelView,
                 el : $('#filter-list-panel')
@@ -121,6 +125,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
 						queryScopes: parsedSess.queryScopes,
                         el : $('#filter-list')
                     });
+
+                    if($('#search-results-panel').is(":visible")) {
+                        $('#guide-me-button').hide();
+                    }        
 
                     let filterListView = new FilterListView({
                         outputPanelView : queryView,
