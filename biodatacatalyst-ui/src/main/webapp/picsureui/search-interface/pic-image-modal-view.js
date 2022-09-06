@@ -33,6 +33,8 @@ function($, BB, HBS, template, modal,) {
         render: function() {
             this.$el.html(this.template({
                 currentImage: this.currentImage,
+                imageIndex: this.imageIndex+1,
+                totalImages: this.images.length,
             }));
             const titles = document.getElementsByClassName('modal-title');
             if (titles && titles.length>0) {titles[0].innerHTML = this.titles[this.imageIndex];}

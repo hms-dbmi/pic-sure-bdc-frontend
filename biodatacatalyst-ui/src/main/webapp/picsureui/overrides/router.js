@@ -24,7 +24,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
         let getInvalidActiveFilters = function() {
             const session = JSON.parse(sessionStorage.getItem("session"));
             return filterModel.get('activeFilters').filter(filter => {
-                const filterStudyId = '\\\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\\\'
+                const filterStudyId = '\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\'
                 return session.queryScopes && !session.queryScopes.includes(filterStudyId);
             });
         };
@@ -49,6 +49,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                 queryScopes: parsedSess.queryScopes,
                 el : $('#filter-list')
             });
+
+            if($('#search-results-panel').is(":visible")) {
+                $('#guide-me-button').hide();
+            }
 
             const filterListView = new FilterListView({
                 outputPanelView : outputPanelView,
@@ -121,6 +125,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
 						queryScopes: parsedSess.queryScopes,
                         el : $('#filter-list')
                     });
+
+                    if($('#search-results-panel').is(":visible")) {
+                        $('#guide-me-button').hide();
+                    }        
 
                     let filterListView = new FilterListView({
                         outputPanelView : queryView,
