@@ -299,12 +299,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					if ($('#no-results').length === 0) {
 						$('#guide-me-button').show();
 						$("#search-area").append(HBS.compile(noResultsTemplate));
+						//Dynamically Adding click event after appending the element that gets clicked
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
 							'keypress': this.helpViewClickHandler
 						});
 					} else {
 						$('#guide-me-button').show();
+						//Ensures Element has click event
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
 							'keypress': this.helpViewClickHandler
