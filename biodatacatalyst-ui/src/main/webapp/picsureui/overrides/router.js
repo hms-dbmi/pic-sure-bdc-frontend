@@ -24,8 +24,8 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
         let getInvalidActiveFilters = function() {
             const session = JSON.parse(sessionStorage.getItem("session"));
             return filterModel.get('activeFilters').filter(filter => {
-                const filterStudyId = '\\\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\\\'
-                return session.queryScopes && session.queryScopes.includes(filterStudyId);
+                const filterStudyId = '\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\'
+                return session.queryScopes && !session.queryScopes.includes(filterStudyId);
             });
         };
         let displayOpenAccess = function() {
