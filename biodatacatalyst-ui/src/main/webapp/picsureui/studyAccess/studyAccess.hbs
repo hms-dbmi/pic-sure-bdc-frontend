@@ -1,80 +1,98 @@
-<div id="infgfx" class="clearfix">
-    <div id="infgfx-line"></div>
-    <span class="col-md-6">
-		<div class="infgfx-content">
-
-			<div class="gfx-title clearfix" style="margin-right:0px;width:100%">
-				<div style="width:100%;font-size:25px;font-weight:bold">Authorized Access</div>
-				<button type="button" data-href="/picsureui/queryBuilder"
-                    {{#if authorizedAccess}}class="btn btn-primary btn-blue clickable-button"{{/if}}
-                    {{#unless authorizedAccess}}class="btn btn-primary btn-grey"{{/unless}}
-                    {{#unless authorizedAccess}}disabled="disabled"{{/unless}}>
-                    Explore Now
-                </button>
-			</div>
-			<div class="gfx-cohorts">{{auth_studies_cnt}} Studies</div>
-			<div class="gfx-participants" id="authorized-participants"></div>
-			<div id="authorized-participants-spinner"></div>
-			<div class="gfx-authorization">
-				<img src="studyAccess/icons/authorized-protected.svg" style="position:relative;z-index:100"/>
-				dbGap Approval Required
-			</div>
-			<div class="gfx-datatype">
-				<img src="studyAccess/icons/med-record.svg" style="height:100px;width:100px;margin:-20px;position:relative;top:3px"/>
-				<img src="studyAccess/icons/dna.svg" style="height:46px;width:46px;margin:0px 0px 0px -18px;transform:rotate(-45deg)" />
-				Authorized Phenotypic and Genomic Datasets
-			</div>
-			<div class="gfx-datalevel">
-				<img src="studyAccess/icons/users.svg" style="padding:0px; margin:0px 10px;"/>
-				Aggregate Counts
-			</div>
-			<div class="gfx-datalevel">
-				<img src="studyAccess/icons/user.svg" />
-				<img src="studyAccess/icons/user.svg" />
-				<img src="studyAccess/icons/user.svg" style="margin-right: 0px"/>
-				Patient Level Data
-			</div>
-			<div class="gfx-downloads">
-				<img src="studyAccess/icons/download.svg" style="padding:8px" />
-				Download Authorized Datasets
-			</div>
-			<div class="gfx-api">
-				<img src="studyAccess/icons/api-access.svg" style="padding:8px"/>
-				R and Python API Access
-			</div>
-		</div>
-	</span>
-    <span class="col-md-6">
-		<div class="infgfx-content">
-			<div class="gfx-title clearfix" style="margin-right:0px;width:100%">
-				<div style="width:100%;font-size:25px;font-weight:bold;">Open Access</div>
-				<button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/openAccess">Explore Now</button>
-			</div>
-			<div id="open-studies-count" class="gfx-cohorts"></div>
-			<div class="gfx-participants" id="open-participants"></div>
-			<div id="open-participants-spinner"></div>
-			<div class="gfx-authorization">
-				<img src="studyAccess/icons/authorized-open.svg" style="padding:10px; position:relative; z-index:100" />
-				No Authorization Required
-			</div>
-			<div class="gfx-datatype">
-				<img src="studyAccess/icons/med-record.svg" style="height:100px;width:100px;margin:-20px -4px -20px 0px;position:relative;top:3px;"/>
-				All Phenotypic Datasets Available in <span class="nowrap">PIC-SURE</span>
-			</div>
-			<div class="gfx-datalevel">
-				<img src="studyAccess/icons/users.svg" style="padding:0px; margin:0px 10px;"/>
-				Aggregate Counts Only
-			</div>
-		</div>
-	</span>
+<div class="center-panel">
+    <div class="panel panel-outline explor-panel">
+        <div class="panel-heading no-border center-panel">
+            <div class="side-border heading-space">
+                <div>
+                    <h4 class="access-title">Authorized Access</h4>
+                    <button type="button" data-href="/picsureui/queryBuilder" aria-label="Explore Authorized Access"
+                        {{#if authorizedAccess}}class="btn btn-primary btn-blue clickable-button"{{/if}}
+                        {{#unless authorizedAccess}}class="btn btn-primary btn-grey"{{/unless}}
+                        {{#unless authorizedAccess}}disabled="disabled"{{/unless}}>
+                        Explore Now
+                    </button>
+                </div>
+                <div class="participants-container">
+                    <h4 class="">{{auth_studies_cnt}} Studies</h4>
+                    <h5 class="" id="authorized-participants"></h5>
+                    <div id="authorized-participants-spinner"></div>
+                </div>
+            </div>
+            <div class="heading-space">
+                <div>
+                    <h4 class="access-title">Open Access</h4>
+                    <button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/openAccess" aria-label="Explore Open Access">Explore Now</button>
+                </div>
+                <div class="participants-container">
+                    <h4 id="open-studies-count" class=""></h4>
+                    <h5 id="open-participants" class=""></h5>
+                    <div id="open-participants-spinner"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body" style="display: flex;">
+            <div class="body-space side-border">
+                <ul class="plain-list">
+                    <li style="display: flex; flex-direction:row">
+                        <i class="fa-regular fa-address-card" aria-hidden="true"></i>
+                        <i class="fa-solid fa-dna" aria-hidden="true"></i>
+                        <span>Authorized Phenotypic and Genomic Datasets</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <span>Aggregate Counts</span>
+                    </li>
+                    <li>
+                        <i class="fa-regular fa-user" aria-hidden="true"></i>
+                        <span>Participant-level Data</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                        <span>Visualizations</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
+                        <span>R and Python API Access</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="body-space">
+                <ul class="plain-list">
+                    <li>
+                        <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+                        <span>No Authorization Required</span>
+                    </li>
+                    <li>
+                        <i class="fa-regular fa-address-card" aria-hidden="true"></i>
+                        <span>All Phenotypic Datasets Available in PIC-SURE</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <span>Aggregate Counts Only</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
+                        <span>R and Python API Access</span>
+                    </li>
+                </ul>
+            </div>
+        </div>  
+    </div>
 </div>
 
 
 
 <div id="studies-access">
     <div>
-        <div>{{freeze_msg}}</div>
-        <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic, n/a = Not Applicable</div>
+        <div class="space-out">
+            <div>
+                <h2 class="studies-title">Data Access Table</h2>
+                <h4 class="studies-sub-title">View all studies and associated information available in PIC-SURE separated by consent group. Check personalized authorization for available studies in the "Access" column.</h4>
+            </div>
+            <div class="freeze-message">
+                <div>{{freeze_msg}}</div>
+                <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic, n/a = Not Applicable</div>
+            </div>
+        </div>
 
         <table class="table table-striped">
             <thead>
@@ -121,7 +139,7 @@
                     <td>{{study_version}}</td>
                     <td>{{study_phase}}</td>
                     <td>
-                        <a href="{{request_access}}" target="_blank">
+                        <a href="{{request_access}}" target="_blank" title='Clicking here will take you to the given link in another tab'>
                             <span class="btn btn-primary btn-blue" aria-label="Request access to {{full_study_name}}. This link will open in a new browser tab.">Request</span>
                         </a>
                     </td>

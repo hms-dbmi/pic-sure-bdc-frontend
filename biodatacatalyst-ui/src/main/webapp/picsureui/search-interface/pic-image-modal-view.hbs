@@ -1,0 +1,35 @@
+<style>
+    .image-container {
+        width: 100%;
+    }
+    .image-container img {
+        width: inherit;
+    }
+    .modal-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .push-left {
+        margin-left: auto;
+    }
+    .push-right {
+        width: 120px; /*~Size of image-buttons div*/
+        visibility: hidden; 
+        margin-right:auto;
+    }
+</style>
+<div>
+    <div class="image-container">
+        <img src="{{currentImage}}" title="An image explaining the UI" aria-label="An image explaining the UI" />
+    </div>
+    <div class="modal-footer">
+        <div class="push-right"></div>
+        <div>{{imageIndex}} / {{totalImages}}</div>
+        <div id="image-buttons" class="push-left">
+            <button id="prev-button" class="btn btn-default" tabindex="0">Back</button>
+            <button id="next-button" class="btn btn-primary" tabindex="0">Next</button>
+        </div>
+    </div>
+</div>

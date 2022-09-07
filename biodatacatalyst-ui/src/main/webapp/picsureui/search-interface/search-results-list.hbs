@@ -1,0 +1,27 @@
+<style>
+  table.dataTable {
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+</style>
+{{#if results}}
+<div class="panel">
+  <div class="search-resutls-panel-heading space-out panel-heading">
+    <h4>Search Results:</h4>
+    <div class="results-container">{{variableCount}} variables match your search. <a id="no-results-help" class="btn no-padding m-0" tabindex="0" title="Why might I see unexpected search results?" aria-label="A link that opens a modal called Why might I see unexpected search results?">Learn More</a></div>
+  </div>
+  <table id="search-results-datatable" tabindex="0" class="table table-striped row-border hover" role="region" aria-label="You are in the results region. Use the up and down arrows to move between search results. Use the left and right arrows to move between pages of search results. You are currently on page {{pageNum}} out of {{numPages}} pages of search results with up to 10 results per page.">
+    <thead>
+        <tr>
+            <th>Study</th>
+            <th>Variable Name</th>
+            <th>Variable Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+  </table>
+</div>
+{{/if}}

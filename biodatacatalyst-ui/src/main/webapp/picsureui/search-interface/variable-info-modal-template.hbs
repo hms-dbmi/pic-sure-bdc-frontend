@@ -1,0 +1,92 @@
+<style>
+    .glyphicon.export-icon {
+        font-size: 1.3em;
+    }
+</style>
+<div class="variable-info">
+    {{#if variableMetadata.columnmeta_name}}
+        <div>Variable Name: {{variableMetadata.columnmeta_name}}</div>
+    {{/if}}
+    {{#if variableId}}
+        <div>
+            Variable Accession: {{variableMetadata.columnmeta_var_id}}
+            <i data-target="variable" data-id="{{variableId}}" aria-label="Filter By Variable Button - {{filterTitleText}}" title="{{filterTitleText}}" tabindex=1000000 class="fa fa-filter {{disabledClass}} search-result-action-btn"></i>
+            {{#if isAuthorized}}
+                {{#if isExportField}}
+                <i data-target="variable" data-id="{{variableId}}" aria-label="Add Variable to Export Button - {{exportTitleText}}" title="{{exportTitleText}}" tabindex=1000001 class="fa-regular fa-square-check export-icon {{disabledClass}} search-result-action-btn"></i>
+                {{else}}
+                <i data-target="variable" data-id="{{variableId}}" aria-label="Add Variable to Export Button - {{exportTitleText}}" title="{{exportTitleText}}" tabindex=1000001 class="glyphicon glyphicon-log-out export-icon {{disabledClass}} search-result-action-btn"></i>
+                {{/if}}
+
+            {{/if}}
+        </div>
+    {{/if}}
+    {{#if variableMetadata.columnmeta_description}}
+        <div>Variable Description: {{variableMetadata.columnmeta_description}}</div>
+    {{/if}}
+    {{#if variableMetadata.columnmeta_data_type}}
+        <div>Variable Type: {{variableMetadata.columnmeta_data_type}}</div>
+    {{/if}}
+    {{#if variableMetadata.columnmeta_var_report_comment}}
+        <div>Variable Report Comment: {{variableMetadata.columnmeta_var_report_comment}}</div>
+    {{/if}}
+</div>
+{{#if variableMetadata.derived_group_id}}
+<hr>
+<div class="dataset-info">
+    <div class="dataset-name">
+        Dataset Name: {{variableMetadata.derived_group_name}}
+    </div>
+    <div class="dataset-accession">
+        Dataset Accession: {{variableMetadata.columnmeta_var_group_id}}
+        <i data-target="datatable" data-id="{{variableMetadata.columnmeta_var_group_id}}" tabindex=1000002 title="{{exportTitleText}}" class="fa fa-filter {{disabledClass}} search-result-action-btn"></i>
+        {{#if isAuthorized}}
+            <i data-target="datatable" data-id="{{variableMetadata.columnmeta_var_group_id}}" tabindex=1000003 title="{{exportTitleText}}" class="glyphicon glyphicon-log-out export-icon {{disabledClass}} search-result-action-btn"></i>
+        {{/if}}
+    </div>
+    {{#if variableMetadata.columnmeta_var_group_description}}
+    <div class="dataset-description">
+        Dataset Description: {{variableMetadata.columnmeta_var_group_description}}
+    </div>
+    {{/if}}
+</div>
+{{/if}}
+<hr>
+<div class="study-info">
+    <div class="study-description">
+        Study Name: {{studyDescription}}
+    </div>
+    <div class="study-accession">
+        Study Accession: {{studyAccession}}
+    </div>
+    {{#if isRequiredTag}}
+    <div class="badge fat-badge {{colorClass studyAccessionTagId}}" id="tag-{{studyAccessionTagId}}">
+        <div class="stack">
+            <span class="required-tag bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy studyAccessionTagId}}is associated with this variable. There are {{tagScore}} search results having this tag. Press enter to no longer require search results to have this tag.">{{aliasIfStudy studyAccessionTagName}} ({{tagScore}})</span>
+            <span id="study-{{studyAccessionTagId}}" class="tag-study-text mouse-through">{{studyAccessionTagId}}</span>
+        </div>
+        <span data-tag="{{studyAccessionTagId}}" data-action="removeRequiredTag"
+                class="fa fa-times selected-required-tag removeRequiredTag hover-control remove-tag-btn"></span>
+    </div>
+    {{/if}}
+    {{#if isExcludedTag}}
+    <div class="badge fat-badge {{colorClass studyAccessionTagId}}" id="tag-{{studyAccessionTagId}}">
+            <div class="stack excluded-tag">
+                <span class="bold-tag mouse-through" aria-label="Tag {{ariaAliasIfStudy studyAccessionTagId}} is associated with this variable. There are {{tagScore}} search results having this tag. Press enter to no longer exclude this tag from search results.">{{aliasIfStudy studyAccessionTagName}} ({{tagScore}})</span>
+                <span id="study-{{studyAccessionTagId}}" class="tag-study-text mouse-through">{{studyAccessionTagId}}</span>
+            </div>
+            <span data-tag="{{studyAccessionTagId}}" data-action="removeExcludedTag"
+                class="fa fa-times selected-excluded-tag remove-tag-btn hover-control"></span>
+    </div>
+    {{/if}}
+    {{#if isUnusedTag}}
+    <div class="badge fat-badge {{colorClass studyAccessionTagId}}" id="tag-{{studyAccessionTagId}}" >
+        <span data-tag="{{studyAccessionTagId}}" data-action="excludeTag" class="fa fa-minus exclude-tag-btn hover-control"></span>
+        <div class="stack">
+            <span class="bold-tag mouse-through" aria-label="Study Tag {{ariaAliasIfStudy studyAccessionTagId}} is associated with this variable. There are {{tagScore}} search results having this tag. Press the plus key to include only search results having this tag. Press minus to exclude all search results having this tag.">{{aliasIfStudy studyAccessionTagName}} ({{tagScore}})</span>
+            <span id="study-{{studyAccessionTagId}}" class="tag-study-text mouse-through">{{studyAccessionTagId}}</span>
+        </div>
+        <span data-tag="{{studyAccessionTagId}}" data-action="requireTag" class="fa fa-plus require-tag-btn hover-control"></span>
+    </div>
+    {{/if}}
+</div>

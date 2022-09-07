@@ -1,52 +1,113 @@
-<div class="row header-row">
-	<img class="logo-img" src="{{logoPath}}">
-</div>
-<div class="row" style="margin-top: 6px">
-    <span class="col-md-1"></span>
-    {{#not_empty applications}}
-    <div class="col dropdown" id="applications-dropdown">
-        <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
-        <ul class="dropdown-menu" role="menu">
-        {{#each applications}}
-            <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
-        {{/each}}
-        </ul>
-    </div>
-    {{/not_empty}}
+<style>
+    #help-dropdown {
+        padding: 0;
+    }
+    .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        padding: 32px 35px;
+        cursor: pointer;
+        background-color: var(--background-grey);
+        border: none;
+    }
+    .dropdown-toggle i {
+        margin-left: 8px;
+    }
+    .selected {
+        border: 4px solid var(--nhlbi-red);
+    }
+    .nav-dropdown-menu.open {
+        display: block;
+    }
+    .nav-dropdown-menu {
+        list-style-type: none;
+        color: rgb(51,51,51);
+        position: absolute;
+        top: 0%;
+        z-index: 1000;
+        float: left;
+        min-width: 160px;
+        padding: 0;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+        display:none;
+    }
+    .nav-dropdown-menu > li > a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+    .nav-dropdown-menu > li > a:hover,
+    .nav-dropdown-menu > li > a:focus {
+        text-decoration: none;
+        color: #262626;
+        background-color: #f5f5f5;
+    }
+    #top-header {
+        display: flex;
+        flex-direction: row;
+        background-color: #f4f4f6;
+        padding: 10px;
+    }
+     #top-header img {
+        padding-top: 0px;
+     }
+    #top-header .nav-menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left: 10px;
+    }
+    @media only screen and (max-width: 1470px) {
+        #top-header img {
+            padding-top: 0px;
+            max-width: 500px;
+            height: fit-content;
+        }
+    }
 
-    {{#contains privileges "SUPER_ADMIN"}}
-        <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
-            <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
-            <ul class="dropdown-menu" role="menu">
-                <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
-                <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
-                <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
-                <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+     @media only screen and (max-width: 990px) {
+        #top-header {
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f4f6;
+            padding: 10px;
+        }
+    }
+</style>
+<header id="top-header" class="space-out">
+    <img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
+    <nav id="header-tabs" class="nav-menu" role="navigation" aria-label="Main Navigation. You are on the main navigation of Pic-sure. Please use the arrow keys to navigate through the tabs. Use Enter or space to select the tab." tabindex="0">
+        {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
+            <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" tabindex="-1" title="Explore" aria-label="Explore">Data Access Dashboard</a>
+        {{/contains}}
+        {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
+            <a class="header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" tabindex="-1" title="Authorized Access" aria-label="Authorized Access">Authorized Access</a>
+        {{/contains}}
+        {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
+            <a class="header-btn header-navigation" data-href="/picsureui/openAccess#" href="#" id="open-access-btn" tabindex="-1" title="Open Access" aria-label="Open Access">Open Access</a>
+            <button class="dropdown-toggle nav-dropdown header-btn authenticated-visible" aria-expanded="false" id="help-dropdown-toggle" tabindex="-1" title="Help" aria-label="Help dropwdown" aria-controls="help-menu-list">
+                Help <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </button>
+            <ul id="help-menu-list" class="nav-dropdown-menu" tabindex="-1">
+                {{#if videoLink}}<li id="video-demo-option" class="dropdown" aria-label="Video Demonstration, clicking here will open a link in a new tab"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
+                {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                {{#if jupyterExampleLink}}<li id="jupyter-examples-option" class="dropdown" aria-label="Jupyter Examples, clicking here will open a link  in a new tab"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
+                {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
             </ul>
-        </div>
-    {{/contains}}
-    {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
-        <a class="col btn btn-default header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn">Authorized Access</a>
-    {{/contains}}
-    {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-        <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/openAccess" href="#" id="open-access-btn">Open Access</a>
-        <a class="col btn btn-default header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn">Data Access</a> 
-    {{/contains}}
-    {{#contains privileges 'ADMIN'}}
-        <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#">Users</a>
-    {{/contains}}
-    {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
-        <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#">User Profile</a>
-        <div tabindex=0 class="col dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-            <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="help-dropdown-toggle">Help</span>
-            <ul class="dropdown-menu" role="menu">
-                {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
-                {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
-                {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
-            </ul>
-        </div>
-        <a href="#" id="logout-btn" class="col btn btn-default header-btn authenticated-visible">Log Out</a>
-    {{/contains}}
-
-</div>
+            <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile" aria-haspopup="true" aria-label="User Profile">User Profile</a>
+            <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out" aria-label="Log Out">Log Out</a>
+        {{/contains}}
+    </nav>
+</header>

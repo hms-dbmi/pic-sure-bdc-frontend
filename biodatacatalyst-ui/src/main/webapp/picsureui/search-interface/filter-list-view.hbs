@@ -1,0 +1,84 @@
+<style>
+    .focused-filter-container {
+        border-top: 1px solid;
+        border-width:4px !important;
+        border-color:red !important;
+    }
+    .filter-container {
+        border:solid;
+        border-width:1px;
+        border-radius:0.5em;
+    }
+    .filter-list-action-btn {
+        font-size: 1.5em;
+        margin-left: 2px;
+        cursor: pointer;
+    }
+    .heading-sub-text {
+        font-size: 0.75em;
+    }
+    .var-heading {
+        font-weight: 700;
+    }
+    .filter-buttons-container {
+        min-width: fit-content;
+        align-self: flex-start;
+    }
+</style>
+<div class="panel">
+    <div class="panel-heading">
+        <span>Added Variable Filters</span>
+        <div class="heading-sub-text">Active filters applied to your cohort.</div>
+    </div>
+    <div id="filter-list" class="panel-body" tabindex=0 aria-activedescendent="">
+    {{#each activeFilters}}
+        {{#if datatable}}
+            <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_group_id}}">
+                <div class="filter-header">
+                    <div>
+                        <span>Filter on {{variables.length}} variable(s) in {{this.searchResult.result.metadata.derived_group_name}} </span> 
+                    </div>
+                    <div class="filter-buttons-container">
+                        <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
+                        <i class="fa-solid fa-pen-to-square edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
+                    </div>
+                </div>
+                <div class="filter">
+                    <div><span>Study: </span>{{this.searchResult.result.metadata.derived_study_abv_name}} ({{this.searchResult.result.metadata.columnmeta_study_id}})</div>
+                </div>
+                <div class="value"> Participants with any value recorded for any of these variables will be included if they match all other defined filters</div>
+            </div>
+        {{else if genomic}}
+            <div class="filter-container with-wrap" id="genomic">
+                <div class="filter-header">
+                    <div>
+                        <span>Genomic Filter</span>
+                    </div>
+                    <div class="filter-buttons-container">
+                        <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
+                        <i class="fa-solid fa-pen-to-square edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
+                    </div>
+                </div>
+                {{> genomic-filter-partial filters=variantInfoFilters}}
+            </div>
+        {{else}}
+            <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_id}}">
+                    <div class="filter-header">
+                        <div>
+                            <span class="var-heading">Filter on variable {{#if this.searchResult.result.metadata.columnmeta_name}}{{this.searchResult.result.metadata.columnmeta_name}}</span>{{/if}}
+                        </div>
+                        <div class="filter-buttons-container">
+                            <i class="fa fa-info-circle info-filter filter-list-action-btn" title="Variable information" data-index="{{@index}}"></i>
+                            <i class="fa fa-times-circle remove-filter filter-list-action-btn" title="Remove Filter" data-index="{{@index}}"></i>
+                            <i class="fa fa-solid fa-pen-to-square edit-filter filter-list-action-btn" title="Edit Filter" data-index="{{@index}}"></i>
+                        </div>
+                    </div>
+                <div class="filter">
+                    <div><span>Study: </span>{{this.searchResult.result.metadata.derived_study_abv_name}} ({{this.searchResult.result.metadata.columnmeta_study_id}})</div>
+                    <div class="value"><span>Value: </span>{{getFilterTypeDescription this}}</div>
+                </div>
+            </div>
+        {{/if}}
+    {{/each}}
+    </div>
+</div>

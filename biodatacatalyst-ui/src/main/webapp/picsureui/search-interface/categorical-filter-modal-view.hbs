@@ -1,0 +1,16 @@
+<div class="filter-modal-container">
+    <div class="row">
+        <div class="flex-container space-out">
+            <ul class="var-info">
+                <li>Study Name: {{studyName}} ({{searchResult.result.studyId}})</li>
+                <li>Variable Name: {{searchResult.result.metadata.columnmeta_name}}</li>
+                <li>Variable Accession: {{searchResult.result.metadata.columnmeta_var_id}}</li>
+                <li>Variable Description: {{searchResult.result.metadata.columnmeta_description}}</li>
+            </ul>
+            <div class="button-container">
+                <button id="add-filter-button" class="btn btn-primary" tabindex="1099999">Add Filter to Query</button>
+            </div>
+        </div>
+        <div id="value-container" class="value-container"></div>
+    </div>
+</div>

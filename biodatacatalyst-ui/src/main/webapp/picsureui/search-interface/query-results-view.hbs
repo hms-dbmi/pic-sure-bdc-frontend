@@ -1,0 +1,47 @@
+<style>
+.data-summary-body{
+    padding:15px;
+}
+#patient-count-box{
+    padding:0px;
+}
+#patient-count {
+    font-size: 200%;
+    font-weight: 800;
+    width: 98%;
+    margin-bottom: .1em;
+}
+#patient-count-label {
+    font-size: 150%;
+    font-weight: 600;
+    width: 98%;
+    margin-bottom: .5em;
+}
+#export-count {
+    font-size: 125%;
+    font-weight: 400;
+    width: 98%;
+    margin-bottom: .4em;
+}
+.blue-center-large{
+    margin: 10px;
+}
+</style>
+
+<div>
+<div class="panel" id="patient-count-box">
+    <div class="space-out panel-heading">
+        <span>Data Summary</span>
+        <a id="data-summary-help" class="btn no-padding" title="Data Summary Help" aria-label="Data Summary Help" tabindex="0" >What is this?</a>
+    </div>
+    <div class="data-summary-body panel-body" >
+	       <span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+	          <span id="patient-count" class="blue center large">{{#if queryRan}}{{totalPatients}}{{else}}-{{/if}}</span>
+
+	             <span id="patient-count-label" class="center medium">Total Participants</span>
+
+                 <span id="export-count" class="center small">{{#if queryRan}}{{totalVariables}}{{else}}-{{/if}} Variables</span>
+
+	                <div class="container" id="pic-sure-instances"></div>
+</div>
+</div>

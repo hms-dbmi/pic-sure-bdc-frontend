@@ -1,0 +1,100 @@
+<style>
+	#search-box {
+		display: inline;
+		vertical-align: bottom;
+	}
+	#search-button {
+		width:6em;
+	}
+	#genomic-filter-btn {
+	    width:10em;
+	}
+	#search-controls:not([type="reset"]) {
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		align-items: end;
+	}
+	#search-controls > button:last-child {
+		margin-right: 11px;
+	}
+	#search-controls > *:not([type="reset"]):not(:last-child) {
+		margin-right: 0.5em;
+	}
+	#search-controls > *:not([type="reset"]):not(:first-child) {
+		box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
+	}
+	#search-controls > label:first-of-type {
+		margin-left: 1em;
+	}
+	#search-controls label {
+		align-self: center;
+	}
+	.reset-button {
+		align-self: center;
+	}
+	hr {
+		width: 98%;
+		margin-left: 1em;
+	}
+	.center-spinner {
+		text-align: center;
+		margin: 50px auto;
+	}
+	.big-button {
+		background-color: var(--nhlbi-red);
+		color: white;
+		box-shadow: 5px 10px 18px #888888;
+		font-size: 25px;
+		padding: 20px 45px;
+		border-radius: 50px;
+	}
+	#guide-me-button {
+		display: flex;
+		align-self: center;
+		margin: 10% 20%;
+	}
+	#guide-me-button:hover,
+	#guide-me-button:active,
+	#guide-me-button:focus {
+		color: var(--nhlbi-red);
+		background-color: white;
+		border: 1px solid var(--nhlbi-red);
+	}
+	@media only screen and (max-width: 990px) {
+        #guide-me-button {
+            margin: 0;
+        }
+	}
+</style>
+
+<div>
+	<form id="search-controls" class="col">
+		<label for='search-box' class='col'>Search:</label>
+		<input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
+		aria-label="Type search terms here, use enter or the search button to submit search"
+		title="Type search terms here, use enter or the search button to submit search"
+		placeholder="Search studies or variables"
+		onsubmit="return false" 
+		required>
+			<input class="btn bg-transparent reset-button" value="" accesskey="r" type="reset"></input>
+		</input>
+		<button id="search-button" type="button" class='btn btn-primary col'
+		aria-label="You are on the search button"
+		>Search</button>
+		<button id='genomic-filter-btn' type="button" class='btn btn-outline primary col'
+		aria-label="You are on the Genomic Filtering button"
+		>Genomic Filtering</button>
+		<button id="search-reset-button" type="button" class='btn btn-outline danger' 
+		aria-label="You are on the reset button">Reset</button>
+	</form>
+    <hr>
+    <div id="search-area" class="flex-container space-between">
+	    <div id="tag-filters"></div>
+		<div id="spinner-holder" class="center-spinner"></div>
+		<button id="guide-me-button" class="btn big-button" tabindex="0" aria-label="You are on a button called guide me that uses images to explain the UI.">Guide Me</button>
+	    <div class="m-lr-20 grow">
+	        <div id="search-results"></div>
+    	</div>
+    </div>
+</div>

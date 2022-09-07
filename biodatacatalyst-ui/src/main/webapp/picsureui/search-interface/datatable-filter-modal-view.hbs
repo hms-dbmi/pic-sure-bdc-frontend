@@ -1,0 +1,36 @@
+<style>
+    #datatable-selection-buttons {
+        float: right;
+    }
+    #datatable-selection-buttons > button {
+        margin-left: 20px;
+    }
+    .focused-variable {
+        border:solid;
+        border-width:-4px !important;
+        border-color:#a73039 !important;
+    }
+    table.dataTable {
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+</style>
+<div class="filter-modal" style="background:white;">
+    <div class="flex-container space-out">
+            <ul class="var-info">
+                <li>Study Name: {{studyName}} ({{studyId}})</li>
+                <li>Dataset Name: {{datasetName}}</li>
+                <li>Dataset Accession: {{datasetAccession}}</li>
+            </ul>
+            <div class="button-container">
+                <button id="add-filter-button" class="btn btn-primary" tabindex="1099999">Add Filter to Query</button>
+            </div>
+        </div>
+    <div id="datatable-modal-instructions">
+        <p>Select the variables to add to your query to include only participants who have a value for at least one of the selected variables.  Use the "Search" textbox and "Select All" and "Deselect All" buttons to filter the variables in the table and select/deselect in bulk.  Once you have selected the variables of interest, click the "Add Filter to Query" button to filter your cohort.</p>
+    </div>
+    <div id="datatable-modal-table"></div>
+</div>

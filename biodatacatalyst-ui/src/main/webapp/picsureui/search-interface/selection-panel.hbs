@@ -1,0 +1,15 @@
+<h3>{{heading}}</h3>
+<div class="panel panel-default no-padding" aria-label="{{description}}">
+    <div class="panel-heading space-out panel-extra-large">
+        <h4 class="panel-title">{{searchContext}}</h4>
+        {{#if description}}
+        <i class="fa fa-question-circle fa-lg tabable" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{{description}}"></i>
+        {{/if}}
+    </div>
+    <div class="panel-body selection-box tabable" aria-label="You are on a list box. Use the arrow keys to navigate and space or enter to select" role="listbox">
+        {{#each options}}
+        <input class="categorical-filter-input selectable list-item" type="checkbox" title="{{this}}" role="option" tabindex="-1" value="{{this}}"
+             />{{this}} <br />
+        {{/each}}
+    </div>
+</div>

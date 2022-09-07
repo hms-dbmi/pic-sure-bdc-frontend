@@ -1,0 +1,14 @@
+<div id="visualizations-modal">
+    <h5>All visualizations display the distributions of each variable for the specified cohort of interest.</h5>
+    <div class="visualization-body">
+        <div class="center large" id="spinner-holder">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</div>
+        {{#if errors}}
+            {{#unless spinning}}
+                <div class="no-visualizations">
+                    <p>No visualizations available</p>
+                </div>
+            {{/unless}}
+        {{/if}}
+        <div id="visualizations-container"></div>
+    </div>
+</div>

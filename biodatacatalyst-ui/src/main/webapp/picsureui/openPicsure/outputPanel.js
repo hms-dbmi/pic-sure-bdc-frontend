@@ -1,9 +1,9 @@
-define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPanel.hbs",
-		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors"],
+define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
+		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "search-interface/modal", "openPicsure/openPicsureHelpView"],
 		function($, settings, outputTemplate,
-				 BB, HBS, overrides, studiesDataJson, transportErrors){
+				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView) {
 
-	var studiesInfo = {};
+	let studiesInfo = {};
 	var studyConcepts = [];
 	var conceptsLoaded = $.Deferred();
 
@@ -13,7 +13,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 
 	var loadConcepts = function() {
 		$.ajax({
-			url: window.location.origin + "/picsure/search/" + JSON.parse(settings).openAccessResourceId,
+			url: window.location.origin + "/picsure/search/" + settings.openAccessResourceId,
 			type: 'POST',
 			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 			contentType: 'application/json',
@@ -27,14 +27,18 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 					return x.split("\\").length === 4;
 				});
 				_.forEach(studyKeys, x => {
-					let studyName = x.split("\\")[2];
+					let studyName = x.split("\\")[2].split(" ")[0];
 					studiesInfo[studyName] = {code:studyName, name:"", study_matches: 0, consents:[]}
 				})
 
 				let studiesData = JSON.parse(studiesDataJson).bio_data_catalyst;
 				studiesData.forEach((studyRecord) => {
-					var temp = studiesInfo[generateStudiesInfoKey(studyRecord.abbreviated_name, studyRecord.study_identifier)];
+					var temp = studiesInfo[studyRecord.study_identifier];
+					if (!temp) {
+						temp = studiesInfo[studyRecord.abbreviated_name.toUpperCase()]
+					}
 					if (temp) {
+						temp.display_name = generateStudiesInfoKey(studyRecord.abbreviated_name, studyRecord.study_identifier);
 						temp.name = studyRecord.full_study_name;
 						temp.study_type = studyRecord.study_type;
 						temp.request_access = studyRecord.request_access;
@@ -47,7 +51,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 						} else {
 							studyRecord.short_title = t.substring(t.lastIndexOf("(")).replace('(','').replace(')','');
 							temp.study_matches += studyRecord.clinical_sample_size;
-						}
+						}	
 						if (studyRecord.consent_group_code !== 'c0') temp.consents.push(studyRecord);
 					}
 				});
@@ -86,111 +90,102 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
     }
 
     var doUpdate = function(incomingQuery) {
-		// clear counts
-		for (var x in studiesInfo) {
-			studiesInfo[x].study_matches = "--";
-		}
-		this.model.set("totalPatients",0);
-		this.model.spinAll();
-		this.render();
+		if (JSON.parse(sessionStorage.getItem('isOpenAccess')) === true) {
+			// clear counts
+			for (var x in studiesInfo) {
+				studiesInfo[x].study_matches = "--";
+			}
+			outputModel.set("totalPatients",0);
+			outputModel.spinAll();
+			this.render();
 
-		// make safe deep copies of the incoming query so we don't modify it
-		var query = JSON.parse(JSON.stringify(incomingQuery));
-		query.resourceCredentials = {};
-		query.query.expectedResultType="COUNT";
-		this.model.set("query", query);
+			// make safe deep copies of the incoming query so we don't modify it
+			var query = JSON.parse(JSON.stringify(incomingQuery));
+			query.resourceCredentials = {};
+			query.query.expectedResultType="COUNT";
+			outputModel.set("query", query);
 
-		// query for the studies counts
-		var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
-		queryStudies.query.crossCountFields = studyConcepts;
-		queryStudies.query.expectedResultType="CROSS_COUNT";
+			// query for the studies counts
+			var queryStudies = JSON.parse(JSON.stringify(incomingQuery));
+			queryStudies.query.crossCountFields = studyConcepts;
+			queryStudies.query.expectedResultType="CROSS_COUNT";
 
-		$.ajax({
-			url: window.location.origin + "/picsure/query/sync",
-			type: 'POST',
-			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-			contentType: 'application/json',
-			data: JSON.stringify(queryStudies),
-			success: (function(response) {
-				let totalPatients = response["\\_studies_consents\\"];
-				if (totalPatients.includes(" \u00B1")) {
-					this.model.set("totalPatients", totalPatients.split(" ")[0]);
-					this.model.set("totalPatientsSuffix", totalPatients.split(" ")[1]);
-				} else {
-					this.model.set("totalPatients", totalPatients);
-					this.model.set("totalPatientsSuffix", "");
-				}
-				this.model.set("spinning", false);
-				this.model.set("queryRan", true);
-				this.render();
+			$.ajax({
+				url: window.location.origin + "/picsure/query/sync",
+				type: 'POST',
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				contentType: 'application/json',
+				data: JSON.stringify(queryStudies),
+				success: (function(response) {
+					let totalPatients = String(response["\\_studies_consents\\"]);
+					if (totalPatients.includes(" \u00B1")) {
+						outputModel.set("totalPatients", totalPatients.split(" ")[0]);
+						outputModel.set("totalPatientsSuffix", totalPatients.split(" ")[1]);
+					} else {
+						outputModel.set("totalPatients", totalPatients);
+						outputModel.set("totalPatientsSuffix", "");
+					}
+					outputModel.set("spinning", false);
+					outputModel.set("queryRan", true);
+					this.render();
 
-				// populate counts and sort
-				var sorted_found = [];
-				var sorted_unfound = [];
-				for (var x in studiesInfo) {
-					var cnt = response[studiesInfo[x].study_concept];
-					if (cnt) {
-						studiesInfo[x].study_matches = cnt;
-						if (cnt.includes("<") || cnt.includes("\u00B1") || cnt > 0) {
-							sorted_found.push(studiesInfo[x]);
-						} else {
-							sorted_unfound.push(studiesInfo[x]);
+					// populate counts and sort
+					var sorted_found = [];
+					var sorted_unfound = [];
+					for (var x in studiesInfo) {
+						let cnt = String(response[studiesInfo[x].study_concept]);
+						if (cnt) {
+							studiesInfo[x].study_matches = String(cnt);
+							if (cnt.includes("<") || cnt.includes("\u00B1") || cnt > 0) {
+								sorted_found.push(studiesInfo[x]);
+							} else {
+								sorted_unfound.push(studiesInfo[x]);
+							}
 						}
 					}
-				}
 
-				// perform additional sort
-				var func_sort = function(a,b) {
-					let codeComparison = a.code.localeCompare(b.code, undefined, {sensitivity: 'base'});
-					if (codeComparison === 0) {
-						return a.identifier.localeCompare(b.identifier, undefined, {sensitivity: 'base'});
+					// perform additional sort
+					var func_sort = function(a,b) {
+						let codeComparison = a.code.localeCompare(b.code, undefined, {sensitivity: 'base'});
+						if (codeComparison === 0) {
+							return a.identifier.localeCompare(b.identifier, undefined, {sensitivity: 'base'});
+						}
+						return codeComparison;
+					};
+					sorted_found.sort(func_sort);
+					sorted_unfound.sort(func_sort);
+					var sorted_final = sorted_found.concat(sorted_unfound);
+
+					// outputModel.set("studies",sorted_final);
+
+					// populate the study consent counts
+					for (var code in studiesInfo) {
+						studiesInfo[code].consents.forEach((x) => {
+							// todo: remove consents if not found? or 0?
+							// yes
+							x.study_matches = response[studiesInfo[code].study_concept + x.short_title + '\\'];
+						});
 					}
-					return codeComparison;
-				};
-				sorted_found.sort(func_sort);
-				sorted_unfound.sort(func_sort);
-				var sorted_final = sorted_found.concat(sorted_unfound);
-
-				this.model.set("studies",sorted_final);
-
-				// populate the study consent counts
-				for (var code in studiesInfo) {
-					studiesInfo[code].consents.forEach((x) => {
-						// todo: remove consents if not found? or 0?
-						// yes
-						x.study_matches = response["\\_studies_consents\\" + x.abbreviated_name + ' (' + x.study_identifier + ')' + "\\" + x.short_title + "\\"];
-					});
-				}
-				this.render();
-			}).bind(this),
-			error: (function(response) {
-				for (var x in studiesInfo) {
-					studiesInfo[x].study_matches = "(error)";
-				}
-				this.render();
-			}).bind(this)
-		});
+					outputModel.set("studies",sorted_final);
+					this.studiesAccessPanelView.render();
+					this.render();
+				}).bind(this),
+				error: (function(response) {
+					for (var x in studiesInfo) {
+						studiesInfo[x].study_matches = "(error)";
+					}
+					this.studiesAccessPanelView.render();
+					this.render();
+				}).bind(this)
+			});
+		}
 	}
 
-    var outputModelDefaults = {
-			totalPatients : 0,
-			spinnerClasses: "spinner-medium spinner-medium-center ",
-			spinning: false,
-			studies: studiesInfo,
-			resources : {}
-	};
-
-	var outputModel = BB.Model.extend({
-		defaults: outputModelDefaults,
-		spinAll: function(){
-			this.set('spinning', true);
-			this.set('queryRan', false);
-		}
-	});
-
 	var outputView = BB.View.extend({
-		initialize: function(){
+		initialize: function(opts){
 			this.template = HBS.compile(outputTemplate);
+			this.helpView = new helpView();
+			this.studiesAccessPanelView = opts.studiesPanel;
 			loadConcepts();
 		},
 		events:{
@@ -201,7 +196,9 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			"mouseout .request-access": "unhighlightConsent",
 			"keypress .request-access": "keyRequestAccess",
 			"click .request-access": "requestAccess",
-            "click .explore-access": "exploreAccess"
+            "click .explore-access": "exploreAccess",
+			"click #open-access-output-help": "openHelpModal",
+			"keypress #open-access-output-help": "openHelpModal",
 		},
 		keyToggleConsentGroup: function(event) {
 			if (event.key === "Enter") this.toggleConsentGroup(event);
@@ -229,6 +226,18 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
             console.log("Explore study: " + $(event.target).data("study"));
             window.history.pushState({}, "", "picsureui/queryBuilder");
         },
+		openHelpModal: function(event) {
+			if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+				return;
+			}
+			modal.displayModal(
+                this.helpView,
+                'Data Summary Help',
+                () => {
+                    $('#patient-count-box').focus();
+                }
+            );
+		},
 		totalCount: 0,
 		tagName: "div",
 		runQuery: function(incomingQuery) {
@@ -241,7 +250,7 @@ define(["jquery", "text!../settings/settings.json", "text!openPicsure/outputPane
 			}
 		},
 		render: function(){
-			var context = this.model.toJSON();
+			var context = outputModel.toJSON();
 			this.$el.html(this.template(Object.assign({}, context, overrides)));
 		}
 	});
