@@ -82,7 +82,6 @@
 
 
 <div id="studies-access">
-    <div>
         <div class="space-out">
             <div>
                 <h2 class="studies-title">Data Access Table</h2>
@@ -93,82 +92,14 @@
                 <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic, n/a = Not Applicable</div>
             </div>
         </div>
-
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Identifier</th>
-                <th>Code</th>
-                <th>Data Type</th>
-                <th>Name</th>
-                <th>Consents</th>
-                <th>Clinical Variables</th>
-                <th>Participants with Phenotypes</th>
-                <th>Samples Sequenced</th>
-                <th>Version</th>
-                <th>Participant Number</th>
-                <th>Access</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each permitted}}
-                <tr>
-                    <td>{{study_identifier}}</td>
-                    <td>{{abbreviated_name}}</td>
-                    <td>{{data_type}}</td>
-                    <td>{{full_study_name}}</td>
-                    <td>{{consent_group_name}}</td>
-                    <td>{{valueOrNA clinical_variable_count}}</td>
-                    <td>{{valueOrNA clinical_sample_size}}</td>
-                    <td>{{valueOrNA genetic_sample_size}}</td>
-                    <td>{{study_version}}</td>
-                    <td>{{study_phase}}</td>
-                    <td><span class="btn btn-default disabled">Granted</span></td>
-                </tr>
-            {{/each}}
-            {{#each denied}}
-                <tr>
-                    <td>{{study_identifier}}</td>
-                    <td>{{abbreviated_name}}</td>
-                    <td>{{data_type}}</td>
-                    <td>{{full_study_name}}</td>
-                    <td>{{consent_group_name}}</td>
-                    <td>{{valueOrNA clinical_variable_count}}</td>
-                    <td>{{valueOrNA clinical_sample_size}}</td>
-                    <td>{{valueOrNA genetic_sample_size}}</td>
-                    <td>{{study_version}}</td>
-                    <td>{{study_phase}}</td>
-                    <td>
-                        <a href="{{request_access}}" target="_blank" title='Clicking here will take you to the given link in another tab'>
-                            <span class="btn btn-primary btn-blue" aria-label="Request access to {{full_study_name}}. This link will open in a new browser tab.">Request</span>
-                        </a>
-                    </td>
-                </tr>
-            {{/each}}
-            <tr>
-                <td colspan="11" style="background-color: #fff;" align="right"><div class="btn-group" role="group" style="position: relative;">
+        <div class="flex-col">
+            <table id="data-access-table" class="table table-striped row-border hover" role="region" aria-label=""></table>
+            <div class="button-container">
+                <div class="btn-group buttom-spacer" role="group">
                     <button type="button" class="btn btn-default btn-lg study-lst-btn1 study-lst-btn-no-hov" tabindex="-1">Studies with data unavailable (withdrawn or no consents)</button>
                     <button type="button" class="btn btn-default btn-lg study-lst-btn2"><span id="no-consent-toggle" class="glyphicon glyphicon-chevron-down"></span></button>
-                </div></td>
-            </tr>
-            {{#each na}}
-                <tr class="no-consent-row" style="display:none;">
-                    <td>{{study_identifier}}</td>
-                    <td>{{abbreviated_name}}</td>
-                    <td>{{data_type}}</td>
-                    <td>{{full_study_name}}</td>
-                    <td>{{consent_group_name}}</td>
-                    <td>{{valueOrNA clinical_variable_count}}</td>
-                    <td>{{valueOrNA clinical_sample_size}}</td>
-                    <td>{{valueOrNA genetic_sample_size}}</td>
-                    <td>{{study_version}}</td>
-                    <td>{{study_phase}}</td>
-                    <td>
-                        <span class="btn btn-default disabled">N/A</span>
-                    </td>
-                </tr>
-            {{/each}}
-            </tbody>
-        </table>
-    </div>
+                </div>
+            </div> 
+            <table id="data-access-table-na" class="table table-striped row-border hover" role="region" aria-label=""></table>
+        </div>
 </div>
