@@ -82,24 +82,24 @@
 
 
 <div id="studies-access">
-        <div class="space-out">
-            <div>
-                <h2 class="studies-title">Data Access Table</h2>
-                <h4 class="studies-sub-title">View all studies and associated information available in PIC-SURE separated by consent group. Check personalized authorization for available studies in the "Access" column.</h4>
-            </div>
-            <div class="freeze-message">
-                <div>{{freeze_msg}}</div>
-                <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic, n/a = Not Applicable</div>
-            </div>
+    <div class="space-out">
+        <div>
+            <h2 class="studies-title">Data Access Table</h2>
+            <h4 class="studies-sub-title">View all studies and associated information available in PIC-SURE separated by consent group. Check personalized authorization for available studies in the "Access" column.</h4>
         </div>
-        <div class="flex-col">
-            <table id="data-access-table" class="table table-striped row-border hover" role="region" aria-label=""></table>
-            <div class="button-container">
-                <div class="btn-group buttom-spacer" role="group">
-                    <button type="button" class="btn btn-default btn-lg study-lst-btn1 study-lst-btn-no-hov" tabindex="-1">Studies with data unavailable (withdrawn or no consents)</button>
-                    <button type="button" class="btn btn-default btn-lg study-lst-btn2"><span id="no-consent-toggle" class="glyphicon glyphicon-chevron-down"></span></button>
-                </div>
-            </div> 
-            <table id="data-access-table-na" class="table table-striped row-border hover" role="region" aria-label=""></table>
+        <div class="freeze-message">
+            <div>{{freeze_msg}}</div>
+            <div>P = Phenotype, G = Genomic, P/G = Phenotype/Genomic, n/a = Not Applicable</div>
         </div>
+    </div>
+    <div class="flex-col table-responsive">
+        <table id="data-access-table" style="width:100%" class="table table-striped row-border hover" role="region" aria-label="A table showing infomation about studies included in Pic-sure. Use the first column to request access to studies."></table>
+        <div class="button-container">
+            <div class="btn-group buttom-spacer" role="group">
+                <button type="button" class="btn btn-default btn-lg study-lst-btn1 study-lst-btn-no-hov" tabindex="-1">Studies with data unavailable (withdrawn or no consents)</button>
+                <button type="button" class="btn btn-default btn-lg study-lst-btn2"><span id="no-consent-toggle" class="glyphicon glyphicon-chevron-down"></span></button>
+            </div>
+        </div> 
+        <table id="data-access-table-na" style="width:100%" class="table table-striped row-border hover" role="region" aria-label="A table showing infomation about studies with data unavailable"></table>
+    </div>
 </div>
