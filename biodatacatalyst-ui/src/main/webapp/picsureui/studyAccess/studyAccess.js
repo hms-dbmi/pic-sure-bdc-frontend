@@ -59,9 +59,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
 
                         let studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"];
                         tmpStudy['accession'] = tmpStudy["study_identifier"]+ "." + tmpStudy["study_version"] + "." + tmpStudy["study_phase"];
-                        tmpStudy['study_focus']="N/A";
-                        tmpStudy['study_design']="N/A";
-                        tmpStudy['additional_info']="N/A";
                         if (validConsents.includes(studyConsent)) {
                             tmpStudy['isGranted']=true;
                             this.records.permitted.push(tmpStudy);
@@ -196,12 +193,12 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         {title:'Access', data:null},
                         {title:'Abbreviation', data:'abbreviated_name'},
                         {title:'Name',data:'full_study_name'},
-                        {title:'Study Focus',data:'study_focus'}, //todo
-                        {title:'Study Design', data:'study_design'}, //todo
+                        {title:'Study Focus',data:'study_focus'},
+                        {title:'Study Design', data:'study_design'},
                         {title:'Clinical Variables',data:'clinical_variable_count'},
                         {title:'Participants with Phenotypes',data:'clinical_sample_size'},
                         {title:'Samples Sequenced',data:'genetic_sample_size'},
-                        {title:'Aditional Infomation',data:'additional_info'}, //todo
+                        {title:'Aditional Infomation',data:'additional_information'},
                         {title:'Concents',data:'consent_group_name'},
                         {title:'Accession',data:'accession'},
                     ],
@@ -246,12 +243,12 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         {title:'Access', data:null},
                         {title:'Abbreviation', data:'abbreviated_name'},
                         {title:'Name',data:'full_study_name'},
-                        {title:'Study Focus',data:'study_focus'}, //todo
-                        {title:'Study Design', data:'study_design'}, //todo
+                        {title:'Study Focus',data:'study_focus'},
+                        {title:'Study Design', data:'study_design'}, 
                         {title:'Clinical Variables',data:'clinical_variable_count'},
                         {title:'Participants with Phenotypes',data:'clinical_sample_size'},
                         {title:'Samples Sequenced',data:'genetic_sample_size'},
-                        {title:'Aditional Infomation',data:'additional_info'}, //todo
+                        {title:'Aditional Infomation',data:'additional_information'},
                         {title:'Concents',data:'consent_group_name'},
                         {title:'Accession',data:'accession'},
                     ],
