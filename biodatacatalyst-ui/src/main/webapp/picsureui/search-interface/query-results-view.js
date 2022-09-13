@@ -1,9 +1,11 @@
 define(["jquery",  "text!search-interface/query-results-view.hbs", "picSure/ontology", "backbone", "handlebars",
 "overrides/outputPanel", "common/transportErrors", "common/config",
-"text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder", "search-interface/query-results-help-view", "search-interface/modal", "openPicsure/openPicsureHelpView"],
+"text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder", 
+"search-interface/query-results-help-view", "search-interface/modal", "openPicsure/openPicsureHelpView",
+"search-interface/tool-suite-view"],
 function($, queryResultsTemplate, ontology, BB, HBS,
     overrides, transportErrors, config,
-    modalTemplate, settings, filterModel, queryBuilder, helpView, modal, openHelpView){
+    modalTemplate, settings, filterModel, queryBuilder, helpView, modal, openHelpView,){
 
         var queryResultsModel = BB.Model.extend({
             defaults: {
@@ -20,6 +22,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             ontology: ontology,
             initialize: function(opts){
                 this.template = HBS.compile(queryResultsTemplate);
+                this.toolSuiteView = opts.toolSuiteView;
                 this.helpView = new helpView();
                 this.openHelpView = new openHelpView();
                 overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
@@ -40,6 +43,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
             queryFinished: function(){
                 this.model.set('spinning', false);
                 this.model.set('queryRan', true);
+                this.toolSuiteView && this.toolSuiteView.handleFilterChange();
                 this.render();
             },
             totalCount: 0,
