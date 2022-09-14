@@ -45,11 +45,12 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			"click #search-results-datatable tr": "infoClickHandler",
 			"click .fa-filter": "filterClickHandler",
 			"click #no-results-help, #no-results-help-empty": "helpViewClickHandler",
+			"keypress #no-results-help, #no-results-help-empty": "helpViewClickHandler",
 			"click .export-icon": "databaseClickHandler",
 			"click .page-link>a":"pageLinkHandler",
 			'focus #search-results-datatable': 'resultsDatatableFocus',
 			'blur #search-results-datatable': 'resultsBlur',
-			'keypress #search-results-div': 'resultKeyHandler',
+			'keypress #search-results-datatable': 'resultKeyHandler',
 		},
 		pageLinkHandler: function(event){
 			tagFilterModel.set("currentPage", event.target.innerText);
@@ -58,7 +59,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			tagFilterModel.set("searchResults",response, {silent:true});
 		},
 		resultsFocus: function(event){
-			this.focusedSection = '#search-results-div';
+			this.focusedSection = '#search-results-datatable';
 			keyboardNav.setCurrentView("searchResults");
 		},
 		resultsDatatableFocus: function(event){
@@ -183,7 +184,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			this.retrieveDataTableMeta(searchResult.result.studyId + "_" + searchResult.result.dtId, function(response){
 				this.cacheVariableInfo(response, searchResult.result.varId);
 				modal.displayModal(this.filterModalView, "Variable Information for " + response.variables[searchResult.result.varId].metadata.columnmeta_name, ()=>{
-					$('#search-results-div').focus();
+					$('#search-results-datatable').focus();
 				});
 			}.bind(this));
 		},
@@ -259,7 +260,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
                 new noResultHelpView,
                 'Why might I see unexpected search results?',
                 () => {
-                    $('search-box').focus();
+                    $('#no-results-help').focus();
                 }
             );
 		},
