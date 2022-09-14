@@ -4,7 +4,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
     function($, BB, HBS, studyAccessTemplate, studyAccessConfiguration,
              transportErrors, queryBuilder, settings, spinner,
              outputPanelOverrides, search){
-
+        const STUDY_CONSENTS = "\\_studies_consents\\";
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
             open_cnts: {},
@@ -152,7 +152,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             $('#open-studies-count').html(openStudies + " Studies");
 
                             var query = queryBuilder.generateQueryNew({}, {}, null, studyAccess.resources.open);
-                            query.query.expectedResultType = "COUNT";
+                            query.query.expectedResultType = "CROSS_COUNT";
+                            query.query.crossCountFields = [STUDY_CONSENTS];
                             var deferredParticipants = $.ajax({
                                 url: window.location.origin + "/picsure/query/sync",
                                 type: 'POST',
@@ -160,7 +161,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                                 contentType: 'application/json',
                                 data: JSON.stringify(query),
                                 success: (function (response) {
-                                    $("#open-participants").html(parseInt(response).toLocaleString() + " Participants");
+                                    const parsedCountString = response[STUDY_CONSENTS] ? parseInt(response[STUDY_CONSENTS]).toLocaleString() + " Participants" : "Count Unavailable";
+                                    $("#open-participants").html(parsedCountString);
                                 }).bind(this),
                                 statusCode: {
                                     401: function(){
