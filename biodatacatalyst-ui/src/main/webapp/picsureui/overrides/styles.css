@@ -25,7 +25,6 @@
 /*************************/
 
 #main-content {
-    display: flex;
     width: 100%;
     height: 100%;
     position: relative;
@@ -261,49 +260,37 @@
 }
 
 #studies-access > div {
-    margin: 10px 0px;
+    margin: 20px 0px;
 }
 
 #studies-access > div > div {
     margin: 5px 20px
 }
 
-#studies-access table {
-    border-collapse: separate;
-    border-spacing: 0;
+.flex-col {
+    display: flex;
+    flex-direction: column;
 }
 
-#studies-access table th {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0px;
-    z-index: 2;
-    background-color: white;
-    border-bottom: 1px solid #aaa;
+.center-vert {
+    vertical-align: middle!important;
 }
 
-#studies-access table tr > :nth-child(2),
-#studies-access table tr > :nth-child(3),
-#studies-access table tr > :nth-child(6),
-#studies-access table tr > :nth-child(7),
-#studies-access table tr > :nth-child(8),
-#studies-access table tr > :nth-child(9),
-#studies-access table tr > :nth-child(10),
-#studies-access table tr > :nth-child(11) {
-    text-align: center;
+#studies-access .buttom-spacer {
+    margin: 0 50px 0 auto;
 }
-
-#studies-access table tr > :nth-child(3),
-#studies-access table tr > :nth-child(5),
-#studies-access table tr > :nth-child(6),
-#studies-access table tr > :nth-child(7),
-#studies-access table tr > :nth-child(8),
-#studies-access table tr > :nth-child(10) {
-    width: 1%;
+#studies-access .button-container {
+    display: flex;
+    width: 100%;
+    height: 50px;
 }
 
 #studies-access span.btn {
     width: 90px;
+}
+
+#data-access-table {
+    width: 100%;
 }
 
 .btn-blue {
