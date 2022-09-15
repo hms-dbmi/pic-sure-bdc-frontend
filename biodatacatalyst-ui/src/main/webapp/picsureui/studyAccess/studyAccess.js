@@ -199,7 +199,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         {title:'Participants with Phenotypes',data:'clinical_sample_size'},
                         {title:'Samples Sequenced',data:'genetic_sample_size'},
                         {title:'Aditional Infomation',data:'additional_information'},
-                        {title:'Concents',data:'consent_group_name'},
+                        {title:'Consents',data:'consent_group_name'},
                         {title:'Accession',data:'accession'},
                     ],
                     columnDefs: [
