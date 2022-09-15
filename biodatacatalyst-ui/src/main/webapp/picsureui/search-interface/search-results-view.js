@@ -8,7 +8,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel,
 		 modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView,) {
-
+	const SPACE = ' ';
 	let shouldDisableActions = function(isHarmonized) {
 		if (isHarmonized) {
 			let nonHarmonizedFitlers = filterModel.get('activeFilters').filter(filter=>{
@@ -39,6 +39,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				'keynav-arrowright document': this.nextPage,
 				'keynav-arrowleft document': this.previousPage
 			});
+			this.isSearching = false;
 		},
 		events: {
 			"click .search-result": "infoClickHandler",
@@ -144,14 +145,22 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}.bind(this));
 		},
 		resultKeyHandler: function(event){
+			if (event.key.toLowerCase()==='s') {
+				if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
+					event.preventDefault();
+					this.isSearching = !this.isSearching;
+					this.render();
+				}
+			}
 			event.target = $('.focused-search-result')[0];
 			if(event.key.toLowerCase()==='f'){
 				this.filterClickHandler(event);
 			}
-			if(event.key.toLowerCase()==='i'){
-				this.infoClickHandler(event);
+			if(event.key.toLowerCase()==='e'){
+				this.databaseClickHandler(event);
 			}
-			if(event.key.toLowerCase()==='enter'){
+			if(event.key.toLowerCase()==='i' || event.key.toLowerCase()==='enter' || event.key.toLowerCase()===SPACE){
+				event.preventDefault();
 				this.infoClickHandler(event);
 			}
 		},
@@ -159,7 +168,13 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			if (event.target.classList.contains('disabled-icon')) {
 				return;
 			}
-			const varId = $(event.target).data('variable-id');
+			let varId = $(event.target).data('variable-id');
+
+			if (!varId && !event.target.classList.contains('search-result-action-btn')) {
+				const exportIcon = $(event.target).find('.fa-filter.search-result-action-btn');
+				if (exportIcon.classList.contains('disabled-icon')) return;
+				varId = exportIcon.data('variable-id')
+			}
 
 			let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
 				return varId === result.result.varId;
@@ -193,6 +208,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				return;
 			}
 			let resultIndex = $(event.target).data("result-index");
+			if (!resultIndex && 
+				!(event.target.classList.contains('.export-icon.search-result-action-btn') ||
+			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn') )) {
+					let target = $(event.target).find('.export-icon.search-result-action-btn');
+					target = target ? target : $(event.target).find('.glyphicon-log-out.search-result-action-btn');
+					if (!target || target.get(0).classList.contains('disabled-icon')) return
+					resultIndex = target.data("result-index");
+			}
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
 		},
@@ -253,7 +276,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			searchUtil.ensureElementIsInView(results[focusedVariable]);
 		},
 		helpViewClickHandler: function(event) {
-			if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
+			if (event.type === "keypress" && !(event.key === SPACE || event.key === 'Enter')) {
 				return;
 			}
 			modal.displayModal(
@@ -354,7 +377,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				$('#search-results-div').html(searchResultsView.$el);
 				this.searchResultsTable = $('#search-results-datatable').DataTable({
                     data: results,
-					"searching": false,
+					"searching": this.isSearching,
 					"ordering": false,
 					"bAutoWidth": false,
 					"tabIndex": -1,
