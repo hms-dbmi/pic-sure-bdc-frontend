@@ -224,6 +224,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 				this.$el.find('#genomic-filter-btn').remove();
 			}
+			$('#search-box').focus();
 		}
 	});
 
