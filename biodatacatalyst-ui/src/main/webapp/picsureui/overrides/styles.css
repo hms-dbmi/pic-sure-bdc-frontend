@@ -285,40 +285,6 @@
     height: 50px;
 }
 
-/* #studies-access table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-#studies-access table th {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0px;
-    z-index: 2;
-    background-color: white;
-    border-bottom: 1px solid #aaa;
-}
-
-#studies-access table tr > :nth-child(2),
-#studies-access table tr > :nth-child(3),
-#studies-access table tr > :nth-child(6),
-#studies-access table tr > :nth-child(7),
-#studies-access table tr > :nth-child(8),
-#studies-access table tr > :nth-child(9),
-#studies-access table tr > :nth-child(10),
-#studies-access table tr > :nth-child(11) {
-    text-align: center;
-}
-
-#studies-access table tr > :nth-child(3),
-#studies-access table tr > :nth-child(5),
-#studies-access table tr > :nth-child(6),
-#studies-access table tr > :nth-child(7),
-#studies-access table tr > :nth-child(8),
-#studies-access table tr > :nth-child(10) {
-    width: 1%;
-} */
-
 #studies-access span.btn {
     width: 90px;
 }
