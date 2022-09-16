@@ -54,6 +54,7 @@
 	#tag-filters {
 		max-width: 315px;
 		min-width: 315px;
+		margin-left: 10px;
 	}
 
 	.require-tag-btn {
@@ -155,7 +156,7 @@
 	</div>
 </div>
 {{/if}}
-{{#if this.tagsShown}}
+{{#if showTagSection}}
 <div id='tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0
 	aria-label="You are in the tag filters region. Use up and down arrows to move between tag filters.">
 	<div class='panel-heading'>
@@ -175,10 +176,15 @@
 		</div>
 		{{/each}}
 		<br>
-		{{#if tagsLimited}}
-		<span id="show-all-tags-btn" tabindex="0"> <span class="glyphicon glyphicon-chevron-down"></span> View more tags</span>
-		{{else}}
-		<span id="show-fewer-tags-btn" tabindex="0"> <span class="glyphicon glyphicon-chevron-up"></span> View fewer tags</span>
+		{{#unless tagsTotal}}
+			<p style="margin-bottom: 26px;">No tag results available for your search term.</p>
+		{{/unless}}
+		{{#if tagsTotal}}
+			{{#if tagsLimited}}
+			<span id="show-all-tags-btn" tabindex="0"> <span class="glyphicon glyphicon-chevron-down"></span> View more tags</span>
+			{{else}}
+			<span id="show-fewer-tags-btn" tabindex="0"> <span class="glyphicon glyphicon-chevron-up"></span> View fewer tags</span>
+			{{/if}}
 		{{/if}}
 	</div>
 </div>

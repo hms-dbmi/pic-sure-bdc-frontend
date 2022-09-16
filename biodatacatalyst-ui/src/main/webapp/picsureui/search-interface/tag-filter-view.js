@@ -227,6 +227,7 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 					numActiveTags: this.model.get("requiredTags").size() + this.model.get("excludedTags").size(),
 					tagsTotal: filteredTags.length,
 					tagsShown: this.model.get('numTags'),
+					showTagSection: this.model.get('showTagSection'),
 					tagsLimited: this.model.get('tagLimit') == defaultTagLimit,
 					hasRequiredTags:this.model.hasRequiredTags(),
 					hasExcludedTags:this.model.hasExcludedTags(),

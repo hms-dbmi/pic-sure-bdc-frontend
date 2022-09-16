@@ -106,6 +106,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		updateTags: function(response) {
 			if(!tagFilterModel.changed.currentPage){
 				this.tagFilterView.updateTags(response);
+				tagFilterModel.set('showTagSection', true);
 				this.tagFilterView.render();
 			}
 			this.searchResultsView.updateResponse(response);
@@ -120,8 +121,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				if(tagFilterModel.get("term")!==this.searchTerm){
 					tagFilterModel.set("term", this.searchTerm, {silent:true});
 				}
-			}
-			else{
+			} else{
 				this.searchTerm = tagFilterModel.get("term");
 				$('#search-box').val(this.searchTerm);
 			}
@@ -224,6 +224,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 				this.$el.find('#genomic-filter-btn').remove();
 			}
+			$('#search-box').focus();
 		}
 	});
 

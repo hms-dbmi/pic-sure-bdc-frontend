@@ -23,7 +23,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 this.searchPanel = new searchPanel(this.dataForSearchPanel);
             },
             events: {
-                "click #add-filter-button": "addFilter"
+                "click #add-filter-button": "addFilter",
+                'updatedLists' : 'updateButtonState',
             },
             addFilter: function(event) {
                 if(_.keys(this.data.searchResult.result.values).length <= $('.results-box .categorical-filter-input:checked').length){
@@ -41,6 +42,15 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 }
                 $('.close').click();
             },
+            updateButtonState: function() {
+                if (this.searchPanel.data.selectedResults.length > 0) {
+                    this.$el.find('#add-filter-button').prop('disabled', false);
+                    this.$el.find('#add-filter-button').prop('title', 'Adds Filter');
+                } else {
+                    this.$el.find('#add-filter-button').prop('disabled', true);
+                    this.$el.find('#add-filter-button').prop('title', 'Please select at least one option to add the filter to the query.');
+                }
+            },
             render: function () {
                 this.$el.html(this.categoricalFilterModalViewTemplate(this.data));
                 this.searchPanel.$el = $('#value-container');
@@ -50,7 +60,6 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                             $('.categorical-filter-input[value="' + value + '"]').attr("checked", "true");
                         });
                 }
-
                 this.searchPanel.render();
             }
         });
