@@ -213,7 +213,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn') )) {
 					let target = $(event.target).find('.export-icon.search-result-action-btn');
 					target = target ? target : $(event.target).find('.glyphicon-log-out.search-result-action-btn');
-					if (!target || target.get(0).classList.contains('disabled-icon')) return
+					if (!target || target.get(0).classList.contains('disabled-icon')) return;
 					resultIndex = target.data("result-index");
 			}
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
