@@ -25,10 +25,11 @@ define(['backbone', 'handlebars','text!search-interface/variable-values-view.hbs
 			modal.displayModal(
 				prevModal.view,
 				prevModal.title,
-					() => {
-						$(prevModal.div).focus();
-					}
-			);
+				() => {
+					$(prevModal.div).focus();
+				}, 
+				{isHandleTabs: true}
+		);
 		},
 		data: function(){
 			return $('#vcfData').DataTable().rows( {order:'index', search:'applied'} ).data();

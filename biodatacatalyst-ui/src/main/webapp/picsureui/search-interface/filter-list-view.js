@@ -140,7 +140,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     modalView.render();
                     modal.displayModal(modalView, "Variable Information for " + data.variableMetadata.derived_var_name,  ()=>{
                         $('#filter-list').focus();
-                    });
+                    }, {isHandleTabs: true});
                 }
             },
             editFilterHandler: function(event) {
@@ -171,7 +171,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                                 el: $(".modal-body"),
                             });
                             this.filterModalView.render();
-                            modal.displayModal(this.filterModalView, "Dataset : " + filter.searchResult.result.metadata.derived_study_description);
+                            modal.displayModal(this.filterModalView, "Dataset : " + filter.searchResult.result.metadata.derived_study_description), ()=>{$('#filter-list').focus();}, {isHandleTabs: true};
                         }.bind(this),
                         error: function(response){
                             console.log(response);
@@ -204,7 +204,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                     modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name, ()=>{
                         $('#filter-list').focus();
-                    });
+                    }, {isHandleTabs: true});
                 }
             },
             render: function(){

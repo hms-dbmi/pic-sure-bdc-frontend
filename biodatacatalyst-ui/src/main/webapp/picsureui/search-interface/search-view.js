@@ -101,7 +101,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			const imageViewerView = new imageViewer(viewOpts);
 			modal.displayModal(imageViewerView, titles[0], function() {
 				$('#guide-me-button').focus();
-			});
+			}, {isHandleTabs: false});
 		},
 		updateTags: function(response) {
 			if(!tagFilterModel.changed.currentPage){
@@ -207,7 +207,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			const genomicFilter = new genomicFilterView({el: $(".modal-body")});
 			modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 				$('#filter-list').focus();
-			});
+			}, {isHandleTabs: true});
 			return false;
 		},
 

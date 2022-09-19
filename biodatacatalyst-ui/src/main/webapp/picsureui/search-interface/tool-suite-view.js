@@ -37,7 +37,8 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             modal.displayModal(
                 vizModal,
                 'Variable distributions of query filters',
-                () => {this.$el.focus();}
+                () => {this.$el.focus();}, 
+                {isHandleTabs: true}
             );
         },
         openHelp: function(event){
@@ -49,7 +50,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 'Tool Suite Help',
                 () => {
                     $('#tool-suite').focus();
-                }
+                }, {isHandleTabs: true}
             );
         },
         openImaging: function(){
@@ -75,7 +76,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 'Review and Package Data',
                 () => {
                     $('#package-modal').focus();
-                }
+                }, {isHandleTabs: true}
             );
         },
         openVariantExplorer: function(){

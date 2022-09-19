@@ -117,7 +117,7 @@ define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", 
                 'Filtered Results by Study',
                 () => {
                     $('#patient-count-box').focus();
-                }
+                }, {isHandleTabs: true}
             );
 		},
         render: function() {

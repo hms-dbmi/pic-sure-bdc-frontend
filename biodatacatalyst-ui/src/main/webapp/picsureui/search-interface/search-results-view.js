@@ -141,7 +141,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.dataTableInfoView.render();
 				modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[rowData.variable_id].metadata.columnmeta_name,  ()=>{
 					$('#search-results-datatable').focus();
-				});
+				}, {isHandleTabs: true});
 			}.bind(this));
 		},
 		resultKeyHandler: function(event){
@@ -200,7 +200,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				this.cacheVariableInfo(response, searchResult.result.varId);
 				modal.displayModal(this.filterModalView, "Variable Information for " + response.variables[searchResult.result.varId].metadata.columnmeta_name, ()=>{
 					$('#search-results-datatable').focus();
-				});
+				}, {isHandleTabs: true});
 			}.bind(this));
 		},
 		databaseClickHandler: function(event) {
@@ -284,7 +284,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
                 'Why might I see unexpected search results?',
                 () => {
                     $('#no-results-help').focus();
-                }
+                }, {isHandleTabs: true}
             );
 		},
 		updateExportIcons() {

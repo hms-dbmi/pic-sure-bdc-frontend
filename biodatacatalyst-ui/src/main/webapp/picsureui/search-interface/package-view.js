@@ -309,7 +309,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			title,
 			() => {
 				$('#values-modal').focus();
-			}
+			}, {isHandleTabs: true}
 		);
 	},
 	render: function(){

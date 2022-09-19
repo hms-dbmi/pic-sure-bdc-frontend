@@ -105,7 +105,7 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                     'Data Summary Help',
                     () => {
                         $('#patient-count-box').focus();
-                    }
+                    }, {isHandleTabs: true}
                 );
             },
             render: function(){
