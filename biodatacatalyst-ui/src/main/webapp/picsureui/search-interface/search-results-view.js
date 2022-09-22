@@ -170,10 +170,11 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 			let varId = $(event.target).data('variable-id');
 
+			//Handle Keyboard event
 			if (!varId && !event.target.classList.contains('search-result-action-btn')) {
-				const exportIcon = $(event.target).find('.fa-filter.search-result-action-btn');
-				if (exportIcon.classList.contains('disabled-icon')) return;
-				varId = exportIcon.data('variable-id');
+				const exportIcon = $(event.target).find('.fa-filter.search-result-action-btn').get(0);
+				if (exportIcon && exportIcon.classList.contains('disabled-icon')) return;
+				varId = $(exportIcon).data('variable-id');
 			}
 
 			let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
