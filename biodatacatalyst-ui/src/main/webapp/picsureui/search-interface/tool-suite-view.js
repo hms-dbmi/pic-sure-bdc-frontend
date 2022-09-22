@@ -4,7 +4,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
         initialize: function(opts){
             this.template = HBS.compile(template);
             this.helpView = new helpView();
-            this.listenTo(filterModel.get('activeFilters'), 'change reset add remove', this.render);
+            this.listenTo(filterModel, 'change reset add remove', this.render);
         },
         events: {
             'click #package-data' : 'openPackageData',
