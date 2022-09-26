@@ -3,7 +3,12 @@
         outline: 4px solid red!important;
     }
 </style>
-<h3 class="selection-heading">{{heading}}</h3>
+<h3 class="selection-heading">
+    {{heading}}
+    {{#if isRequired}}
+        <span class="selection-required">Required</span>
+    {{/if}}
+</h3>
 <div id="{{searchId}}-container" class="selection-container space-even" aria-label="{{description}}" >
     <div class="panel panel-default no-padding half-width">
         <div class="panel-heading search-heading space-out">

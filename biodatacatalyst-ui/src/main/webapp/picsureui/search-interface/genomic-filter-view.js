@@ -79,7 +79,8 @@ define(['jquery', 'backbone','handlebars',
                     resultContext: 'Selected genes',
                     placeholderText: 'The list of genes below is a sub-set, try typing other gene names (Ex. CHD8)',
                     description: this.data.geneDesc,
-                    sample: true
+                    sample: true,
+                    isRequired: true
                 }
                 this.dataForConsequenceSearch = {
                     heading: 'Variant consequence calculated',
@@ -195,15 +196,12 @@ define(['jquery', 'backbone','handlebars',
                 }
             },
             updateDisabledButton: function(){
-                if (this.data.categoryVariantInfoFilters && ((this.data.categoryVariantInfoFilters.Gene_with_variant && this.data.categoryVariantInfoFilters.Gene_with_variant.length) ||
-                    (this.data.categoryVariantInfoFilters.Variant_consequence_calculated && this.data.categoryVariantInfoFilters.Variant_consequence_calculated.length) ||
-                    (this.data.categoryVariantInfoFilters.Variant_severity && this.data.categoryVariantInfoFilters.Variant_severity.length) ||
-                    (this.data.categoryVariantInfoFilters.Variant_class && this.data.categoryVariantInfoFilters.Variant_class.length) ||
-                    (this.data.categoryVariantInfoFilters.Variant_frequency_as_text && this.data.categoryVariantInfoFilters.Variant_frequency_as_text.length)
-                )) {
+                if (this.data.categoryVariantInfoFilters && (this.data.categoryVariantInfoFilters.Gene_with_variant && this.data.categoryVariantInfoFilters.Gene_with_variant.length)) {
                     this.$el.find('#apply-genomic-filters').prop('disabled', false);
+                    this.$el.find('#apply-genomic-filters-tooltip').tooltip('disable');
                 } else {
                     this.$el.find('#apply-genomic-filters').prop('disabled', true);
+                    this.$el.find('#apply-genomic-filters-tooltip').tooltip('enable');
                 }
             },
             updateGenomicFilter: function(){
