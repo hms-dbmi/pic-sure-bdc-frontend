@@ -77,13 +77,9 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                             filterModel.get('activeFilters').remove(genomicFilters, {silent: true});
                             displayOpenAccess();
                         } else  {
-                            // If firefox use this.navigate() to go back to the previous page otherwise use window.history.back()
-                            // Firefox does not handle window.history.back() well for this use case.
-                            if (navigator.userAgent && navigator.userAgent.indexOf("Firefox") !== -1) {
-                                this.navigate('picsureui/queryBuilder#', {trigger:true, replace:false});
-                            } else {
-                                window.history.back();
-                            }
+                            this.navigate('picsureui/queryBuilder#', {trigger:false, replace:false});
+                            $(".header-btn.active").removeClass('active');
+                            $("#query-builder-btn").addClass('active');
                             return;
                         }
                     } else {
