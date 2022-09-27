@@ -404,7 +404,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 		return this;
 	},
 	setTabIndices: function(){
-		let tabcounter = 1000001;
+		let tabcounter = 1000000;
 		$('.dataTables_length select').attr('tabindex', tabcounter++);
 		$('.dataTables_filter input').attr('tabindex', tabcounter++);
 

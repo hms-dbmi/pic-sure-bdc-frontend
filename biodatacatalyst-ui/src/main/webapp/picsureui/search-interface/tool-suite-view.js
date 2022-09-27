@@ -76,7 +76,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 'Review and Package Data',
                 () => {
                     $('#package-modal').focus();
-                }, {isHandleTabs: true}
+                }, {isHandleTabs: false}
             );
         },
         openVariantExplorer: function(){
