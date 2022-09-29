@@ -27,7 +27,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     'keynav-arrowup document': this.previousFilter,
                     'keynav-arrowdown document': this.nextFilter,
                     'keynav-arrowright document': this.editFilter,
-                    'keynav-arrowleft document': this.removeFilter
+                    'keynav-arrowleft document': this.removeFilter,
+                    'keynav-enter': this.editFilter,
                 });
             },
             events: {
@@ -35,8 +36,8 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 "click .edit-filter": "editFilterHandler",
                 "click .variable-info": "editFilterHandler",
                 'click .info-filter': 'onInfoClick',
-                'focus #filter-list': 'filtersFocus',
-                'blur #filter-list': 'filtersBlur',
+                'focus #filter-list-container': 'filtersFocus',
+                'blur #filter-list-container': 'filtersBlur',
             },
             filtersFocus: function () {
                 this.nextFilter();
@@ -139,7 +140,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     modalView.render();
                     modal.displayModal(modalView, "Variable Information for " + data.variableMetadata.derived_var_name,  ()=>{
                         $('#filter-list').focus();
-                    });
+                    }, {isHandleTabs: true});
                 }
             },
             editFilterHandler: function(event) {
@@ -170,7 +171,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                                 el: $(".modal-body"),
                             });
                             this.filterModalView.render();
-                            modal.displayModal(this.filterModalView, "Dataset : " + filter.searchResult.result.metadata.derived_study_description);
+                            modal.displayModal(this.filterModalView, "Dataset : " + filter.searchResult.result.metadata.derived_study_description), ()=>{$('#filter-list').focus();}, {isHandleTabs: true};
                         }.bind(this),
                         error: function(response){
                             console.log(response);
@@ -203,7 +204,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
 
                     modal.displayModal(this.filterModalView, "Variable-level Filter for " + searchResult.result.metadata.columnmeta_name, ()=>{
                         $('#filter-list').focus();
-                    });
+                    }, {isHandleTabs: true});
                 }
             },
             render: function(){

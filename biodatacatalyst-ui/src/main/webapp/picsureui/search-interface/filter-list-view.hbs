@@ -13,6 +13,7 @@
         font-size: 1.5em;
         margin-left: 2px;
         cursor: pointer;
+        pointer-events: all;
     }
     .heading-sub-text {
         font-size: 0.75em;
@@ -24,13 +25,16 @@
         min-width: fit-content;
         align-self: flex-start;
     }
+    #filter-list-container {
+        pointer-events: none; 
+    }
 </style>
 <div class="panel">
     <div class="panel-heading">
         <span>Added Variable Filters</span>
         <div class="heading-sub-text">Active filters applied to your cohort.</div>
     </div>
-    <div id="filter-list" class="panel-body" tabindex=0 aria-activedescendent="">
+    <div id="filter-list-container" class="panel-body" tabindex=0 aria-activedescendent="">
     {{#each activeFilters}}
         {{#if datatable}}
             <div class="filter-container" id="{{this.searchResult.result.metadata.columnmeta_var_group_id}}">

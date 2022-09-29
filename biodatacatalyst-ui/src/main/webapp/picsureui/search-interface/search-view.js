@@ -101,11 +101,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			const imageViewerView = new imageViewer(viewOpts);
 			modal.displayModal(imageViewerView, titles[0], function() {
 				$('#guide-me-button').focus();
-			});
+			}, {isHandleTabs: false});
 		},
 		updateTags: function(response) {
 			if(!tagFilterModel.changed.currentPage){
 				this.tagFilterView.updateTags(response);
+				tagFilterModel.set('showTagSection', true);
 				this.tagFilterView.render();
 			}
 			this.searchResultsView.updateResponse(response);
@@ -120,8 +121,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				if(tagFilterModel.get("term")!==this.searchTerm){
 					tagFilterModel.set("term", this.searchTerm, {silent:true});
 				}
-			}
-			else{
+			} else{
 				this.searchTerm = tagFilterModel.get("term");
 				$('#search-box').val(this.searchTerm);
 			}
@@ -207,7 +207,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			const genomicFilter = new genomicFilterView({el: $(".modal-body")});
 			modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 				$('#filter-list').focus();
-			});
+			}, {isHandleTabs: true});
 			return false;
 		},
 
@@ -224,6 +224,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 				this.$el.find('#genomic-filter-btn').remove();
 			}
+			$('#search-box').focus();
 		}
 	});
 

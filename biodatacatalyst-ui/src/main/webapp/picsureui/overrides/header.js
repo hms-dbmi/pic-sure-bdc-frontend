@@ -45,7 +45,7 @@ define([
 	let openUserProfileModal = (e) => {
 		keyboardNav.setCurrentView(undefined);
 		userFunctions.meWithToken(this, (user) => {
-			modal.displayModal(new userProfile(user), 'User Profile');
+			modal.displayModal(new userProfile(user), 'User Profile', ()=>{e.target.focus();}, {isHandleTabs: true});
 		});
 	}
 

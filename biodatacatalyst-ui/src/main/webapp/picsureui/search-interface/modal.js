@@ -1,10 +1,11 @@
-define(["handlebars","jquery","backbone","text!options/modal.hbs", "common/keyboard-nav"],
-	function(HBS,$,BB,modalTemplate, keyboardNav){
+define(["handlebars","jquery","backbone","text!options/modal.hbs"],
+	function(HBS,$,BB,modalTemplate){
+		const TAB_INDEX_START = 1000000;
 	let Modal = BB.View.extend({
 		initialize: function(opts){
 			this.title="";
 			HBS.registerHelper("tabindex", function(options) {
-			  return 1000000 + options;
+			  return TAB_INDEX_START + options;
 			});
 			this.createTabLoop();
 		},
@@ -35,7 +36,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "common/keybo
 			where a modal can fire another modal and when that second modal is dismissed the
 			prior modal can be displayed.
 		*/
-		displayModal: function(view, title, dismissalAction){
+		displayModal: function(view, title, dismissalAction, opts){
 			this.title = title;
 			this.render();
 
@@ -46,6 +47,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "common/keybo
             $('.close').attr('tabindex', 1100000);
 			view.setElement($(".modal-body"));
 			view.render();
+			opts && opts.isHandleTabs && this.createTabIndex();
 		},
 
 		/*
@@ -62,21 +64,31 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs", "common/keybo
                 }
 
                 if (e.shiftKey) { // if shift key pressed for shift + tab combination
-                    if ($(document.activeElement).is($('[tabindex="1000000"]'))) {
+                    if ($(document.activeElement).is($('[tabindex="'+TAB_INDEX_START+'"]'))) {
                         $('[tabindex="1100000"]').focus(); // add focus for the last focusable element
                         e.preventDefault();
                     }
                 } else { // if tab key is pressed
                     if ($(document.activeElement).is($('[tabindex="1100000"]'))) { // if focused has reached to last focusable element then focus first focusable element after pressing tab
-                        $('[tabindex="1000000"]').focus(); // add focus for the first focusable element
+                        $('[tabindex="'+TAB_INDEX_START+'"]').focus(); // add focus for the first focusable element
                         e.preventDefault();
                     }
                 }
             });
             // TODO : What?
-            $('[tabindex="1000000"]').focus();
-            $('.close').focus();
-        }
+            //$('[tabindex="1000000"]').focus();
+           // $('.close').focus();
+        },
+
+		// Finds elements with a tab index or the class 'tabable' and sets the correct tab index for the modal. 
+		// Ignores the close button.
+		createTabIndex: function() {
+			let tabIndex = TAB_INDEX_START;
+			_.each($('#modalDialog').find('[tabindex]:not(.close),.tabable'), function(el) {
+				$(el).attr('tabindex', tabIndex);
+				tabIndex++;
+			});
+		}
         
 	});
 	return new Modal;

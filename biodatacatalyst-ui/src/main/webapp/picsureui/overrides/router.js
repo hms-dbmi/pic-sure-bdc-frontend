@@ -106,8 +106,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
 
                     $('#main-content').empty();
                     $('#main-content').append(this.layoutTemplate(settings));
-
-                    var queryView = new queryResultsView.View({model: new queryResultsView.Model()});
+                    let toolSuiteView = new ToolSuiteView({
+                        el: $('#tool-suite-panel')
+                    });
+                    var queryView = new queryResultsView.View({model: new queryResultsView.Model(), toolSuiteView: toolSuiteView});
 
                     queryView.render();
                     $('#query-results').append(queryView.$el);
@@ -132,10 +134,6 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                     });
 
                     filterListView.render();
-
-                    let toolSuiteView = new ToolSuiteView({
-                        el: $('#tool-suite-panel')
-                    });
 
                     toolSuiteView.render();
                 }

@@ -19,6 +19,7 @@ define(["backbone", "handlebars", "search-interface/search-util"],
                 term:"",
                 currentPage: 1,
                 limit:10,
+                showTagSection: false,
                 searchResults: undefined
             },
             initialize: function(opts){

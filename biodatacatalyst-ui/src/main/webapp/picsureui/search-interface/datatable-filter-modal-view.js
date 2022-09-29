@@ -169,7 +169,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 				title,
 				() => {
 					$('#values-modal').focus();
-				}
+				}, {isHandleTabs: true}
 			);
 		},
 		render: function(){

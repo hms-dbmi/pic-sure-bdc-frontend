@@ -235,7 +235,7 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
                 'Data Summary Help',
                 () => {
                     $('#patient-count-box').focus();
-                }
+                }, {isHandleTabs: true}
             );
 		},
 		totalCount: 0,
