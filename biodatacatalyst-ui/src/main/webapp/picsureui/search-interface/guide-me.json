@@ -1,0 +1,64 @@
+{
+    "#search-box": {
+        "text": "Search clinical variables of interest. Here, a study you are authorized to access was searched. Click anywhere to continue the tour.",
+        "position": "bottom"
+    },
+    "#genomic-filter-btn": { 
+        "text": "Use the genomic filtering button to apply a filter using genomic information."
+    },
+    "#study-tags-section-div": {
+        "text": "Use study tags to filter the results of the search. Hover over the tag and press “+” to filter to only that study or “-” to remove all results from that study.",
+        "position": "right"
+    },
+    "#tags-section-div": {
+        "text": "Use variable tags to filter the results of the search. Hover over the tag and press “+” to filter to results with the term or “-” to remove all results with that term."
+    },
+    "#search-results-datatable": {
+        "text": "The results of the search are displayed in this area. Each row describes a different variable that matches your search result and active tag filters."
+    },
+    "#first-search-result-row": {
+        "text": "To learn more about a variable, click on the row."
+    },
+    "#authorized-actions-row": {
+        "text": "Click on the filter icon to filter cohort participants by specific variable values. Click the Select Variables icon to include variables in the export.",
+        "position": "left"        
+    },
+    "#open-actions-row": {
+        "text": "Click on the filter icon to filter cohort participants by specific variable values.",
+        "position": "left"
+    },
+    "#results-panel-auth": {
+        "text": "The Results Panel displays a summary of the filtered cohort based on the variable filters applied to the query.",
+        "position": "left"
+    },
+    "#tool-suite": {
+        "text": "The Tool Suite contains tools that can be used to explore filtered cohorts of interest further. Note that at least one filter must be added to the query before using the Tool Suite.",
+        "position": "left"
+    },
+    "#package-data": {
+        "text": "Use this tool to retrieve participant-level data corresponding to your filters and variable selections. Variables selected for data retrieval can be reviewed and modified.",
+        "position": "left"
+    },
+    "#distributions": {
+        "text": "Use this tool to view the distributions of query variables based on the filtered cohort.",
+        "position": "left"
+    },
+    "#filters": {
+        "text": "The Added Variable Filters box displays the variable filters that have been applied to the query to build the cohort."
+    },
+    "#open-search-box": {
+        "text": "“Search clinical variables of interest. Here, the term “epilepsy” was searched.”"
+    },
+    "#data-summary": {
+        "text": "This describes the total number of participants that meet the query criteria. Note that this count may be obfuscated.",
+        "position": "left"
+    },
+    "#open-filtered-by-study": {
+        "text": "The filtered number of participants that match the query criteria is broken down by study and consent group. Authorization to access the study is also displayed.",
+        "position": "left"
+    },
+    "#help-header-button": {
+        "text": "To learn more about these features, consult the documentation and video demonstrations in the Help tab and use the information links throughout the site.",
+        "position": "bottom"
+    }
+}

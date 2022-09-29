@@ -208,8 +208,8 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				return;
 			}
 			let resultIndex = $(event.target).data("result-index");
-			if (!resultIndex && 
-				!(event.target.classList.contains('.export-icon.search-result-action-btn') ||
+			//Handle Keyboard event
+			if (!resultIndex && !(event.target.classList.contains('.export-icon.search-result-action-btn') ||
 			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn') )) {
 					let target = $(event.target).find('.export-icon.search-result-action-btn');
 					target = target ? target : $(event.target).find('.glyphicon-log-out.search-result-action-btn');
@@ -388,7 +388,11 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						{title:'Actions'},
                     ],
 					createdRow: function(row, data, dataIndex) {
-						$(row).attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id);
+						if (dataIndex == 0) {
+							$(row).attr('data-intro', "#first-search-result-row").attr('data-sequence', "5").attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id)
+						} else {
+							$(row).attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id);
+						}
 					},
 					columnDefs: [
 						{
@@ -402,14 +406,19 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 								let disabledClass = shouldDisable ? "disabled-icon" : "";
 								let filterTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to configure a filter using this variable.";
 								let exportTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to add this variable to your data retrieval.";
+								let tourAttr = undefined;
+								if (row.result_index == 0) {
+									tourAttr = 'data-intro="#open-actions-row" data-sequence="6"';
+								}
 								if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 									let exportClass = 'glyphicon glyphicon-log-out';
 									if(filterModel.isExportFieldFromId(row.variable_id)){
 										exportClass = 'fa-regular fa-square-check';
 									}
-									return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
+									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6"'}
+									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
 								}
-								return '<span class="search-result-icons col center"><i data-data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
+								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
 							},
 							type: 'string',
 							targets: 3
@@ -425,6 +434,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					" Use the left and right arrows to move between pages of search results. You are currently on page ");
 			}
 			this.updateExportIcons();
+			this.$el.trigger('searchResultsRenderCompleted', {}, {});
 		}
 	});
 	return StudyResultsView;

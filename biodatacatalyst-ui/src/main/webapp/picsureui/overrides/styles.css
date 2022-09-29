@@ -938,3 +938,13 @@ remove when above bug is fixed */
 #filter-list {
     border-right: 1px solid rgb(231 231 231);
 }
+
+.space-even {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.dialog-container {
+    max-width: 400px;
+}

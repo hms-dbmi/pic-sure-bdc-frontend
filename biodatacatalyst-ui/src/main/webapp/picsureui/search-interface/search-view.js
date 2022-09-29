@@ -8,7 +8,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"text!common/unexpected_error.hbs",
 	"search-interface/search-util",
 	"search-interface/filter-model",
-	"search-interface/pic-image-modal-view",
+	"common/pic-sure-dialog-view",
+	"search-interface/tour-view",
 ],
 		function($, BB, HBS, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -20,12 +21,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			helpViewTemplate,
 			searchUtil,
 			filterModel,
-			imageViewer,
+			dialog,
+			tourView
 		){
 	const authMessage = "By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.";
 	const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
 	var SearchView = BB.View.extend({
-
 		initialize: function(opts){
 			this.filters = [];
 			this.queryTemplate = opts.queryTemplate;
@@ -64,18 +65,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			this.searchResultsView.render();
 			tagFilterModel.bind('change', this.submitSearch.bind(this));
 		},
-
-		findStudyAbbreviationFromId: function(study_id){
-			let study = _.find(this.studiesData.bio_data_catalyst,
-				function(studyData){
-					return studyData.study_identifier === study_id.split('.')[0].toLowerCase();
-				});
-			if (study) {
-				return study.abbreviated_name;
-			}
-			return study_id;
-		},
-
 		events: {
 			"click #search-button": "submitSearch",
 			"keypress #search-box": "handleSearchKeypress",
@@ -84,24 +73,63 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			"click #guide-me-button": "openGuideModal",
 		},
 		openGuideModal: function() {
-			let images = [];
-			let titles = [];
-			if(!this.isOpenAccess) {
-                images = ['./images/guideme_AA_1.png', './images/guideme_AA_2.png'];
-                titles = ['Authorized Access - Search', 'Authorized Access - Results'];
-            } else {
-                images = ['./images/guideme_OA_1.png', './images/guideme_OA_2.png'];
-                titles = ['Open Access - Search', 'Open Access - Results'];
-            }
-			const viewOpts = {
-				el: $(".modal-body"),
-				images: images,
-				titles: titles,
+			this.isStartTour = false;
+			const dialogOptions = [
+				{title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
+				{title: "Start Tour", "action": ()=>{
+					this.isStartTour = true;
+					$('.close')?.get(0).click();
+				}, classes: "btn btn-primary"}
+			];
+			let title = 'Welcome to PIC-SURE Authorized Access';
+			let message1 = 'PIC-SURE Authorized Access provides access to complete, participant-level data, in addition to aggregate counts, and access to the Tool Suite.';
+			if (this.isOpenAccess) {
+				title = 'Welcome to PIC-SURE Open Access';
+				message1 = 'PIC-SURE Open Access allows you to search any clinical variable available in PIC-SURE. Your queries will return obfuscated aggregate counts per study and consent.';
 			}
-			const imageViewerView = new imageViewer(viewOpts);
-			modal.displayModal(imageViewerView, titles[0], function() {
-				$('#guide-me-button').focus();
-			}, {isHandleTabs: false});
+			const modalMessages = [
+				message1,
+				'Once the tour starts you can click anywhere to go to the next step. You can press the escape key to stop the tour at any point. You may also use the arrow keys, enter key, or the spacebar to navigate the tour.'
+			];
+			const dialogView = new dialog({options: dialogOptions, messages: modalMessages});
+			modal.displayModal(dialogView, title, function() {
+				this.tourView = new tourView();
+				if (this.isStartTour) {
+					this.setUpTour().then(this.tourView.render());
+				} else {
+					$('#guide-me-button').focus();
+				}
+			}.bind(this), {isHandleTabs: true, width: 400});
+		},
+		setUpTour: function() {
+			return new Promise((resolve, reject) => {
+				try{
+					const session = JSON.parse(sessionStorage.getItem("session"));
+					let abbreviatedName;
+					let results = $.Deferred();
+					if (this.isOpenAccess) {
+						$('#search-box').val('epilepsy');
+							results = this.submitSearch($('#search-button').get());
+							$.when(results).then(()=> {
+								resolve();
+							});
+					} else if (session.queryScopes && session.queryScopes[0]) {
+						let phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
+						phs = phs.substring(1, phs.length-1);
+						abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs);
+						if (abbreviatedName) {
+							$('#search-box').val(abbreviatedName);
+							results = this.submitSearch($('#search-button').get());
+							$.when(results).then(()=> {
+								resolve();
+							});
+						}
+					}
+				} catch(e) {
+					console.error(e);
+					reject(e);
+				}
+			});
 		},
 		updateTags: function(response) {
 			if(!tagFilterModel.changed.currentPage){
@@ -172,6 +200,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 			spinner.medium(deferredSearchResults, '#spinner-holder', '');
 			$('#spinner-holder').addClass('big-grow');
+			return deferredSearchResults;
 		},
 		// Reorders the results where the variables that are not compatible with the filters are moved to the end of the list.
 		processResults: function(response){
@@ -218,7 +247,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			}
 
 		},
-
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
 			if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
@@ -230,3 +258,4 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 	return SearchView;
 });
+
