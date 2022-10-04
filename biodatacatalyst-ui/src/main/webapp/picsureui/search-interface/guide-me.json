@@ -11,7 +11,8 @@
         "position": "right"
     },
     "#tags-section-div": {
-        "text": "Use variable tags to filter the results of the search. Hover over the tag and press “+” to filter to results with the term or “-” to remove all results with that term."
+        "text": "Use variable tags to filter the results of the search. Hover over the tag and press “+” to filter to results with the term or “-” to remove all results with that term.",
+        "position": "right"
     },
     "#search-results-datatable": {
         "text": "The results of the search are displayed in this area. Each row describes a different variable that matches your search result and active tag filters."
