@@ -14,6 +14,8 @@
 		chardin: "webjars/chardin.js/0.2.0/chardinjs",
 		treeview: '../webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min',
 		treeviewStyles: '../webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
+		"datatables-responsive": "webjars/datatables-responsive/2.2.7/js/responsive.jqueryui.min",
+		datatablesResponsiveStyles: "webjars/datatables-responsive/2.2.7/css/responsive.jqueryui.css",
 		Noty: '../webjars/noty/3.1.4/lib/noty',
 		NotyStyles: '../webjars/noty/3.1.4/lib/noty.css',
 		"jstree":"../webjars/jstree/3.3.7/jstree",
@@ -24,10 +26,8 @@
 		privilege: "psamaui/privilege",
 		role: "psamaui/role",
 		termsOfService: "psamaui/termsOfService",
-        user: "psamaui/user",
-        util: "psamaui/util",
-		"datatables-responsive": "webjars/datatables-responsive/2.2.7/js/responsive.jqueryui.min",
-		datatablesResponsiveStyles: "webjars/datatables-responsive/2.2.7/css/responsive.jqueryui.css",
+       		user: "psamaui/user",
+        	util: "psamaui/util",
 	},
 	shim: {
 		"bootstrap": {
