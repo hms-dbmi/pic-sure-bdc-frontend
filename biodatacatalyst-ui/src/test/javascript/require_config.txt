@@ -21,8 +21,6 @@
 		application: "psamaui/application",
 		connection: "psamaui/connection",
 		login: "psamaui/login",
-		"datatables.net": "webjars/datatables/1.11.5/js/jquery.dataTables",
-		datatablesStyles: "webjars/datatables/1.11.5/css/jquery.dataTables.min.css",
 		privilege: "psamaui/privilege",
 		role: "psamaui/role",
 		termsOfService: "psamaui/termsOfService",
@@ -43,9 +41,6 @@
 		},
 		"jstree": {
 			deps: ["jquery"]
-		},
-		"datatables-responsive": {
-			deps:["datatables.net"]
 		}
 	}
 };
