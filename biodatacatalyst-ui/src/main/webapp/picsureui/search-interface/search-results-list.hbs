@@ -13,7 +13,7 @@
     <h4>Search Results:</h4>
     <div class="results-container">{{variableCount}} variables match your search. <a id="no-results-help" class="btn no-padding m-0" tabindex="0" title="Why might I see unexpected search results?" aria-label="A link that opens a modal called Why might I see unexpected search results?">Learn More</a></div>
   </div>
-  <table id="search-results-datatable" tabindex="0" class="table table-striped row-border hover" role="region" aria-label="You are in the results region. Use the up and down arrows to move between search results. Use the left and right arrows to move between pages of search results. You are currently on page {{pageNum}} out of {{numPages}} pages of search results with up to 10 results per page.">
+  <table id="search-results-datatable" data-intro="#search-results-datatable" data-sequence="5" tabindex="0" class="table table-striped row-border hover" role="region" aria-label="You are in the results region. Use the up and down arrows to move between search results. Use the left and right arrows to move between pages of search results. You are currently on page {{pageNum}} out of {{numPages}} pages of search results with up to 10 results per page.">
     <thead>
         <tr>
             <th>Study</th>

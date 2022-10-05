@@ -48,6 +48,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 			view.setElement($(".modal-body"));
 			view.render();
 			opts && opts.isHandleTabs && this.createTabIndex();
+			opts && opts.width && $('.modal-dialog').width(opts.width);
 		},
 
 		/*
