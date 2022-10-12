@@ -26,8 +26,8 @@
 		privilege: "psamaui/privilege",
 		role: "psamaui/role",
 		termsOfService: "psamaui/termsOfService",
-    user: "psamaui/user",
-    util: "psamaui/util",
+		user: "psamaui/user",
+		util: "psamaui/util",
 	},
 	shim: {
 		"bootstrap": {
@@ -41,9 +41,6 @@
 		},
 		"jstree": {
 			deps: ["jquery"]
-		},
-		"datatables-responsive": {
-			deps:["datatables.net"]
 		}
 	}
 };
