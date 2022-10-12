@@ -16,7 +16,6 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			this.onTagChange = opts.onTagChange;
 			this.model.get('requiredTags').bind('change add remove', this.modelChanged.bind(this));
 			this.model.get('excludedTags').bind('change add remove', this.modelChanged.bind(this));
-			//filterModel.get("activeFilters").bind('change add remove', this.queryUpdated.bind(this));
 			keyboardNav.addNavigableView("tagFilters",this);
 			this.on({
 				'keynav-arrowup document': this.previousTag,

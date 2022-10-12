@@ -93,7 +93,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			];
 			const dialogView = new dialog({options: dialogOptions, messages: modalMessages});
 			modal.displayModal(dialogView, title, function() {
-				this.tourView = new tourView();
+				this.tourView = new tourView({idsToWaitFor: ['study-tags-section-div','tags-section-div','search-results-datatable']});
 				if (this.isStartTour) {
 					this.setUpTour().then(this.tourView.render());
 				} else {

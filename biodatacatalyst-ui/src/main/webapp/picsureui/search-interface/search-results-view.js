@@ -435,6 +435,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					" Use the left and right arrows to move between pages of search results. You are currently on page ");
 			}
 			this.updateExportIcons();
+			Backbone.pubSub.trigger('searchResultsRenderCompleted');
 		}
 	});
 	return StudyResultsView;
