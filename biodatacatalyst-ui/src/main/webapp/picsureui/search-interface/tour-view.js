@@ -39,7 +39,6 @@ define([
         },
         initChardinJs: function() {
             let callback = _.once(() => {
-                //Artificial delay to allow the set up render finish rendering. chardin seems to be slow to find new elements.
                 this.checkIfPreRenderCompleted(this.opts.idsToWaitFor).then(() => {
                     this.checkIfOverlayIsReady().then(() => {
                         this.startTour();
@@ -55,7 +54,7 @@ define([
                 });
             });
             $(document).ready(callback);
-		    },
+		},
         checkIfPreRenderCompleted: function(idsToWaitFor) {
             return new Promise(function(resolve, reject) {
                 const timeoutCount = 10;
