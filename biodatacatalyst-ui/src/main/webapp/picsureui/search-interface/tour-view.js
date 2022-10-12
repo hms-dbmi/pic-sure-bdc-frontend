@@ -23,7 +23,8 @@ define([
         return loadingScreen;
     }
     var TourView = BB.View.extend({
-        initialize: function(){
+        initialize: function(opts){
+            this.opts = opts;
             keyboardNav.addNavigableView('chardinJs', this);
             this.on({
 				'keynav-arrowup document': this.prevStep.bind(this),
@@ -34,15 +35,70 @@ define([
 				'keynav-space': this.nextStep.bind(this),
                 'keynav-escape': this.stopTour.bind(this),
 			});
+            Backbone.pubSub.on('searchResultsRenderCompleted', this.initChardinJs.bind(this));
         },
         initChardinJs: function() {
-            this.loadingScreen = showFullScreenLoadingView($);
-            //Artificial delay to allow the set up render finish rendering. chardin seems to be slow to find new elements.
-			delay(2750).then(()=> { //TODO: find a better way to do this
-                this.overlay =  $('body').chardinJs({ url: './search-interface/guide-me.json'})
-                delay(500).then(() => this.startTour()); //Delay again because chardin is slow to get elements
-         });
+            let callback = _.once(() => {
+                //Artificial delay to allow the set up render finish rendering. chardin seems to be slow to find new elements.
+                this.checkIfPreRenderCompleted(this.opts.idsToWaitFor).then(() => {
+                    this.checkIfOverlayIsReady().then(() => {
+                        this.startTour();
+                    }).catch((err) => {
+                        console.error(err);
+                        this.loadingScreen.remove();
+                        alert('Something went wrong. Please try again.');
+                    });
+                }).catch((err) => {
+                    console.error(err);
+                    this.loadingScreen.remove();
+                    alert('Something went wrong. Please try again.');
+                });
+            });
+            $(document).ready(callback);
 		},
+        checkIfPreRenderCompleted: function(idsToWaitFor) {
+            return new Promise(function(resolve, reject) {
+                const timeoutCount = 10;
+                let count = 0;
+                let elementsToWaitFor = [];
+                idsToWaitFor?.forEach(elementId => {
+                    elementsToWaitFor.push(document.getElementById(elementId));
+                });
+                if (elementsToWaitFor.length>0) {
+                    let interval = setInterval(function() {
+                        if (elementsToWaitFor.every(element => element.isConnected === true)) {
+                            clearInterval(interval);
+                            resolve();
+                        }
+                        if (count === timeoutCount) {
+                            clearInterval(interval);
+                            reject("Tour failed to load. (PreRender)");
+                        }
+                        count++;
+                    }, 500);
+                } else {
+                    resolve();
+                }
+            });
+        },
+        checkIfOverlayIsReady: function() {
+            return new Promise(function(resolve, reject) {
+                const timeoutCount = 10;
+                let count = 0;
+                let interval = setInterval(function() {
+                    let overlay = $('body').chardinJs({ url: './search-interface/guide-me.json'});
+                    if (overlay && overlay.data_helptext) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                    if (count === timeoutCount) {
+                        clearInterval(interval);
+                        reject("Tour failed to load. (overlay)");
+                    }
+                    count++;
+                }, 500);
+            });
+        },
         addKeyboardNav: function(){
             keyboardNav.setCurrentView('chardinJs');
         },
@@ -67,7 +123,7 @@ define([
             $('body').chardinJs('stop');
         },
         render: function(){
-            this.initChardinJs();
+            this.loadingScreen = showFullScreenLoadingView($);
         }
     });
     return TourView;
