@@ -35,37 +35,33 @@ define([
               'keynav-space': this.nextStep.bind(this),
               'keynav-escape': this.stopTour.bind(this),
             });
-            Backbone.pubSub.on('searchResultsRenderCompleted', this.initChardinJs.bind(this));
+            Backbone.pubSub.on('searchResultsRenderCompleted', _.once(this.initChardinJs.bind(this)));
         },
         initChardinJs: function() {
-            let callback = _.once(() => {
+            let callback = () => {
                 this.checkIfPreRenderCompleted(this.opts.idsToWaitFor).then(() => {
                     this.checkIfOverlayIsReady().then(() => {
                         this.startTour();
+                        this.stopListening(Backbone.pubSub, 'searchResultsRenderCompleted');
                     }).catch((err) => {
                         console.error(err);
                         this.loadingScreen.remove();
-                        alert('Something went wrong. Please try again.');
                     });
                 }).catch((err) => {
                     console.error(err);
                     this.loadingScreen.remove();
-                    alert('Something went wrong. Please try again.');
                 });
-            });
+            };
             $(document).ready(callback);
 		},
-        checkIfPreRenderCompleted: function(idsToWaitFor) {
+        checkIfPreRenderCompleted: function(idsToWaitFor = []) {
             return new Promise(function(resolve, reject) {
-                const timeoutCount = 10;
+                const timeoutCount = 15;
                 let count = 0;
-                let elementsToWaitFor = [];
-                idsToWaitFor?.forEach(elementId => {
-                    elementsToWaitFor.push(document.getElementById(elementId));
-                });
+                const elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId));
                 if (elementsToWaitFor.length>0) {
                     let interval = setInterval(function() {
-                        if (elementsToWaitFor.every(element => element.isConnected === true)) {
+                        if (elementsToWaitFor.every(element => element.isConnected === true || document.body.contains(element))) {
                             clearInterval(interval);
                             resolve();
                         }
