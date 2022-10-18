@@ -21,10 +21,11 @@ define([
         loadingScreen.append(spinnerHolder);
         $('body').append(loadingScreen);
         return loadingScreen;
-    }
+    };
     var TourView = BB.View.extend({
         initialize: function(opts){
             this.opts = opts;
+            this.retry = true;
             keyboardNav.addNavigableView('chardinJs', this);
             this.on({
               'keynav-arrowup document': this.prevStep.bind(this),
@@ -40,10 +41,15 @@ define([
         initChardinJs: function() {
             let callback = () => {
                 this.checkIfPreRenderCompleted(this.opts.idsToWaitFor).then(() => {
-                    this.checkIfOverlayIsReady().then(() => {
-                        this.startTour();
+                    this.checkIfOverlayIsReady().then((overlay) => {
+                        this.startTour(overlay);
                         this.stopListening(Backbone.pubSub, 'searchResultsRenderCompleted');
                     }).catch((err) => {
+                        if (err === false) {
+                            this.retry = false;
+                            this.initChardinJs();
+                            return;
+                        }
                         console.error(err);
                         this.loadingScreen.remove();
                     });
@@ -56,14 +62,16 @@ define([
 		},
         checkIfPreRenderCompleted: function(idsToWaitFor = []) {
             return new Promise(function(resolve, reject) {
-                const timeoutCount = 15;
+                const timeoutCount = 10;
                 let count = 0;
-                const elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId));
+                let elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId));
                 if (elementsToWaitFor.length>0) {
                     let interval = setInterval(function() {
-                        if (elementsToWaitFor.every(element => element.isConnected === true || document.body.contains(element))) {
+                        if (elementsToWaitFor.every((element) => element.isConnected === true)) {
                             clearInterval(interval);
                             resolve();
+                        } else if (count === 3 || count === 6 || count === 9) { // If the node isnt connected after 1.5 seconds update the element reference.
+                            elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId));
                         }
                         if (count === timeoutCount) {
                             clearInterval(interval);
@@ -77,14 +85,22 @@ define([
             });
         },
         checkIfOverlayIsReady: function() {
+            let retry = this.retry;
             return new Promise(function(resolve, reject) {
-                const timeoutCount = 10;
+                const timeoutCount = 15;
                 let count = 0;
                 let interval = setInterval(function() {
                     let overlay = $('body').chardinJs({ url: './search-interface/guide-me.json'});
-                    if (overlay && overlay.data_helptext) {
-                        clearInterval(interval);
-                        resolve();
+                    if (overlay && overlay.sequencedItems && overlay.data_helptext) {
+                        if (overlay.sequencedItems.toArray().every((element) => element.isConnected === true)) {
+                            // overlay.sequencedItems.toArray().every((element) => element.isConnected === true)
+                            clearInterval(interval);
+                            resolve(overlay);
+                        } else if (retry && count === timeoutCount) {
+                            retry = false;
+                            clearInterval(interval);
+                            reject(retry);
+                        }
                     }
                     if (count === timeoutCount) {
                         clearInterval(interval);
@@ -108,8 +124,8 @@ define([
             shiftClick.shiftKey = true;
             $(CHARDIN_SELECTOR).trigger(shiftClick);
         },
-        startTour: async function() {
-            $('body').chardinJs('start');
+        startTour: async function(overlay) {
+            overlay.start();
             //delay to allow loading screen to close exactly when chardin animates.
             delay(250).then($(this.loadingScreen).remove());
             this.addKeyboardNav();

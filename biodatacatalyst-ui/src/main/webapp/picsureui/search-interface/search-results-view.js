@@ -390,9 +390,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
                     ],
 					createdRow: function(row, data, dataIndex) {
 						if (dataIndex == 0) {
-							$(row).attr('data-intro', "#first-search-result-row").attr('data-sequence', "5").attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id)
+							$(row).attr('data-intro', "#first-search-result-row")
+								  .attr('data-sequence', "5")
+								  .attr('data-hashed-var-id', data.hashed_var_id)
+								  .attr('data-var-id', data.variable_id)
+								  .attr('id', "first-search-result-row");
 						} else {
-							$(row).attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id);
+							$(row).attr('data-hashed-var-id', data.hashed_var_id)
+								  .attr('data-var-id', data.variable_id);
 						}
 					},
 					columnDefs: [
@@ -409,14 +414,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 								let exportTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to add this variable to your data retrieval.";
 								let tourAttr = undefined;
 								if (row.result_index == 0) {
-									tourAttr = 'data-intro="#open-actions-row" data-sequence="6"';
+									tourAttr = 'data-intro="#open-actions-row" data-sequence="6" id="first-actions-row"';
 								}
 								if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 									let exportClass = 'glyphicon glyphicon-log-out';
 									if(filterModel.isExportFieldFromId(row.variable_id)){
 										exportClass = 'fa-regular fa-square-check';
 									}
-									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6"'}
+									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6" id="first-actions-row"';}
 									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
 								}
 								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';

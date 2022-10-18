@@ -30,7 +30,7 @@
     },
     "#results-panel-auth": {
         "text": "The Results Panel displays a summary of the filtered cohort based on the variable filters applied to the query.",
-        "position": "left"
+        "position": "top"
     },
     "#tool-suite": {
         "text": "The Tool Suite contains tools that can be used to explore filtered cohorts of interest further. Note that at least one filter must be added to the query before using the Tool Suite.",

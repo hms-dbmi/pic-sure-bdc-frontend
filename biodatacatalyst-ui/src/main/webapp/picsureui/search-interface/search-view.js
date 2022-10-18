@@ -93,7 +93,8 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			];
 			const dialogView = new dialog({options: dialogOptions, messages: modalMessages});
 			modal.displayModal(dialogView, title, function() {
-				this.tourView = new tourView({idsToWaitFor: ['study-tags-section-div','tags-section-div','search-results-datatable']});
+				// Pass in any tour element ids that are not currently present that maybe be added before the tour is started.
+				this.tourView = new tourView({idsToWaitFor: ['study-tags-section-div','tags-section-div','search-results-datatable','first-search-result-row','first-actions-row']});
 				if (this.isStartTour) {
 					this.setUpTour().then(this.tourView.render());
 				} else {

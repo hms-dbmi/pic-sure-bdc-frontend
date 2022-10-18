@@ -1,11 +1,11 @@
-define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLayout.hbs", "picSure/settings", "filter/filterList",
+define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layoutTemplate.hbs", "picSure/settings", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "overrides/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
-        "search-interface/query-results-view", "text!openPicsure/openMainLayout.hbs", "openPicsure/studiesPanelView", "search-interface/filter-model",
+        "search-interface/query-results-view", "openPicsure/studiesPanelView", "search-interface/filter-model",
         "search-interface/tag-filter-model"],
     function(BB, HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
-             FilterListView, SearchView, ToolSuiteView, queryResultsView, openLayout, studiesPanelView, filterModel, tagFilterModel){
+             FilterListView, SearchView, ToolSuiteView, queryResultsView, studiesPanelView, filterModel, tagFilterModel){
         const genomicFilterWarningText = 'Genomic filters will be removed from your query as they are not currently supported in Open Access. Are you sure you would like to proceed to Open Access? \n\nClick OK to proceed to open access or cancel to reutrn to authorized access.';
         let displayDataAccess = function() {
             $(".header-btn.active").removeClass('active');
@@ -33,7 +33,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/openAccess#']").addClass('active');
             $('#main-content').empty();
-            $('#main-content').append(HBS.compile(openLayout)(settings));
+            $('#main-content').append(this.layoutTemplate(settings));
             const studiesPanel = new studiesPanelView();
             studiesPanel.render();
             $('#studies-list-panel').append(studiesPanel.$el);
@@ -42,7 +42,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
             outputPanelView.render();
             $('#query-results').append(outputPanelView.$el);
 
-            var parsedSess = JSON.parse(sessionStorage.getItem("session"));
+            const parsedSess = JSON.parse(sessionStorage.getItem("session"));
 
             const searchView = new SearchView({
                 queryTemplate: JSON.parse(parsedSess.queryTemplate),
@@ -75,7 +75,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                     if (genomicFilters.length>0) {
                         if (confirm(genomicFilterWarningText)) {
                             filterModel.get('activeFilters').remove(genomicFilters, {silent: true});
-                            displayOpenAccess();
+                            displayOpenAccess.call(this);
                         } else  {
                             this.navigate('picsureui/queryBuilder#', {trigger:false, replace:false});
                             $(".header-btn.active").removeClass('active');
@@ -83,7 +83,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                             return;
                         }
                     } else {
-                        displayOpenAccess();
+                        displayOpenAccess.call(this);
                     }
                 },
                 "picsureui/queryBuilder(/)" : function() {
@@ -109,26 +109,28 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/mainLa
                     let toolSuiteView = new ToolSuiteView({
                         el: $('#tool-suite-panel')
                     });
-                    var queryView = new queryResultsView.View({model: new queryResultsView.Model(), toolSuiteView: toolSuiteView});
+                    const queryView = new queryResultsView.View({model: new queryResultsView.Model(), toolSuiteView: toolSuiteView});
 
                     queryView.render();
                     $('#query-results').append(queryView.$el);
 
-                    var parsedSess = JSON.parse(sessionStorage.getItem("session"));
+                    const parsedSess = JSON.parse(sessionStorage.getItem("session"));
 
-                    var query = queryBuilder.generateQueryNew({},{}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
+                    const query = queryBuilder.generateQueryNew({},{}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
 
-                    let searchView = new SearchView({
+                    const searchView = new SearchView({
                         queryTemplate: JSON.parse(parsedSess.queryTemplate),
 						queryScopes: parsedSess.queryScopes,
                         el : $('#filter-list')
                     });
 
+                    $('#studies-list-panel').remove();
+
                     if($('#search-results-panel').is(":visible")) {
                         $('#guide-me-button').hide();
                     }        
 
-                    let filterListView = new FilterListView({
+                    const filterListView = new FilterListView({
                         outputPanelView : queryView,
                         el : $('#filter-list-panel')
                     });
