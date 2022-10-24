@@ -61,6 +61,10 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				el : $('#search-results')
 			});
 
+			if ($('#search-box').val() === "") {
+				$('#search-box').val(tagFilterModel.get("term"));
+			}
+
 			this.tagFilterView.render();
 			this.searchResultsView.render();
 			Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));

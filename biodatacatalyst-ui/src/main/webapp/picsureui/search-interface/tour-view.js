@@ -134,6 +134,13 @@ define([
         stopTour: function() {
             $('body').chardinJs('stop');
         },
+        destroy: function(){
+			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
+			this.undelegateEvents();	
+			$(this.el).removeData().unbind(); 
+			this.remove();  
+			Backbone.View.prototype.remove.call(this);
+		},
         render: function(){
           this.loadingScreen = showFullScreenLoadingView($);
         }

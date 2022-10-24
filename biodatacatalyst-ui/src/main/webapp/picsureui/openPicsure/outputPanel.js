@@ -187,6 +187,7 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 			this.helpView = new helpView();
 			this.studiesAccessPanelView = opts.studiesPanel;
 			loadConcepts();
+			Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
 		},
 		events:{
 			"click .study-glyph": "toggleConsentGroup",
@@ -248,6 +249,13 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 			} else {
 				// ???
 			}
+		},
+		destroy: function(){
+			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
+			this.undelegateEvents();	
+			$(this.el).removeData().unbind(); 
+			this.remove();  
+			Backbone.View.prototype.remove.call(this);
 		},
 		render: function(){
 			var context = outputModel.toJSON();
