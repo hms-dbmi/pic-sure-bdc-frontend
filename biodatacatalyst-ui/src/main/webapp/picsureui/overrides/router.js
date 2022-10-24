@@ -30,6 +30,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
         };
         let displayOpenAccess = function() {
             sessionStorage.setItem("isOpenAccess", true);
+            Backbone.pubSub.trigger('destroySearchView');
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/openAccess#']").addClass('active');
             $('#main-content').empty();
@@ -100,7 +101,8 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
                             this.navigate('picsureui/openAccess#', {trigger:true, replace:false});
                             return;
                         }  
-                    } 
+                    }
+                    Backbone.pubSub.trigger('destroySearchView');
                     $(".header-btn.active").removeClass('active');
                     $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
 

@@ -36,6 +36,7 @@ define([
               'keynav-space': this.nextStep.bind(this),
               'keynav-escape': this.stopTour.bind(this),
             });
+            Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
             Backbone.pubSub.on('searchResultsRenderCompleted', _.once(this.initChardinJs.bind(this)));
         },
         initChardinJs: function() {
