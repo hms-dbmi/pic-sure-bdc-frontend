@@ -11,7 +11,7 @@
 		plotly: '../webjars/plotly.js-dist-min/2.11.1/plotly.min,
 		fontawesome: "webjars/font-awesome/6.1.2/js/all.min",
 		fontawesomeStyles: "webjars/font-awesome/6.1.2/css/all.min.css",
-		chardin: "webjars/chardin.js/0.2.0/chardinjs",
+		chardin: "webjars/chardin.js/0.2.0/chardinjs.min",
 		treeview: '../webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min',
 		treeviewStyles: '../webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
 		"datatables.net": "webjars/datatables/1.10.25/js/jquery.dataTables",

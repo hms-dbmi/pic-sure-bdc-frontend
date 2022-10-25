@@ -119,9 +119,15 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 								resolve();
 							});
 					} else if (session.queryScopes && session.queryScopes[0]) {
-						let phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
-						phs = phs.substring(1, phs.length-1);
-						abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs);
+						if (filterModel.get('activeFilters').length > 0) {
+							abbreviatedName = filterModel.get('activeFilters').at(0).get('searchResult').result.metadata.derived_study_abv_name;
+						} else {
+							let phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
+							if (phs) {
+								phs = phs.substring(1, phs.length-1);
+							}
+							abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs) || 'epilepsy';
+						}
 						if (abbreviatedName) {
 							$('#search-box').val(abbreviatedName);
 							results = this.submitSearch($('#search-button').get());

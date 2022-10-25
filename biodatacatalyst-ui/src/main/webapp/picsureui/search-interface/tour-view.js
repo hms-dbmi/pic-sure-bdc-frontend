@@ -3,8 +3,7 @@ define([
     'backbone',
     "chardin",
     'common/keyboard-nav',
-    "text!../search-interface/guide-me.json",
-], function($, BB, chardin, keyboardNav, tourJson) {
+], function($, BB, chardin, keyboardNav) {
     const CHARDIN_SELECTOR = '#chardin-mask';
     const delay = function(t, v) {
         return new Promise(function(resolve) { 
@@ -65,14 +64,14 @@ define([
             return new Promise(function(resolve, reject) {
                 const timeoutCount = 10;
                 let count = 0;
-                let elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId));
+                let elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId)).filter(element => element);
                 if (elementsToWaitFor.length>0) {
                     let interval = setInterval(function() {
                         if (elementsToWaitFor.every((element) => element.isConnected === true)) {
                             clearInterval(interval);
                             resolve();
                         } else if (count === 3 || count === 6 || count === 9) { // If the node isnt connected after 1.5 seconds update the element reference.
-                            elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId));
+                            elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId)).filter(element => element);
                         }
                         if (count === timeoutCount) {
                             clearInterval(interval);
@@ -94,7 +93,6 @@ define([
                     let overlay = $('body').chardinJs({ url: './search-interface/guide-me.json'});
                     if (overlay && overlay.sequencedItems && overlay.data_helptext) {
                         if (overlay.sequencedItems.toArray().every((element) => element.isConnected === true)) {
-                            // overlay.sequencedItems.toArray().every((element) => element.isConnected === true)
                             clearInterval(interval);
                             resolve(overlay);
                         } else if (retry && count === timeoutCount) {
