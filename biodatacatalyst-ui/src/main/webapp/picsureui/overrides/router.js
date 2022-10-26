@@ -52,7 +52,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
             });
 
             if($('#search-results-panel').is(":visible")) {
-                $('#guide-me-button').hide();
+                $('#guide-me-button-container').hide();
             }
 
             const filterListView = new FilterListView({
@@ -129,7 +129,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
                     $('#studies-list-panel').remove();
 
                     if($('#search-results-panel').is(":visible")) {
-                        $('#guide-me-button').hide();
+                        $('#guide-me-button-container').hide();
                     }        
 
                     const filterListView = new FilterListView({

@@ -77,6 +77,10 @@
 	.spinner-vert-center {
 		top: 25%;
 	}
+	#guide-me-button-container {
+		width: 100%;
+		height: 100%;
+	}
 </style>
 
 <div>
@@ -107,8 +111,10 @@
     <div id="search-area" class="flex-container space-between">
 	    <div id="tag-filters"></div>
 		<div id="spinner-holder" class="center-spinner"></div>
-		<button id="guide-me-button" class="btn big-button" tabindex="0" aria-label="You are on a button called 'Take a Tour' that opens a modal.">Take a Tour</button>
 	    <div class="m-lr-12 grow">
+			<div id="guide-me-button-container" data-intro="#empty-search-area" data-sequence="5">
+				<button id="guide-me-button" class="btn big-button" tabindex="0" aria-label="You are on a button called 'Take a Tour' that opens a modal.">Take a Tour</button>
+			</div>
 	        <div id="search-results"></div>
     	</div>
     </div>

@@ -1,4 +1,4 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util", "search-interface/open-picsure-tag-help-view", "search-interface/modal"],
+define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util", "search-interface/var-tag-help-view", "search-interface/modal"],
 function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil, helpView, modal){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
@@ -39,7 +39,8 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 			'focus #study-tags-section-div': 'studyTagFocus',
 			'blur #study-tags-section-div': 'studyTagBlur',
 			'focus #tags-section-div': 'tagFocus',
-			'blur #tags-section-div': 'tagBlur'
+			'blur #tags-section-div': 'tagBlur',
+			'click #tags-help': 'showHelp'
 		},
 		requireTag: function(event){
 			let focusedTag = $('.focused-tag-badge')[0];
@@ -207,6 +208,15 @@ function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNa
 				tags.unshift(harmonizedTag);
 			}
 			return tags;
+		},
+		showHelp: function(){
+			modal.displayModal(
+                this.helpView,
+                'How are these tags generated?',
+                () => {
+                    $('#tags-help').focus();
+                }, {isHandleTabs: true}
+            );
 		},
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();

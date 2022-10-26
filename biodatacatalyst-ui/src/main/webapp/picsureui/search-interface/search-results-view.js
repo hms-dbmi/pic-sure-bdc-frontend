@@ -322,7 +322,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				}
 				if (filteredResults.length === 0) {
 					if ($('#no-results').length === 0) {
-						$('#guide-me-button').show();
+						$('#guide-me-button-container').show();
 						$("#search-area").append(HBS.compile(noResultsTemplate));
 						//Dynamically Adding click event after appending the element that gets clicked
 						$('#no-results-help-empty').on({
@@ -330,7 +330,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 							'keypress': this.helpViewClickHandler
 						});
 					} else {
-						$('#guide-me-button').show();
+						$('#guide-me-button-container').show();
 						//Ensures Element has click event
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
@@ -338,7 +338,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						});
 					}
 				} else {
-					$('#guide-me-button').hide();
+					$('#guide-me-button-container').hide();
 					$('#no-results').remove();
 				}
 				let results = _.map(filteredResults, function(result, i){

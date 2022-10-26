@@ -86,9 +86,12 @@
 	.badge-text {
 		line-height: 1.2em;
 	}
+	#tags-help {
+		pointer-events: auto;
+	}
 </style>
 {{#if hasActiveTags}}
-<div id='active-tags-section-div' role='region' class='panel section no-mouse-events' tabindex=0 aria-label='You are in the active tag filters region.
+<div id='active-tags-section-div' data-intro="#active-tags-section-div" data-sequence="3" role='region' class='panel section no-mouse-events' tabindex=0 aria-label='You are in the active tag filters region.
 	Currently {{numActiveTags}} tags are being used to filter search results for your search term "{{searchTerm}}". Currently {{numSearchResults}} search results are displayed in the results region.
 	{{#if hasRequiredTags}} The results are filtered by requiring the following tags:
 		{{#each requiredTags}}{{ariaAliasIfStudy this.tag}}... {{/each}}.
@@ -163,8 +166,9 @@
 		Filter Search Results by Variable Tags
 	</div>
 	<div class='panel-body section-body unused-tags'>
-		<p>Refine results using tag based filters. Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that
-			have variables which match your search term:</p>
+		<p style="margin-bottom:0px;">Refine results using tag based filters. </p>
+		<a id="tags-help" class="btn no-padding" title="Tags help modal" tabindex="0" aria-label="A link that opens a modal that explains how tags are derived.">How are these tags generated?</a>
+		<p>Showing {{this.tagsShown}} out of {{this.tagsTotal}} tags that have variables which match your search term:</p>
 		{{#each tags}}
 		<div class="badge {{colorClass this.tag}}" id="tag-{{this.tag}}">
 			<span class="badge-text"

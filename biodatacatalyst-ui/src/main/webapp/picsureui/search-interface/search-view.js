@@ -102,6 +102,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				if (this.isStartTour) {
 					this.setUpTour().then(this.tourView.render());
 				} else {
+					this.tourView.destroy();
 					$('#guide-me-button').focus();
 				}
 			}.bind(this), {isHandleTabs: true, width: 400});
@@ -118,23 +119,24 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 							$.when(results).then(()=> {
 								resolve();
 							});
-					} else if (session.queryScopes && session.queryScopes[0]) {
-						if (filterModel.get('activeFilters').length > 0) {
+					} else {
+						let phs = undefined;
+						if (tagFilterModel.get('requiredTags').length > 0) {
+							phs = tagFilterModel.get('requiredTags').at(0).get('tag');
+						} else if (filterModel.get('activeFilters').length > 0) {
 							abbreviatedName = filterModel.get('activeFilters').at(0).get('searchResult').result.metadata.derived_study_abv_name;
-						} else {
-							let phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
-							if (phs) {
-								phs = phs.substring(1, phs.length-1);
-							}
+						} else if (session.queryScopes && session.queryScopes[0]) {
+							phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
+							phs = phs.substring(1, phs.length-1); // remove the backslashes
+						}
+						if (!abbreviatedName) {
 							abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs) || 'epilepsy';
 						}
-						if (abbreviatedName) {
-							$('#search-box').val(abbreviatedName);
-							results = this.submitSearch($('#search-button').get());
-							$.when(results).then(()=> {
-								resolve();
-							});
-						}
+						$('#search-box').val(abbreviatedName);
+						results = this.submitSearch($('#search-button').get());
+						$.when(results).then(()=> {
+							resolve();
+						});
 					}
 				} catch(e) {
 					console.error(e);
@@ -173,7 +175,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 			//exclude the user selected tags as well as tags not in scope
 			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
-			$('#guide-me-button').hide();
+			$('#guide-me-button-container').hide();
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			$('#search-button').attr('disabled', 'disabled');
@@ -260,7 +262,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 		},
 		destroy: function(){
 			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
-			this.undelegateEvents();	
+			this.undelegateEvents();
 			$(this.el).removeData().unbind(); 
 			this.remove();  
 			Backbone.View.prototype.remove.call(this);
