@@ -960,10 +960,6 @@ remove when above bug is fixed */
     justify-content: space-evenly;
 }
 
-.dialog-container {
-    max-width: 400px;
-}
-
 .loading{
     position: fixed;
     top: 0;

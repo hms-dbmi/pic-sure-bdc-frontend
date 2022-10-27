@@ -1,8 +1,9 @@
 define([
     'backbone',
     'handlebars',
-    'text!common/pic-sure-dialog-view.hbs'
-], function(BB, HBS, dialog) {
+    'text!common/pic-sure-dialog-view.hbs',
+    'search-interface/modal'
+], function(BB, HBS, dialog, modal) {
     var PicsureDialog = BB.View.extend({
         initialize: function(opts){
             this.opts = opts;
@@ -15,14 +16,19 @@ define([
                 btnEl.tabIndex = 0;
                 return btnEl;
             });;
+            this.previousView = opts.previousView;
         },
-        events: {},
+        onClose: function() {
+            this.previousView && modal.displayModal(this.previousView.view, this.previousView.title);
+        },
         render: function(){
             this.$el.html(this.template(this.opts));
             const optionContainer = this.$el.find('#options');
             this.buttonArr.forEach(button =>{
                 optionContainer.append(button);
             });
+            this.previousView && $('.close')?.off('click');
+            this.previousView && $('.close')?.on('click', this.onClose.bind(this));
         }
     });
     return PicsureDialog;
