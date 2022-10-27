@@ -210,12 +210,12 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 			let resultIndex = $(event.target).data("result-index");
 			//Handle Keyboard event
-			if (!resultIndex && !(event.target.classList.contains('.export-icon.search-result-action-btn') ||
-			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn') )) {
-					let target = $(event.target).find('.export-icon.search-result-action-btn');
-					target = target ? target : $(event.target).find('.glyphicon-log-out.search-result-action-btn');
-					if (!target || target.get(0).classList.contains('disabled-icon')) return;
-					resultIndex = target.data("result-index");
+			if (resultIndex === undefined && !(event.target.classList.contains('.export-icon.search-result-action-btn') ||
+			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn'))) {
+					let target = $(event.target).find('.export-icon');
+					//target = target.length ? target : $(event.target).find('[class~="export-icon search-result-action-btn"]');
+					if (!target.length || target.hasClass('disabled-icon')) return;
+					resultIndex = $(event.target).get(0).data("result-index");
 			}
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
@@ -422,7 +422,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 										exportClass = 'fa-regular fa-square-check';
 									}
 									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6" id="first-actions-row"';}
-									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
+									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="export-icon search-result-action-btn '+ exportClass + ' ' + disabledClass+'"></i></span>';
 								}
 								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
 							},
