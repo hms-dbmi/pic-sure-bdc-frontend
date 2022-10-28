@@ -210,12 +210,11 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 			let resultIndex = $(event.target).data("result-index");
 			//Handle Keyboard event
-			if (!resultIndex && !(event.target.classList.contains('.export-icon.search-result-action-btn') ||
-			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn') )) {
-					let target = $(event.target).find('.export-icon.search-result-action-btn');
-					target = target ? target : $(event.target).find('.glyphicon-log-out.search-result-action-btn');
-					if (!target || target.get(0).classList.contains('disabled-icon')) return;
-					resultIndex = target.data("result-index");
+			if (resultIndex === undefined && !(event.target.classList.contains('.export-icon.search-result-action-btn') ||
+			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn'))) {
+					let target = $(event.target).find('.export-icon');
+					if (!target.length || target.hasClass('disabled-icon')) return;
+					resultIndex = $(event.target).get(0).data("result-index");
 			}
 			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
@@ -322,7 +321,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				}
 				if (filteredResults.length === 0) {
 					if ($('#no-results').length === 0) {
-						$('#guide-me-button').show();
+						$('#guide-me-button-container').show();
 						$("#search-area").append(HBS.compile(noResultsTemplate));
 						//Dynamically Adding click event after appending the element that gets clicked
 						$('#no-results-help-empty').on({
@@ -330,7 +329,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 							'keypress': this.helpViewClickHandler
 						});
 					} else {
-						$('#guide-me-button').show();
+						$('#guide-me-button-container').show();
 						//Ensures Element has click event
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
@@ -338,7 +337,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 						});
 					}
 				} else {
-					$('#guide-me-button').hide();
+					$('#guide-me-button-container').hide();
 					$('#no-results').remove();
 				}
 				let results = _.map(filteredResults, function(result, i){
@@ -390,9 +389,14 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
                     ],
 					createdRow: function(row, data, dataIndex) {
 						if (dataIndex == 0) {
-							$(row).attr('data-intro', "#first-search-result-row").attr('data-sequence', "5").attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id)
+							$(row).attr('data-intro', "#first-search-result-row")
+								  .attr('data-sequence', "5")
+								  .attr('data-hashed-var-id', data.hashed_var_id)
+								  .attr('data-var-id', data.variable_id)
+								  .attr('id', "first-search-result-row");
 						} else {
-							$(row).attr('data-hashed-var-id', data.hashed_var_id).attr('data-var-id', data.variable_id);
+							$(row).attr('data-hashed-var-id', data.hashed_var_id)
+								  .attr('data-var-id', data.variable_id);
 						}
 					},
 					columnDefs: [
@@ -409,15 +413,15 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 								let exportTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to add this variable to your data retrieval.";
 								let tourAttr = undefined;
 								if (row.result_index == 0) {
-									tourAttr = 'data-intro="#open-actions-row" data-sequence="6"';
+									tourAttr = 'data-intro="#open-actions-row" data-sequence="6" id="first-actions-row"';
 								}
 								if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
 									let exportClass = 'glyphicon glyphicon-log-out';
 									if(filterModel.isExportFieldFromId(row.variable_id)){
 										exportClass = 'fa-regular fa-square-check';
 									}
-									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6"'}
-									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="'+ exportClass + ' export-icon search-result-action-btn '+disabledClass+'"></i></span>';
+									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6" id="first-actions-row"';}
+									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="export-icon search-result-action-btn '+ exportClass + ' ' + disabledClass+'"></i></span>';
 								}
 								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
 							},
@@ -435,6 +439,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 					" Use the left and right arrows to move between pages of search results. You are currently on page ");
 			}
 			this.updateExportIcons();
+			Backbone.pubSub.trigger('searchResultsRenderCompleted');
 		}
 	});
 	return StudyResultsView;

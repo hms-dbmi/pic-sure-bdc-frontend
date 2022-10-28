@@ -10,6 +10,10 @@
         "text": "Use study tags to filter the results of the search. Hover over the tag and press “+” to filter to only that study or “-” to remove all results from that study.",
         "position": "right"
     },
+    "#active-tags-section-div": {
+        "text": "Tags that are being applied to filter the results of the search are shown here. Hover over the tag and press “x” to remove the tag filter from the search.",
+        "position": "right"
+    },
     "#tags-section-div": {
         "text": "Use variable tags to filter the results of the search. Hover over the tag and press “+” to filter to results with the term or “-” to remove all results with that term.",
         "position": "right"
@@ -30,7 +34,7 @@
     },
     "#results-panel-auth": {
         "text": "The Results Panel displays a summary of the filtered cohort based on the variable filters applied to the query.",
-        "position": "left"
+        "position": "top"
     },
     "#tool-suite": {
         "text": "The Tool Suite contains tools that can be used to explore filtered cohorts of interest further. Note that at least one filter must be added to the query before using the Tool Suite.",
@@ -61,5 +65,9 @@
     "#help-header-button": {
         "text": "To learn more about these features, consult the documentation and video demonstrations in the Help tab and use the information links throughout the site.",
         "position": "bottom"
+    },
+    "#empty-search-area": {
+        "text": "The results of the search are displayed in this area. Each row describes a different variables that matches your search result and active tag filters. However, there are no search results for the term and active tags applied. Try clearing your search with the “Reset” button and searching a new term.",
+        "position": "right"
     }
 }

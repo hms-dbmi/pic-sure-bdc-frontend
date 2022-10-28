@@ -1,6 +1,6 @@
 	baseUrl: "/picsureui",
 	paths: {
-		jquery: '../webjars/jquery/3.5.1/jquery.min',
+		jquery: '../webjars/jquery/3.6.1/jquery.min',
 		autocomplete: '../webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
 		underscore: '../webjars/underscorejs/1.8.3/underscore-min',
 		bootstrap: '../webjars/bootstrap/3.4.1/js/bootstrap.min',
@@ -11,7 +11,7 @@
 		plotly: '../webjars/plotly.js-dist-min/2.11.1/plotly.min,
 		fontawesome: "webjars/font-awesome/6.1.2/js/all.min",
 		fontawesomeStyles: "webjars/font-awesome/6.1.2/css/all.min.css",
-		chardin: "webjars/chardin.js/0.2.0/chardinjs",
+		chardin: "webjars/chardin.js/0.2.0/chardinjs.min",
 		treeview: '../webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min',
 		treeviewStyles: '../webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
 		"datatables.net": "webjars/datatables/1.10.25/js/jquery.dataTables",
@@ -26,8 +26,8 @@
 		privilege: "psamaui/privilege",
 		role: "psamaui/role",
 		termsOfService: "psamaui/termsOfService",
-       		user: "psamaui/user",
-        	util: "psamaui/util",
+		user: "psamaui/user",
+		util: "psamaui/util",
 	},
 	shim: {
 		"bootstrap": {

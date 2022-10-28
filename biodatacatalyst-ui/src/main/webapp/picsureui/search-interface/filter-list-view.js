@@ -30,6 +30,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                     'keynav-arrowleft document': this.removeFilter,
                     'keynav-enter': this.editFilter,
                 });
+                Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
             },
             events: {
                 "click .remove-filter": "removeFilterHandler",
@@ -206,6 +207,13 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                         $('#filter-list').focus();
                     }, {isHandleTabs: true});
                 }
+            },
+            destroy: function(){
+                //https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
+                this.undelegateEvents();	
+                $(this.el).removeData().unbind(); 
+                this.remove();  
+                Backbone.View.prototype.remove.call(this);
             },
             render: function(){
                 const resourceUUID = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140";

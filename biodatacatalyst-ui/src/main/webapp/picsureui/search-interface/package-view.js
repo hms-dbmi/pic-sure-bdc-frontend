@@ -1,6 +1,21 @@
-define(["jquery",'backbone', 'handlebars','text!search-interface/package-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util", "picSure/queryBuilder", "search-interface/query-results-view", "overrides/outputPanel", "picSure/settings", "search-interface/variable-values-view", "search-interface/modal"],
-function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, queryBuilder, queryResultsView, output, settings, variableValuesView, modal){
-
+define(["jquery",
+		'backbone', 
+		'handlebars',
+		'text!search-interface/package-view.hbs',
+		'datatables.net', 
+		"common/keyboard-nav",
+		"search-interface/filter-model", 
+		"search-interface/search-util", 
+		"picSure/queryBuilder", 
+		"search-interface/query-results-view", 
+		"overrides/outputPanel",
+		"picSure/settings",
+		"search-interface/variable-values-view",
+		"search-interface/modal",
+		"common/pic-sure-dialog-view"],
+function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
+	filterModel, searchUtil, queryBuilder, queryResultsView, output, settings,
+	variableValuesView, modal, dialog){
 	var packageView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatablePackageModal",this);
@@ -150,7 +165,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 				$('#package-download-button').show();
 				$('#package-download-button', this.$el).off('click');
 				$('#package-download-button', this.$el).click(function(){
-					viewObj.downloadData(viewObj);
+					viewObj.openDownloadConfirmationModal();
 				}.bind(viewObj));
 				$('#package-copy-query-button', this.$el).click(function(){
 					viewObj.copyQueryId();
@@ -233,6 +248,21 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			});
 		}());
 	},
+	openDownloadConfirmationModal: function(){
+		const dialogOptions = [
+			{title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
+			{title: "Download", "action": ()=>{
+				this.downloadData(this);
+				$('.close')?.get(0).click();
+			}, classes: "btn btn-primary"}
+		];
+		const message = 'You are transferring data through the BioData Catalyst security boundary which may or may not be supported by your Data Use Agreement(s), Limitation(s), or your Institutional Review Board policies and guidelines. As a BioData Catalyst user, you are solely responsible for adhering to the terms of these policies.';
+		const dialogView = new dialog({options: dialogOptions, messages: [message], previousView: {view: this, title: 'Review and Package Data', model: this.model}});
+		modal.displayModal(dialogView, 'Are you sure you want to download data?', function(){
+			$('#package-download-button').focus();
+			dialogView.remove();
+		}.bind(this), {isHandleTabs: true, width: 500});
+	},
 	downloadData: function(viewObj){
 		$('#package-download-button', this.$el).removeAttr("href");
 		let queryId = viewObj.model.get('queryId');
@@ -245,9 +275,10 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,  filterModel
 			data: "{}",
 			success: function(response){
 				responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
-				$("#package-download-button", this.$el).off('click');
-				$("#package-download-button", this.$el).attr("href", responseDataUrl);
-				$("#package-download-button", this.$el)[0].click();
+				const link = document.createElement('a');
+				link.href = responseDataUrl;
+				link.click();
+				link.remove();
 			}.bind(this),
 			error: function(response){
 				console.log("error preparing download : ");

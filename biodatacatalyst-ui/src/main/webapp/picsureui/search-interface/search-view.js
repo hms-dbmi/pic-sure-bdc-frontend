@@ -61,9 +61,13 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				el : $('#search-results')
 			});
 
+			if ($('#search-box').val() === "") {
+				$('#search-box').val(tagFilterModel.get("term"));
+			}
+
 			this.tagFilterView.render();
 			this.searchResultsView.render();
-			tagFilterModel.bind('change', this.submitSearch.bind(this));
+			Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
 		},
 		events: {
 			"click #search-button": "submitSearch",
@@ -93,10 +97,12 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			];
 			const dialogView = new dialog({options: dialogOptions, messages: modalMessages});
 			modal.displayModal(dialogView, title, function() {
-				this.tourView = new tourView();
+				// Pass in any tour element ids that are not currently present that maybe be added before the tour is started.
+				this.tourView = new tourView({idsToWaitFor: ['study-tags-section-div','tags-section-div','search-results-datatable','first-search-result-row','first-actions-row']});
 				if (this.isStartTour) {
 					this.setUpTour().then(this.tourView.render());
 				} else {
+					this.tourView.destroy();
 					$('#guide-me-button').focus();
 				}
 			}.bind(this), {isHandleTabs: true, width: 400});
@@ -113,17 +119,24 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 							$.when(results).then(()=> {
 								resolve();
 							});
-					} else if (session.queryScopes && session.queryScopes[0]) {
-						let phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
-						phs = phs.substring(1, phs.length-1);
-						abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs);
-						if (abbreviatedName) {
-							$('#search-box').val(abbreviatedName);
-							results = this.submitSearch($('#search-button').get());
-							$.when(results).then(()=> {
-								resolve();
-							});
+					} else {
+						let phs = undefined;
+						if (tagFilterModel.get('requiredTags').length > 0) {
+							phs = tagFilterModel.get('requiredTags').at(0).get('tag');
+						} else if (filterModel.get('activeFilters').length > 0) {
+							abbreviatedName = filterModel.get('activeFilters').at(0).get('searchResult').result.metadata.derived_study_abv_name;
+						} else if (session.queryScopes && session.queryScopes[0]) {
+							phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
+							phs = phs.substring(1, phs.length-1); // remove the backslashes
 						}
+						if (!abbreviatedName) {
+							abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs) || 'epilepsy';
+						}
+						$('#search-box').val(abbreviatedName);
+						results = this.submitSearch($('#search-button').get());
+						$.when(results).then(()=> {
+							resolve();
+						});
 					}
 				} catch(e) {
 					console.error(e);
@@ -162,12 +175,11 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 
 			//exclude the user selected tags as well as tags not in scope
 			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
-			$('#guide-me-button').hide();
+			$('#guide-me-button-container').hide();
 			$('#search-results').hide();
 			e && $('#tag-filters').hide();
 			$('#search-button').attr('disabled', 'disabled');
 
-			//let deferredSearchResults = $.Deferred();
 			let deferredSearchResults = $.ajax({
 				url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
 				type: 'POST',
@@ -180,7 +192,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					limit: 1000000
 				}}),
 				success: function(response){
-					//deferredSearchResults.resolve();
 					this.processResults(response);
 					this.updateTags(response);
 					$('#tag-filters').show();
@@ -246,6 +257,13 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				return false;
 			}
 
+		},
+		destroy: function(){
+			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
+			this.undelegateEvents();
+			$(this.el).removeData().unbind(); 
+			this.remove();  
+			Backbone.View.prototype.remove.call(this);
 		},
 		render: function(){
 			this.$el.html(this.searchViewTemplate());
