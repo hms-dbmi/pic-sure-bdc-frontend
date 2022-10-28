@@ -65,14 +65,14 @@ define([
             return new Promise(function(resolve, reject) {
                 const timeoutCount = 10;
                 let count = 0;
-                let elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId)).filter(element => element);
+                let elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId)).filter(element => element); // filter out nulls
                 if (elementsToWaitFor.length>0) {
                     let interval = setInterval(function() {
                         if (elementsToWaitFor.every((element) => element.isConnected === true)) {
                             clearInterval(interval);
                             resolve();
                         } else if (count === 3 || count === 6 || count === 9) { // If the node isnt connected after 1.5 seconds update the element reference.
-                            elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId)).filter(element => element);
+                            elementsToWaitFor = idsToWaitFor.map(elementId => document.getElementById(elementId)).filter(element => element); // filter out nulls
                         }
                         if (count === timeoutCount) {
                             clearInterval(interval);

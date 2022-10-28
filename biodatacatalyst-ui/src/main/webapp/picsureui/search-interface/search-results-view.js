@@ -213,7 +213,6 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 			if (resultIndex === undefined && !(event.target.classList.contains('.export-icon.search-result-action-btn') ||
 			      event.target.classList.contains('.glyphicon-log-out.search-result-action-btn'))) {
 					let target = $(event.target).find('.export-icon');
-					//target = target.length ? target : $(event.target).find('[class~="export-icon search-result-action-btn"]');
 					if (!target.length || target.hasClass('disabled-icon')) return;
 					resultIndex = $(event.target).get(0).data("result-index");
 			}

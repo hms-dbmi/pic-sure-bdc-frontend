@@ -180,7 +180,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			e && $('#tag-filters').hide();
 			$('#search-button').attr('disabled', 'disabled');
 
-			//let deferredSearchResults = $.Deferred();
 			let deferredSearchResults = $.ajax({
 				url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
 				type: 'POST',
@@ -193,7 +192,6 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 					limit: 1000000
 				}}),
 				success: function(response){
-					//deferredSearchResults.resolve();
 					this.processResults(response);
 					this.updateTags(response);
 					$('#tag-filters').show();
