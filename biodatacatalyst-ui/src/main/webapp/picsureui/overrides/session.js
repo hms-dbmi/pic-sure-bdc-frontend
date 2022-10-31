@@ -12,7 +12,7 @@ define([], function(){
                 history.pushState({}, "", "/picsureui/not_authorized");
                 return;
             }
-            if (currentSession.privileges && currentSession.privileges.length > 1) {
+            if (currentSession.privileges && currentSession.privileges.length > 0 && currentSession.privileges.filter(s => s.includes('phs')).length > 0) {
                 currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
             }
             
