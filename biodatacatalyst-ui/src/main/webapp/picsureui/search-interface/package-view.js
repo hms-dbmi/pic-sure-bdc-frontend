@@ -276,6 +276,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			success: function(response){
 				responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
 				const link = document.createElement('a');
+				link.download = 'data.csv';
 				link.href = responseDataUrl;
 				link.click();
 				link.remove();
