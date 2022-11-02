@@ -132,9 +132,12 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', '#337ab7');
+				$('#package-package-button').css('background-color', 'var(--catalyst-blue)');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
+				$('#package-copy-query-button').hide();
+				$('#seven-bridges-export').hide();
+				$('#terra-export').hide();
 			}
 			else if (exportStatus === 'Overload') {
 				fontColor = 'Red';
@@ -143,6 +146,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).off('click');
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
+				$('#package-copy-query-button').hide();
 				$('#package-download-button').hide();
 			}
 			else if (exportStatus === 'Progress') {
@@ -151,7 +155,10 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).off('click');
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
+				$('#package-copy-query-button').hide();
 				$('#package-download-button').hide();
+				$('#seven-bridges-export').hide();
+				$('#terra-export').hide();
 			}
 			else if (exportStatus === 'Done') {
 				statusMessage = 'Status: Available';
@@ -159,10 +166,13 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', '#337ab7');
+				$('#package-package-button').css('background-color', 'var(--catalyst-blue)');
 				$('.package-query-container').show();
+				$('#seven-bridges-export').show();
+				$('#terra-export').show();
 				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
+				$('#package-copy-query-button').show();
 				$('#package-download-button', this.$el).off('click');
 				$('#package-download-button', this.$el).click(function(){
 					viewObj.openDownloadConfirmationModal();
@@ -181,7 +191,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button').css('background-color', '#337ab7');
 			}
 
-			$('#package-download-button', this.$el).removeAttr("href");
+			// $('#package-download-button', this.$el).removeAttr("href");
 			$('#package-participants-value').html(filterModel.get("totalPatients"));
 			$('#package-variables-value').html(filterModel.get("totalVariables"));
 			$('#package-est-data-value').html(filterModel.get("estDataPoints"));
@@ -262,6 +272,14 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			$('#package-download-button').focus();
 			dialogView.remove();
 		}.bind(this), {isHandleTabs: true, width: 500});
+	},
+	openSevenBridgesModal: function(){
+		// if (!this.sevenBridgesExportView) {
+		// 	this.sevenBridgesExportView = new sevenBridgesExportView();
+		// }
+		// modal.displayModal(sevenBridgesExportView, 'Export to BioDataCatalyst Powered by Seven Bridges', function(){
+		// 	$('#seven-bridges-export').focus();
+		// }.bind(this), {isHandleTabs: true});
 	},
 	downloadData: function(viewObj){
 		$('#package-download-button', this.$el).removeAttr("href");
