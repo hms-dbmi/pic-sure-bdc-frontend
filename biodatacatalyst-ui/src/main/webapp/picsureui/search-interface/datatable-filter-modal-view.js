@@ -182,7 +182,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-filter-modal-v
 			let data = this.dtData;
 			if(!data){
 				data = _.map(this.model.dtVariables,function(variable){
-					let values = _.keys(variable.result.values).join(", ");
+					let values = variable.result.values.join(", ");
                 	return [
                 		existingFilter ?
                 			(_.find(existingFilter.get('variables'), (conceptPath)=>{
