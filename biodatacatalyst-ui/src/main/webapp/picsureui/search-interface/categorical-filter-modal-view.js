@@ -8,7 +8,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.metadata.columnmeta_study_id);
                 this.dataForSearchPanel = {
                     heading: 'Available values',
-                    results: _.values(this.data.searchResult.result.values),
+                    results: this.data.searchResult.result.values,
                     searchContext: 'Select values of interest',
                     resultContext: 'Selected values',
                     placeholderText: 'Try searching for values',
@@ -17,7 +17,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 }
                 if (this.data.filter) {
                     this.dataForSearchPanel.searchResults = this.data.filter.type === 'required' ?
-                        _.values(this.data.filter.searchResult.result.values) :
+                        this.data.filter.searchResult.result.values :
                         this.data.filter.values;
                 }
                 this.searchPanel = new searchPanel(this.dataForSearchPanel);
@@ -27,7 +27,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 'updatedLists' : 'updateButtonState',
             },
             addFilter: function(event) {
-                if(_.keys(this.data.searchResult.result.values).length <= $('.results-box .categorical-filter-input:checked').length){
+                if(this.data.searchResult.result.values.length <= $('.results-box .categorical-filter-input:checked').length){
                     filterModel.addRequiredFilter(
                         this.data.searchResult,
                     );

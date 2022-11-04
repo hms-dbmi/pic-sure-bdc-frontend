@@ -176,7 +176,7 @@ define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-v
 			let data = this.dtData;
 			if(!data){
 				data = _.map(this.model.dtVariables,function(variable){
-						let values = _.keys(variable.result.values).join(", ");
+						let values = variable.result.values.join(", ");
 	                	return [
 							//TODO change to check for variable in ExportFields
 	                		filterModel.isExportField(variable),

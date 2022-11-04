@@ -357,7 +357,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				let variable = model.attributes;
 
 				let metadata = variable.variable.metadata;
-				let values = _.values(variable.variable.values).join(", ");
+				let values = variable.variable.values.join(", ");
 
 				return [
 					true,
