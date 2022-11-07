@@ -12,10 +12,11 @@ define(["jquery",
 		"picSure/settings",
 		"search-interface/variable-values-view",
 		"search-interface/modal",
-		"common/pic-sure-dialog-view"],
+		"common/pic-sure-dialog-view",
+		"search-interface/seven-bridges-export-view",],
 function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 	filterModel, searchUtil, queryBuilder, queryResultsView, output, settings,
-	variableValuesView, modal, dialog){
+	variableValuesView, modal, dialog, sevenBridgesExportView){
 	var packageView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatablePackageModal",this);
@@ -31,7 +32,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			'click input[type="checkbox"]':"checkboxToggled",
 			'focus #exportData': 'exportDataFocus',
 			'blur #exportData': 'exportDataBlur',
-			'click button[id="varValuesButton"]':"openVariableValues"
+			'click button[id="varValuesButton"]':"openVariableValues",
+			'click #seven-bridges-export':"openSevenBridgesModal",
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -274,12 +276,12 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 		}.bind(this), {isHandleTabs: true, width: 500});
 	},
 	openSevenBridgesModal: function(){
-		// if (!this.sevenBridgesExportView) {
-		// 	this.sevenBridgesExportView = new sevenBridgesExportView();
-		// }
-		// modal.displayModal(sevenBridgesExportView, 'Export to BioDataCatalyst Powered by Seven Bridges', function(){
-		// 	$('#seven-bridges-export').focus();
-		// }.bind(this), {isHandleTabs: true});
+		if (!this.sevenBridgesExportView) {
+			this.sevenBridgesExportView = new sevenBridgesExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}});
+		}
+		modal.displayModal(this.sevenBridgesExportView, 'Export to BioData Catalyst Powered by Seven Bridges', function(){
+			$('#seven-bridges-export').focus();
+		}.bind(this), {isHandleTabs: true});
 	},
 	downloadData: function(viewObj){
 		$('#package-download-button', this.$el).removeAttr("href");
@@ -306,15 +308,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 		})
 	}.bind(this),
 	copyQueryId: function(){
-		//this will copy the query ID to the user's clipboard
-		var sel = getSelection();
-		var range = document.createRange();
-		document.getElementById("package-query-id").value
-		= document.getElementById("package-query-id").textContent;
-		range.selectNode(document.getElementById("package-query-id"));
-		sel.removeAllRanges();
-		sel.addRange(range);
-		document.execCommand("copy");
+		navigator.clipboard.writeText(document.getElementById("package-query-id").textContent);
+		document.getElementById("package-copy-query-button").innerText = "Copied!";
 	},
 	openVariableValues: function(event){
 		let varId = event.target.dataset['varid'];

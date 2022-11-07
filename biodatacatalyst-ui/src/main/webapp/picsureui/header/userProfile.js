@@ -105,15 +105,17 @@ define(["jquery", "backbone","handlebars", "text!header/userProfile.hbs", "picSu
         },
         revealToken: function(event){
             $('#user-token-refresh-success').hide();
-            var type = $('#user-token-reveal-button').html();
+            const tokenTextArea = $("#user_token_textarea");
+            const type = $('#user-token-reveal-button').html();
             if (type == "Reveal"){
-                var token = $('#user_token_textarea')[0].attributes.token.value;
-                $("#user_token_textarea").html(token);
+                const token = $('#user_token_textarea')[0].attributes.token.value;
+                tokenTextArea.html(token);
                 $("#user-token-reveal-button").html("Hide");
             } else {
-                $("#user_token_textarea").html("**************************************************************************************************************************************************************************************************************************************************************************************");
+                tokenTextArea.html("**************************************************************************************************************************************************************************************************************************************************************************************");
                 $("#user-token-reveal-button").html("Reveal");
             }
+            tokenTextArea.height(tokenTextArea.prop('scrollHeight'));
         },
         closeDialog: function () {
             $("#modalDialog").hide();
