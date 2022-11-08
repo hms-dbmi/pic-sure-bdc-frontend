@@ -12,7 +12,6 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             'click #imaging' : 'openImaging',
             'click #distributions' : 'openDistributions',
             'click #tool-suite-help' : 'openHelp',
-            'click #export-to-seven-bridges' : 'exportToSevenBridges',
             'keypress #tool-suite-help' : 'openHelp',
         },
         handleFilterChange: function(){

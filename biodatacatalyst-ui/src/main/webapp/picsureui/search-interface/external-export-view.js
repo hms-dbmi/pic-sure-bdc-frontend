@@ -2,13 +2,19 @@ define([
     'backbone',
     'handlebars',
     'text!search-interface/seven-bridges-export-view.hbs',
+    'text!search-interface/terra-export-view.hbs',
     'search-interface/modal',
     'header/userProfile',
     'picSure/userFunctions',
-], function(BB, HBS, viewTemplate, modal, userProfile, userFunctions) {
+], function(BB, HBS, sevenBridgesTemplate, terraTemplate, modal, userProfile, userFunctions) {
     var sevenBridgesExportView = BB.View.extend({
         initialize: async function(opts){
-            this.viewTemplate = HBS.compile(viewTemplate);
+            this.isTerra = opts.terra;
+            if (this.isTerra) {
+                this.viewTemplate = HBS.compile(terraTemplate);
+            } else {
+                this.viewTemplate = HBS.compile(sevenBridgesTemplate);
+            }
             this.previousView = opts.previousView;
         },
         onClose: function() {

@@ -13,10 +13,10 @@ define(["jquery",
 		"search-interface/variable-values-view",
 		"search-interface/modal",
 		"common/pic-sure-dialog-view",
-		"search-interface/seven-bridges-export-view",],
+		"search-interface/external-export-view",],
 function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 	filterModel, searchUtil, queryBuilder, queryResultsView, output, settings,
-	variableValuesView, modal, dialog, sevenBridgesExportView){
+	variableValuesView, modal, dialog, externalExportView){
 	var packageView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatablePackageModal",this);
@@ -34,6 +34,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			'blur #exportData': 'exportDataBlur',
 			'click button[id="varValuesButton"]':"openVariableValues",
 			'click #seven-bridges-export':"openSevenBridgesModal",
+			'click #terra-export': "openTerraModal",
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -276,10 +277,18 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 		}.bind(this), {isHandleTabs: true, width: 500});
 	},
 	openSevenBridgesModal: function(){
-		if (!this.sevenBridgesExportView) {
-			this.sevenBridgesExportView = new sevenBridgesExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}});
+		if (!this.externalExportView || !this.externalExportView.isTerra) {
+			this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, terra: false});
 		}
-		modal.displayModal(this.sevenBridgesExportView, 'Export to BioData Catalyst Powered by Seven Bridges', function(){
+		modal.displayModal(this.externalExportView, 'Export to BioData Catalyst Powered by Seven Bridges', function(){
+			$('#seven-bridges-export').focus();
+		}.bind(this), {isHandleTabs: true});
+	},
+	openTerraModal: function(){
+		if (!this.externalExportView || this.externalExportView.isTerra) {
+			this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, terra: true});
+		}
+		modal.displayModal(this.externalExportView, 'Export to BioData Catalyst Powered by Terra', function(){
 			$('#seven-bridges-export').focus();
 		}.bind(this), {isHandleTabs: true});
 	},
