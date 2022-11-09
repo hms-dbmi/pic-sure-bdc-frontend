@@ -1,21 +1,18 @@
 define([
     'backbone',
     'handlebars',
-    'text!search-interface/seven-bridges-export-view.hbs',
-    'text!search-interface/terra-export-view.hbs',
     'search-interface/modal',
     'header/userProfile',
     'picSure/userFunctions',
-], function(BB, HBS, sevenBridgesTemplate, terraTemplate, modal, userProfile, userFunctions) {
-    var sevenBridgesExportView = BB.View.extend({
+], function(BB, HBS, modal, userProfile, userFunctions) {
+    var externalExportView = BB.View.extend({
         initialize: async function(opts){
-            this.isTerra = opts.terra;
-            if (this.isTerra) {
-                this.viewTemplate = HBS.compile(terraTemplate);
-            } else {
-                this.viewTemplate = HBS.compile(sevenBridgesTemplate);
-            }
             this.previousView = opts.previousView;
+            if (opts.template) {
+                this.viewTemplate = HBS.compile(opts.template);
+            } else {
+                console.error("No template provided for externalExportView");
+            }
         },
         onClose: function() {
             this.previousView && modal.displayModal(this.previousView.view, this.previousView.title);
@@ -28,6 +25,13 @@ define([
             navigator.clipboard.writeText(document.getElementById("query-id").textContent);
             document.getElementById("copy-query-id-button").innerText = "Copied!";
         },
+        destroy: function(){
+			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
+			this.undelegateEvents();	
+			$(this.el).removeData().unbind(); 
+			this.remove();  
+			Backbone.View.prototype.remove.call(this);
+		},
         render: function(){
             this.$el.html(this.viewTemplate());
             this.previousView && $('.close')?.off('click');
@@ -46,5 +50,5 @@ define([
             }
         }
     });
-    return sevenBridgesExportView;
+    return externalExportView;
 });
