@@ -29,26 +29,9 @@ define(["jquery", "backbone","handlebars", "text!header/userProfile.hbs", "picSu
         },
         copyToken: function(){
             $('#user-token-refresh-success').hide();
-            var originValue = document.getElementById("user_token_textarea").textContent;
-
-            var sel = getSelection();
-            var range = document.createRange();
-
-            // this if for supporting chrome, since chrome will look for value instead of textContent
-            // document.getElementById("user_token_textarea").value = document.getElementById("user_token_textarea").textContent;
-            document.getElementById("user_token_textarea").value
-                = document.getElementById("user_token_textarea").textContent
-                = document.getElementById("user_token_textarea").attributes.token.value;
-            range.selectNode(document.getElementById("user_token_textarea"));
-            sel.removeAllRanges();
-            sel.addRange(range);
-            document.execCommand("copy");
-
+            const tokenValue = document.getElementById("user_token_textarea").attributes.token.value;;
+            navigator.clipboard.writeText(tokenValue);
             $("#user-token-copy-button").html("Copied");
-
-            document.getElementById("user_token_textarea").textContent
-                = document.getElementById("user_token_textarea").value
-                = originValue;
         },
         refreshToken: function(event){
 		    $('#user-token-refresh-button').hide();
@@ -105,15 +88,17 @@ define(["jquery", "backbone","handlebars", "text!header/userProfile.hbs", "picSu
         },
         revealToken: function(event){
             $('#user-token-refresh-success').hide();
-            var type = $('#user-token-reveal-button').html();
+            const tokenTextArea = document.getElementById("user_token_textarea");
+            const type = $('#user-token-reveal-button').html();
             if (type == "Reveal"){
-                var token = $('#user_token_textarea')[0].attributes.token.value;
-                $("#user_token_textarea").html(token);
+                const token = $('#user_token_textarea')[0].attributes.token.value;
+                $(tokenTextArea).html(token);
                 $("#user-token-reveal-button").html("Hide");
             } else {
-                $("#user_token_textarea").html("**************************************************************************************************************************************************************************************************************************************************************************************");
+                $(tokenTextArea).html("**************************************************************************************************************************************************************************************************************************************************************************************");
                 $("#user-token-reveal-button").html("Reveal");
             }
+            $(tokenTextArea).height($(tokenTextArea).prop('scrollHeight'));
         },
         closeDialog: function () {
             $("#modalDialog").hide();

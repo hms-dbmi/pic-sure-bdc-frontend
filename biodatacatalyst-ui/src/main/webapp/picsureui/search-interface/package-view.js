@@ -12,10 +12,13 @@ define(["jquery",
 		"picSure/settings",
 		"search-interface/variable-values-view",
 		"search-interface/modal",
-		"common/pic-sure-dialog-view"],
+		"common/pic-sure-dialog-view",
+		"search-interface/external-export-view",
+	    'text!search-interface/seven-bridges-export-view.hbs',
+    	'text!search-interface/terra-export-view.hbs',],
 function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 	filterModel, searchUtil, queryBuilder, queryResultsView, output, settings,
-	variableValuesView, modal, dialog){
+	variableValuesView, modal, dialog, externalExportView, sevenBridgeExportTemplate, terraExportTemplate){
 	var packageView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatablePackageModal",this);
@@ -31,7 +34,9 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			'click input[type="checkbox"]':"checkboxToggled",
 			'focus #exportData': 'exportDataFocus',
 			'blur #exportData': 'exportDataBlur',
-			'click button[id="varValuesButton"]':"openVariableValues"
+			'click button[id="varValuesButton"]':"openVariableValues",
+			'click #seven-bridges-export':"openSevenBridgesModal",
+			'click #terra-export': "openTerraModal",
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -132,9 +137,12 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', '#337ab7');
+				$('#package-package-button').css('background-color', 'var(--catalyst-blue)');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
+				$('#package-copy-query-button').hide();
+				$('#seven-bridges-export').hide();
+				$('#terra-export').hide();
 			}
 			else if (exportStatus === 'Overload') {
 				fontColor = 'Red';
@@ -143,6 +151,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).off('click');
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
+				$('#package-copy-query-button').hide();
 				$('#package-download-button').hide();
 			}
 			else if (exportStatus === 'Progress') {
@@ -151,7 +160,10 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).off('click');
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
+				$('#package-copy-query-button').hide();
 				$('#package-download-button').hide();
+				$('#seven-bridges-export').hide();
+				$('#terra-export').hide();
 			}
 			else if (exportStatus === 'Done') {
 				statusMessage = 'Status: Available';
@@ -159,10 +171,13 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button', this.$el).click(function(){
 					viewObj.initiatePackage();
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', '#337ab7');
+				$('#package-package-button').css('background-color', 'var(--catalyst-blue)');
 				$('.package-query-container').show();
+				$('#seven-bridges-export').show();
+				$('#terra-export').show();
 				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
+				$('#package-copy-query-button').show();
 				$('#package-download-button', this.$el).off('click');
 				$('#package-download-button', this.$el).click(function(){
 					viewObj.openDownloadConfirmationModal();
@@ -181,7 +196,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('#package-package-button').css('background-color', '#337ab7');
 			}
 
-			$('#package-download-button', this.$el).removeAttr("href");
+			// $('#package-download-button', this.$el).removeAttr("href");
 			$('#package-participants-value').html(filterModel.get("totalPatients"));
 			$('#package-variables-value').html(filterModel.get("totalVariables"));
 			$('#package-est-data-value').html(filterModel.get("estDataPoints"));
@@ -263,6 +278,24 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			dialogView.remove();
 		}.bind(this), {isHandleTabs: true, width: 500});
 	},
+	openSevenBridgesModal: function(){
+		if (this.externalExportView) {
+			this.externalExportView.destroy();
+		}
+		this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: sevenBridgeExportTemplate});
+		modal.displayModal(this.externalExportView, 'Export to BioData Catalyst Powered by Seven Bridges', function(){
+			$('#seven-bridges-export').focus();
+		}.bind(this), {isHandleTabs: true});
+	},
+	openTerraModal: function(){
+		if (this.externalExportView) {
+			this.externalExportView.destroy();
+		}
+		this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: terraExportTemplate});
+		modal.displayModal(this.externalExportView, 'Export to BioData Catalyst Powered by Terra', function(){
+			$('#terra-export').focus();
+		}.bind(this), {isHandleTabs: true});
+	},
 	downloadData: function(viewObj){
 		$('#package-download-button', this.$el).removeAttr("href");
 		let queryId = viewObj.model.get('queryId');
@@ -288,15 +321,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 		})
 	}.bind(this),
 	copyQueryId: function(){
-		//this will copy the query ID to the user's clipboard
-		var sel = getSelection();
-		var range = document.createRange();
-		document.getElementById("package-query-id").value
-		= document.getElementById("package-query-id").textContent;
-		range.selectNode(document.getElementById("package-query-id"));
-		sel.removeAllRanges();
-		sel.addRange(range);
-		document.execCommand("copy");
+		navigator.clipboard.writeText(document.getElementById("package-query-id").textContent);
+		document.getElementById("package-copy-query-button").innerText = "Copied!";
 	},
 	openVariableValues: function(event){
 		let varId = event.target.dataset['varid'];

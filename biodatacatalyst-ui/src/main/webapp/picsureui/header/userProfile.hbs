@@ -1,25 +1,27 @@
 <div id="user-profile">
-    <div class="bordered-block">
-        Token:
-        <button id="user-token-copy-button" type="button" class="btn-small btn btn-success" tabindex="3001" uuid="{{user.uuid}}" alt="Copy">Copy</button>
-        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-info" tabindex="3002" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
-        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-warning" tabindex="3003" uuid="{{user.uuid}}"
-                style="float: right; border-radius: 4px;" alt="Refresh">Refresh</button>
-        <span id="user-token-refresh-success" style="float: right; display: none; color: #2e8540; margin: 8px 8px 0 0;">Success!</span>
-        <div id="user-token-refresh-confirm-container" style="float: right; display: none;">
-            Refresh will inactivate the old token. Do you want to continue?
-            <button id="user-token-yes-button" type="button" class="btn-small btn btn-success" tabindex="3004" alt="Yes">Yes</button>
-            <button id="user-token-no-button" type="button" class="btn-small btn btn-danger" tabindex="3005" alt="No">No</button>
+    <label>Personalized Token:</label>
+    <div class="user-profile-container">
+        <div class="token-container">
+            <textarea tabindex="3006" id="user_token_textarea" style="word-wrap: break-word;" token="{{user.token}}" readonly disabled>**************************************************************************************************************************************************************************************************************************************************************************************</textarea>
+            <div id="user_token_expiration">
+                Token expiration time: <span id="user-token-exp-calculated">{{{tokenExpiration user.token}}}</span>
+            </div>
+            <span id="user-token-refresh-success" style="float: right; display: none; color: #2e8540; margin: 8px 8px 0 0;">Success!</span>
+            <div class="username-row">
+                <label for="username-textbox">Username: </label><span id="username-textbox" uuid="{{user.uuid}}" type="text" name="user_email" style="width: 100%;" required readonly disabled>{{user.email}}</span>
+            </div>
         </div>
-        <br>
-        <div tabindex="3006" class="bordered-block" id="user_token_textarea" style="width: 100%; margin-top: 8px; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
-        <div id="user_token_expiration">Token expiration time: <span id="user-token-exp-calculated">{{{tokenExpiration user.token}}}</span></div>
-        <b/>
+        <div class="token-buttons">
+            <button id="user-token-copy-button" type="button" class="btn-small btn btn-primary" tabindex="3003" uuid="{{user.uuid}}" alt="Copy">Copy</button>
+            <button id="user-token-reveal-button" type="button" class="btn-small btn btn-primary" tabindex="3002" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
+            <button id="user-token-refresh-button" type="button" class="btn-small btn btn-primary" tabindex="3001" uuid="{{user.uuid}}" style="border-radius: 4px;" alt="Refresh">Refresh</button>
+        </div>
     </div>
-
-    <div class="bordered-block">
-        Email:<br>
-        <input uuid="{{user.uuid}}" type="text" name="user_email" style="width: 100%;" required readonly disabled value="{{user.email}}">
-        <br/>
+    <div id="user-token-refresh-confirm-container" style="float:right; display: none;">
+        <span style="margin-right: 10px;">Refresh will inactivate the old token. Do you want to continue?</span>
+        <div class="token-buttons-confirmed">
+            <button id="user-token-yes-button" type="button" class="btn-small btn btn-primary" tabindex="3004" alt="Yes">Yes</button>
+            <button id="user-token-no-button" type="button" class="btn-small btn btn-primary" tabindex="3005" alt="No">No</button>
+        </div>
     </div>
 </div>

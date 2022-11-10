@@ -1,10 +1,4 @@
 <style>
-#export-selection-buttons {
-    float: right;
-}
-#export-selection-buttons > button {
-    margin-left: 20px;
-}
 .focused-variable {
     border:solid;
     border-width:-4px !important;
@@ -34,8 +28,8 @@ div#package-datatable-table{
     margin-bottom:1.5vh;
 }
 .right-container{
-    display:inline-flex;
-    justify-content: end;
+    display:flex;
+    flex-direction: column;
     margin-right:10px;
     text-align: right;
 }
@@ -43,32 +37,33 @@ div#package-datatable-table{
     display: block;
 }
 .package-query-container, .package-buttons-container{
-    display: inline-block;
+    display: inline-flex;
     text-align:right;
-    padding-right:10px;
+    justify-content: end;
 }
 .package-button {
     display: flex;
     justify-content: center;
     margin-bottom: 3px;
-    width:11em;
+    margin-left: 3px;
+    width:12em;
     font-size:1em;
+    height: fit-content;    
 }
 #package-query-id{
     width:fit-content;
     padding:6px 4px;
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 5px;
     align-items: center;
-    height:
+    height: fit-content;
 }
 #package-copy-query-button{
     position:relative;
-    right:-40%;
     font-size:1em;
 }
 #package-download-button{
-    background: #337ab7;
+    background-color: var(--catalyst-blue);
     color: white;
 }
 #package-download-label{
@@ -78,6 +73,16 @@ div#package-datatable-table{
 }
 #package-download-icon{
     padding-top:.2em;
+}
+
+.top-button-row {
+    display: flex;
+    flex-direction: row;
+}
+
+#query-id-label {
+    padding-top: 0.3em;
+    padding-right: 0.3em;
 }
 
 </style>
@@ -102,20 +107,18 @@ div#package-datatable-table{
             </div>
         </div>
         <div class="right-container">
-            <div class="package-query-container">
-                <button id="package-copy-query-button" class="btn btn-primary package-button" tabindex="1099999">
-                    Copy Query ID
-                </button>
-                <div id="package-query-id">xxx</div>
-            </div>
-            <div class="package-buttons-container">
-                <button id="package-package-button" class="btn btn-primary package-button" tabindex="1099998">
-                        Package Data
-                </button>
-                <a id="package-download-button" class="btn btn-primary download-button package-button" title="Download Data" download='data.csv'>
-                      <div class="fa fa-download" id="package-download-icon"></div>
-                      <span id='package-download-label'> Download </span>
+            <div class="top-button-row">
+                <button id="seven-bridges-export" class="btn btn-primary package-button">Export to Seven Bridges</button>
+                <button id="terra-export" class="btn btn-primary package-button" style="display: none;">Export to Terra</button>
+                 <a id="package-download-button" aria-label="Download Button, opens a confirmation modal." class="btn btn-primary download-button package-button" title="Download Data" download='data.csv'>
+                      <i class="fa fa-download" id="package-download-icon" aria-hidden="true"></i>
+                      <span id='package-download-label'>Download</span>
                 </a>
+                <button id="package-package-button" class="btn btn-primary package-button" tabindex="1099998">Package Data</button>
+            </div>
+            <div class="package-query-container">
+                <label id="query-id-label" for="package-query-id">Query Id:</label><div id="package-query-id">xxx</div>
+                <button id="package-copy-query-button" class="btn btn-primary package-button" tabindex="1099999">Copy Query ID</button>
             </div>
         </div>
     </div>

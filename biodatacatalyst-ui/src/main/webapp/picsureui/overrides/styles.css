@@ -397,20 +397,62 @@
 .remove-filter {
     float: right;
 }
+
 .edit-filter {
     float: right;
 }
 
-#user-profile button {
-    background-color: #337ab7;
-    border-color: #337ab7;
-    color: #ffffff;
+/* USER PROFILE */
+
+#user-profile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-#user-profile button:hover, #user-profile button:focus {
-    background-color: #20639d;
-    border-color: #20639d;
-    color: #ffffff;
+.user-profile-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#user-profile .token-container, #user-profile .token-container textarea {
+   width: 100%;
+}
+
+#user-profile .token-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: fit-content;
+    margin-left: 10px;
+}
+
+#user-profile .token-buttons button:not(.token-buttons-confirmed) {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+#user-token-refresh-confirm-container {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    height: fit-content;
+    align-items: baseline;
+    align-self: flex-end;
+}
+
+#user-profile .token-buttons .token-buttons-confirmed {
+   width: fit-content;
+}
+
+#user-profile .username-row {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+#user-profile .username-row > label {
+    margin-right: 10px;
 }
 
 #user-profile .badge-primary,
