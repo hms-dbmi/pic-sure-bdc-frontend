@@ -223,7 +223,7 @@ define(['jquery', 'backbone','handlebars',
                 }
                 if (variantClass.length > 0) {
                     variantClass.each(function(i, el){
-                        let elVal = $(el).val().toLowerCase();
+                        let elVal = $(el).val();
                         elVal = elVal === 'SNV' ? elVal.toUpperCase() : elVal.toLowerCase();
                         variantClassData.push(elVal);
                     });
