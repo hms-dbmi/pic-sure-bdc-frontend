@@ -14,6 +14,8 @@ define(['jquery', 'backbone','handlebars',
         const severityKey = 'Variant_severity';
         const classKey = 'Variant_class';
         const frequencyKey = 'Variant_frequency_as_text';
+        const classDescription = 'A standardized term from the Sequence Ontology (http://www.sequenceontology.org) to describe the type of a variant. Possible values: deletion, insertion.';
+        const frequencyDescription = 'The variant allele frequency in gnomAD exomes of combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%).';
         const TABABLE_CLASS = '.tabable';
         const SELECTED = 'selected';
         const LIST_ITEM = 'list-item';
@@ -29,8 +31,8 @@ define(['jquery', 'backbone','handlebars',
                     this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1];
                     this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1];
                     this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.split('"')[1];
-                    this.data.classDescription = this.infoColumns.find(col => col.key === classKey).description.split('"')[1];
-                    this.data.frequencyDescription = this.infoColumns.find(col => col.key === frequencyKey).description.split('"')[1];
+                    this.data.classDescription = classDescription;
+                    this.data.frequencyDescription = frequencyDescription;
                     // TODO: Do this in the backend at some point
                     this.data.severityDescription = this.data.severityDescription.substring(0, this.data.severityDescription.lastIndexOf(','))+'.';
                     isLoading = false;
@@ -70,8 +72,8 @@ define(['jquery', 'backbone','handlebars',
                 const geneList = parsedVariantData.genes;
                 const consequencesList = parsedVariantData.consequences;
                 this.data.severityOptions = ['High', 'Moderate', 'Low'];
-                this.data.classOptions = ['SNV', 'Deletion', 'Insertion'];
-                this.data.frequencyOptions = ['Novel', 'Rare', 'Common'];
+                this.data.classOptions = ['Deletion', 'Insertion'];
+                this.data.frequencyOptions = ['Rare', 'Common'];
                 this.dataForGeneSearch = {
                     heading: 'Gene with Variant',
                     results: geneList,
