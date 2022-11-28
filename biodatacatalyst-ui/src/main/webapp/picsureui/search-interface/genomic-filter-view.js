@@ -70,8 +70,8 @@ define(['jquery', 'backbone','handlebars',
                 const geneList = parsedVariantData.genes;
                 const consequencesList = parsedVariantData.consequences;
                 this.data.severityOptions = ['High', 'Moderate', 'Low'];
-                this.data.classOptions = ['SNV', 'Deletion', 'Insertion'];
-                this.data.frequencyOptions = ['Novel', 'Rare', 'Common'];
+                this.data.classOptions = ['Deletion', 'Insertion'];
+                this.data.frequencyOptions = ['Rare', 'Common'];
                 this.dataForGeneSearch = {
                     heading: 'Gene with Variant',
                     results: geneList,
