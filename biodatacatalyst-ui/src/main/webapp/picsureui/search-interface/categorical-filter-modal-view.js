@@ -8,6 +8,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                 this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.metadata.columnmeta_study_id);
                 this.dataForSearchPanel = {
                     heading: 'Available values',
+                    // todo: remove this _.values call and check for null/empty object
                     results: _.values(this.data.searchResult.result.values),
                     searchContext: 'Select values of interest',
                     resultContext: 'Selected values',
@@ -16,6 +17,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/categorical-fil
                     sample: false
                 }
                 if (this.data.filter) {
+                    // todo: remove this _.values call and check for null/empty object
                     this.dataForSearchPanel.searchResults = this.data.filter.type === 'required' ?
                         _.values(this.data.filter.searchResult.result.values) :
                         this.data.filter.values;
