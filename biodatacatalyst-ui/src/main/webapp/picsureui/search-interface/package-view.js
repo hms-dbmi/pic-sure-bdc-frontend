@@ -283,7 +283,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			this.externalExportView.destroy();
 		}
 		this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: sevenBridgeExportTemplate});
-		modal.displayModal(this.externalExportView, 'Export to BioData Catalyst Powered by Seven Bridges', function(){
+		modal.displayModal(this.externalExportView, 'Export to NHLBI BioData Catalyst® Powered by Seven Bridges', function(){
 			$('#seven-bridges-export').focus();
 		}.bind(this), {isHandleTabs: true});
 	},
@@ -292,7 +292,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			this.externalExportView.destroy();
 		}
 		this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: terraExportTemplate});
-		modal.displayModal(this.externalExportView, 'Export to BioData Catalyst Powered by Terra', function(){
+		modal.displayModal(this.externalExportView, 'Export to NHLBI BioData Catalyst® Powered by Terra', function(){
 			$('#terra-export').focus();
 		}.bind(this), {isHandleTabs: true});
 	},
