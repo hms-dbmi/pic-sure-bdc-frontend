@@ -153,6 +153,8 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				$('.package-query-container').hide();
 				$('#package-copy-query-button').hide();
 				$('#package-download-button').hide();
+				$('#seven-bridges-export').hide();
+				$('#terra-export').hide();
 			}
 			else if (exportStatus === 'Progress') {
 				statusMessage = 'Status: In Progress';
