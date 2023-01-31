@@ -58,7 +58,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         tmpStudy["genetic_sample_size"] = gsc=='-1' || gsc=='NaN' ? 'N/A' : gsc;
 
                         let studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"];
-                        tmpStudy['accession'] = tmpStudy["study_identifier"]+ "." + tmpStudy["study_version"] + "." + tmpStudy["study_phase"];
+                        tmpStudy['accession'] = tmpStudy["study_identifier"]+ "." + tmpStudy["study_version"] + "." + tmpStudy["study_phase"]+ "." + tmpStudy["consent_group_code"];
                         if (validConsents.includes(studyConsent)) {
                             tmpStudy['isGranted']=true;
                             this.records.permitted.push(tmpStudy);
@@ -207,7 +207,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                     columnDefs: [
                         {
                             targets: 0,
-                            className: 'center-vert dt-center',
+                            className: 'dt-center',
                             type: 'string'
 						},
                         {
