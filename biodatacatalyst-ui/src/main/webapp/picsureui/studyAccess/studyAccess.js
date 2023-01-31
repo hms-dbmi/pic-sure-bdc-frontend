@@ -207,7 +207,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                     columnDefs: [
                         {
                             targets: 0,
-                            className: 'center-vert dt-center',
+                            className: 'dt-center',
                             type: 'string'
 						},
                         {
