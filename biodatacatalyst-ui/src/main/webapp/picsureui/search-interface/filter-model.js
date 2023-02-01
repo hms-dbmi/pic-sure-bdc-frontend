@@ -58,7 +58,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
                 tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
-                this.addExportColumn(searchResult, 'filter');
+                this.addExportColumn(searchResult, 'filter', undefined, values);
             },
             addNumericFilter: function(searchResult, min, max) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
@@ -76,7 +76,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: searchResult.result.varId.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
-                    this.addExportColumn(searchResult, 'filter');
+                    this.addExportColumn(searchResult, 'filter', undefined, undefined, min, max);
                     this.trigger('change', this, {});
             },
             addRequiredFilter: function(searchResult) {
@@ -93,7 +93,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     topmed: searchResult.result.metadata.columnmeta_var_id.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
-                    this.addExportColumn(searchResult, 'filter');
+                    this.addExportColumn(searchResult, 'filter', undefined, searchResult.result.values);
                     this.trigger('change', this, {});
             },
             addDatatableFilter: function(datatableSelections) {
@@ -202,7 +202,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
             generateDatatableCategory: function(searchResult) {
                 return "\\" + searchResult.result.dtId + "\\" + searchResult.result.studyId + "\\";
             },
-            addExportColumn: function(searchResult, type, source){
+            addExportColumn: function(searchResult, type, source, selectedValues, selectedMin, selectedMax){
                 let existingColumn =   _.find(this.get('exportColumns').models, (model)=>{
                          return model.attributes.variable.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
                 });
@@ -214,20 +214,29 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                         this.get('exportColumns').add({
                             type: type,
                             variable: searchResult.result,
-                            source: source
+                            source: source,
+                            selectedValues: selectedValues,
+                            selectedMin: selectedMin,
+                            selectedMax: selectedMax
                         });
                     } else if (type == 'filter' && existingColumn.type === 'auto'){
                         this.get('exportColumns').add({
                             type: type,
                             variable: searchResult.result,
-                            source: source
+                            source: source,
+                            selectedValues: selectedValues,
+                            selectedMin: selectedMin,
+                            selectedMax: selectedMax
                         });
                     }
                 } else {
                     this.get('exportColumns').add({
                         type: type,
                         variable: searchResult.result,
-                        source: source
+                        source: source,
+                        selectedValues: selectedValues,
+                        selectedMin: selectedMin,
+                        selectedMax: selectedMax
                     });
                 }
 

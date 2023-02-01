@@ -349,13 +349,25 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 		valuesModel.varStudy = metadata.columnmeta_study_id;
 		valuesModel.isNumerical = target.attributes.variable.is_continuous ? target.attributes.variable.is_continuous : false;
 		valuesModel.isCategorical = target.attributes.variable.is_categorical ? target.attributes.variable.is_categorical : true;
-		if(valuesModel.isCategorical){
-			valuesModel.varValues = target.attributes.variable.values;
+		if(target.attributes.type != "filter"){
+			if(valuesModel.isCategorical){
+				valuesModel.varValues = target.attributes.variable.values;
+			}
+			else{
+				valuesModel.varMin = metadata.columnmeta_min;
+				valuesModel.varMax = metadata.columnmeta_max;
+			}
 		}
-		else{
-			valuesModel.varMin = metadata.columnmeta_min;
-			valuesModel.varMax = metadata.columnmeta_max;
-		}
+		else {
+			if(valuesModel.isCategorical){
+				valuesModel.varValues = target.attributes.selectedValues;
+			}
+			else{
+				valuesModel.varMin = target.attributes.selectedMin;
+				valuesModel.varMax = target.attributes.selectedMax;
+			}
+		}			
+
 		this.valuesView = new variableValuesView({
 			prevModal: {
 				view: this,
@@ -387,13 +399,28 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 				let metadata = variable.variable.metadata;
 				let values = variable.variable.values ? [] : variable.variable.values.join(", ");
 
+				if (variable.type == 'filter'){
+					let selectedValues = variable.selectedValues == undefined ? undefined : variable.selectedValues.join(", ");
+					return [
+						true,
+						metadata.columnmeta_var_id,
+						metadata.columnmeta_name,
+						metadata.columnmeta_description,
+						(metadata.columnmeta_data_type.toLowerCase() == 'continuous')  ? metadata.columnmeta_data_type.toLowerCase() : 'categorical',
+						(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.selectedMin + ', Max: ' + variable.selectedMax : "",
+						(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + selectedValues + ' ]' :  "",
+						variable.type,
+						metadata.columnmeta_HPDS_PATH
+					];
+				}
+
 				return [
 					true,
 					metadata.columnmeta_var_id,
 					metadata.columnmeta_name,
 					metadata.columnmeta_description,
 					(metadata.columnmeta_data_type.toLowerCase() == 'continuous')  ? metadata.columnmeta_data_type.toLowerCase() : 'categorical',
-					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ metadata.columnmeta_min + ', Max: ' + metadata.columnmeta_max : '',
+					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ metadata.columnmeta_min + ', Max: ' + metadata.columnmeta_max : "",
 					(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + values + ' ]' :  "",
 					variable.type,
 					metadata.columnmeta_HPDS_PATH
