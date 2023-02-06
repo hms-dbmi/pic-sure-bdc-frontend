@@ -94,6 +94,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				tagScore = (unusedTag) ? unusedTag.get('score') : "" ;
 			}
 			variableInfoCache[variableId] = {
+					studyName: searchUtil.findStudyNameFromId(response.metadata.columnmeta_study_id.toLowerCase()),
 					studyDescription: response.metadata.study_description.length > 0 ? response.metadata.study_description :
 					searchUtil.findStudyNameFromId(response.metadata.columnmeta_study_id.toLowerCase()),
 					studyAccession: this.generateStudyAccession(response),
