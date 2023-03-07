@@ -15,10 +15,12 @@ define(["jquery",
 		"common/pic-sure-dialog-view",
 		"search-interface/external-export-view",
 	    'text!search-interface/seven-bridges-export-view.hbs',
-    	'text!search-interface/terra-export-view.hbs',],
+    	'text!search-interface/terra-export-view.hbs',
+		"common/spinner"],
 function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 	filterModel, searchUtil, queryBuilder, queryResultsView, output, settings,
-	variableValuesView, modal, dialog, externalExportView, sevenBridgeExportTemplate, terraExportTemplate){
+	variableValuesView, modal, dialog, externalExportView, sevenBridgeExportTemplate, terraExportTemplate,
+	spinner){
 	var packageView = BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatablePackageModal",this);
@@ -205,7 +207,7 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			$('#package-status').html(statusMessage);
 			$('#package-status').css('color', fontColor);
 		},
-		initiatePackage: function(){
+		initiatePackage: function() {
 			this.model.set('exportStatus', 'Progress');
 			this.updateHeader();
 			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
@@ -214,11 +216,14 @@ function($, BB, HBS, packageModalTemplate, datatables, keyboardNav,
 			queryBuilder.updateConsentFilters(query, settings);
 			var deferredQueryId = $.Deferred();
 			var viewObj = this;
-			this.queryAsync(query, deferredQueryId);
-			$.when(deferredQueryId).then(function(queryUUID){
+
+			spinner.small(deferredQueryId, "#package-spinner", "");
+			viewObj.queryAsync(query, deferredQueryId);
+			$.when(deferredQueryId).then(function(queryUUID) {
 				viewObj.model.set('exportStatus', 'Done');
 				viewObj.updateHeader();
 			});
+
 		},
 	queryAsync: function(query, promise){
 		var queryUUID = null;
