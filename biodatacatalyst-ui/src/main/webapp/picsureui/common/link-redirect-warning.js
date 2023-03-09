@@ -1,6 +1,5 @@
-define(['backbone', 'jquery', 'handlebars', 'text!common/link-redirect-warning-view.hbs'], function (Backbone, $, HBS, linkRedirectWarningTemplate) {
-
-
+define(['backbone', 'jquery', 'handlebars', 'text!common/link-redirect-warning-view.hbs'],
+    function (Backbone, $, HBS, linkRedirectWarningTemplate) {
     return Backbone.View.extend({
         initialize: function (opts) {
             this.template = HBS.compile(linkRedirectWarningTemplate);
