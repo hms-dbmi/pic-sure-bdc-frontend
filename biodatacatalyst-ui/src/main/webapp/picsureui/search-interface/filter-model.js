@@ -71,12 +71,16 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     category: this.generateVariableCategory(searchResult),
                     min: min,
                     max: max,
-                    filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
+                    filterType: min==="" ? "lessThan" : max==="" ? "greaterThan" : "between",
                     isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
                     topmed: searchResult.result.varId.includes('phv'),
                 });
                     tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
-                    this.addExportColumn(searchResult, 'filter', undefined, undefined, min, max);
+                    this.addExportColumn(
+                        searchResult, 'filter', undefined, undefined,
+                        min === "" ? searchResult.result.metadata.columnmeta_min : min,
+                        max === "" ? searchResult.result.metadata.columnmeta_max : max
+                    );
                     this.trigger('change', this, {});
             },
             addRequiredFilter: function(searchResult) {
@@ -209,7 +213,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 if(existingColumn){
                     existingColumn = existingColumn.attributes;
                     //tree for hierarchy of replacement
-                    if(type == 'filter' && existingColumn.type === 'export'){
+                    if ((type == 'filter' && existingColumn.type === 'export') || (type == 'filter' && existingColumn.type === 'filter')){
                         this.removeExportColumn(searchResult.result, existingColumn.type);
                         this.get('exportColumns').add({
                             type: type,
