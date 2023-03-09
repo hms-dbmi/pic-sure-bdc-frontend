@@ -1,4 +1,5 @@
-define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/link-redirect-warning"], function(HBS, template, modal, linkRedirect){
+define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/link-redirect-warning", "common/session"],
+	function(HBS, template, modal, linkRedirect, session){
 	return {
 		/*
 		 * The render function for the footer can be overridden here.
@@ -27,20 +28,23 @@ define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/link-
 			$('title').html(title);
 			this.$el.html(HBS.compile(template)());
 
-			$(document).ready(function() {
-				$('a[target="_blank"]').on('click', function (event) {
-					event.preventDefault();
-					console.log(event.target.href);
+			if (session.isValid()) {
+				$(document).ready(function () {
+					$('a[target="_blank"]').on('click', function (event) {
+						event.preventDefault();
+						console.log(event.target.href);
 
-					const linkView = new linkRedirect({href: event.target.href});
-					modal.displayModal(
-						linkView
-						, "Leaving BDC-PIC-SURE"
-						, () => {}
-						, {handleTabs: true, width: "450px"}
-					);
+						const linkView = new linkRedirect({href: event.target.href});
+						modal.displayModal(
+							linkView
+							, "Leaving BDC-PIC-SURE"
+							, () => {
+							}
+							, {handleTabs: true, width: "450px"}
+						);
+					});
 				});
-			});
+			}
 		}
 	};
 });
