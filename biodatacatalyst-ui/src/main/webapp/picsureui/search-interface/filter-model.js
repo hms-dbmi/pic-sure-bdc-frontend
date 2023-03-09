@@ -78,6 +78,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                 tagFilterModel.requireTag(searchResult.result.metadata.columnmeta_study_id);
                 this.addExportColumn(searchResult, 'filter', undefined, undefined, min == "" ? searchResult.result.metadata.columnmeta_min : min, max == "" ? searchResult.result.metadata.columnmeta_max : max);
                 this.trigger('change', this, {});
+
             },
             addRequiredFilter: function (searchResult) {
                 let existingFilterForVariable = this.getByVarId(searchResult.result.varId);
