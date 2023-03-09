@@ -71,7 +71,7 @@ define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "o
                     category: this.generateVariableCategory(searchResult),
                     min: min,
                     max: max,
-                    filterType: min===undefined ? "lessThan" : max===undefined ? "greaterThan" : "between",
+                    filterType: min=="" ? "lessThan" : max=="" ? "greaterThan" : "between",
                     isHarmonized: searchUtil.isStudyHarmonized(searchResult.result.metadata.columnmeta_study_id),
                     topmed: searchResult.result.varId.includes('phv'),
                 });
