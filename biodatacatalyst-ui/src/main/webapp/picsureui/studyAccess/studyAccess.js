@@ -225,7 +225,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                                 if (data.isGranted === true) {
                                     return '<span class="btn btn-default disabled">Granted</span>';
                                 }
-                                return '<a href="'+ data.request_access +'" target="_blank" title="Clicking here will take you to the given link in another tab"><span class="btn btn-primary btn-blue" aria-label="Request access to '+data.full_study_name+'. This link will open in a new browser tab.">Request</span></a>';
+                                return '<a href="'+ data.request_access +'" target="_blank" aria-label="Clicking here will take you to the given link in another tab." ' +
+                                    'title="Clicking here will take you to the given link in another tab"><span class="btn btn-primary btn-blue" aria-label="Request access to '+data.full_study_name+'. This link will open in a new browser tab.">Request</span></a>';
                             },
                             type: 'string',
                             targets: 0
