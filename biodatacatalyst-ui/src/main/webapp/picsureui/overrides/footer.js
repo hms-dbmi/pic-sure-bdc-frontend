@@ -1,5 +1,5 @@
-define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/link-redirect-warning", "common/session"],
-	function(HBS, template, modal, linkRedirect, session){
+define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/session", "common/pic-sure-dialog-view"],
+	function(HBS, template, modal, session, dialog){
 	return {
 		/*
 		 * The render function for the footer can be overridden here.
@@ -32,11 +32,40 @@ define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/link-
 				$(document).ready(function () {
 					$('a[target="_blank"]').on('click', function (event) {
 						event.preventDefault();
-						console.log(event.target.href);
 
-						const linkView = new linkRedirect({href: event.target.href});
+						let closeModal = () => {
+							$("#modalDialog").hide();
+							$(".modal-backdrop").hide();
+						};
+
+						const dialogOption = [
+							{
+								title: "Cancel",
+								"action": () => {
+									closeModal();
+								},
+								classes: "btn"
+							},
+							{
+								title: "Continue",
+								"action": () => {
+									closeModal();
+									window.open(event.target.href, '_blank');
+								},
+								classes: "btn btn-primary"
+							}
+						];
+						const modalMessage = [
+							"This external website will be opened as a new tab in your browser.",
+							"Are you sure you want to leave BDC-PIC-SURE?"
+						];
+
+						const dialogView = new dialog({
+							options: dialogOption,
+							messages: modalMessage,
+						});
 						modal.displayModal(
-							linkView
+							dialogView
 							, "Leaving BDC-PIC-SURE"
 							, () => {
 							}
