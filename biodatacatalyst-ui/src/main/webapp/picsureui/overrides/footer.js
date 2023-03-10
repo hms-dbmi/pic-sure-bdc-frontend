@@ -34,8 +34,7 @@ define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/sessi
 						event.preventDefault();
 
 						let closeModal = () => {
-							$("#modalDialog").hide();
-							$(".modal-backdrop").hide();
+							$('.close')?.get(0).click();
 						};
 
 						const dialogOption = [
@@ -44,7 +43,7 @@ define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/sessi
 								"action": () => {
 									closeModal();
 								},
-								classes: "btn"
+								classes: "btn btn-default"
 							},
 							{
 								title: "Continue",
