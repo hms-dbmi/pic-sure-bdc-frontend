@@ -89,11 +89,6 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
         }
     }
 
-			function queryComplete() {
-				outputModel.set("spinning", false);
-				outputModel.set("queryRan", true);
-			}
-
 			var doUpdate = function(incomingQuery) {
 		if (JSON.parse(sessionStorage.getItem('isOpenAccess')) === true) {
 			// clear counts
