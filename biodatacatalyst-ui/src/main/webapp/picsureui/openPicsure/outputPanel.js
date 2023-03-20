@@ -89,7 +89,12 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
         }
     }
 
-    var doUpdate = function(incomingQuery) {
+			function queryComplete() {
+				outputModel.set("spinning", false);
+				outputModel.set("queryRan", true);
+			}
+
+			var doUpdate = function(incomingQuery) {
 		if (JSON.parse(sessionStorage.getItem('isOpenAccess')) === true) {
 			// clear counts
 			for (var x in studiesInfo) {
@@ -125,8 +130,7 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 						outputModel.set("totalPatients", totalPatients);
 						outputModel.set("totalPatientsSuffix", "");
 					}
-					outputModel.set("spinning", false);
-					outputModel.set("queryRan", true);
+					outputModel.stopAll();
 					this.render();
 
 					// populate counts and sort
@@ -174,6 +178,8 @@ define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 					for (var x in studiesInfo) {
 						studiesInfo[x].study_matches = "(error)";
 					}
+					outputModel.stopAll();
+
 					this.studiesAccessPanelView.render();
 					this.render();
 				}).bind(this)

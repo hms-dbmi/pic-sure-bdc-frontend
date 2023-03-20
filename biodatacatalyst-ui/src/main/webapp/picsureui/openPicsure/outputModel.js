@@ -14,6 +14,10 @@ define(["backbone"], function(BB) {
     spinAll: function(){
         this.set('spinning', true);
         this.set('queryRan', false);
+    },
+    stopAll: function() {
+        this.set('spinning', false);
+        this.set('queryRan', true);
     }
     });
     return new OutputModel();
