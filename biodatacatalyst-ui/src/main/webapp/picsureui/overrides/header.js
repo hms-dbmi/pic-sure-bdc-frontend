@@ -8,10 +8,7 @@ define([
 ],function (
 	keyboardNav,
 	dropdown,
-	menuNavControls,
-	modal,
-	userProfile,
-	userFunctions,
+	menuNavControls
 ) {
 
 	let headerTabs = undefined;
@@ -23,7 +20,7 @@ define([
 		console.debug("tabsFocus", e.target);
 		keyboardNav.setCurrentView("headerTabs");
 		dropdown.isOpen() ? e.target.querySelector('.header-btn.nav-dropdown').classList.add('selected') : headerTabs.querySelector('.header-btn.active').classList.add('selected');
-	}
+	};
 
 	/*
 		If the tabs loose focus and the loss of focus is from something out side the #header-tabs div then
@@ -41,13 +38,6 @@ define([
 			dropdown.closeDropdown(e);
 		}
 	}
-  
-	let openUserProfileModal = (e) => {
-		keyboardNav.setCurrentView(undefined);
-		userFunctions.meWithToken(this, (user) => {
-			modal.displayModal(new userProfile(user), 'User Profile', ()=>{e.target.focus();}, {isHandleTabs: true});
-		});
-	}
 
 	return {
 		/*
@@ -57,8 +47,6 @@ define([
 			*/
 		logoPath: undefined,
 		renderExt: function (view) {
-			//Override the core UI click #user-profile-btn event
-			view.delegateEvents(_.extend(view.events, { "click #user-profile-btn": openUserProfileModal }));
 			dropdown.init(view, [
 				{'click #help-dropdown-toggle': dropdown.toggleDropdown}, 
 				{'blur .nav-dropdown-menu': dropdown.dropdownBlur}
