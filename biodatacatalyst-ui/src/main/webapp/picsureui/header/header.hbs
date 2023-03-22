@@ -97,6 +97,7 @@
         {{/contains}}
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
             <a class="header-btn header-navigation" data-href="/picsureui/openAccess#" href="#" id="open-access-btn" tabindex="-1" title="Open Access" aria-label="Open Access">Open Access</a>
+            <a id="api-btn" data-href="/picsureui/api" class="header-navigation header-btn authenticated-visible" href="#" tabindex="-1" title="API" aria-haspopup="true" aria-label="API">API</a>
             <button data-intro="#help-header-button" data-sequence="14" class="dropdown-toggle nav-dropdown header-btn authenticated-visible" aria-expanded="false" id="help-dropdown-toggle" tabindex="-1" title="Help" aria-label="Help dropwdown" aria-controls="help-menu-list">
                 Help <i class="fa fa-caret-down" aria-hidden="true"></i>
             </button>
@@ -107,7 +108,6 @@
                 {{#if documentationLink}}<li id="documentation-option" class="dropdown" aria-label="BioData Catalyst Documentation, clicking here will open a link  in a new tab"><a href="{{{documentationLink}}}">BioData Catalyst Documentation</a></li>{{/if}}
                 {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
             </ul>
-            <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile" aria-haspopup="true" aria-label="User Profile">User Profile</a>
             <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out" aria-label="Log Out">Log Out</a>
         {{/contains}}
     </nav>
