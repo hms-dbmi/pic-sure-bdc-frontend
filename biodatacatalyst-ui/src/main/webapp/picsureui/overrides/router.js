@@ -67,7 +67,6 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/api']").addClass('active');
             $('#main-content').empty();
-            $('#main-content').append();
 
             var apiPanelView = new ApiPanelView({});
             $('#main-content').append(apiPanelView.$el);
