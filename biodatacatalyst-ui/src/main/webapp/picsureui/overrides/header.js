@@ -8,7 +8,7 @@ define([
 ],function (
 	keyboardNav,
 	dropdown,
-	menuNavControls
+	menuNavControls,
 ) {
 
 	let headerTabs = undefined;
