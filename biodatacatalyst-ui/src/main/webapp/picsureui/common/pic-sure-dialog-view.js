@@ -15,7 +15,7 @@ define([
                 button.classes && btnEl.classList.add(...button.classes.split(' '));
                 btnEl.tabIndex = 0;
                 return btnEl;
-            });;
+            });
             this.previousView = opts.previousView;
         },
         onClose: function() {

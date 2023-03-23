@@ -1,0 +1,179 @@
+<style>
+    #intro-section {
+        margin: 0 auto;
+        min-width: 800px;
+        width: fit-content;
+    }
+
+    #get-started-section {
+        margin: 30px 15px 0 15px;
+        padding: 8px 0;
+        min-width: 1200px;
+    }
+
+    .title {
+        font-size: 28px;
+        margin: 0;
+    }
+
+    .sub-title {
+        font-size: 16px;
+        margin: 0;
+    }
+
+    #getting-start-examples > a,
+    #getting-start-examples > button {
+        margin: 5px;
+    }
+
+    #about-section {
+        margin: 30px 15px 0 15px;
+        padding: 8px 0;
+        min-width: 1200px;
+    }
+
+</style>
+<div class="panel panel-outline" id="intro-section">
+    <div class="panel-heading no-border center-panel">
+        <div class="access-title">
+            <h3>PIC-SURE Application Programming Interface (API)</h3>
+        </div>
+    </div>
+    <div class="panel-body" style="display: flex; margin: 0 auto 10px auto">
+        <ul class="plain-list">
+            <li>
+                <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
+                <span>Search and query the studies in PIC-SURE using code, available in python or R</span>
+            </li>
+            <li>
+                <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                <span>Tutorials and example code can be accessed via Jupyter notebooks or RStudio</span>
+            </li>
+            <li>
+                <i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>
+                <span>PIC-SURE API is open source and licensed under Apache License 2.0</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="panel panel-outline" id="get-started-section">
+    <div class="panel-heading no-border">
+        <h2 class="title">Getting Started</h2>
+        <div class="sub-title">
+            <p>To use the PIC-SURE API, copy your personalized access token below.</p>
+            <p>Paste the token into a text file in your working directory and save as "token.txt".</p>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="user-profile" style="margin: 0 10%; width: 80%">
+
+        </div>
+        <h2 class="title">PIC-SURE API Examples</h2>
+        <div class="sub-title">
+            Access example code on an NHLBI BioData Catalyst® (BDC) analysis platform or on the public GitHub
+            repository.
+        </div>
+        <div style="margin: 0 auto; width: max-content;" id="getting-start-examples">
+            <a class="btn btn-primary btn-lg"
+               href="https://github.com/hms-dbmi/Access-to-Data-using-PIC-SURE-API/tree/master/NHLBI_BioData_Catalyst"
+               aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span>Public GitHub Repository</span>
+            </a>
+            <a class="btn btn-primary btn-lg"
+               href="https://accounts.sb.biodatacatalyst.nhlbi.nih.gov/auth/login"
+               aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                BDC Powered by Seven Bridges
+            </a>
+            <button class="btn btn-primary btn-lg" id="bdc-powered-by-terra"
+                    aria-label="Clicking this button will open a modal.">
+                BDC Powered by Terra
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="panel panel-outline" id="about-section">
+    <div class="panel-heading no-border">
+        <h2 class="title">About the PIC-SURE API</h2>
+        <div class="sub-title">
+            The PIC-SURE API allows users to search and query BDC studies and export participant-level data using code.
+            This open source API is currently available in python or R. See below for links to more documentation.
+        </div>
+    </div>
+    <div class="panel-body">
+        <h3>PIC-SURE API</h3>
+        <ul>
+            <li>
+                <a href="https://tinyurl.com/BDC-PIC-SURE-User-Guide"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    BDC-PIC-SURE User Guide
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/hms-dbmi/Access-to-Data-using-PIC-SURE-API/tree/master/NHLBI_BioData_Catalyst"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    Access to Data using PIC-SURE GitHub repository
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    PIC-SURE API GitHub repository
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+        </ul>
+        <h3>Python Clients & Adapters on GitHub</h3>
+        <ul>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure-python-client"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    PIC-SURE Python Client
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure-python-adapter-hpds"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    PIC-SURE HPDS Python Client
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure-biodatacatalyst-python-adapter-hpds"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    PIC-SURE HPDS Python Adapter for BDC
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+        </ul>
+        <h3>R Clients & Adapters on GitHub</h3>
+        <ul>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure-r-adapter-hpds"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    R Clients & Adapters on GitHub
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure-r-adapter-hpds/blob/master/hpds.pdf"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    PIC-SURE HPDS R Client documentation
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/hms-dbmi/pic-sure-biodatacatalyst-r-adapter-hpds"
+                   aria-label="Clicking here will take you to the given link in another tab." target="_blank">
+                    PIC-SURE HPDS R Adapter for BDC
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
