@@ -63,7 +63,6 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
         };
 
         let displayAPI = function() {
-            console.log('displayAPI');
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/api']").addClass('active');
             $('#main-content').empty();
