@@ -8,7 +8,7 @@
         display: flex;
         flex-direction: row;
         align-items: baseline;
-        margin: 10px 0px;
+        margin: 10px 0;
     }
 
     .query-id-container * {
@@ -35,13 +35,14 @@
     }
 
     #terra-export-view hr {
-        margin: 10px 0px;
+        margin: 10px 0;
         width: 98.8%;
     }
 </style>
 <div id="terra-export-view" class="terra-view-container">
     <div>
-        <p>After cloning the PIC-SURE API public workspace as a personal workspace, you will need the following to export the data:</p>
+        <p>After cloning the PIC-SURE API public workspace as a personal workspace, you will need the following to
+            export the data:</p>
         <ol>
             <li><span>Copy the personalized access token and paste in the “Workspace_setup.ipynb” notebook where instructed. Run this notebook to set up your workspace.</span>
                 <div id="user-profile-container"></div>
@@ -60,7 +61,14 @@
     <hr>
     <div class="options">
         <button id="cancel-button" class="btn btn-default">Cancel</button>
-        <a href="https://tinyurl.com/BDC-PIC-SURE-API-R-Terra" target="_blank" class="btn btn-primary" aria-label="Link to Terra for R. Opens a new tab.">Go to Terra via R <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-        <a href="https://tinyurl.com/BDC-PIC-SURE-API-Python-Terra" target="_blank" class="btn btn-primary" aria-label="Link to Terra for Python. Opens a new tab.">Go to Terra via Python <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://tinyurl.com/BDC-PIC-SURE-API-Python-Terra" target="_blank" class="btn btn-primary"
+           aria-label="Link to Terra for Python. Opens a new tab.">Go to Python Notebook on Terra <i
+                class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://tinyurl.com/BDC-PIC-SURE-API-R-Terra" target="_blank" class="btn btn-primary"
+           aria-label="Link to Terra for R. Opens a new tab.">Go to R Notebook on Terra <i
+                class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://tinyurl.com/BDC-PIC-SURE-API-RStudio-Terra" target="_blank" class="btn btn-primary"
+           aria-label="Link to Terra for Python. Opens a new tab.">Go to RStudio on Terra <i
+                class="fa-solid fa-arrow-up-right-from-square"></i></a>
     </div>
 </div>
