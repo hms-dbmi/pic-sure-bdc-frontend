@@ -7,7 +7,7 @@
 		bootstrapStyles: '../webjars/bootstrap/3.4.1/css/bootstrap.min.css',
 		backbone: '../webjars/backbonejs/1.3.3/backbone-min',
 		text: '../webjars/requirejs-text/2.0.15/text',
-		handlebars: '../webjars/handlebars/4.7.6/handlebars.min',
+		handlebars: '../webjars/handlebars/4.7.7/handlebars.min',
 		plotly: '../webjars/plotly.js-dist-min/2.11.1/plotly.min,
 		fontawesome: "webjars/font-awesome/6.1.2/js/all.min",
 		fontawesomeStyles: "webjars/font-awesome/6.1.2/css/all.min.css",

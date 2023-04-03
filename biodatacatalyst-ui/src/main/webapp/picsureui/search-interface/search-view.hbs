@@ -35,7 +35,6 @@
 	}
 	hr {
 		width: 98%;
-		margin-left: 1em;
 	}
 	.center-spinner {
 		text-align: center;
@@ -48,11 +47,6 @@
 		font-size: 25px;
 		padding: 20px 45px;
 		border-radius: 50px;
-	}
-	#guide-me-button {
-		display: flex;
-		align-self: center;
-		margin: 10% 20%;
 	}
 	#guide-me-button:hover,
 	#guide-me-button:active,
@@ -78,44 +72,46 @@
 		top: 25%;
 	}
 	#guide-me-button-container {
-		width: 100%;
-		height: 100%;
+		display: flex;
+		justify-content: center;
 	}
 </style>
 
 <div>
-	<form id="search-controls" class="col">
-		<label for='search-box' class='col'>Search:</label>
-		<input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
-		aria-label="Type search terms here, use enter or the search button to submit search"
-		title="Type search terms here, use enter or the search button to submit search"
-		placeholder="Search studies or variables"
-		onsubmit="return false"
-		data-intro="#search-box"
-		data-sequence="1"
-		required>
-			<input class="btn bg-transparent reset-button" value="" accesskey="r" type="reset"></input>
-		</input>
-		<button id="search-button" type="button" class='btn btn-primary col'
-		aria-label="You are on the search button"
-		>Search</button>
-		<button id="genomic-filter-btn" type="button" class='btn btn-outline primary col'
-		aria-label="You are on the Genomic Filtering button"
-		data-intro="#genomic-filter-btn"
-		data-sequence="2"
-		>Genomic Filtering</button>
-		<button id="search-reset-button" type="button" class='btn btn-outline danger' 
-		aria-label="You are on the reset button">Reset</button>
-	</form>
-    <hr>
     <div id="search-area" class="flex-container space-between">
 	    <div id="tag-filters"></div>
-		<div id="spinner-holder" class="center-spinner"></div>
-	    <div class="m-lr-12 grow">
-			<div id="guide-me-button-container" data-intro="#empty-search-area" data-sequence="5">
-				<button id="guide-me-button" class="btn big-button" tabindex="0" aria-label="You are on a button called 'Take a Tour' that opens a modal.">Take a Tour</button>
+		<div class="fill">
+			<form id="search-controls" class="col">
+				<label for='search-box' class='col'>Search:</label>
+				<input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
+				aria-label="Type search terms here, use enter or the search button to submit search"
+				title="Type search terms here, use enter or the search button to submit search"
+				placeholder="Search studies or variables"
+				onsubmit="return false"
+				data-intro="#search-box"
+				data-sequence="1"
+				required>
+					<input class="btn bg-transparent reset-button" value="" accesskey="r" type="reset"></input>
+				</input>
+				<button id="search-button" type="button" class='btn btn-primary col'
+				aria-label="You are on the search button"
+				>Search</button>
+				<button id="genomic-filter-btn" type="button" class='btn btn-outline primary col'
+				aria-label="You are on the Genomic Filtering button"
+				data-intro="#genomic-filter-btn"
+				data-sequence="2"
+				>Genomic Filtering</button>
+				<button id="search-reset-button" type="button" class='btn btn-outline danger' 
+				aria-label="You are on the reset button">Reset</button>
+			</form>
+			<hr>
+			<div id="search-results" class="m-lr-12"></div>
+			<div id="spinner-holder" class="center-spinner"></div>
+			<div class="m-lr-12 grow">
+				<div id="guide-me-button-container" data-intro="#empty-search-area" data-sequence="5">
+					<button id="guide-me-button" class="btn big-button" tabindex="0" aria-label="You are on a button called 'Take a Tour' that opens a modal.">Take a Tour</button>
+				</div>
 			</div>
-	        <div id="search-results"></div>
-    	</div>
+		</div>
     </div>
 </div>

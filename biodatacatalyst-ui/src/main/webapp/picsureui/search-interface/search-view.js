@@ -177,7 +177,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
 			$('#guide-me-button-container').hide();
 			$('#search-results').hide();
-			e && $('#tag-filters').hide();
+			e && $('#tags-container').hide();
 			$('#search-button').attr('disabled', 'disabled');
 			$('#genomic-filter-btn').attr('disabled', 'disabled');
 
@@ -195,7 +195,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 				success: function(response){
 					this.processResults(response);
 					this.updateTags(response);
-					$('#tag-filters').show();
+					$('#tags-container').show();
 					$('#search-results').show();
 					$('#search-button').removeAttr('disabled');
 					$('#genomic-filter-btn').removeAttr('disabled');

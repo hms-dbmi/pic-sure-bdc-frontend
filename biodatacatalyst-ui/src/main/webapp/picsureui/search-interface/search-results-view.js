@@ -323,7 +323,7 @@ function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
 				if (filteredResults.length === 0) {
 					if ($('#no-results').length === 0) {
 						$('#guide-me-button-container').show();
-						$("#search-area").append(HBS.compile(noResultsTemplate));
+						$("#search-results").append(HBS.compile(noResultsTemplate));
 						//Dynamically Adding click event after appending the element that gets clicked
 						$('#no-results-help-empty').on({
 							'click': this.helpViewClickHandler,
