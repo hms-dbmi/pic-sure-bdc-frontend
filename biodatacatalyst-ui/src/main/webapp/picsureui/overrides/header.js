@@ -47,12 +47,6 @@ define([
 			*/
 		logoPath: undefined,
 		renderExt: function (view) {
-			// Implement a redirect to the top window if we are in an iframe
-			// This is to prevent clickjacking.
-			if (window.top !== window.self) {
-				window.top.location = window.self.location;
-			}
-
 			dropdown.init(view, [
 				{'click #help-dropdown-toggle': dropdown.toggleDropdown}, 
 				{'blur .nav-dropdown-menu': dropdown.dropdownBlur}
