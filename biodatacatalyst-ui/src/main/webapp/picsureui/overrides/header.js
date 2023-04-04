@@ -50,7 +50,7 @@ define([
 			// Implement a redirect to the top window if we are in an iframe
 			// This is to prevent clickjacking.
 			if (window.top !== window.self) {
-				window.top.location.href = window.self.location.href;
+				window.top.location = window.self.location;
 			}
 
 			dropdown.init(view, [
