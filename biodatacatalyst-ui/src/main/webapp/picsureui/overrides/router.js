@@ -25,11 +25,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
             const session = JSON.parse(sessionStorage.getItem("session"));
             return filterModel.get('activeFilters').filter(filter => {
                 if (filter.get('type') === 'genomic') {
-                    let genomicValues = ['Gene_with_variant'];
-                    const isValidGenomic = session.queryScopes.filter(scope => {
-                        return genomicValues.includes(scope);
-                    });
-                    return session.queryScopes && !isValidGenomic;
+                    return session.queryScopes && !session.queryScopes.includes('Gene_with_variant');
                 } else {
                     const filterStudyId = '\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\';
                     return session.queryScopes && !session.queryScopes.includes(filterStudyId);
