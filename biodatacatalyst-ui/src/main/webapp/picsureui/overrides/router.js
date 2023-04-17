@@ -24,10 +24,19 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
         let getInvalidActiveFilters = function() {
             const session = JSON.parse(sessionStorage.getItem("session"));
             return filterModel.get('activeFilters').filter(filter => {
-                const filterStudyId = '\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\'
-                return session.queryScopes && !session.queryScopes.includes(filterStudyId);
+                if (filter.get('type') === 'genomic') {
+                    let genomicValues = ['Gene_with_variant'];
+                    const isValidGenomic = session.queryScopes.filter(scope => {
+                        return genomicValues.includes(scope);
+                    });
+                    return session.queryScopes && !isValidGenomic;
+                } else {
+                    const filterStudyId = '\\'+filter.get('searchResult').result.metadata.columnmeta_study_id+'\\';
+                    return session.queryScopes && !session.queryScopes.includes(filterStudyId);
+                }
             });
         };
+
         let displayOpenAccess = function() {
             sessionStorage.setItem("isOpenAccess", true);
             Backbone.pubSub.trigger('destroySearchView');
@@ -111,7 +120,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
                         } else {
                             this.navigate('picsureui/openAccess#', {trigger:true, replace:false});
                             return;
-                        }  
+                        }
                     }
                     Backbone.pubSub.trigger('destroySearchView');
                     $(".header-btn.active").removeClass('active');
