@@ -1,33 +1,51 @@
 {
     "consequences" : [
-        "intergenic_variant",
-        "start_retained_variant",
-        "frameshift_variant",
-        "3_prime_UTR_variant",
-        "splice_acceptor_variant",
-        "intron_variant",
-        "splice_region_variant",
-        "upstream_gene_variant",
-        "5_prime_UTR_variant",
-        "non_coding_transcript_exon_variant",
-        "stop_gained",
-        "non_coding_transcript_variant",
-        "start_lost",
-        "splice_donor_variant",
-        "synonymous_variant",
-        "missense_variant",
-        "mature_miRNA_variant",
-        "stop_lost",
-        "regulatory_region_variant",
-        "downstream_gene_variant",
-        "TFBS_ablation",
-        "stop_retained_variant",
-        "TF_binding_site_variant",
-        "coding_sequence_variant",
-        "inframe_deletion",
-        "protein_altering_variant",
-        "inframe_insertion",
-        "incomplete_terminal_codon_variant"
+        {
+            "text": "High Severity",
+            "state": {
+                "opened": true,
+                "selected": false
+            },
+            "children": [
+                {"text": "transcript_ablation"},
+                {"text": "splice_acceptor_variant"},
+                {"text": "splice_donor_variant"},
+                {"text": "stop_gained"},
+                {"text": "frameshift_variant"},
+                {"text": "stop_lost"},
+                {"text": "start_lost"}
+            ]
+        },
+        {
+            "text": "Medium Severity",
+            "state": {
+                "opened": true,
+                "selected": false
+            },
+            "children": [
+                {"text": "inframe_insertion"},
+                {"text": "inframe_deletion"},
+                {"text": "missense_variant"},
+                {"text": "Protein_altering_variant"}
+            ]
+        },
+        {
+            "text": "Low Severity",
+            "state": {
+                "opened": true,
+                "selected": false
+            },
+            "children": [
+                {"text": "splice_region_variant"},
+                {"text": "splice_donor_5th_base_variant"},
+                {"text": "splice_donor_region_variant"},
+                {"text": "splice_polypyrimidine_tract_variant"},
+                {"text": "incomplete_terminal_codon_variant"},
+                {"text": "start_retained_variant"},
+                {"text": "stop_retained_variant"},
+                {"text": "synonymous_variant"}
+            ]
+        }
     ],
     "genes": [
         "HTR4",
