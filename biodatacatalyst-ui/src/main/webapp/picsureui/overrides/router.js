@@ -94,10 +94,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
                             filterModel.get('activeFilters').remove(genomicFilters, {silent: true});
                             displayOpenAccess.call(this);
                         } else  {
-                            this.navigate('picsureui/queryBuilder#', {trigger:false, replace:false});
-                            $(".header-btn.active").removeClass('active');
-                            $("#query-builder-btn").addClass('active');
-                            return;
+                            // go back to the previous page. Since we do not currently track the previous page with
+                            // backbone js we have to use the browser history to go back two pages. Since a user
+                            // must've visited our page and selected filters this should be safe.
+                            window.history.go(-2);
                         }
                     } else {
                         displayOpenAccess.call(this);
