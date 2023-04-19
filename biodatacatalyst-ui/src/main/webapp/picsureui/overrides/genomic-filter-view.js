@@ -9,7 +9,6 @@ define(['search-interface/filter-model',], function(filterModel){
                 numericVariantInfoFilters: {}
             };
             //this.createUniqueId(filtersForQuery); uncomment to support multiple filters
-            console.debug(filtersForQuery);
             filterModel.addGenomicFilter(filtersForQuery, this.previousUniqueId);
             view.cancelGenomicFilters();
         },

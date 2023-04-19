@@ -7,7 +7,6 @@
                 "selected": false
             },
             "children": [
-                {"text": "transcript_ablation"},
                 {"text": "splice_acceptor_variant"},
                 {"text": "splice_donor_variant"},
                 {"text": "stop_gained"},
