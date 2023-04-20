@@ -3,7 +3,7 @@ define(["jquery","backbone","handlebars","search-interface/tag-filter-view","sea
 	"text!search-interface/search-view.hbs",
 	"text!../studyAccess/studies-data.json",
 	"search-interface/modal",
-	"search-interface/genomic-filter-view",
+	"filter/genomic-filter-view",
 	"common/spinner",
 	"text!common/unexpected_error.hbs",
 	"search-interface/search-util",
