@@ -14,7 +14,7 @@ function (Backbone, settings) {
                         resourceID = settings.picSureResourceId;
                     }
 
-                    options.url += (options.url.indexOf("?") === -1 ? "?" : "&") + "resourceId=" + resourceID;
+                    jqXHR.setRequestHeader("auth_or_open_resource_uuid", resourceID);
                 }
             });
         },
