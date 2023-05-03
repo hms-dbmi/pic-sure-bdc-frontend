@@ -6,15 +6,15 @@ function (Backbone, settings) {
                 // if url contains picsure
                 if (options.url.indexOf("/picsure") !== -1) {
                     let isOpenAccess = sessionStorage.getItem("isOpenAccess");
-                    let resourceID;
+                    let requestSource;
 
                     if (isOpenAccess === "true") {
-                        resourceID = settings.openAccessResourceId;
+                        requestSource = "Open";
                     } else {
-                        resourceID = settings.picSureResourceId;
+                        requestSource = "Authorized";
                     }
 
-                    jqXHR.setRequestHeader("auth_or_open_resource_uuid", resourceID);
+                    jqXHR.setRequestHeader("requestSource", requestSource);
                 }
             });
         },
