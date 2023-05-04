@@ -6,13 +6,7 @@ function (Backbone, settings) {
                 // if url contains picsure
                 if (options.url.indexOf("/picsure") !== -1) {
                     let isOpenAccess = sessionStorage.getItem("isOpenAccess");
-                    let requestSource;
-
-                    if (isOpenAccess === "true") {
-                        requestSource = "Open";
-                    } else {
-                        requestSource = "Authorized";
-                    }
+                    let requestSource = isOpenAccess ? 'Open' : 'Authorized';
 
                     jqXHR.setRequestHeader("requestSource", requestSource);
                 }
