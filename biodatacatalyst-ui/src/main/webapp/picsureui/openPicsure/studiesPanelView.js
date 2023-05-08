@@ -1,6 +1,8 @@
-define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel", "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",],
-		function($, BB, HBS, studiesPanelTemplate, outputModel, keyboardNav, helpView, modal) {
-    const LIST_ITEM = 'study-container'
+define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel",
+        "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",
+        "common/pic-sure-dialog-view"],
+		function($, BB, HBS, studiesPanelTemplate, outputModel, keyboardNav, helpView, modal, dialog) {
+    const LIST_ITEM = 'study-container';
     const SELECTED = 'selected';
 
 	let studiesPanelView = BB.View.extend({
@@ -46,7 +48,8 @@ define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", 
             if (event.type === 'keydown') {
                 target = $('#studies-list').find('.' + SELECTED).find('.request-access')[0];
             }
-            window.open(target.getAttribute("data-href"));
+
+            redirectModal(target.getAttribute("data-href"), dialog, modal);
         },
         exploreAccess: function(event) {
             window.history.pushState({}, "", "picsureui/queryBuilder");
