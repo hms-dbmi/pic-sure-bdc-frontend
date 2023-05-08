@@ -1,10 +1,12 @@
-define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/session", "common/pic-sure-dialog-view"],
-    function (HBS, template, modal, session, dialog) {
+define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/session", "common/pic-sure-dialog-view", "middleware/middleware"],
+    function (HBS, template, modal, session, dialog, Middleware) {
         return {
             /*
              * The render function for the footer can be overridden here.
              */
             render: function () {
+                new Middleware();
+
                 let title = window.location.pathname.split("/");
                 title = title[2]; // begins with empty string
                 switch (title) {
