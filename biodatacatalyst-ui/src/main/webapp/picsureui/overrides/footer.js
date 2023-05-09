@@ -1,6 +1,7 @@
-function redirectModal(href, dialog, modal) {
+function redirectModal(event, dialog, modal, url = undefined) {
     let closeModal = () => {
         $('.close')?.get(0).click();
+        $(event.target).focus();
     };
 
     const dialogOption = [
@@ -14,8 +15,8 @@ function redirectModal(href, dialog, modal) {
         {
             title: "Continue",
             "action": () => {
+                window.open((url === undefined ? event.target.href : url), '_blank');
                 closeModal();
-                window.open(href, '_blank');
             },
             classes: "btn btn-primary"
         }
@@ -73,7 +74,7 @@ define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/sessi
                 $(document).on('click', 'a[target="_blank"]', function (event) {
                     event.preventDefault();
 
-                    redirectModal(event.target.href, dialog, modal);
+                    redirectModal(event, dialog, modal);
                 });
             }
         };
