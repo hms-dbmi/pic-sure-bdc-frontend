@@ -49,7 +49,7 @@ define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", 
                 target = $('#studies-list').find('.' + SELECTED).find('.request-access')[0];
             }
 
-            redirectModal(target.getAttribute("data-href"), dialog, modal);
+            redirectModal(event, dialog, modal, target.getAttribute("data-href"));
         },
         exploreAccess: function(event) {
             window.history.pushState({}, "", "picsureui/queryBuilder");
