@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "search-interface/search-util"],
-    function(BB, HBS, searchUtil){
+define(["backbone", "handlebars", "underscore", "search-interface/search-util"],
+    function(BB, HBS, _, searchUtil){
         let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
         let dccHarmonizedTag = 'dcc harmonized data set';
         let defaultTagLimit = 12;

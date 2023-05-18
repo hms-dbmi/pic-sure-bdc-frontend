@@ -1,5 +1,5 @@
-define(["handlebars","jquery","backbone","text!options/modal.hbs"],
-	function(HBS,$,BB,modalTemplate){
+define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"],
+	function(HBS,$,BB, _, modalTemplate){
 		const TAB_INDEX_START = 1000000;
 	let Modal = BB.View.extend({
 		initialize: function(opts){

@@ -1,5 +1,5 @@
-define(["jquery","text!studyAccess/studies-data.json", "text!settings/settings.json", "search-interface/studies-data-cache"],
-    function($, studiesDataJson, settingsJson, cache){
+define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!settings/settings.json", "search-interface/studies-data-cache"],
+    function($, _, studiesDataJson, settingsJson, cache){
         let studiesData = JSON.parse(studiesDataJson);
         let settings = JSON.parse(settingsJson);
 

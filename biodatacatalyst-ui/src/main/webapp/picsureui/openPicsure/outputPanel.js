@@ -1,6 +1,6 @@
-define(["jquery", "picSure/settings", "text!openPicsure/outputPanel.hbs",
+define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPanel.hbs",
 		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "search-interface/modal", "openPicsure/openPicsureHelpView"],
-		function($, settings, outputTemplate,
+		function($, _, settings, outputTemplate,
 				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView) {
 
 	let studiesInfo = {};

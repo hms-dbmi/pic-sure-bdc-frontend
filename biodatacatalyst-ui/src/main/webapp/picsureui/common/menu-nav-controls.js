@@ -1,4 +1,4 @@
-define(['common/pic-dropdown'], function (dropdown) {
+define(['common/pic-dropdown', 'underscore'], function (dropdown, _) {
     //CONSTANTS
     const FORWARD = 1;
     const BACKWARD = -1;

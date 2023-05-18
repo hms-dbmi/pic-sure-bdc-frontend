@@ -1,5 +1,5 @@
-define(['backbone', 'handlebars','text!search-interface/datatable-export-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util","search-interface/variable-values-view", "search-interface/modal"],
-	function(BB, HBS, datatableExportModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, variableValuesView, modal){
+define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable-export-modal-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/filter-model", "search-interface/search-util","search-interface/variable-values-view", "search-interface/modal"],
+	function(BB, HBS, _, datatableExportModalTemplate, datatables, keyboardNav,  filterModel, searchUtil, variableValuesView, modal){
 	let DatatableExportModalView = BB.View.extend({
 		initialize: function(opts){
 			keyboardNav.addNavigableView("datatableExportModal",this);
