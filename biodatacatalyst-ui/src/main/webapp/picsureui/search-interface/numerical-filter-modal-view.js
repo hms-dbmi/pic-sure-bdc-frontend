@@ -1,5 +1,5 @@
-define(["jquery","backbone","handlebars", "text!search-interface/numerical-filter-modal-partial.hbs", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings", "search-interface/search-util"],
-    function($, BB, HBS, partialTemplate, filterModalViewTemplate, filterModel, search, settings, searchUtil){
+define(["jquery","backbone","handlebars", "underscore", "text!search-interface/numerical-filter-modal-partial.hbs", "text!search-interface/numerical-filter-modal-view.hbs", "search-interface/filter-model", "picSure/search", "picSure/settings", "search-interface/search-util"],
+    function($, BB, HBS, _, partialTemplate, filterModalViewTemplate, filterModel, search, settings, searchUtil){
 
         var View = BB.View.extend({
             initialize: function(opts){

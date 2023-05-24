@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util", "search-interface/var-tag-help-view", "search-interface/modal"],
-function(BB, HBS, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil, helpView, modal){
+define(["backbone", "handlebars", "underscore", "text!search-interface/tag-filter-view.hbs", "search-interface/tag-filter-model", "search-interface/filter-model", "common/keyboard-nav", "search-interface/search-util", "search-interface/var-tag-help-view", "search-interface/modal"],
+function(BB, HBS, _, tagFilterViewTemplate, tagFilterModel, filterModel, keyboardNav, searchUtil, helpView, modal){
 	let studyRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d$');
 	let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
 	let tableRegex = new RegExp('[pP][hH][tT]\\d\\d\\d\\d\\d\\d$');

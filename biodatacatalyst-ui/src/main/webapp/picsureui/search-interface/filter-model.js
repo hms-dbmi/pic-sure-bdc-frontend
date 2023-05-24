@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel", "search-interface/tag-filter-model",  "search-interface/search-util"],
-    function(BB, HBS, settings, queryBuilder, output, tagFilterModel, searchUtil){
+define(["backbone", "handlebars", 'underscore', "picSure/settings", "picSure/queryBuilder", "overrides/outputPanel", "search-interface/tag-filter-model",  "search-interface/search-util"],
+    function(BB, HBS, _, settings, queryBuilder, output, tagFilterModel, searchUtil){
 
         let FilterModel = BB.Model.extend({
             defaults:{

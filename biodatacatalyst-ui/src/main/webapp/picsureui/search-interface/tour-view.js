@@ -1,9 +1,10 @@
 define([
     'jquery',
     'backbone',
+    'underscore',
     "chardin",
     'common/keyboard-nav',
-], function($, BB, chardin, keyboardNav) {
+], function($, BB, _, chardin, keyboardNav) {
     const CHARDIN_SELECTOR = '#chardin-mask';
     const delay = function(t, v) {
         return new Promise(function(resolve) { 

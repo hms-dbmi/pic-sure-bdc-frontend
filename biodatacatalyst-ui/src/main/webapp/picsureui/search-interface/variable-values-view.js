@@ -1,5 +1,5 @@
-define(['backbone', 'handlebars','text!search-interface/variable-values-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/modal"],
-	function(BB, HBS, variableValuesModalTemplate, datatables, keyboardNav, modal){
+define(['backbone', 'handlebars','underscore', 'text!search-interface/variable-values-view.hbs', 'datatables.net', "common/keyboard-nav", "search-interface/modal"],
+	function(BB, HBS, _, variableValuesModalTemplate, datatables, keyboardNav, modal){
 	let VariableValuesModalView = BB.View.extend({
 		initialize: function(opts){
 			this.prevModal = opts.prevModal;

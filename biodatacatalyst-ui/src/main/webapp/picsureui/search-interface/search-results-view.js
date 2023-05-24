@@ -1,10 +1,10 @@
-define(["backbone", "handlebars", "text!search-interface/search-results-view.hbs", "text!search-interface/search-results-list.hbs",
+define(["backbone", "handlebars", "underscore", "text!search-interface/search-results-view.hbs", "text!search-interface/search-results-list.hbs",
 		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util",
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
 		"search-interface/filter-model", "search-interface/tag-filter-model",
 		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",
 		"text!search-interface/no-results-partial.hbs", "search-interface/no-results-help-view",],
-function(BB, HBS, searchResultsViewTemplate, searchResultsListTemplate,
+function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
 		 categoricalFilterModalView, filterModel, tagFilterModel,
 		 modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView,) {

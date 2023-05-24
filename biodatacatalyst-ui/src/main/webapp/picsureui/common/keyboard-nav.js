@@ -1,4 +1,4 @@
-define(['jquery'],function($){
+define(['jquery', 'underscore'],function($, _){
 	let navigableViews = {};
 
 	let currentView = undefined;
