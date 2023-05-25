@@ -1,4 +1,4 @@
-define(["jquery", "common/keyboard-nav"],function($, keyboardNav){
+define(["jquery", "common/keyboard-nav", "underscore"],function($, keyboardNav, _){
     let view = undefined;
 
     const OPEN = 'open';

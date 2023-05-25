@@ -1,5 +1,5 @@
-define(["jquery","backbone","handlebars", "text!search-interface/categorical-filter-modal-view.hbs", "search-interface/filter-model", "search-interface/search-util", 'common/selection-search-panel-view'],
-    function($, BB, HBS, categoricalFilterModalViewTemplate, filterModel, searchUtil, searchPanel){
+define(["jquery","backbone","handlebars", "underscore", "text!search-interface/categorical-filter-modal-view.hbs", "search-interface/filter-model", "search-interface/search-util", 'common/selection-search-panel-view'],
+    function($, BB, HBS, _, categoricalFilterModalViewTemplate, filterModel, searchUtil, searchPanel){
 
         var View = BB.View.extend({
             initialize: function(opts){
