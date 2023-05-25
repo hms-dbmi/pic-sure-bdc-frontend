@@ -10,8 +10,6 @@ define([
             this.data = opts || {};
         },
         render: function (sourceEvent, url = undefined) {
-            console.log("rendering redirect modal");
-
             let closeModal = function (sourceEvent) {
                 // After closing the modal
                 sourceEvent.target.focus();
