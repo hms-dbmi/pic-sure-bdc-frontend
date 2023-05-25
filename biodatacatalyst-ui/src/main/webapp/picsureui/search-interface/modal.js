@@ -17,7 +17,6 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 
 		render: function(){
 			let modalId = this.modalContainerId;
-			console.log("Modal: " + modalId + " rendered");
 
 			if($("#" + modalId).length === 0) {
 				$('#main-content').append('<div id="' + modalId + '" aria-modal="true"></div>');
@@ -25,14 +24,18 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 
 			let modal = $("#" + modalId);
 
-			if($("modalDialog").length !== 0) {
-				$(".modal-backdrop").remove();
-			}
+			modal.html(HBS.compile(modalTemplate)({title: this.title}));
 
-            modal.html(HBS.compile(modalTemplate)({title: this.title}));
-			$('#' + modalId + '.close').click(function() {
+			// This is a hack to get modals to close correctly when clicking outside the modal
+			// This can be done because the modal backdrop is static
+			$('#' + modalId).on('click', function(event) {
+				if (!$(event.target).closest('#' + modalId + ' .modal-content').length) {
+					$('#' + modalId + ' .close').get(0).click();
+				}
+			});
+
+			$('#' + modalId + ' .close').click(function() {
                 $("#" + modalId +  " #modalDialog").hide();
-				$(".modal-backdrop").hide();
             });
 		},
 
@@ -48,7 +51,7 @@ define(["handlebars","jquery","backbone","text!options/modal.hbs"],
 			this.modalContainerId = (opts && opts.modalContainerId) ? opts.modalContainerId : "modal-window";
 			this.render();
 
-	        $("#" + this.modalContainerId + " #modalDialog").modal({keyboard:true});
+	        $("#" + this.modalContainerId + " #modalDialog").modal({keyboard:true, backdrop: "static"});
 			if(dismissalAction) {
 				$("#" + this.modalContainerId + ' #modalDialog').on('hidden.bs.modal', dismissalAction);
 			}
