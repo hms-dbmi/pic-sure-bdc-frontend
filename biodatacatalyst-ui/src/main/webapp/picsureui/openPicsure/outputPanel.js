@@ -9,7 +9,7 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 
 	var generateStudiesInfoKey = function(abbreviatedName, studyIdentifier) {
 		return abbreviatedName + ' (' + studyIdentifier + ')';
-	}
+	};
 
 	var loadConcepts = function() {
 		$.ajax({
@@ -87,7 +87,7 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
             });
             studiesInfo[key].hasPermission = studiesInfo[key].consents.filter((x) => { return x.hasPermission}).length == studiesInfo[key].consents.length;
         }
-    }
+    };
 
 			var doUpdate = function(incomingQuery) {
 		if (JSON.parse(sessionStorage.getItem('isOpenAccess')) === true) {
@@ -155,18 +155,15 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 					sorted_unfound.sort(func_sort);
 					var sorted_final = sorted_found.concat(sorted_unfound);
 
-					// outputModel.set("studies",sorted_final);
-
 					// populate the study consent counts
 					for (var code in studiesInfo) {
 						studiesInfo[code].consents.forEach((x) => {
-							// todo: remove consents if not found? or 0?
-							// yes
 							x.study_matches = response[studiesInfo[code].study_concept + x.short_title + '\\'];
 						});
 					}
 					outputModel.set("studies",sorted_final);
 					this.studiesAccessPanelView.render();
+					this.toolSuiteView.render();
 					this.render();
 				}).bind(this),
 				error: (function(response) {
@@ -176,17 +173,19 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 					outputModel.stopAll();
 
 					this.studiesAccessPanelView.render();
+					this.toolSuiteView.render();
 					this.render();
 				}).bind(this)
 			});
 		}
-	}
+	};
 
 	var outputView = BB.View.extend({
 		initialize: function(opts){
 			this.template = HBS.compile(outputTemplate);
 			this.helpView = new helpView();
 			this.studiesAccessPanelView = opts.studiesPanel;
+			this.toolSuiteView = opts.toolSuiteView;
 			loadConcepts();
 			Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
 		},
@@ -268,5 +267,5 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 	return {
 		View : (overrides.viewOverride ? overrides.viewOverride : outputView),
 		Model: (overrides.modelOverride ? overrides.modelOverride : outputModel)
-	}
+	};
 });
