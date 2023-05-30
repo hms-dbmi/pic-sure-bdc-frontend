@@ -1,3 +1,45 @@
+<style>
+    #tool-suite-table-studies-modal thead {
+        background-color: lightgrey;
+    }
+
+    #tool-suite-table-studies-modal_wrapper {
+        margin: 2.5em 1.5em;
+    }
+
+    #tool-suite-table-studies-modal ul {
+        list-style-type: none;
+        padding-left: unset;
+    }
+
+    #tool-suite-table-studies-modal .study-count {
+        float: right;
+    }
+
+    #showAllStudies {
+        margin-left: 2em;
+        background-color: transparent;
+    }
+
+    #showAllStudies:hover {
+        background-color: #1a568c;
+        color: white;
+    }
+
+    #tool-suite-table-studies-modal .request-access {
+        background-color: #1a568c;
+        cursor: pointer;
+    }
+
+    #tool-suite-table-studies-modal .request-access:hover {
+        background: #777 !important;
+    }
+
+    #tool-suite-table-studies-modal .dt-center {
+        vertical-align: center;
+        text-align: center;
+    }
+</style>
 <p>The Participant Count by Study Tool provides an overview of the obfuscated, aggregate counts of participants per
     study and consent group that meet the query criteria. Without any variable filters, the counts displayed are the
     total number of participants in each study and consent. Here, you can request access to studies you are not
@@ -10,3 +52,6 @@
         will be obfuscated by ±3.</li>
     <li>Query results that are zero participants will show "0 ".</li>
 </ul>
+<table id="tool-suite-table-studies-modal" style="width:100%" class="table table-bordered row-border hover" role="region" aria-label="A table for showing aggregate counts of participants per
+    study and consent group that meet the query criteria"></table>
+<button id="showAllStudies" class="btn btn-default">Show studies with 0 participants</button>
