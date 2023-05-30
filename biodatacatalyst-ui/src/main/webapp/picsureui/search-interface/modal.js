@@ -22,6 +22,10 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 				$('#main-content').append('<div id="' + modalId + '" aria-modal="true"></div>');
 			}
 
+			if($(".modal-backdrop").length !== 0) {
+				$(".modal-backdrop").remove();
+			}
+
 			let modal = $("#" + modalId);
 
 			modal.html(HBS.compile(modalTemplate)({title: this.title}));
@@ -51,17 +55,17 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 			this.modalContainerId = (opts && opts.modalContainerId) ? opts.modalContainerId : "modal-window";
 			this.render();
 
-	        $("#" + this.modalContainerId + " #modalDialog").modal({keyboard:true, backdrop: "static"});
+	        $('#' + this.modalContainerId + ' #modalDialog').modal({keyboard:true, backdrop: "static"});
 			if(dismissalAction) {
-				$("#" + this.modalContainerId + ' #modalDialog').on('hidden.bs.modal', dismissalAction);
+				$('#' + this.modalContainerId + ' #modalDialog').on('hidden.bs.modal', dismissalAction);
 			}
 
-            $("#" + this.modalContainerId + ' .close').attr('tabindex', 1100000);
-			view.setElement($("#" + this.modalContainerId +  " .modal-body"));
+            $('#' + this.modalContainerId + ' .close').attr('tabindex', 1100000);
+			view.setElement($('#' + this.modalContainerId +  ' .modal-body'));
 			view.render();
 
 			opts && opts.isHandleTabs && this.createTabIndex();
-			opts && opts.width && $("#" + this.modalContainerId +  " .modal-dialog").width(opts.width);
+			opts && opts.width && $('#' + this.modalContainerId +  ' .modal-dialog').width(opts.width);
 		},
 
 		/*
