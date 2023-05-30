@@ -4,28 +4,39 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 	let Modal = BB.View.extend({
 		initialize: function(opts){
 			this.title="";
+			this.modalContainerId = "modal-window";
 			HBS.registerHelper("tabindex", function(options) {
 			  return TAB_INDEX_START + options;
 			});
 			this.createTabLoop();
 		},
-
 		events: {
 
 		},
-
 		render: function(){
-			if ($("#modal-window").length === 0) {
-                $('#main-content').append('<div id="modal-window" aria-modal="true"></div>');
-            }
-			if($("#modal-window").length !== 0) {
+			let modalId = this.modalContainerId;
+
+			if($("#" + modalId).length === 0) {
+				$('#main-content').append('<div id="' + modalId + '" aria-modal="true"></div>');
+			}
+
+			if($(".modal-backdrop").length !== 0) {
 				$(".modal-backdrop").remove();
 			}
 
-            $("#modal-window").html(HBS.compile(modalTemplate)({title: this.title}));
-            $('.close').click(function() {
-                $("#modalDialog").hide();
-                $(".modal-backdrop").hide();
+			let modal = $("#" + modalId);
+
+			modal.html(HBS.compile(modalTemplate)({title: this.title}));
+
+			$('#' + modalId + ' #modalDialog').on('click', function(event) {
+				if ($(event.target).parents('.modal-content').length === 0) {
+					$('#' + modalId + ' .close').click();
+				}
+			});
+
+			$('#' + modalId + ' .close').click(function() {
+				$("#" + modalId +  " #modalDialog").hide();
+				$(".modal-backdrop").hide();
             });
 		},
 
@@ -38,17 +49,20 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 		*/
 		displayModal: function(view, title, dismissalAction, opts){
 			this.title = title;
+			this.modalContainerId = (opts && opts.modalContainerId) ? opts.modalContainerId : "modal-window";
 			this.render();
 
-	        $("#modalDialog").modal({keyboard:true});
-			if(dismissalAction){
-				$('#modalDialog').on('hidden.bs.modal', dismissalAction);
+	        $('#' + this.modalContainerId + ' #modalDialog').modal({keyboard:true, backdrop: "static"});
+			if(dismissalAction) {
+				$('#' + this.modalContainerId + ' #modalDialog').on('hidden.bs.modal', dismissalAction);
 			}
-            $('.close').attr('tabindex', 1100000);
-			view.setElement($(".modal-body"));
+
+            $('#' + this.modalContainerId + ' .close').attr('tabindex', 1100000);
+			view.setElement($('#' + this.modalContainerId +  ' .modal-body'));
 			view.render();
+
 			opts && opts.isHandleTabs && this.createTabIndex();
-			opts && opts.width && $('.modal-dialog').width(opts.width);
+			opts && opts.width && $('#' + this.modalContainerId +  ' .modal-dialog').width(opts.width);
 		},
 
 		/*
@@ -76,16 +90,13 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
                     }
                 }
             });
-            // TODO : What?
-            //$('[tabindex="1000000"]').focus();
-           // $('.close').focus();
         },
 
 		// Finds elements with a tab index or the class 'tabable' and sets the correct tab index for the modal. 
 		// Ignores the close button.
 		createTabIndex: function() {
 			let tabIndex = TAB_INDEX_START;
-			_.each($('#modalDialog').find('[tabindex]:not(.close),.tabable'), function(el) {
+			_.each($('#' + this.modalContainerId +  ' #modalDialog').find('[tabindex]:not(.close),.tabable'), function(el) {
 				$(el).attr('tabindex', tabIndex);
 				tabIndex++;
 			});

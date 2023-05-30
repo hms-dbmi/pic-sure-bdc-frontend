@@ -1,46 +1,12 @@
-function redirectModal(event, dialog, modal, url = undefined) {
-    let closeModal = () => {
-        $('.close')?.get(0).click();
-        $(event.target).focus();
-    };
-
-    const dialogOption = [
-        {
-            title: "Cancel",
-            "action": () => {
-                closeModal();
-            },
-            classes: "btn btn-default"
-        },
-        {
-            title: "Continue",
-            "action": () => {
-                window.open((url === undefined ? event.target.href : url), '_blank');
-                closeModal();
-            },
-            classes: "btn btn-primary"
-        }
-    ];
-    const modalMessage = [
-        "This external website will be opened as a new tab in your browser.",
-        "Are you sure you want to leave BDC-PIC-SURE?"
-    ];
-
-    const dialogView = new dialog({
-        options: dialogOption,
-        messages: modalMessage,
-    });
-    modal.displayModal(
-        dialogView
-        , "Leaving BDC-PIC-SURE"
-        , () => {
-        }
-        , {handleTabs: true, width: "450px"}
-    );
-}
-
-define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/session", "common/pic-sure-dialog-view", "middleware/middleware"],
-    function (HBS, template, modal, session, dialog, Middleware) {
+define(["handlebars",
+        "text!overrides/footer.hbs",
+        "search-interface/modal",
+        "common/session",
+        "common/pic-sure-dialog-view",
+        "middleware/middleware",
+        "common/redirect-modal"
+    ],
+    function (HBS, template, modal, session, dialog, Middleware, redirectModal) {
         return {
             /*
              * The render function for the footer can be overridden here.
@@ -71,10 +37,13 @@ define(["handlebars", "text!overrides/footer.hbs", "common/modal", "common/sessi
                 $('title').html(title);
                 this.$el.html(HBS.compile(template)());
 
-                $(document).on('click', 'a[target="_blank"]', function (event) {
+                let redirect = new redirectModal();
+
+                // Using .off() to prevent multiple event handlers from being attached
+                $(document).off('click', 'a[target="_blank"]').on('click', 'a[target="_blank"]', function (event) {
                     event.preventDefault();
 
-                    redirectModal(event, dialog, modal);
+                    redirect.render(event);
                 });
             }
         };

@@ -1,7 +1,8 @@
 define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel",
         "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",
-        "common/pic-sure-dialog-view"],
-		function($, BB, HBS, studiesPanelTemplate, outputModel, keyboardNav, helpView, modal, dialog) {
+        "common/pic-sure-dialog-view", "common/redirect-modal"],
+		function($, BB, HBS, studiesPanelTemplate, outputModel, keyboardNav,
+                 helpView, modal, dialog, redirectModal) {
     const LIST_ITEM = 'study-container';
     const SELECTED = 'selected';
 
@@ -49,7 +50,7 @@ define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", 
                 target = $('#studies-list').find('.' + SELECTED).find('.request-access')[0];
             }
 
-            redirectModal(event, dialog, modal, target.getAttribute("data-href"));
+            new redirectModal().render(event, target.getAttribute("data-href"));
         },
         exploreAccess: function(event) {
             window.history.pushState({}, "", "picsureui/queryBuilder");
