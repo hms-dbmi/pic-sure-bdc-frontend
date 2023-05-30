@@ -10,9 +10,7 @@ define([
             this.data = opts || {};
         },
         render: function (sourceEvent, url = undefined) {
-            let closeModal = function (sourceEvent) {
-                // After closing the modal
-                sourceEvent.target.focus();
+            let closeModal = function () {
                 $('#modal-redirect .close')?.get(0).click();
             };
 
@@ -20,7 +18,7 @@ define([
                 {
                     title: "Cancel",
                     "action": () => {
-                        closeModal(sourceEvent);
+                        closeModal();
                     },
                     classes: "btn btn-default"
                 },
@@ -28,7 +26,7 @@ define([
                     title: "Continue",
                     "action": () => {
                         window.open((url === undefined ? sourceEvent.target.href : url), '_blank');
-                        closeModal(sourceEvent);
+                        closeModal();
                     },
                     classes: "btn btn-primary"
                 }
@@ -54,14 +52,22 @@ define([
             modal.displayModal(
                 dialogView
                 , "Leaving BDC-PIC-SURE"
-                , undefined
+                , () => { sourceEvent.target.focus(); }
                 , {isHandleTabs: true, width: "450px", modalContainerId: modalContainerId}
             );
 
             // Add additional event listener to close button
             $('#modal-redirect #close-modal-button').on('click', () => {
-                closeModal(sourceEvent);
-                $('#modal-window .modal-dialog').show();
+                event.preventDefault();
+
+                // if the source event is in a modal, we need to show the modal-window again
+                if($(sourceEvent.target).parents('.modal-content').length > 0) {
+                    $('#modal-window .modal-dialog').show();
+
+                    if ($('.modal-backdrop in').length === 0) {
+                        $('body').append('<div class="modal-backdrop in"></div>');
+                    }
+                }
             });
         }
     });
