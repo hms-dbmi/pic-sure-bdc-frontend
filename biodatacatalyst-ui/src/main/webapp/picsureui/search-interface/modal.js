@@ -10,11 +10,9 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 			});
 			this.createTabLoop();
 		},
-
 		events: {
 
 		},
-
 		render: function(){
 			let modalId = this.modalContainerId;
 
@@ -30,16 +28,15 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 
 			modal.html(HBS.compile(modalTemplate)({title: this.title}));
 
-			// This is a hack to get modals to close correctly when clicking outside the modal
-			// This can be done because the modal backdrop is static
-			$('#' + modalId).on('click', function(event) {
-				if (!$(event.target).closest('#' + modalId + ' .modal-content').length) {
-					$('#' + modalId + ' .close').get(0).click();
+			$('#' + modalId + ' #modalDialog').on('click', function(event) {
+				if ($(event.target).parents('.modal-content').length === 0) {
+					$('#' + modalId + ' .close').click();
 				}
 			});
 
 			$('#' + modalId + ' .close').click(function() {
-                $("#" + modalId +  " #modalDialog").hide();
+				$("#" + modalId +  " #modalDialog").hide();
+				$(".modal-backdrop").hide();
             });
 		},
 
