@@ -162,7 +162,6 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 						});
 					}
 					outputModel.set("studies",sorted_final);
-					this.studiesAccessPanelView.render();
 					this.toolSuiteView.render();
 					this.render();
 				}).bind(this),
@@ -172,7 +171,6 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 					}
 					outputModel.stopAll();
 
-					this.studiesAccessPanelView.render();
 					this.toolSuiteView.render();
 					this.render();
 				}).bind(this)
@@ -184,7 +182,6 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 		initialize: function(opts){
 			this.template = HBS.compile(outputTemplate);
 			this.helpView = new helpView();
-			this.studiesAccessPanelView = opts.studiesPanel;
 			this.toolSuiteView = opts.toolSuiteView;
 			loadConcepts();
 			Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
