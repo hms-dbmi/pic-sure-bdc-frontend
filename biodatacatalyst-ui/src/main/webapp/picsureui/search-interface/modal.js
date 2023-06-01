@@ -29,10 +29,18 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 			modal.html(HBS.compile(modalTemplate)({title: this.title}));
 
 			$('#' + modalId + ' #modalDialog').on('click', function(event) {
-				if ($(event.target).parents('.modal-content').length === 0) {
+				let parent = $(event.target).parent();
+				// Traverse up the tree until we find the modal-content class or the body
+				while (parent.length && !parent.is('body') && !parent.is('.modal-content')) {
+					parent = parent.parent();
+				}
+
+				// If we traversed up to the body, then we clicked outside the modal
+				if (parent.is('body')) {
 					$('#' + modalId + ' .close').click();
 				}
 			});
+
 
 			$('#' + modalId + ' .close').click(function() {
 				$("#" + modalId +  " #modalDialog").hide();
