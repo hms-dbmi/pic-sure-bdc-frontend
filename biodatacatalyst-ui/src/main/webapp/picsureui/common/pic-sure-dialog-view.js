@@ -7,6 +7,7 @@ define([
     var PicsureDialog = BB.View.extend({
         initialize: function(opts){
             this.opts = opts;
+            this.modalId = (opts.modalContainerId ? opts.modalContainerId : "modal-window");
             this.template = HBS.compile(dialog);
             this.buttonArr = opts.options.map(button => {
                 let btnEl = document.createElement('button');
@@ -24,11 +25,12 @@ define([
         render: function(){
             this.$el.html(this.template(this.opts));
             const optionContainer = this.$el.find('#options');
-            this.buttonArr.forEach(button =>{
+            this.buttonArr.forEach(button => {
                 optionContainer.append(button);
             });
-            this.previousView && $('.close')?.off('click');
-            this.previousView && $('.close')?.on('click', this.onClose.bind(this));
+            let close = $('#' + this.modalId + ' .close');
+            this.previousView && close?.off('click');
+            this.previousView && close?.on('click', this.onClose.bind(this));
         }
     });
     return PicsureDialog;
