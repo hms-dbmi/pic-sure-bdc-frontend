@@ -1,11 +1,12 @@
 define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layoutTemplate.hbs", "picSure/settings", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "overrides/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
-        "search-interface/query-results-view", "openPicsure/studiesPanelView", "api-interface/apiPanelView", "search-interface/filter-model",
-        "search-interface/tag-filter-model"],
+        "search-interface/query-results-view", "api-interface/apiPanelView", "search-interface/filter-model",
+        "search-interface/tag-filter-model", "openPicsure/tool-suite-view"],
     function(BB, HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
-             FilterListView, SearchView, ToolSuiteView, queryResultsView, studiesPanelView, ApiPanelView, filterModel, tagFilterModel) {
+             FilterListView, SearchView, ToolSuiteView, queryResultsView,
+             ApiPanelView, filterModel, tagFilterModel, openToolSuiteView) {
         const genomicFilterWarningText = 'Genomic filters will be removed from your query as they are not currently supported in Open Access. Are you sure you would like to proceed to Open Access? \n\nClick OK to proceed to open access or cancel to reutrn to authorized access.';
         let displayDataAccess = function() {
             $(".header-btn.active").removeClass('active');
@@ -40,10 +41,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
             $(".header-btn[data-href='/picsureui/openAccess#']").addClass('active');
             $('#main-content').empty();
             $('#main-content').append(this.layoutTemplate(settings));
-            const studiesPanel = new studiesPanelView();
-            studiesPanel.render();
-            $('#studies-list-panel').append(studiesPanel.$el);
-            const outputPanelView = new outputPanel.View({studiesPanel: studiesPanel});
+            let toolSuiteView = new openToolSuiteView({el: $('#tool-suite-panel')});
+            toolSuiteView.render();
+
+            const outputPanelView = new outputPanel.View({toolSuiteView: toolSuiteView});
             const query = queryBuilder.generateQueryNew({}, {}, null, settings.openAccessResourceId);
             outputPanelView.render();
             $('#query-results').append(outputPanelView.$el);

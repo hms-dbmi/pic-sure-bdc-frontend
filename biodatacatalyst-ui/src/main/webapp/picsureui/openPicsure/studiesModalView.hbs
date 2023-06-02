@@ -1,0 +1,92 @@
+<style>
+    .search-result {
+        border-bottom: 1px solid;
+        padding:3px;
+        overflow:hidden;
+        cursor:pointer;
+    }
+
+    .search-result:first-of-type {
+        border-top: 1px solid;
+    }
+
+    .search-result span.col {
+        padding:3px;
+    }
+
+    .search-result:nth-child(even) {
+        background:lightgray;
+    }
+
+    .search-result:nth-child(odd) {
+        background:white;
+    }
+
+    .search-result-action-btn {
+        font-size:1.5em;
+        padding-left:.25em;
+        cursor: pointer;
+    }
+
+    .search-result:hover {
+        background-color:rgb(223, 238, 255);
+    }
+
+    #tool-suite-table-studies-modal-datatable thead {
+        background-color: lightgrey;
+    }
+
+    #tool-suite-table-studies-modal-datatable_wrapper {
+        margin: 2.5em 1.5em;
+    }
+
+    #tool-suite-table-studies-modal-datatable ul {
+        list-style-type: none;
+        padding-left: unset;
+    }
+
+    #tool-suite-table-studies-modal-datatable .study-count {
+        float: right;
+    }
+
+    #showAllStudies {
+        margin-left: 2em;
+        background-color: transparent;
+    }
+
+    #showAllStudies:hover {
+        background-color: #1a568c;
+        color: white;
+    }
+
+    #tool-suite-table-studies-modal-datatable .request-access {
+        background-color: #1a568c;
+        cursor: pointer;
+    }
+
+    #tool-suite-table-studies-modal-datatable .request-access:hover {
+        background: #777 !important;
+    }
+
+    #tool-suite-table-studies-modal-datatable .dt-center {
+        vertical-align: center;
+        text-align: center;
+    }
+</style>
+<p>The Participant Count by Study Tool provides an overview of the obfuscated, aggregate counts of participants per
+    study and consent group that meet the query criteria. Without any variable filters, the counts displayed are the
+    total number of participants in each study and consent. Here, you can request access to studies you are not
+    authorized to access using the “Request” button.</p>
+
+<p>Note that counts are obfuscated using the following methods:</p>
+<ul>
+    <li>If the consent(s) or study(ies) are between 1-9 the query results will show "<10".</li>
+    <li>If the consent(s) results are between 1-9 and the number of participants per study are 10 or higher the results
+        will be obfuscated by ±3.</li>
+    <li>Query results that are zero participants will show "0 ".</li>
+</ul>
+<table id="tool-suite-table-studies-modal-datatable" style="width:100%" class="table table-bordered row-border hover" tabindex="0" aria-label="A table for showing aggregate counts of participants per
+        study and consent group that meet the query criteria">
+
+</table>
+<button id="showAllStudies" class="btn btn-default" tabindex="0">Show studies with 0 participants</button>
