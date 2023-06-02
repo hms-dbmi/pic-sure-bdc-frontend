@@ -31,7 +31,6 @@ define([
             this.$("#tool-suite-table-studies-modal-datatable .focused-search-result").removeClass('focused-search-result');
         },
         resultsDatatableFocus: function (event) {
-            console.log("results datatable focus");
             this.focusedSection = '#tool-suite-table-studies-modal-datatable';
             keyboardNav.setCurrentView("studiesModal");
         },
@@ -80,7 +79,6 @@ define([
             $('#aria-live').html("Now on page " + ($('#tool-suite-table-studies-modal-datatable').DataTable().page() + 1) + " of the results region.");
         },
         adjustFocusedRow: function (adjustment, results) {
-            console.log("adjusting focused variable");
             let focusedRow = adjustment;
             for (let x = 0; x < results.length; x++) {
                 if ($(results[x]).hasClass('focused-search-result')) {
@@ -103,7 +101,6 @@ define([
             searchUtil.ensureElementIsInView(results[focusedRow]);
         },
         requestAccessClickHandler(event) {
-            console.log("request access click handler");
             $(event.target).find(".request-access-button").click();
         },
         displayTable: function (data) {
