@@ -57,11 +57,17 @@ define([
             );
 
             // Add additional event listener to close button
-            $('#modal-redirect #close-modal-button').on('click', () => {
+            $('#' + modalContainerId + ' #modalDialog').on('click', function(event) {
                 event.preventDefault();
 
-                // if the source event is in a modal, we need to show the modal-window again
-                if($(sourceEvent.target).parents('.modal-content').length > 0) {
+                let parent = $(event.target).parent();
+                // Traverse up the tree until we find the modal-content class or the body
+                while (parent.length && !parent.is('body') && !parent.is('#modalDialog')) {
+                    parent = parent.parent();
+                }
+
+                // If we traversed up to the body, then we clicked outside the modal
+                if (parent.is('#modalDialog')) {
                     $('#modal-window .modal-dialog').show();
 
                     if ($('.modal-backdrop in').length === 0) {
