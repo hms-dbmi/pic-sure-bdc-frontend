@@ -31,7 +31,7 @@ define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"
 			$('#' + modalId + ' #modalDialog').on('click', function(event) {
 				let parent = $(event.target).parent();
 				// Traverse up the tree until we find the modal-content class or the body
-				while (parent.length && !parent.is('body') && !parent.is('.modal-content')) {
+				while (parent.length && !parent.is('body') && !parent.is('#modalDialog')) {
 					parent = parent.parent();
 				}
 
