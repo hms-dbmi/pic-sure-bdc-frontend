@@ -8,7 +8,7 @@ function (Backbone, settings) {
                     let isOpenAccess = sessionStorage.getItem("isOpenAccess");
                     let requestSource = isOpenAccess ? 'Open' : 'Authorized';
 
-                    jqXHR.setRequestHeader("requestSource", requestSource);
+                    jqXHR.setRequestHeader("request-source", requestSource);
                 }
             });
         },
