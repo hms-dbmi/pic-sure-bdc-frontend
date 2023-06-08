@@ -1,6 +1,8 @@
 define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model",
-        "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"],
-function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView) {
+        "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"
+    , "text!search-interface/visualization-modal-view.hbs"],
+function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView
+    , VisualizationTemplate) {
     var ToolSuiteView = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
@@ -32,7 +34,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
         },
         openDistributions: function(){
-            const vizModal = new VisualizationModalView.View({model: new VisualizationModalView.Model()});
+            const vizModal = new VisualizationModalView.View({model: new VisualizationModalView.Model(), template: VisualizationTemplate});
             modal.displayModal(
                 vizModal,
                 'Variable distributions of query filters',
