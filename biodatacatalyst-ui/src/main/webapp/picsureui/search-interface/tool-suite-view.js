@@ -1,4 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model", "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"],
+define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model",
+        "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"],
 function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView) {
     var ToolSuiteView = BB.View.extend({
         initialize: function(opts){
@@ -9,7 +10,6 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
         events: {
             'click #package-data' : 'openPackageData',
             'click #variant-explorer' : 'openVariantExplorer',
-            'click #imaging' : 'openImaging',
             'click #distributions' : 'openDistributions',
             'click #tool-suite-help' : 'openHelp',
             'keypress #tool-suite-help' : 'openHelp',
@@ -52,14 +52,11 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 }, {isHandleTabs: true}
             );
         },
-        openImaging: function(){
-            console.log('openImaging');
-        },
         openPackageData: function(){
             let exportStatus = 'Ready';
                 if(filterModel.get('estDataPoints') > 1000000){
                     exportStatus = 'Overload';
-                };
+                }
             let exportModel = Backbone.Model.extend({
                 defaults: {},
             });
