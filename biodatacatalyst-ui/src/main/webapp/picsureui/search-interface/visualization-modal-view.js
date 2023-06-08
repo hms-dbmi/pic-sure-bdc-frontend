@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/visualization-modal-view.hbs", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings", "common/spinner", "plotly"],
-function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings, spinner, plotly) {
+define(["jquery", "backbone", "handlebars", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings", "common/spinner", "plotly"],
+function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner, plotly) {
     let defaultModel = BB.Model.extend({
 		defaults: {
 			spinnerClasses: "spinner-medium spinner-medium-center ",
@@ -18,13 +18,13 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
         modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'sendDataToCloud']
     };
     let visualizationModalView = BB.View.extend({
-        initialize: function(){
+        initialize: function(opts){
             this.data = {};
             this.data.traces = [];
             this.data.layouts = [];
             this.data.errors = [];
             this.config = defaultPlotlyConfig;
-            this.template = HBS.compile(template);
+            this.template = HBS.compile(opts.template);
             HBS.registerPartial("visualization-image-partial", imageTemplate);
             this.getImages();
         },
