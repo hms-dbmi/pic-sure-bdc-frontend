@@ -5,8 +5,8 @@ function (Backbone, settings) {
             $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                 // if url contains picsure
                 if (options.url.indexOf("/picsure") !== -1) {
-                    let isOpenAccess = sessionStorage.getItem("isOpenAccess");
-                    let requestSource = isOpenAccess === "true" ? 'Open' : 'Authorized';
+                    let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                    let requestSource = isOpenAccess ? 'Open' : 'Authorized';
 
                     jqXHR.setRequestHeader("request-source", requestSource);
                 }
