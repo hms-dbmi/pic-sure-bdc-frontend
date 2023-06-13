@@ -5,10 +5,10 @@ function (Backbone, settings) {
             $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                 // if url contains picsure
                 if (options.url.indexOf("/picsure") !== -1) {
-                    let isOpenAccess = sessionStorage.getItem("isOpenAccess");
+                    let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
                     let requestSource = isOpenAccess ? 'Open' : 'Authorized';
 
-                    jqXHR.setRequestHeader("requestSource", requestSource);
+                    jqXHR.setRequestHeader("request-source", requestSource);
                 }
             });
         },
