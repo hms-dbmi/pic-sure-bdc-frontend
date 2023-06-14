@@ -123,7 +123,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 						let phs = undefined;
 						if (tagFilterModel.get('requiredTags').length > 0) {
 							phs = tagFilterModel.get('requiredTags').at(0).get('tag');
-						} else if (filterModel.get('activeFilters').length > 0) {
+						} else if (filterModel.get('activeFilters').length > 0 && filterModel.get('activeFilters')?.at(0).get('searchResult')) {
 							abbreviatedName = filterModel.get('activeFilters').at(0).get('searchResult').result.metadata.derived_study_abv_name;
 						} else if (session.queryScopes && session.queryScopes[0]) {
 							phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
