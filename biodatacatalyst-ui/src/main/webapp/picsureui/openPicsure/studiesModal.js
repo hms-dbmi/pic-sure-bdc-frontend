@@ -112,7 +112,8 @@ define([
                 return requiredCols.every(function (property) {
                     if (property === 'study_matches' && !showAll) {
                         // Only show studies with participants. If showStudiesWithZeroParticipants is true, then show all studies.
-                        return item.hasOwnProperty(property) && item[property] != null && item[property] !== '' && item[property] > 0;
+                        return item.hasOwnProperty(property) && item[property] != null && item[property] !== '' &&
+                            (item[property] > 0 || (typeof item[property] === 'string' && item[property] !== '0'));
                     }
 
                     return item.hasOwnProperty(property) && item[property] != null && item[property] !== '';
