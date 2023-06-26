@@ -136,7 +136,6 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 					varId: rowData.variable_id,
 					dataTableData: response,
 					isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
-					shouldDisableActions: shouldDisableActions(searchUtil.isStudyHarmonized(rowData.study_id)),
 					el: $(".modal-body")
 				});
 				this.dataTableInfoView.render();
@@ -408,10 +407,8 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 						},
 						{
 							render: function (data, type, row, meta) {
-								let shouldDisable = shouldDisableActions(row.is_harmonized);
-								let disabledClass = shouldDisable ? "disabled-icon" : "";
-								let filterTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to configure a filter using this variable.";
-								let exportTitleText = shouldDisable ? "Variable conflicts with current filter parameters." : "Click to add this variable to your data retrieval.";
+								let filterTitleText = "Click to configure a filter using this variable.";
+								let exportTitleText = "Click to add this variable to your data retrieval.";
 								let tourAttr = undefined;
 								if (row.result_index == 0) {
 									tourAttr = 'data-intro="#open-actions-row" data-sequence="6" id="first-actions-row"';
@@ -422,9 +419,9 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 										exportClass = 'fa-regular fa-square-check';
 									}
 									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6" id="first-actions-row"';}
-									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn '+disabledClass+'"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="export-icon search-result-action-btn '+ exportClass + ' ' + disabledClass+'"></i></span>';
+									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="export-icon search-result-action-btn '+ exportClass+'"></i></span>';
 								}
-								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn '+disabledClass+'"></i></span>';
+								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
 							},
 							type: 'string',
 							targets: 3
