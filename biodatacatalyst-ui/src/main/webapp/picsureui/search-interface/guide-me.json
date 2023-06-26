@@ -40,6 +40,10 @@
         "text": "The Tool Suite contains tools that can be used to explore filtered cohorts of interest further. Note that at least one filter must be added to the query before using the Tool Suite.",
         "position": "left"
     },
+    "#participant-study-data": {
+        "text": "Use this tool to view the aggregate, obfuscated counts of participants by study and consent group.",
+        "position": "left"
+    },
     "#package-data": {
         "text": "Use this tool to retrieve participant-level data corresponding to your filters and variable selections. Variables selected for data retrieval can be reviewed and modified.",
         "position": "left"
@@ -56,10 +60,6 @@
     },
     "#data-summary": {
         "text": "This describes the total number of participants that meet the query criteria. Note that this count may be obfuscated.",
-        "position": "left"
-    },
-    "#open-filtered-by-study": {
-        "text": "The filtered number of participants that match the query criteria is broken down by study and consent group. Authorization to access the study is also displayed.",
         "position": "left"
     },
     "#help-header-button": {
