@@ -1,7 +1,7 @@
 define(["jquery", "backbone", "handlebars", "text!openPicsure/tool-suite-view.hbs",
         "search-interface/modal", "openPicsure/tool-suite-help-view", "openPicsure/outputModel",
-        "openPicsure/studiesModal"],
-    function ($, BB, HBS, template, modal, helpView, outputModel, studiesModal) {
+        "openPicsure/studiesModal","search-interface/visualization-modal-view",],
+    function ($, BB, HBS, template, modal, helpView, outputModel, studiesModal, VisualizationModalView) {
         return BB.View.extend({
             initialize: function (opts) {
                 this.template = HBS.compile(template);
@@ -13,6 +13,7 @@ define(["jquery", "backbone", "handlebars", "text!openPicsure/tool-suite-view.hb
                 'click #participant-study-data': 'openParticipantStudyData',
                 'click #tool-suite-help': 'openHelp',
                 'keypress #tool-suite-help': 'openHelp',
+                'click #distributions' : 'openDistributions',
             },
             handleFilterChange: function () {
                 let shouldDisableParticipantCount = parseInt(outputModel.get("totalPatients")) === 0;
@@ -40,6 +41,15 @@ define(["jquery", "backbone", "handlebars", "text!openPicsure/tool-suite-view.hb
                     {isHandleTabs: true}
                 );
 
+            },
+            openDistributions: function(){
+                const vizModal = new VisualizationModalView.View({model: new VisualizationModalView.Model()});
+                modal.displayModal(
+                    vizModal,
+                    'Variable distributions of query filters',
+                    () => {this.$el.focus();},
+                    {isHandleTabs: true}
+                );
             },
             destroy: function () {
                 //https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
