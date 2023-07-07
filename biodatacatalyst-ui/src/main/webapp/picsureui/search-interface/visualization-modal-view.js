@@ -44,7 +44,30 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
 				}.bind(this)
 			});
         },
-        getImages: function(){
+        halfOpacity: function(colorCode) {
+        // Remove the '#' symbol if present
+        if (colorCode.charAt(0) === '#') {
+            colorCode = colorCode.substr(1);
+        }
+
+        // Parse the color code into RGB components
+        const red = parseInt(colorCode.substr(0, 2), 16);
+        const green = parseInt(colorCode.substr(2, 2), 16);
+        const blue = parseInt(colorCode.substr(4, 2), 16);
+
+        // Calculate the new RGB components with halved opacity and increased brightness
+        const newRed = Math.min(Math.floor(red * 1.5), 255);
+        const newGreen = Math.min(Math.floor(green * 1.5), 255);
+        const newBlue = Math.min(Math.floor(blue * 1.5), 255);
+
+        // Convert the new RGB components back to a color code
+        const newColorCode = '#' + [newRed, newGreen, newBlue]
+            .map(component => component.toString(16).padStart(2, '0'))
+            .join('');
+
+        return newColorCode;
+    },
+    getImages: function(){
             let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, settings.visualizationResourceId);
             query.resourceCredentials = {"Authorization" : "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
             queryBuilder.updateConsentFilters(query, settings);
@@ -82,16 +105,43 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
         },
         createCategoryPlot: function(){
             this.model.get('categoricalData').forEach((dataMap) => {
+                let obfuscationRange = 6;
+
+                // shaded area at top of bar chart
+                const topBar = Array(obfuscationRange).fill(1);
+
                 let title = dataMap.title;
                 if (dataMap.title && dataMap.title.length > MAX_TITLE_LENGTH) {
-                    title = dataMap.title.substring(0, MAX_TITLE_LENGTH - 3) + "...";
+                    title = dataMap.title.substring(0, MAX_TITLE_LENGTH - (obfuscationRange/2)) + "...";
                 }
+
+                const shadedSections =  dataMap?.categoricalObfuscatedMap ? Object.values(dataMap.categoricalObfuscatedMap) : [];
                 const values = Object.values(dataMap.categoricalMap);
+
+                // TODO: this is just for development purposes
+                if(shadedSections.length === 0) {
+                    // add true to shadedSections for the number of elements in values
+                    shadedSections.splice(0, 0, ...Array(values.length).fill(true));
+                }
+
+                // If the value is obfuscated, then the text value is empty
+                const traceTopBarText = shadedSections.map((value, i) => i < (obfuscationRange/2) && value ? '' : values[i]);
+
+                // If the value is obfuscated, then we add it to the shadedTraceText array
+                const traceBottomBarText = shadedSections.map((value, i) => i < (obfuscationRange/2) && value ? values[i] : '');
+
+                // if the value is obfuscated and the value is 10 or less, then we replace it in the traceTopBarText array with a '< 10' string and set the value in the topBar to 10
+                topBar.forEach((value, i) => {
+                    if (value === 1 && values[i] <= 10) {
+                        topBar[i] = 9;
+                    }
+                });
+
                 const colors = this.getColors(values.length);
                 const trace = {
                     x: Object.keys(dataMap.categoricalMap),
-                    y: values,
-                    text: values,
+                    // Remove 3 elements from the top of the bar chart to make room for the shaded area
+                    y: values.map((value, i) => i < (obfuscationRange/2) && shadedSections[i] ? value - topBar[i] : value),
                     name: title,
                     unformatedTitle: dataMap.title,
                     type: 'bar',
@@ -99,12 +149,40 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     isCategorical: true,
                     marker: {
                         color: colors,
-                        line: {
-                            color: 'rgba(0,0,0,0.5)',
-                            width: 2
-                          }
                     }
                 };
+
+                let shadedTrace;
+                if(shadedSections.length > 0) {
+                    // for each color half the opacity
+                    const shadedColors = colors.map(color => this.halfOpacity(color));
+
+                    // Add shaded area to top of bar chart
+                    shadedTrace = {
+                        x: Object.keys(dataMap.categoricalMap),
+                        y: topBar,
+                        name: 'Shaded Area',
+                        type: 'bar',
+                        showlegend: false,
+                        marker: {
+                            color: shadedColors,
+                        }
+                    };
+                }
+
+                // Open access does not display the obfuscated values on the chart
+                let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                if(!isOpenAccess) {
+                    trace.text = traceTopBarText;
+                    shadedTrace.text = traceBottomBarText;
+                }
+
+                if (shadedTrace) {
+                    this.data.traces.push([trace, shadedTrace]);
+                } else {
+                    this.data.traces.push([trace]);
+                }
+
                 const layout = {
                     title: title,
                     width: dataMap.chartWidth || 500,
@@ -120,9 +198,10 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     yaxis: {
                         title: dataMap.yaxisName,
                         automargin: true,
-                    }
-                }
-                this.data.traces.push(trace);
+                    },
+                    barmode: 'stack',
+                };
+
                 this.data.layouts.push(layout);
             });
         },
@@ -166,26 +245,39 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                         title: dataMap.yaxisName,
                         automargin: true,
                     }
-                }
-                this.data.traces.push(trace);
+                };
+
+                this.data.traces.push([trace]);
                 this.data.layouts.push(layout);
             });
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            for(let i = 0; i < this.data.traces.length; i++){
+            for(let i = 0; i < this.data.traces.length; i++) {
                 let plot = document.createElement('div');
                 let screenReaderText = 'Histogram showing the visualization of ';
-                if (this.data.traces[i].isCategorical) {
-                    screenReaderText = 'Column chart showing the visualization of ';
+
+                // We need to do this because the traces are a 2d array. As long as one of the traces is categorical,
+                // we need to add the screen reader text
+                let unformatedTitle;
+                for(let j = 0; j < this.data.traces[i].length; j++) {
+                    if (this.data.traces[i][j].isCategorical) {
+                        screenReaderText = 'Column chart showing the visualization of ';
+                    }
+
+                    if (this.data.traces[i][j].unformatedTitle) {
+                        unformatedTitle = this.data.traces[i][j].unformatedTitle;
+                        break;
+                    }
                 }
+
                 plot.setAttribute('id', 'plot' + i);
-                plot.setAttribute('aria-label', screenReaderText + this.data.traces[i].unformatedTitle);
-                plot.setAttribute('title', 'Visualization of ' + this.data.traces[i].unformatedTitle);
+                plot.setAttribute('aria-label', screenReaderText + unformatedTitle);
+                plot.setAttribute('title', 'Visualization of ' + unformatedTitle);
                 plot.classList.add('image-container');
                 document.getElementById('visualizations-container').appendChild(plot);
-                this.config.toImageButtonOptions.filename = this.data.traces[i].unformatedTitle;
-                plotly.newPlot(plot, [this.data.traces[i]], this.data.layouts[i], this.config);
+                this.config.toImageButtonOptions.filename = unformatedTitle;
+                plotly.newPlot(plot, this.data.traces[i], this.data.layouts[i], this.config);
             }
             return this;
         }
