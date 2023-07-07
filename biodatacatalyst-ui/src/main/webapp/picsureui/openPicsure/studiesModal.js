@@ -190,7 +190,7 @@ define([
 
             // Update the button text
             if (!this.showZeroParticipants) {
-                $("#showAllStudies").text("Show studies with 0 participants");
+                $("#showAllStudies").text("Include studies with 0 participants");
             } else {
                 $("#showAllStudies").text("Show only studies with participants");
             }
