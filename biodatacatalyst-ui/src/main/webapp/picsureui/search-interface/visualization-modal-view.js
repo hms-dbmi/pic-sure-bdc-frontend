@@ -44,33 +44,18 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
 				}.bind(this)
 			});
         },
-        halfOpacity: function(colorCode) {
-        // Remove the '#' symbol if present
-        if (colorCode.charAt(0) === '#') {
-            colorCode = colorCode.substr(1);
-        }
-
-        // Parse the color code into RGB components
-        const red = parseInt(colorCode.substr(0, 2), 16);
-        const green = parseInt(colorCode.substr(2, 2), 16);
-        const blue = parseInt(colorCode.substr(4, 2), 16);
-
-        // Calculate the new RGB components with halved opacity and increased brightness
-        const newRed = Math.min(Math.floor(red * 1.5), 255);
-        const newGreen = Math.min(Math.floor(green * 1.5), 255);
-        const newBlue = Math.min(Math.floor(blue * 1.5), 255);
-
-        // Convert the new RGB components back to a color code
-        const newColorCode = '#' + [newRed, newGreen, newBlue]
-            .map(component => component.toString(16).padStart(2, '0'))
-            .join('');
-
-        return newColorCode;
-    },
     getImages: function(){
             let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, settings.visualizationResourceId);
             query.resourceCredentials = {"Authorization" : "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
             queryBuilder.updateConsentFilters(query, settings);
+
+            // We need to remove the consent filter for open access as it will reduce the number of results
+            // and we want to show all results for open access. We just obfuscate the data that is not consented to.
+            const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+            if (isOpenAccess) {
+                delete query.query.categoryFilters["\\_consents\\"];
+            }
+
             this.model.set('spinning', true);
             $.ajax({
 				url: window.location.origin + '/picsure/query/sync',
@@ -103,37 +88,39 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
             }
             return colors;
         },
-        createCategoryPlot: function(){
+        createCategoryPlot: function() {
             this.model.get('categoricalData').forEach((dataMap) => {
-                let obfuscationRange = 6;
-
-                // shaded area at top of bar chart
-                const topBar = Array(obfuscationRange).fill(1);
+                const obfuscationRange = 6;
 
                 let title = dataMap.title;
                 if (dataMap.title && dataMap.title.length > MAX_TITLE_LENGTH) {
-                    title = dataMap.title.substring(0, MAX_TITLE_LENGTH - (obfuscationRange/2)) + "...";
+                    title = dataMap.title.substring(0, MAX_TITLE_LENGTH - 3) + "...";
                 }
 
-                const shadedSections =  dataMap?.categoricalObfuscatedMap ? Object.values(dataMap.categoricalObfuscatedMap) : [];
+                const shadedSections =  Object.values(dataMap.categoricalObfuscatedMap);
                 const values = Object.values(dataMap.categoricalMap);
 
-                // TODO: this is just for development purposes
-                if(shadedSections.length === 0) {
-                    // add true to shadedSections for the number of elements in values
-                    shadedSections.splice(0, 0, ...Array(values.length).fill(true));
-                }
+                // shaded area at top of bar chart
+                const topBar = Array(values.length).fill(obfuscationRange);
 
-                // If the value is obfuscated, then the text value is empty
-                const traceTopBarText = shadedSections.map((value, i) => i < (obfuscationRange/2) && value ? '' : values[i]);
+                let traceBottomBarText = [];
 
-                // If the value is obfuscated, then we add it to the shadedTraceText array
-                const traceBottomBarText = shadedSections.map((value, i) => i < (obfuscationRange/2) && value ? values[i] : '');
-
-                // if the value is obfuscated and the value is 10 or less, then we replace it in the traceTopBarText array with a '< 10' string and set the value in the topBar to 10
-                topBar.forEach((value, i) => {
-                    if (value === 1 && values[i] <= 10) {
+                values.forEach((value, i) => {
+                    if (value < 10 && shadedSections[i]) {
+                        // If the values is less than 10 we are going to show 9 in the shaded area and 0 in the rest.
                         topBar[i] = 9;
+
+                        // set the value in the trace values to 0 so that it doesn't show up in the bar chart
+                        traceBottomBarText[i] = '< 10';
+
+                        // set the value in the topBar array to 0 so that it doesn't show up in the bar chart
+                        values[i] = 0;
+                    } else if (shadedSections[i]) {
+                        // The value has been obfuscated by +- obfuscationRange
+                        traceBottomBarText[i] = value + ' \u00B1 3';
+                    } else {
+                        topBar[i] = 0;
+                        traceBottomBarText[i] = value;
                     }
                 });
 
@@ -141,7 +128,7 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                 const trace = {
                     x: Object.keys(dataMap.categoricalMap),
                     // Remove 3 elements from the top of the bar chart to make room for the shaded area
-                    y: values.map((value, i) => i < (obfuscationRange/2) && shadedSections[i] ? value - topBar[i] : value),
+                    y: values.map((value, i) => shadedSections[i] && value > 0 ? value - (topBar[i] / 2) : value),
                     name: title,
                     unformatedTitle: dataMap.title,
                     type: 'bar',
@@ -149,39 +136,30 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     isCategorical: true,
                     marker: {
                         color: colors,
-                    }
+                    },
                 };
 
-                let shadedTrace;
-                if(shadedSections.length > 0) {
-                    // for each color half the opacity
-                    const shadedColors = colors.map(color => this.halfOpacity(color));
 
-                    // Add shaded area to top of bar chart
-                    shadedTrace = {
-                        x: Object.keys(dataMap.categoricalMap),
-                        y: topBar,
-                        name: 'Shaded Area',
-                        type: 'bar',
-                        showlegend: false,
-                        marker: {
-                            color: shadedColors,
+                let shadedTrace = {
+                    x: Object.keys(dataMap.categoricalMap),
+                    y: topBar,
+                    name: 'Obfuscated Data',
+                    showlegend: false,
+                    isCategorical: true,
+                    type: 'bar',
+                    marker: {
+                        color: colors,
+                        pattern: {
+                            shape: '/',
+                            size: 20,
+                            solidity: '.5'
                         }
-                    };
-                }
+                    },
+                    text: traceBottomBarText,
+                    textposition: 'outside',
+                };
 
-                // Open access does not display the obfuscated values on the chart
-                let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
-                if(!isOpenAccess) {
-                    trace.text = traceTopBarText;
-                    shadedTrace.text = traceBottomBarText;
-                }
-
-                if (shadedTrace) {
-                    this.data.traces.push([trace, shadedTrace]);
-                } else {
-                    this.data.traces.push([trace]);
-                }
+                this.data.traces.push([trace, shadedTrace]);
 
                 const layout = {
                     title: title,
