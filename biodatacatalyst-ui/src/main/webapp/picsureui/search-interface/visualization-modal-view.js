@@ -97,7 +97,7 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     title = dataMap.title.substring(0, MAX_TITLE_LENGTH - 3) + "...";
                 }
 
-                const shadedSections =  Object.values(dataMap.categoricalObfuscatedMap);
+                const obfuscationArr =  Object.values(dataMap.categoricalObfuscatedMap);
                 const values = Object.values(dataMap.categoricalMap);
 
                 // shaded area at top of bar chart
@@ -106,16 +106,16 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                 let traceBottomBarText = [];
 
                 values.forEach((value, i) => {
-                    if (value < 10 && shadedSections[i]) {
-                        // If the values is less than 10 we are going to show 9 in the shaded area and 0 in the rest.
+                    // If the value is less than 10 and the section obfuscated, then we need to obfuscate the value
+                    if (value < 10 && obfuscationArr[i]) {
                         topBar[i] = 9;
 
-                        // set the value in the trace values to 0 so that it doesn't show up in the bar chart
+                        // Set the text to < 10 so that it shows up in the bar chart
                         traceBottomBarText[i] = '< 10';
 
                         // set the value in the topBar array to 0 so that it doesn't show up in the bar chart
                         values[i] = 0;
-                    } else if (shadedSections[i]) {
+                    } else if (obfuscationArr[i]) {
                         // The value has been obfuscated by +- obfuscationRange
                         traceBottomBarText[i] = value + ' \u00B1 3';
                     } else {
@@ -127,8 +127,9 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                 const colors = this.getColors(values.length);
                 const trace = {
                     x: Object.keys(dataMap.categoricalMap),
-                    // Remove 3 elements from the top of the bar chart to make room for the shaded area
-                    y: values.map((value, i) => shadedSections[i] && value > 0 ? value - (topBar[i] / 2) : value),
+                    // Remove half of the obfuscation range value from the top of the bar
+                    // chart to make room for the shaded area
+                    y: values.map((value, i) => obfuscationArr[i] && value > 0 ? value - (obfuscationRange / 2) : value),
                     name: title,
                     unformatedTitle: dataMap.title,
                     type: 'bar',
@@ -138,7 +139,6 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                         color: colors,
                     },
                 };
-
 
                 let shadedTrace = {
                     x: Object.keys(dataMap.categoricalMap),
