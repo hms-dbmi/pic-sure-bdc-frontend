@@ -97,12 +97,15 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     title = dataMap.title.substring(0, MAX_TITLE_LENGTH - 3) + "...";
                 }
 
-                const obfuscationArr =  Object.values(dataMap.categoricalObfuscatedMap);
+                let obfuscationArr =  dataMap.categoricalObfuscatedMap ? Object.values(dataMap.categoricalObfuscatedMap) : [];
+                if (obfuscationArr.length === 0) {
+                    obfuscationArr = Array(Object.values(dataMap.categoricalMap).length).fill(false);
+                }
+
                 const values = Object.values(dataMap.categoricalMap);
 
                 // shaded area at top of bar chart
                 const topBar = Array(values.length).fill(obfuscationRange);
-
                 let traceBottomBarText = [];
 
                 values.forEach((value, i) => {
