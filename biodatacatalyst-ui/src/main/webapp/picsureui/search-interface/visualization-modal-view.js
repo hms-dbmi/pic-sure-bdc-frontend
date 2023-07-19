@@ -241,11 +241,15 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     isCategorical: true,
                     type: 'bar',
                     marker: {
-                        color: colors,
+                        color: '#c31f3f',
                         pattern: {
                             shape: '/',
                             size: 20,
                             solidity: '.5'
+                        },
+                        line: {
+                            color: '#616265',
+                            width: 1
                         }
                     },
                     text: traceBottomBarText,
@@ -271,7 +275,8 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                     yaxis: {
                         title: dataMap.yaxisName,
                         automargin: true,
-                    }
+                    },
+                    barmode: 'stack',
                 };
 
                 this.data.layouts.push(layout);
