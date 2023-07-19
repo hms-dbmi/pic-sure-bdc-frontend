@@ -29,7 +29,7 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 				_.forEach(studyKeys, x => {
 					let studyName = x.split("\\")[2].split(" ")[0];
 					studiesInfo[studyName] = {code:studyName, name:"", study_matches: 0, consents:[]}
-				})
+				});
 
 				let studiesData = JSON.parse(studiesDataJson).bio_data_catalyst;
 				studiesData.forEach((studyRecord) => {
