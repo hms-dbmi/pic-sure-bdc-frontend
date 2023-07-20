@@ -191,13 +191,43 @@ function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner
 
                 const obfuscationRange = 6;
                 let isObfuscated =  dataMap.obfuscated;
-                const values = Object.values(dataMap.continuousMap);
+
+                /*
+                * The dataMap.continuousMap is an object with the key being the range and the value being the count.
+                * When converting the keys, which are a string of the range, to an array of numbers, we are not
+                * guaranteed that the keys will be in order. We need to sort the keys by the lower limit of the range.
+                * If the lower limit is NaN, then it is a single value. We need to sort the keys by the lower limit of
+                * the range.
+                *
+                * This doesn't happen when the data isn't obfuscated because the keys are the same as the values.
+                */
+
+                const keys = Object.keys(dataMap.continuousMap);
+                keys.sort((a, b) => {
+                    // sort the keys by the lower limit of the range
+                    let aLowerLimit = parseFloat(a.split(' -')[0]);
+                    let bLowerLimit = parseFloat(b.split(' -')[0]);
+
+                    // If the lower limit is NaN, then it is a single value
+                    if(isNaN(aLowerLimit)) aLowerLimit = parseFloat(a.split(' +')[0]);
+                    if(isNaN(bLowerLimit)) bLowerLimit = parseFloat(a.split(' +')[0]);
+
+                    return aLowerLimit - bLowerLimit;
+                });
+
+                let orderedKeys = [];
+                let orderedValues = [];
+
+                keys.forEach((key) => {
+                    orderedKeys.push(key);
+                    orderedValues.push(dataMap.continuousMap[key]);
+                });
 
                 // shaded area at top of bar chart
-                const topBar = Array(values.length).fill(obfuscationRange);
+                const topBar = Array(orderedValues.length).fill(obfuscationRange);
                 let traceBottomBarText = [];
 
-                values.forEach((value, i) => {
+                orderedValues.forEach((value, i) => {
                     // If the value is less than 10 and the section obfuscated, then we need to obfuscate the value
                     if (value < 10 && isObfuscated) {
                         topBar[i] = 9;
@@ -206,7 +236,7 @@ function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner
                         traceBottomBarText[i] = '< 10';
 
                         // set the value in the topBar array to 0 so that it doesn't show up in the bar chart
-                        values[i] = 0;
+                        orderedValues[i] = 0;
                     } else if (isObfuscated) {
                         // The value has been obfuscated by +- obfuscationRange
                         traceBottomBarText[i] = value + ' \u00B1 3';
@@ -217,8 +247,8 @@ function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner
                 });
 
                 let trace = {
-                    x: Object.keys(dataMap.continuousMap),
-                    y: values.map((value, i) => isObfuscated && value > 0 ? value - (obfuscationRange / 2) : value),
+                    x: orderedKeys,
+                    y: orderedValues.map((value, i) => isObfuscated && value > 0 ? value - (obfuscationRange / 2) : value),
                     name: title,
                     unformatedTitle: dataMap.title,
                     type: 'bar',
@@ -234,7 +264,7 @@ function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner
                 };
 
                 let shadedTrace = {
-                    x: Object.keys(dataMap.continuousMap),
+                    x: orderedKeys,
                     y: topBar,
                     name: 'Obfuscated Data',
                     showlegend: false,
