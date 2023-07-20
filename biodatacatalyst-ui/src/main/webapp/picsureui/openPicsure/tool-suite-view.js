@@ -13,8 +13,8 @@ define(["jquery", "backbone", "handlebars", "text!openPicsure/tool-suite-view.hb
             events: {
                 'click #participant-study-data': 'openParticipantStudyData',
                 'click #tool-suite-help': 'openHelp',
-                'keypress #tool-suite-help': 'openHelp',
                 'click #distributions' : 'openDistributions',
+                'keypress #tool-suite-help': 'openHelp',
             },
             handleFilterChange: function () {
                 let participantCount = parseInt(outputModel.get("totalPatients")) === 0;
