@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings", "common/spinner", "plotly"],
-function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner, plotly) {
+define(["jquery", "backbone", "handlebars", "text!search-interface/visualization-modal-view.hbs", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings", "common/spinner", "plotly"],
+function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings, spinner, plotly) {
     let defaultModel = BB.Model.extend({
 		defaults: {
 			spinnerClasses: "spinner-medium spinner-medium-center ",
@@ -24,7 +24,7 @@ function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner
             this.data.layouts = [];
             this.data.errors = [];
             this.config = defaultPlotlyConfig;
-            this.template = HBS.compile(opts.template);
+            this.template = HBS.compile(template);
             HBS.registerPartial("visualization-image-partial", imageTemplate);
             this.getImages();
         },
@@ -229,7 +229,7 @@ function($, BB, HBS, filterModel, queryBuilder, imageTemplate, settings, spinner
 
                 orderedValues.forEach((value, i) => {
                     // If the value is less than 10 and the section obfuscated, then we need to obfuscate the value
-                    if (value < 10 && isObfuscated) {
+                    if (value <= 10 && isObfuscated) {
                         topBar[i] = 9;
 
                         // Set the text to < 10 so that it shows up in the bar chart
