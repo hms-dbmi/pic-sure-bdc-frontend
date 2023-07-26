@@ -1,7 +1,6 @@
 define(["backbone", "handlebars", "underscore", "search-interface/search-util"],
     function(BB, HBS, _, searchUtil){
-        let studyVersionRegex = new RegExp('[pP][hH][sS]\\d\\d\\d\\d\\d\\d');
-        let dccHarmonizedTag = 'dcc harmonized data set';
+        const dccHarmonizedTag = 'dcc harmonized data set';
         let defaultTagLimit = 12;
 
         let TagCollection = BB.Collection.extend({
@@ -31,25 +30,22 @@ define(["backbone", "handlebars", "underscore", "search-interface/search-util"],
                     if (tag===dccHarmonizedTag) {
                         return 'DCC Harmonized data set';
                     }
-                    if(studyVersionRegex.test(tag)){
-                        return searchUtil.findStudyAbbreviationFromId(tag);
-                    }
-                    return tag;
+                    return searchUtil.findStudyAbbreviationFromId(tag) || tag;
                 });
                 HBS.registerHelper("ariaAliasIfStudy", function(tag){
-                    if(studyVersionRegex.test(tag)){
+                    if(searchUtil.isStudy(tag)){
                         return "Study " + searchUtil.findStudyAbbreviationFromId(tag).split('').join('.');
                     }
                     return tag;
                 });
                 HBS.registerHelper("colorClass", function(tag){
-                    if(tag===dccHarmonizedTag || studyVersionRegex.test(tag)){
+                    if (searchUtil.isStudy(tag)) {
                         return 'study-badge';
                     }
                     return 'tag-badge';
                 });
                 HBS.registerHelper('isStudy', function(arg1, options) {
-                    return (arg1===dccHarmonizedTag || studyVersionRegex.test(arg1)) ? options.fn(this) : options.inverse(this);
+                    return (searchUtil.isStudy(arg1)) ? options.fn(this) : options.inverse(this);
                 });
             },
             reset: function(options){

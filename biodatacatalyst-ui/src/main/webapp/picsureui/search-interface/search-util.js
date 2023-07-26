@@ -2,7 +2,7 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
     function($, _, studiesDataJson, settingsJson, cache){
         let studiesData = JSON.parse(studiesDataJson);
         let settings = JSON.parse(settingsJson);
-
+        const dccHarmonizedTag = 'dcc harmonized data set';
         return {
 
             /*
@@ -49,6 +49,17 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
 
                 })
                 return activeStudiesList;
+            },
+            isStudy(study_id) {
+                if (study_id===dccHarmonizedTag || cache.has(study_id)) {
+                    return true;
+                }
+                let study = _.find(studiesData.bio_data_catalyst,
+                  function (studyData) {
+                    return (studyData.study_identifier.toLowerCase() === study_id.toLowerCase());
+                  }
+                );
+                return !!study;
             },
             isStudyHarmonized: function(study_id) {
                 if (cache.has(study_id)) {
