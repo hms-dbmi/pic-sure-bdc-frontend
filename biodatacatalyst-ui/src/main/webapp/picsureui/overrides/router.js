@@ -1,9 +1,9 @@
-define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layoutTemplate.hbs", "picSure/settings", "filter/filterList",
+define(["backbone", "handlebars", "studyAccess/studyAccess", "picSure/settings", "filter/filterList",
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "overrides/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
         "search-interface/query-results-view", "api-interface/apiPanelView", "search-interface/filter-model",
         "search-interface/tag-filter-model", "openPicsure/tool-suite-view"],
-    function(BB, HBS, studyAccess, layoutTemplate, settings, filterList,
+    function(BB, HBS, studyAccess, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
              FilterListView, SearchView, ToolSuiteView, queryResultsView,
              ApiPanelView, filterModel, tagFilterModel, openToolSuiteView) {
