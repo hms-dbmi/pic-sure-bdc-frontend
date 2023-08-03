@@ -49,6 +49,11 @@ FROM open_access_stage-false as open_access_stage-true
 
 # The build will fail if the open-pic-sure-bdc-frontend folder isn't there.
 COPY open-pic-sure-bdc-frontend/ui/src/main/picsureui/ /usr/local/apache2/htdocs/picsureui/
+COPY open-pic-sure-bdc-frontend/ui/src/main/psamaui/ /usr/local/apache2/htdocs/picsureui/psamaui/
 
+ARG IS_OPEN_ACCESS
 FROM open_access_stage-${IS_OPEN_ACCESS} as final_stage
 # This stage will container the final image that will be used in deployment
+
+ENV IS_OPEN_ACCESS=${IS_OPEN_ACCESS}
+RUN echo "Final stage IS_OPEN_ACCESS: ${IS_OPEN_ACCESS}"
