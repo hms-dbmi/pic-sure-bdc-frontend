@@ -2,7 +2,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 	"search-interface/search-results-view",
 	"text!search-interface/search-view.hbs",
 	"text!../studyAccess/studies-data.json",
-	"search-interface/modal",
+	"common/modal",
 	"filter/genomic-filter-view",
 	"common/spinner",
 	"text!common/unexpected_error.hbs",

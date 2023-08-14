@@ -2,7 +2,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
 		"text!options/modal.hbs", "search-interface/variable-info-modal-view", "search-interface/search-util",
 		"search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
 		"search-interface/filter-model", "search-interface/tag-filter-model",
-		"search-interface/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",
+		"common/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",
 		"text!search-interface/no-results-partial.hbs", "search-interface/no-results-help-view",],
 function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 		 modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,

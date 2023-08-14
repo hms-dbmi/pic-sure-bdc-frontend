@@ -1,5 +1,5 @@
 define(["jquery", "handlebars", "backbone", "text!api-interface/apiPanel.hbs", "header/userProfile"
-        , "picSure/userFunctions", "api-interface/bdcTerraLinkView", "search-interface/modal"],
+        , "picSure/userFunctions", "api-interface/bdcTerraLinkView", "common/modal"],
     function ($, HBS, BB, apiPanelTemplate, UserProfile, userFunctions, BdcTerraView, modal) {
 
         return BB.View.extend({

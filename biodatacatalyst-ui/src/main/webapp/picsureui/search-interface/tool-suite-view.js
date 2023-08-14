@@ -1,5 +1,5 @@
 define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model",
-        "search-interface/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"
+        "common/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"
     , "text!search-interface/visualization-modal-view.hbs"],
 function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView
     , VisualizationTemplate) {
