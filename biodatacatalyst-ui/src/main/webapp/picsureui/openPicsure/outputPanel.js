@@ -83,7 +83,8 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 
         for (var key in studiesInfo) {
             studiesInfo[key].consents.forEach((x) => {
-                x.hasPermission = validConsents.includes(x.study_identifier + "." + x.consent_group_code);
+				let consent = x.consent_group_code && x.consent_group_code != "" ? "." + x.consent_group_code : "";
+                x.hasPermission = validConsents.includes(x.study_identifier + consent);
             });
             studiesInfo[key].hasPermission = studiesInfo[key].consents.filter((x) => { return x.hasPermission}).length == studiesInfo[key].consents.length;
         }
