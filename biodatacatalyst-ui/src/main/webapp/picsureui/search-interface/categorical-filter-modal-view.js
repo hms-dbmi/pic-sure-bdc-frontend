@@ -6,15 +6,27 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                 this.categoricalFilterModalViewTemplate = HBS.compile(categoricalFilterModalViewTemplate);
                 this.data = opts.data;
                 this.data.studyName = searchUtil.findStudyAbbreviationFromId(this.data.searchResult.result.metadata.columnmeta_study_id);
+                this.allVariables = _.values(this.data.searchResult.result.values);
+                this.startLocation = 20;
+                let topResults = this.allVariables;
+                let isInfinite = false;
+                let nextOptoionsFunction = undefined;
+                if (this.allVariables.length > 100) {
+                    topResults = this.allVariables.slice(0, this.startLocation);
+                    isInfinite = true;
+                    nextOptoionsFunction = this.getNextVariables.bind(this);
+                }
                 this.dataForSearchPanel = {
                     heading: 'Available values',
                     // todo: remove this _.values call and check for null/empty object
-                    results: _.values(this.data.searchResult.result.values),
+                    searchResultOptions: topResults,
+                    results: this.allVariables,
                     searchContext: 'Select values of interest',
                     resultContext: 'Selected values',
                     placeholderText: 'Try searching for values',
                     description: null,
-                    sample: false
+                    getNextOptions: nextOptoionsFunction,
+                    infinite: isInfinite
                 }
                 if (this.data.filter) {
                     // todo: remove this _.values call and check for null/empty object
@@ -53,6 +65,34 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                     this.$el.find('#add-filter-button').prop('title', 'Please select at least one option to add the filter to the query.');
                 }
             },
+            getNextVariables: function(page, searchTerm) {
+                let totalVars = this.allVariables.length;
+                let start = this.startLocation * (page - 1);
+                let end = this.startLocation * page;
+                if (end > totalVars) {
+                    end = totalVars;
+                }
+                return new Promise((resolve, reject) => {
+                    try {
+                        if (searchTerm) {
+                            let searchResults = this.allVariables.filter((result) => {
+                                return result.toLowerCase().includes(searchTerm);
+                            });
+                            let nextVars = searchResults.slice(start, end);
+                            this.startLocation = end;
+                            resolve({results: nextVars});
+                        } else {
+                            let nextVars = this.allVariables.slice(start, end);
+                            this.startLocation = end;
+                            resolve({results: nextVars});
+                        }
+                    } catch (e) {
+                        this.startLocation = start;
+                        console.error(e);
+                        reject(e);
+                    }
+                });
+            }, 
             render: function () {
                 this.$el.html(this.categoricalFilterModalViewTemplate(this.data));
                 this.searchPanel.$el = $('#value-container');
