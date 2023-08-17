@@ -9,11 +9,9 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                 this.allVariables = _.values(this.data.searchResult.result.values);
                 this.startLocation = 20;
                 let topResults = this.allVariables;
-                let isInfinite = false;
                 let nextOptoionsFunction = undefined;
                 if (this.allVariables.length > 100) {
                     topResults = this.allVariables.slice(0, this.startLocation);
-                    isInfinite = true;
                     nextOptoionsFunction = this.getNextVariables.bind(this);
                 }
                 this.dataForSearchPanel = {
@@ -26,7 +24,6 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                     placeholderText: 'Try searching for values',
                     description: null,
                     getNextOptions: nextOptoionsFunction,
-                    infinite: isInfinite
                 }
                 if (this.data.filter) {
                     // todo: remove this _.values call and check for null/empty object
