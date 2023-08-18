@@ -1,5 +1,5 @@
 define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPanel.hbs",
-		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "search-interface/modal", "openPicsure/openPicsureHelpView"],
+		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "common/modal", "openPicsure/openPicsureHelpView"],
 		function($, _, settings, outputTemplate,
 				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView) {
 
@@ -249,7 +249,6 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 			}
 		},
 		destroy: function(){
-			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
 			this.undelegateEvents();	
 			$(this.el).removeData().unbind(); 
 			this.remove();  

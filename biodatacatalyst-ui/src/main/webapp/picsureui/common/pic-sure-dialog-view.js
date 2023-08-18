@@ -2,7 +2,7 @@ define([
     'backbone',
     'handlebars',
     'text!common/pic-sure-dialog-view.hbs',
-    'search-interface/modal'
+    'common/modal'
 ], function(BB, HBS, dialog, modal) {
     var PicsureDialog = BB.View.extend({
         initialize: function(opts){

@@ -1,7 +1,7 @@
 define(["jquery",  "text!search-interface/query-results-view.hbs", "picSure/ontology", "backbone", "handlebars",
 "overrides/outputPanel", "common/transportErrors", "common/config",
 "text!options/modal.hbs", "picSure/settings", "search-interface/filter-model", "picSure/queryBuilder", 
-"search-interface/query-results-help-view", "search-interface/modal", "openPicsure/openPicsureHelpView",
+"search-interface/query-results-help-view", "common/modal", "openPicsure/openPicsureHelpView",
 "search-interface/tool-suite-view"],
 function($, queryResultsTemplate, ontology, BB, HBS,
     overrides, transportErrors, config,

@@ -1,7 +1,7 @@
 define(["jquery","backbone","handlebars", "text!search-interface/filter-list-view.hbs", "search-interface/filter-model",
         "text!options/modal.hbs", "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
         "search-interface/datatable-filter-modal-view",
-        "picSure/queryBuilder","search-interface/modal", "common/keyboard-nav", "search-interface/search-util",
+        "picSure/queryBuilder","common/modal", "common/keyboard-nav", "search-interface/search-util",
         "text!search-interface/genomic-filter-partial.hbs", "filter/genomic-filter-view","search-interface/variable-info-cache",
         "search-interface/variable-info-modal-view", "picSure/settings"
     ],

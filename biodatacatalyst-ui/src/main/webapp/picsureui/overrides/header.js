@@ -2,7 +2,7 @@ define([
 	"common/keyboard-nav",
 	"common/pic-dropdown",
 	"common/menu-nav-controls",
-	"search-interface/modal",
+	"common/modal",
 	"header/userProfile",
 	"picSure/userFunctions",
 ],function (

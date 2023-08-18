@@ -1,7 +1,7 @@
 define([
     'backbone',
     'handlebars',
-    'search-interface/modal',
+    'common/modal',
     'header/userProfile',
     'picSure/userFunctions',
 ], function(BB, HBS, modal, userProfile, userFunctions) {
