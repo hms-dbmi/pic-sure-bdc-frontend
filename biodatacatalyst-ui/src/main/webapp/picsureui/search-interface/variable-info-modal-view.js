@@ -2,7 +2,7 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 		"search-interface/tag-filter-model", "text!options/modal.hbs", "search-interface/variable-info-cache",
 		"search-interface/filter-model","search-interface/categorical-filter-modal-view",
 		"search-interface/numerical-filter-modal-view", "search-interface/datatable-filter-modal-view","search-interface/datatable-export-modal-view",
-		"search-interface/modal"],
+		"common/modal"],
 	function($, BB, HBS, _, dataTableInfoTemplate,
 			 tagFilterModel, modalTemplate, variableInfoCache,
 			 filterModel, categoricalFilterModalView,

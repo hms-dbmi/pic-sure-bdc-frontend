@@ -1,4 +1,4 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/pic-image-modal-view.hbs", "search-interface/modal",],
+define(["jquery", "backbone", "handlebars", "text!search-interface/pic-image-modal-view.hbs", "common/modal",],
 function($, BB, HBS, template, modal,) {
     var ImageModalView = BB.View.extend({
         initialize: function(opts){

@@ -1,5 +1,5 @@
 define(["jquery","backbone", "handlebars", "text!openPicsure/studiesPanel.hbs", "openPicsure/outputModel",
-        "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "search-interface/modal",
+        "common/keyboard-nav","search-interface/open-picsure-tag-help-view", "common/modal",
         "common/pic-sure-dialog-view", "common/redirect-modal"],
 		function($, BB, HBS, studiesPanelTemplate, outputModel, keyboardNav,
                  helpView, modal, dialog, redirectModal) {

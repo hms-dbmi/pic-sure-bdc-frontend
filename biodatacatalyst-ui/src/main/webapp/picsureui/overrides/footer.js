@@ -1,6 +1,6 @@
 define(["handlebars",
         "text!overrides/footer.hbs",
-        "search-interface/modal",
+        "common/modal",
         "common/session",
         "common/pic-sure-dialog-view",
         "middleware/middleware",

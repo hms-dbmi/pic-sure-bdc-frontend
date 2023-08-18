@@ -1,5 +1,5 @@
 define(["jquery", "backbone", "handlebars", "text!openPicsure/tool-suite-view.hbs",
-        "search-interface/modal", "openPicsure/tool-suite-help-view", "openPicsure/outputModel",
+        "common/modal", "openPicsure/tool-suite-help-view", "openPicsure/outputModel",
         "openPicsure/studiesModal","search-interface/visualization-modal-view", "search-interface/filter-model"],
     function ($, BB, HBS, template, modal, helpView, outputModel, studiesModal, VisualizationModalView,
               filterModel) {
