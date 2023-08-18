@@ -9,10 +9,10 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                 this.allVariables = _.values(this.data.searchResult.result.values);
                 this.startLocation = 20;
                 let topResults = this.allVariables;
-                let nextOptoionsFunction = undefined;
+                let nextOptionsFunction = undefined;
                 if (this.allVariables.length > 100) {
                     topResults = this.allVariables.slice(0, this.startLocation);
-                    nextOptoionsFunction = this.getNextVariables.bind(this);
+                    nextOptionsFunction = this.getNextVariables.bind(this);
                 }
                 this.dataForSearchPanel = {
                     heading: 'Available values',
@@ -23,7 +23,7 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                     resultContext: 'Selected values',
                     placeholderText: 'Try searching for values',
                     description: null,
-                    getNextOptions: nextOptoionsFunction,
+                    getNextOptions: nextOptionsFunction,
                 }
                 if (this.data.filter) {
                     // todo: remove this _.values call and check for null/empty object
