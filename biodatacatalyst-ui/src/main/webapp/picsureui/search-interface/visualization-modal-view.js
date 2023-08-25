@@ -98,6 +98,16 @@ function($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, setting
                 }
 
                 let isObfuscated =  dataMap.obfuscated;
+
+                //TODO: Remove once other bug is fixed for open access
+                const keys = Object.keys(dataMap.categoricalMap);
+                const lastItem = keys[keys.length - 1];
+                if (isObfuscated && dataMap.categoricalMap && keys.length > 7 && lastItem.toLowerCase() === 'other') {
+                    delete dataMap.categoricalMap[lastItem];
+                    const message = 'Note that, for categorical variable distributions, only the first seven categories selected will be displayed. If you selected more than eight values, the remaining will not be shown in the visualization.';
+                    this.model.set('message', message);
+                }
+
                 const values = Object.values(dataMap.categoricalMap);
 
                 // shaded area at top of bar chart
