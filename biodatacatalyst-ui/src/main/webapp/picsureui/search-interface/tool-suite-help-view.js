@@ -6,11 +6,12 @@ define([
 ], function(BB, HBS, toolSuiteHelpViewTemplate, settings) {
     var HelpView = BB.View.extend({
         initialize: function(opts){
+            this.isOpenAccess = opts.isOpenAccess;
             this.toolSuiteHelpViewTemplate = HBS.compile(toolSuiteHelpViewTemplate);
         },
         events: {},
         render: function(){
-            this.$el.html(this.toolSuiteHelpViewTemplate({pdfLink: settings.pdfLink}));
+            this.$el.html(this.toolSuiteHelpViewTemplate({pdfLink: settings.pdfLink, isOpenAccess: this.isOpenAccess}));
         }
     });
     return HelpView;

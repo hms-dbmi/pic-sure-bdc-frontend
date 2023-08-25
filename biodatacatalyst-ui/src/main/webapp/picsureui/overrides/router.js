@@ -2,11 +2,11 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
         "openPicsure/outputPanel", "picSure/queryBuilder", "text!openPicsure/searchHelpTooltipOpen.hbs", "overrides/outputPanel",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
         "search-interface/query-results-view", "api-interface/apiPanelView", "search-interface/filter-model",
-        "search-interface/tag-filter-model", "openPicsure/tool-suite-view"],
+        "search-interface/tag-filter-model",],
     function(BB, HBS, studyAccess, layoutTemplate, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
              FilterListView, SearchView, ToolSuiteView, queryResultsView,
-             ApiPanelView, filterModel, tagFilterModel, openToolSuiteView) {
+             ApiPanelView, filterModel, tagFilterModel) {
         const genomicFilterWarningText = 'Genomic filters will be removed from your query as they are not currently supported in Open Access. Are you sure you would like to proceed to Open Access? \n\nClick OK to proceed to open access or cancel to reutrn to authorized access.';
         let displayDataAccess = function() {
             $(".header-btn.active").removeClass('active');
@@ -41,8 +41,10 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
             $(".header-btn[data-href='/picsureui/openAccess#']").addClass('active');
             $('#main-content').empty();
             $('#main-content').append(this.layoutTemplate(settings));
-            let toolSuiteView = new openToolSuiteView({el: $('#tool-suite-panel')});
-            toolSuiteView.render();
+            const toolSuiteView = new ToolSuiteView({
+                el: $('#tool-suite-panel'),
+                isOpenAccess: true
+            });
 
             const outputPanelView = new outputPanel.View({toolSuiteView: toolSuiteView});
             const query = queryBuilder.generateQueryNew({}, {}, null, settings.openAccessResourceId);
@@ -66,6 +68,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
                 el : $('#filter-list-panel')
             });
             filterListView.render();
+            toolSuiteView.render();
         };
 
         let displayAPI = function() {
@@ -125,8 +128,9 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "text!common/layout
 
                     $('#main-content').empty();
                     $('#main-content').append(this.layoutTemplate(settings));
-                    let toolSuiteView = new ToolSuiteView({
-                        el: $('#tool-suite-panel')
+                    const toolSuiteView = new ToolSuiteView({
+                        el: $('#tool-suite-panel'),
+                        isOpenAccess: false
                     });
                     const queryView = new queryResultsView.View({model: new queryResultsView.Model(), toolSuiteView: toolSuiteView});
 
