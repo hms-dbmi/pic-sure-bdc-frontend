@@ -18,7 +18,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             'keypress #tool-suite-help' : 'openHelp',
         },
         handleFilterChange: function(){
-            const hasParticipants = parseInt(filterModel.get('totalPatients') !== 0);
+            const hasParticipants = parseInt(filterModel.get('totalPatients')) !== 0;
             const filters = filterModel.get('activeFilters');
             const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
             const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
