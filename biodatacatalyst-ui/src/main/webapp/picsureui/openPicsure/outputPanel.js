@@ -121,9 +121,11 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 					let totalPatients = String(response["\\_studies_consents\\"]);
 					if (totalPatients.includes(" \u00B1")) {
 						outputModel.set("totalPatients", totalPatients.split(" ")[0]);
+						filterModel.set("totalPatients", totalPatients.split(" ")[0]);
 						outputModel.set("totalPatientsSuffix", totalPatients.split(" ")[1]);
 					} else {
 						outputModel.set("totalPatients", totalPatients);
+						filterModel.set("totalPatients", totalPatients);
 						outputModel.set("totalPatientsSuffix", "");
 					}
 					outputModel.stopAll();

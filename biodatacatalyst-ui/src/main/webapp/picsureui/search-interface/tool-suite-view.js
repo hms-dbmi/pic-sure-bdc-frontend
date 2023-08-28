@@ -32,7 +32,7 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                     shouldDisablePackageData = false;
                 }
             }
-            this.$el.find('#participant-study-data').prop('disabled', hasParticipants).prop('title', hasParticipants ? 'The "Total Participants" must be greater than zero' : 'Participant Count by Study');
+            this.$el.find('#participant-study-data').prop('disabled', !hasParticipants).prop('title', !hasParticipants ? 'The "Total Participants" must be greater than zero' : 'Participant Count by Study');
             this.$el.find('#package-data').prop('disabled', shouldDisablePackageData).prop('title', shouldDisablePackageData ? 'Please add a phenotypic filter to your query to package data':'Select and Package data');
             this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
         },
