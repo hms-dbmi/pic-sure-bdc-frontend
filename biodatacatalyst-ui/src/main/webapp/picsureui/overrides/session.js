@@ -1,4 +1,11 @@
 define(['search-interface/search-util'], function(searchUtil){
+    let isStudyPrivilege = function(privilege){
+        const prefixToRemove = "PRIV_FENCE_";
+        const study = privilege.startsWith(prefixToRemove)
+        ? privilege.slice(prefixToRemove.length)
+        : privilege;
+        return privilege.includes('phs') || searchUtil.isStudy(study);
+    };
     return {
         handleQueryTemplateAndMeResponseSuccess: function(queryTemplateResponse, meResponse){
             var currentSession = JSON.parse(sessionStorage.getItem("session"));
@@ -12,7 +19,7 @@ define(['search-interface/search-util'], function(searchUtil){
                 history.pushState({}, "", "/picsureui/not_authorized");
                 return;
             }
-            if (currentSession.privileges && currentSession.privileges.length > 0 && currentSession.privileges.filter(s => searchUtil.isStudy(s)).length > 0)  {
+            if (currentSession.privileges && currentSession.privileges.length > 0 && currentSession.privileges.filter(s => isStudyPrivilege(s)).length > 0)  {
                 currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
             }
             
