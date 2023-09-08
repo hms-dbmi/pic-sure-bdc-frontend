@@ -1,4 +1,4 @@
-define([], function(){
+define(['search-interface/search-util'], function(searchUtil){
     return {
         handleQueryTemplateAndMeResponseSuccess: function(queryTemplateResponse, meResponse){
             var currentSession = JSON.parse(sessionStorage.getItem("session"));
@@ -12,7 +12,7 @@ define([], function(){
                 history.pushState({}, "", "/picsureui/not_authorized");
                 return;
             }
-            if (currentSession.privileges && currentSession.privileges.length > 0 && currentSession.privileges.filter(s => s.includes('phs')).length > 0) {
+            if (currentSession.privileges && currentSession.privileges.length > 0 && currentSession.privileges.filter(s => searchUtil.isStudy(s)).length > 0)  {
                 currentSession.privileges.push("FENCE_AUTHORIZED_ACCESS");
             }
             
