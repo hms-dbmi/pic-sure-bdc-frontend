@@ -1,28 +1,41 @@
-define(["jquery",
-		'backbone', 
-		'handlebars',
-		'underscore',
-		'text!search-interface/package-view.hbs',
-		'datatables.net', 
-		"common/keyboard-nav",
-		"search-interface/filter-model", 
-		"search-interface/search-util", 
-		"picSure/queryBuilder", 
-		"search-interface/query-results-view", 
-		"overrides/outputPanel",
-		"picSure/settings",
-		"search-interface/variable-values-view",
-		"common/modal",
-		"common/pic-sure-dialog-view",
-		"search-interface/external-export-view",
-	    'text!search-interface/seven-bridges-export-view.hbs',
-    	'text!search-interface/terra-export-view.hbs',
-		"common/spinner"],
-function($, BB, HBS, _, packageModalTemplate, datatables, keyboardNav,
-	filterModel, searchUtil, queryBuilder, queryResultsView, output, settings,
-	variableValuesView, modal, dialog, externalExportView, sevenBridgeExportTemplate, terraExportTemplate,
-	spinner){
-	var packageView = BB.View.extend({
+define([
+	"jquery", "backbone", "handlebars", "underscore",
+	"text!search-interface/package-view.hbs",
+	"datatables.net",
+	"common/keyboard-nav",
+	"search-interface/filter-model",
+	"search-interface/search-util", 
+	"picSure/queryBuilder", 
+	"search-interface/query-results-view", 
+	"overrides/outputPanel",
+	"picSure/settings",
+	"search-interface/variable-values-view",
+	"common/modal",
+	"common/pic-sure-dialog-view",
+	"search-interface/external-export-view",
+	'text!search-interface/seven-bridges-export-view.hbs',
+	'text!search-interface/terra-export-view.hbs',
+	"common/spinner"
+], function(
+	$, BB, HBS, _,
+	packageModalTemplate,
+	datatables,
+	keyboardNav,
+	filterModel,
+	searchUtil,
+	queryBuilder,
+	queryResultsView,
+	output,
+	settings,
+	variableValuesView,
+	modal,
+	dialog,
+	externalExportView,
+	sevenBridgeExportTemplate,
+	terraExportTemplate,
+	spinner
+){
+	return BB.View.extend({
 		initialize: function(){
 			keyboardNav.addNavigableView("datatablePackageModal",this);
 			this.on({
@@ -87,7 +100,6 @@ function($, BB, HBS, _, packageModalTemplate, datatables, keyboardNav,
 			keyboardNav.setCurrentView(undefined);
 			this.$("#exportData.focused-variable").removeClass('focused-variable');
 		},
-
 		checkboxToggled: function(event){
 			let target = _.find(this.data(),(variable)=>{
 				return event.target.dataset['varid'] === variable[1];
@@ -226,295 +238,292 @@ function($, BB, HBS, _, packageModalTemplate, datatables, keyboardNav,
 			});
 
 		},
-	queryAsync: function(query, promise){
-		var queryUUID = null;
-		var queryUrlFragment = '';
-		var interval = 0;
-		var viewObj = this;
+		queryAsync: function(query, promise){
+			var queryUUID = null;
+			var queryUrlFragment = '';
+			var interval = 0;
+			var viewObj = this;
 
-		(function updateStatus(){
+			(function updateStatus(){
+				$.ajax({
+					url: window.location.origin + "/picsure/query" + queryUrlFragment,
+					type: 'POST',
+					headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+					contentType: 'application/json',
+					dataType: 'text',
+					data: JSON.stringify(query),
+					success: function(response){
+						respJson = JSON.parse(response);
+						queryUUID = respJson.picsureResultId;
+						status = respJson.status;
+						if( !status || status == "ERROR" ){
+							viewObj.model.set("exportStatus", status);
+							viewObj.updateHeader();
+							return;
+						} else if (status == "AVAILABLE"){
+							//resolve any waiting functions.
+							if(promise) {
+								viewObj.model.set("queryId", queryUUID);
+								promise.resolve(queryUUID);
+							}
+							return;
+						}
+
+						//check again, but back off at 2, 4, 6, ... 30 second (max) intervals
+						interval = Math.min(interval + 2000, 30000);
+						//hit the status endpoint after the first request
+						queryUrlFragment = "/" + queryUUID + "/status";
+						setTimeout(updateStatus, interval);
+					},
+					error: function(response){
+						$('#resource-id-display', this.$el).html("Error running query, Please see logs");
+						console.log("error preparing async download: ");
+						console.dir(response);
+					}
+				});
+			}());
+		},
+		openDownloadConfirmationModal: function(){
+			const dialogOptions = [
+				{title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
+				{title: "Download", "action": ()=>{
+					this.downloadData(this);
+					$('.close')?.get(0).click();
+				}, classes: "btn btn-primary"}
+			];
+			const message = 'You are transferring data through the BioData Catalyst security boundary which may or may not be supported by your Data Use Agreement(s), Limitation(s), or your Institutional Review Board policies and guidelines. As a BioData Catalyst user, you are solely responsible for adhering to the terms of these policies.';
+			const dialogView = new dialog({options: dialogOptions, messages: [message], previousView: {view: this, title: 'Review and Package Data', model: this.model}});
+			modal.displayModal(dialogView, 'Are you sure you want to download data?', function(){
+				$('#package-download-button').focus();
+				dialogView.remove();
+			}.bind(this), {isHandleTabs: true, width: 500});
+		},
+		openSevenBridgesModal: function(){
+			if (this.externalExportView) {
+				this.externalExportView.destroy();
+			}
+			this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: sevenBridgeExportTemplate});
+			modal.displayModal(this.externalExportView, 'Export to NHLBI BioData Catalyst® Powered by Seven Bridges', function(){
+				$('#seven-bridges-export').focus();
+			}.bind(this), {isHandleTabs: true});
+		},
+		openTerraModal: function(){
+			if (this.externalExportView) {
+				this.externalExportView.destroy();
+			}
+			this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: terraExportTemplate});
+			modal.displayModal(this.externalExportView, 'Export to NHLBI BioData Catalyst® Powered by Terra', function(){
+				$('#terra-export').focus();
+			}.bind(this), {isHandleTabs: true});
+		},
+		downloadData: function(viewObj){
+			$('#package-download-button', this.$el).removeAttr("href");
+			let queryId = viewObj.model.get('queryId');
 			$.ajax({
-				url: window.location.origin + "/picsure/query" + queryUrlFragment,
+				url: window.location.origin + "/picsure/query/" + queryId + "/result",
 				type: 'POST',
 				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 				contentType: 'application/json',
 				dataType: 'text',
-				data: JSON.stringify(query),
+				data: "{}",
 				success: function(response){
-					respJson = JSON.parse(response);
-					queryUUID = respJson.picsureResultId;
-					status = respJson.status;
-					if( !status || status == "ERROR" ){
-						viewObj.model.set("exportStatus", status);
-						viewObj.updateHeader();
-						return;
-					} else if (status == "AVAILABLE"){
-						//resolve any waiting functions.
-						if(promise) {
-							viewObj.model.set("queryId", queryUUID);
-							promise.resolve(queryUUID);
-						}
-						return;
+					responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
+					const link = document.createElement('a');
+					link.download = 'data.csv';
+					link.href = responseDataUrl;
+					link.click();
+					link.remove();
+				}.bind(this),
+				error: function(response){
+					console.log("error preparing download : ");
+					console.dir(response);
+				}.bind(this)
+			})
+		}.bind(this),
+		copyQueryId: function(){
+			navigator.clipboard.writeText(document.getElementById("package-query-id").textContent);
+			document.getElementById("package-copy-query-button").innerText = "Copied!";
+		},
+		openVariableValues: function(event){
+			let varId = event.target.dataset['varid'];
+			let target = _.find(this.tempExportFields,(variable)=>{
+				return '\\' + varId + '\\' === '\\' + variable.attributes.variable.metadata.columnmeta_var_id + '\\';
+			});
+			if (!target){
+				target = _.find(this.model.get('deletedExports').models,(variable)=>{
+					return varId === variable.attributes.variable.metadata.columnmeta_var_id;
+				});
+			}
+			var valuesModelTemplate = Backbone.Model.extend({
+							defaults: {},
+						});
+			valuesModel = new valuesModelTemplate();
+			keyboardNav.addNavigableView("variableValuesModal",this);
+			let metadata = target.attributes.variable.metadata;
+			valuesModel.varId = metadata.columnmeta_var_id;
+			valuesModel.varDesc = metadata.columnmeta_description;
+			valuesModel.varName = metadata.columnmeta_name;
+			valuesModel.varDataset = metadata.columnmeta_var_group_id;
+			valuesModel.varStudy = metadata.columnmeta_study_id;
+			valuesModel.isNumerical = target.attributes.variable.is_continuous ? target.attributes.variable.is_continuous : false;
+			valuesModel.isCategorical = target.attributes.variable.is_categorical ? target.attributes.variable.is_categorical : true;
+			if(target.attributes.type != "filter"){
+				if(valuesModel.isCategorical){
+					valuesModel.varValues = target.attributes.variable.values;
+				}
+				else{
+					valuesModel.varMin = metadata.columnmeta_min;
+					valuesModel.varMax = metadata.columnmeta_max;
+				}
+			}
+			else {
+				if(valuesModel.isCategorical){
+					valuesModel.varValues = target.attributes.selectedValues;
+				}
+				else{
+					valuesModel.varMin = target.attributes.selectedMin;
+					valuesModel.varMax = target.attributes.selectedMax;
+				}
+			}			
+
+			this.valuesView = new variableValuesView({
+				prevModal: {
+					view: this,
+					title: 'Review and Package Data',
+					div: '#package-modal'
+				},
+				model: valuesModel});
+			let title = 'Values for ' + varId;
+			modal.displayModal(
+				this.valuesView,
+				title,
+				() => {
+					$('#values-modal').focus();
+				}, {isHandleTabs: true}
+			);
+		},
+		render: function(){
+			this.$el.html((HBS.compile(packageModalTemplate))(this.model));
+			$('.modal-dialog').width('90%');
+			$('#package-datatable-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='exportData' class='display stripe' ></table>");
+			this.updateHeader();
+			let toggleable = true;
+			let data = this.dtData;
+			if(!data){
+
+				data = _.map(this.tempExportFields,function(model){
+					let variable = model.attributes;
+
+					let metadata = variable.variable.metadata;
+					let values = variable.variable.values ? [] : variable.variable.values.join(", ");
+
+					if (variable.type == 'filter'){
+						let selectedValues = variable.selectedValues == undefined ? undefined : variable.selectedValues.join(", ");
+						return [
+							true,
+							metadata.columnmeta_var_id,
+							metadata.columnmeta_name,
+							metadata.columnmeta_description,
+							(metadata.columnmeta_data_type.toLowerCase() == 'continuous')  ? metadata.columnmeta_data_type.toLowerCase() : 'categorical',
+							(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.selectedMin + ', Max: ' + variable.selectedMax : "",
+							(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + selectedValues + ' ]' :  "",
+							variable.type,
+							metadata.columnmeta_HPDS_PATH
+						];
 					}
 
-					//check again, but back off at 2, 4, 6, ... 30 second (max) intervals
-					interval = Math.min(interval + 2000, 30000);
-					//hit the status endpoint after the first request
-					queryUrlFragment = "/" + queryUUID + "/status";
-					setTimeout(updateStatus, interval);
-				},
-				error: function(response){
-					$('#resource-id-display', this.$el).html("Error running query, Please see logs");
-					console.log("error preparing async download: ");
-					console.dir(response);
-				}
-			});
-		}());
-	},
-	openDownloadConfirmationModal: function(){
-		const dialogOptions = [
-			{title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
-			{title: "Download", "action": ()=>{
-				this.downloadData(this);
-				$('.close')?.get(0).click();
-			}, classes: "btn btn-primary"}
-		];
-		const message = 'You are transferring data through the BioData Catalyst security boundary which may or may not be supported by your Data Use Agreement(s), Limitation(s), or your Institutional Review Board policies and guidelines. As a BioData Catalyst user, you are solely responsible for adhering to the terms of these policies.';
-		const dialogView = new dialog({options: dialogOptions, messages: [message], previousView: {view: this, title: 'Review and Package Data', model: this.model}});
-		modal.displayModal(dialogView, 'Are you sure you want to download data?', function(){
-			$('#package-download-button').focus();
-			dialogView.remove();
-		}.bind(this), {isHandleTabs: true, width: 500});
-	},
-	openSevenBridgesModal: function(){
-		if (this.externalExportView) {
-			this.externalExportView.destroy();
-		}
-		this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: sevenBridgeExportTemplate});
-		modal.displayModal(this.externalExportView, 'Export to NHLBI BioData Catalyst® Powered by Seven Bridges', function(){
-			$('#seven-bridges-export').focus();
-		}.bind(this), {isHandleTabs: true});
-	},
-	openTerraModal: function(){
-		if (this.externalExportView) {
-			this.externalExportView.destroy();
-		}
-		this.externalExportView = new externalExportView({previousView: {view: this, title: 'Review and Package Data', model: this.model}, template: terraExportTemplate});
-		modal.displayModal(this.externalExportView, 'Export to NHLBI BioData Catalyst® Powered by Terra', function(){
-			$('#terra-export').focus();
-		}.bind(this), {isHandleTabs: true});
-	},
-	downloadData: function(viewObj){
-		$('#package-download-button', this.$el).removeAttr("href");
-		let queryId = viewObj.model.get('queryId');
-		$.ajax({
-			url: window.location.origin + "/picsure/query/" + queryId + "/result",
-			type: 'POST',
-			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-			contentType: 'application/json',
-			dataType: 'text',
-			data: "{}",
-			success: function(response){
-				responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
-				const link = document.createElement('a');
-				link.download = 'data.csv';
-				link.href = responseDataUrl;
-				link.click();
-				link.remove();
-			}.bind(this),
-			error: function(response){
-				console.log("error preparing download : ");
-				console.dir(response);
-			}.bind(this)
-		})
-	}.bind(this),
-	copyQueryId: function(){
-		navigator.clipboard.writeText(document.getElementById("package-query-id").textContent);
-		document.getElementById("package-copy-query-button").innerText = "Copied!";
-	},
-	openVariableValues: function(event){
-		let varId = event.target.dataset['varid'];
-		let target = _.find(this.tempExportFields,(variable)=>{
-			return '\\' + varId + '\\' === '\\' + variable.attributes.variable.metadata.columnmeta_var_id + '\\';
-		});
-		if (!target){
-			target = _.find(this.model.get('deletedExports').models,(variable)=>{
-				return varId === variable.attributes.variable.metadata.columnmeta_var_id;
-			});
-		}
-		var valuesModelTemplate = Backbone.Model.extend({
-						defaults: {},
-					});
-		valuesModel = new valuesModelTemplate();
-		keyboardNav.addNavigableView("variableValuesModal",this);
-		let metadata = target.attributes.variable.metadata;
-		valuesModel.varId = metadata.columnmeta_var_id;
-		valuesModel.varDesc = metadata.columnmeta_description;
-		valuesModel.varName = metadata.columnmeta_name;
-		valuesModel.varDataset = metadata.columnmeta_var_group_id;
-		valuesModel.varStudy = metadata.columnmeta_study_id;
-		valuesModel.isNumerical = target.attributes.variable.is_continuous ? target.attributes.variable.is_continuous : false;
-		valuesModel.isCategorical = target.attributes.variable.is_categorical ? target.attributes.variable.is_categorical : true;
-		if(target.attributes.type != "filter"){
-			if(valuesModel.isCategorical){
-				valuesModel.varValues = target.attributes.variable.values;
-			}
-			else{
-				valuesModel.varMin = metadata.columnmeta_min;
-				valuesModel.varMax = metadata.columnmeta_max;
-			}
-		}
-		else {
-			if(valuesModel.isCategorical){
-				valuesModel.varValues = target.attributes.selectedValues;
-			}
-			else{
-				valuesModel.varMin = target.attributes.selectedMin;
-				valuesModel.varMax = target.attributes.selectedMax;
-			}
-		}			
-
-		this.valuesView = new variableValuesView({
-			prevModal: {
-				view: this,
-				title: 'Review and Package Data',
-				div: '#package-modal'
-			},
-			model: valuesModel});
-		let title = 'Values for ' + varId;
-		modal.displayModal(
-			this.valuesView,
-			title,
-			() => {
-				$('#values-modal').focus();
-			}, {isHandleTabs: true}
-		);
-	},
-	render: function(){
-		this.$el.html((HBS.compile(packageModalTemplate))(this.model));
-		$('.modal-dialog').width('90%');
-		$('#package-datatable-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='exportData' class='display stripe' ></table>");
-		this.updateHeader();
-		let toggleable = true;
-		let data = this.dtData;
-		if(!data){
-
-			data = _.map(this.tempExportFields,function(model){
-				let variable = model.attributes;
-
-				let metadata = variable.variable.metadata;
-				let values = variable.variable.values ? [] : variable.variable.values.join(", ");
-
-				if (variable.type == 'filter'){
-					let selectedValues = variable.selectedValues == undefined ? undefined : variable.selectedValues.join(", ");
 					return [
 						true,
 						metadata.columnmeta_var_id,
 						metadata.columnmeta_name,
 						metadata.columnmeta_description,
 						(metadata.columnmeta_data_type.toLowerCase() == 'continuous')  ? metadata.columnmeta_data_type.toLowerCase() : 'categorical',
-						(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.selectedMin + ', Max: ' + variable.selectedMax : "",
-						(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + selectedValues + ' ]' :  "",
+						(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ metadata.columnmeta_min + ', Max: ' + metadata.columnmeta_max : "",
+						(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + values + ' ]' :  "",
 						variable.type,
 						metadata.columnmeta_HPDS_PATH
 					];
-				}
+				});
+				this.dtData = data;
+			}
 
-				return [
-					true,
-					metadata.columnmeta_var_id,
-					metadata.columnmeta_name,
-					metadata.columnmeta_description,
-					(metadata.columnmeta_data_type.toLowerCase() == 'continuous')  ? metadata.columnmeta_data_type.toLowerCase() : 'categorical',
-					(metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ metadata.columnmeta_min + ', Max: ' + metadata.columnmeta_max : "",
-					(metadata.columnmeta_data_type.toLowerCase() == 'categorical') ?  '[ ' + values + ' ]' :  "",
-					variable.type,
-					metadata.columnmeta_HPDS_PATH
-				];
+			$('#exportData').DataTable( {
+				data: data,
+				columns: [
+					{title:'Selected'},
+					{title:'Variable ID'},
+					{title:'Name'},
+					{title:'Description'},
+					{title:'Type'},
+					{title: 'Values'},
+					{title: 'ValuesHidden', visible: false},
+					{title: 'exportType', visible: false}
+				],
+				select: {
+					style:    'os',
+					selector: 'td:first-child',
+					toggleable: toggleable
+				},
+				columnDefs: [
+					{
+						targets: [1,2,3,4],
+						className: 'dt-center',
+						type:'string'
+					},
+					{
+						render: function(data,type,row,meta){
+							if(row[7] === 'auto'){
+								return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'" title= "This variable cannot be removed from the export." disabled></input>'
+							}
+							else if (row[7] === 'filter'){
+								return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'" title = "This variable cannot be removed from the export." disabled></input>'
+							}
+							return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
+						},
+						type:'string',
+						targets: 0
+					},
+					{
+						render: function(data,type,row,meta){
+
+							if(row[4].toLowerCase() === 'categorical' && row[6] !== ""){
+							return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">See Values</button>';
+							}
+							else{
+							return '<td class="dt-center" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">'+data+'</td>'
+						}
+						},
+						type:'string',
+						targets: 5
+					},
+
+				],
+				order: [[7,'desc'],[ 0, 'asc' ], [1, 'asc']],
+				deferRender: true,
+				drawCallback: function(){
+					this.setTabIndices();
+					this.delegateEvents();
+				}.bind(this)
+			} );
+			this.setTabIndices();
+			return this;
+		},
+		setTabIndices: function(){
+			let tabcounter = 1000000;
+			$('.dataTables_length select').attr('tabindex', tabcounter++);
+			$('.dataTables_filter input').attr('tabindex', tabcounter++);
+
+			_.each($('.sorting', this.$el), function(sortHeader){
+				sortHeader.setAttribute('tabindex', tabcounter++);
 			});
-			this.dtData = data;
+			_.each($('select', this.$el), function(checkbox){
+				checkbox.setAttribute('tabindex', tabcounter++);
+			});
+			_.each($('.paginate_button'), function(pagebutton){
+				pagebutton.setAttribute('tabindex', -1);
+			});
+			$('#exportData').attr('tabindex', tabcounter++);
+			$('#add-filter-button').attr('tabindex', tabcounter++);
 		}
-
-		$('#exportData').DataTable( {
-			data: data,
-			columns: [
-				{title:'Selected'},
-				{title:'Variable ID'},
-				{title:'Name'},
-				{title:'Description'},
-				{title:'Type'},
-				{title: 'Values'},
-				{title: 'ValuesHidden', visible: false},
-				{title: 'exportType', visible: false}
-			],
-			select: {
-				style:    'os',
-				selector: 'td:first-child',
-				toggleable: toggleable
-			},
-			columnDefs: [
-				{
-					targets: [1,2,3,4],
-					className: 'dt-center',
-					type:'string'
-				},
-				{
-					render: function(data,type,row,meta){
-						if(row[7] === 'auto'){
-							return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'" title= "This variable cannot be removed from the export." disabled></input>'
-						}
-						else if (row[7] === 'filter'){
-							return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'" title = "This variable cannot be removed from the export." disabled></input>'
-						}
-						return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
-					},
-					type:'string',
-					targets: 0
-				},
-				{
-					render: function(data,type,row,meta){
-
-						if(row[4].toLowerCase() === 'categorical' && row[6] !== ""){
-						return '<button class="btn btn-primary" id="varValuesButton" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">See Values</button>';
-						}
-						else{
-						return '<td class="dt-center" data-sort-token=' + (data?0:1) + ' tabindex="-1" data-varid="'+row[1]+'">'+data+'</td>'
-					}
-					},
-					type:'string',
-					targets: 5
-				},
-
-			],
-			order: [[7,'desc'],[ 0, 'asc' ], [1, 'asc']],
-			deferRender: true,
-			drawCallback: function(){
-				this.setTabIndices();
-				this.delegateEvents();
-			}.bind(this)
-		} );
-		this.setTabIndices();
-		return this;
-	},
-	setTabIndices: function(){
-		let tabcounter = 1000000;
-		$('.dataTables_length select').attr('tabindex', tabcounter++);
-		$('.dataTables_filter input').attr('tabindex', tabcounter++);
-
-		_.each($('.sorting', this.$el), function(sortHeader){
-			sortHeader.setAttribute('tabindex', tabcounter++);
-		});
-		_.each($('select', this.$el), function(checkbox){
-			checkbox.setAttribute('tabindex', tabcounter++);
-		});
-		_.each($('.paginate_button'), function(pagebutton){
-			pagebutton.setAttribute('tabindex', -1);
-		});
-		$('#exportData').attr('tabindex', tabcounter++);
-		$('#add-filter-button').attr('tabindex', tabcounter++);
-	}
-});
-return packageView;
-;
-
+	});
 });
