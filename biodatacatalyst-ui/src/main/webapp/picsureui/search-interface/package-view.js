@@ -15,6 +15,7 @@ define([
 	"search-interface/external-export-view",
 	'text!search-interface/seven-bridges-export-view.hbs',
 	'text!search-interface/terra-export-view.hbs',
+	'dataset/dataset-save',
 	"common/spinner"
 ], function(
 	$, BB, HBS, _,
@@ -33,6 +34,7 @@ define([
 	externalExportView,
 	sevenBridgeExportTemplate,
 	terraExportTemplate,
+	namedDataset,
 	spinner
 ){
 	return BB.View.extend({
@@ -45,6 +47,7 @@ define([
 				'keynav-arrowleft document': this.previousPage
 			});
 			this.tempExportFields = filterModel.get("exportColumns").models;
+			this.datasetName = undefined;
 		},
 		events: {
 			'click input[type="checkbox"]':"checkboxToggled",
@@ -53,6 +56,7 @@ define([
 			'click button[id="varValuesButton"]':"openVariableValues",
 			'click #seven-bridges-export':"openSevenBridgesModal",
 			'click #terra-export': "openTerraModal",
+			'click #save-named-dataset-btn': "openSaveDatasetModal"
 		},
 		data: function(){
 			return $('#exportData').DataTable().rows( {order:'index', search:'applied'} ).data();
@@ -156,6 +160,7 @@ define([
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 				$('#package-copy-query-button').hide();
+				$('#save-named-dataset-btn').hide();
 				$('#seven-bridges-export').hide();
 				$('#terra-export').hide();
 			}
@@ -167,6 +172,7 @@ define([
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-copy-query-button').hide();
+				$('#save-named-dataset-btn').hide();
 				$('#package-download-button').hide();
 				$('#seven-bridges-export').hide();
 				$('#terra-export').hide();
@@ -178,6 +184,7 @@ define([
 				$('#package-package-button').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-copy-query-button').hide();
+				$('#save-named-dataset-btn').hide();
 				$('#package-download-button').hide();
 				$('#seven-bridges-export').hide();
 				$('#terra-export').hide();
@@ -195,6 +202,7 @@ define([
 				$('#package-query-id').html(this.model.get('queryId'));
 				$('#package-download-button').show();
 				$('#package-copy-query-button').show();
+				$('#save-named-dataset-btn').show();
 				$('#package-download-button', this.$el).off('click');
 				$('#package-download-button', this.$el).click(function(){
 					viewObj.openDownloadConfirmationModal();
@@ -222,6 +230,8 @@ define([
 		},
 		initiatePackage: function() {
 			this.model.set('exportStatus', 'Progress');
+			this.model.set("datasetName", undefined);
+			$("#save-named-dataset-btn").html("Save Dataset ID");
 			this.updateHeader();
 			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
 			query = JSON.parse(JSON.stringify(query));
@@ -402,8 +412,37 @@ define([
 				}, {isHandleTabs: true}
 			);
 		},
+		openSaveDatasetModal: function(){
+            if (this.model.get("datasetName")) return;
+
+            const title = "Save the Dataset ID";
+            const onClose = () => { $("#save-named-dataset-btn").focus(); };
+            const onSuccess = (name) => {
+				this.model.set("datasetName", name);
+			};
+            const options = { isHandleTabs: true, width: "40%" };
+            const modalView = new namedDataset({
+                modalSettings: { title, onClose, onSuccess, options },
+                previousModal: {
+					view: this,
+					title: "Review and Package Data",
+					options: { isHandleTabs: true }
+				},
+                queryUUID: this.model.get("queryId")
+            });
+
+            modal.displayModal(modalView, title, onClose, options);
+        },
+		renderDatasetButton: function() {
+			const name = this.model.get("datasetName") || '';
+			const shortName = name.length > 8 ? name.substring(0, 8) + '...' : name;
+			const datasetBtn = name ? `<i class="fa fa-solid fa-check" aria-hidden="true"></i> Saved as ${shortName}` : "Save Dataset ID";
+			$("#save-named-dataset-btn").html(datasetBtn);
+			$("#save-named-dataset-btn")[name ? "addClass" : "removeClass"]("disabled");
+		},
 		render: function(){
 			this.$el.html((HBS.compile(packageModalTemplate))(this.model));
+			this.renderDatasetButton();
 			$('.modal-dialog').width('90%');
 			$('#package-datatable-table').html("<style scoped>th{width:auto !important;background:white;}</style> <table id='exportData' class='display stripe' ></table>");
 			this.updateHeader();
