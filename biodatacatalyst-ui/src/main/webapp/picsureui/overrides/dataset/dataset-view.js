@@ -8,12 +8,9 @@ define([], function() {
                     const filtersList = Object.entries(filters);
 
                     const filterString = filtersList.map(([filter, values]) => {
-                        const { rawCategory } = /(\\[^\\]+)*\\(?<rawCategory>[^\\]+)\\/.exec(filter).groups;
-                        const category = rawCategory.replace(/^_/, "").replaceAll("_", " ");
-                        return [ "consents", "topmed consents" ].includes(category)
+                        const { category } = /(\\[^\\]+)*\\(?<category>[^\\]+)\\/.exec(filter).groups;
+                        return [ "_consents", "_topmed_consents" ].includes(category)
                             ? ''
-                            //  If we want to list that there are concents included we could use below instead of empty string.
-                            // ? `<span class="list-title">${category}</span>
                             : `<span class="list-title">${category}:</span> Restrict values by ${values.join(", ")}`;
                     }).filter(x => x);
 
@@ -25,7 +22,7 @@ define([], function() {
                 renderId: "detail-filters",
                 render: function(filtersList = []){
                     const filterString = filtersList.map(({ categoryVariantInfoFilters = {}, numericVariantInfoFilters = {} }) => {
-                        const toString = ([category, values]) => `<div><span class="list-title">${category.replaceAll("_", " ")}:</span> ${values.join(", ")}</div>`;
+                        const toString = ([category, values]) => `<div><span class="list-title">${category}:</span> ${values.join(", ")}</div>`;
                         const filters = [
                             Object.entries(categoryVariantInfoFilters).map(toString).join(""),
                             Object.entries(numericVariantInfoFilters).map(toString).join("")
@@ -51,11 +48,8 @@ define([], function() {
                     }, {}));
 
                     const variableString = variableList.map(([filter, values]) => {
-                        const { rawField } = /([^\\]+\\)*(?<rawField>[^\\]+)/.exec(filter).groups;
-                        const field = rawField.replace(/^_/, "").replaceAll("_", " ")
-                        return values.length > 0
-                            ? `<span class="list-title">${field}:</span> ${values.join(", ")}`
-                            : `<span class="list-title">${field}</span>`;
+                        const { field } = /([^\\]+\\)*(?<field>[^\\]+)/.exec(filter).groups;
+                        return `<span class="list-title">${field}:</span> ${values.join(", ")}`;
                     });
 
                     return variableString.map(item => `<li>${item}</li>`).join("");
