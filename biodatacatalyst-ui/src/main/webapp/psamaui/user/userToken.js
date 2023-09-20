@@ -1,8 +1,8 @@
-define(["jquery", "backbone","handlebars", "text!header/userProfile.hbs", "picSure/userFunctions"], 
-    function($, BB, HBS, userProfileTemplate, userFunctions){
+define(["jquery", "backbone","handlebars", "text!psamaui/user/userToken.hbs", "picSure/userFunctions"], 
+    function($, BB, HBS, userTokenTemplate, userFunctions){
     var profileView = BB.View.extend({
         initialize : function(user){
-            this.template = HBS.compile(userProfileTemplate);
+            this.template = HBS.compile(userTokenTemplate);
             this.user = user;
             HBS.registerHelper('tokenExpiration', function (token) {
                 var expirationTime = JSON.parse(atob(token.split('.')[1])).exp * 1000;

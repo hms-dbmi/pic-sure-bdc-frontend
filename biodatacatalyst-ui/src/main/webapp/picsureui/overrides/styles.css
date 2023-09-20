@@ -918,3 +918,7 @@ remove when above bug is fixed */
 .spinner-vert-center {
     top: 25%;
 }
+
+#dataset-view .list-title {
+    font-weight: bold;
+}
