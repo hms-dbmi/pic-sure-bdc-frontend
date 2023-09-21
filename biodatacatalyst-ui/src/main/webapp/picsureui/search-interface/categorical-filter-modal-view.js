@@ -73,7 +73,7 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                     try {
                         if (searchTerm) {
                             let searchResults = this.allVariables.filter((result) => {
-                                return result.toLowerCase().includes(searchTerm);
+                                return result.toLowerCase().includes(searchTerm.toLowerCase());
                             });
                             let nextVars = searchResults.slice(start, end);
                             this.startLocation = end;
