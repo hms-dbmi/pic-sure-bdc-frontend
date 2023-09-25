@@ -22,6 +22,20 @@
     background-color: var(--catalyst-dark-blue);
     border-color: var(--catalyst-dark-blue);
 }
+
+.panel {
+	border-color: #ddd;
+}
+
+.panel-default>.panel-heading {
+    border-color: #ddd;
+}
+
+.panel-default>.panel-heading {
+    color: black;
+    background-color: #f5f5f5;
+}
+
 /*************************/
 
 body {
@@ -767,13 +781,13 @@ remove when above bug is fixed */
     background-color: var(--catalyst-dark-blue);
     height: max-content;
     min-height: 100%;
-    border-radius: 0px;
+    border-radius: 5px 0px 0px 0px;
 }
 
 .panel .results-panel-header {
     color: white;
     border-bottom: none;
-    padding: 2px 15px;
+    padding: 5px 15px 2px 15px;
 }
 
 .panel .search-resutls-panel-heading {
