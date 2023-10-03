@@ -36,9 +36,9 @@ define([
             },
             render: function () {
                 userFunctions.meWithToken(this, (user) => {
-                    const userToken = new userToken(user);
-                    $('#user-profile').html(userToken.$el);
-                    userToken.render();
+                    const token = new userToken(user);
+                    $('#user-profile').html(token.$el);
+                    token.render();
                 });
 
                 this.displayDatasetManagementBox();
