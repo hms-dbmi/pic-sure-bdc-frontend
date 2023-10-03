@@ -1,7 +1,7 @@
 define([
         "backbone",
         "jquery",
-        "search-interface/modal",
+        "common/modal",
         "common/pic-sure-dialog-view"
     ],
     function (BB, $, modal, dialog) {

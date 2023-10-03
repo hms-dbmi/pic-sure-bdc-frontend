@@ -1,10 +1,10 @@
 define([
     'backbone',
     'handlebars',
-    'search-interface/modal',
-    'header/userProfile',
+    'common/modal',
+    'psamaui/user/userToken',
     'picSure/userFunctions',
-], function(BB, HBS, modal, userProfile, userFunctions) {
+], function(BB, HBS, modal, userToken, userFunctions) {
     var externalExportView = BB.View.extend({
         initialize: async function(opts){
             this.previousView = opts.previousView;
@@ -37,15 +37,15 @@ define([
             this.previousView && $('.close')?.off('click');
             this.previousView && $('.close')?.on('click', this.onClose.bind(this));
             this.$el.find('#query-id').text(this.previousView.model.get('queryId'));
-            if (this.userProfile) {
-                this.userProfile.delegateEvents();
-                this.$el.find('#user-profile-container').html(this.userProfile.$el);
+            if (this.userToken) {
+                this.userToken.delegateEvents();
+                this.$el.find('#user-profile-container').html(this.userToken.$el);
             } else {
                 userFunctions.meWithToken(this, (user) => {
-                    this.userProfile = new userProfile(user);
-                    this.userProfile.delegateEvents(); 
-                    this.userProfile.render();
-                    this.$el.find('#user-profile-container').html(this.userProfile.$el);
+                    this.userToken = new userToken(user);
+                    this.userToken.delegateEvents(); 
+                    this.userToken.render();
+                    this.$el.find('#user-profile-container').html(this.userToken.$el);
                 });
             }
         }

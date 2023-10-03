@@ -1,6 +1,14 @@
-define(["jquery", "handlebars", "backbone", "text!api-interface/apiPanel.hbs", "header/userProfile"
-        , "picSure/userFunctions", "api-interface/bdcTerraLinkView", "search-interface/modal"],
-    function ($, HBS, BB, apiPanelTemplate, UserProfile, userFunctions, BdcTerraView, modal) {
+define([
+    "jquery", "handlebars", "backbone",
+    "text!api-interface/apiPanel.hbs", "psamaui/user/userToken",
+    "picSure/userFunctions", "api-interface/bdcTerraLinkView",
+    "common/modal", "dataset/dataset-manage"
+], function (
+    $, HBS, BB,
+    apiPanelTemplate, userToken,
+    userFunctions, BdcTerraView,
+    modal, datasetManagement
+) {
 
         return BB.View.extend({
             initialize: function (opts) {
@@ -19,12 +27,21 @@ define(["jquery", "handlebars", "backbone", "text!api-interface/apiPanel.hbs", "
                     {isHandleTabs: true, width: "600px"}
                 );
             },
+            displayDatasetManagementBox: function(){
+                userFunctions.meWithToken(this, (user) => {
+                    const management = new datasetManagement(user);
+                    $("#dataset-management-box").append(management.$el);
+                    management.render();
+                });
+            },
             render: function () {
                 userFunctions.meWithToken(this, (user) => {
-                    let userProfile = new UserProfile(user);
-                    $('#user-profile').html(userProfile.$el);
-                    userProfile.render();
+                    const userToken = new userToken(user);
+                    $('#user-profile').html(userToken.$el);
+                    userToken.render();
                 });
+
+                this.displayDatasetManagementBox();
 
                 this.$el.html(this.template);
                 return this;

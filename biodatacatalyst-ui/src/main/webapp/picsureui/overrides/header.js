@@ -1,10 +1,7 @@
 define([
 	"common/keyboard-nav",
 	"common/pic-dropdown",
-	"common/menu-nav-controls",
-	"search-interface/modal",
-	"header/userProfile",
-	"picSure/userFunctions",
+	"common/menu-nav-controls"
 ],function (
 	keyboardNav,
 	dropdown,
