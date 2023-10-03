@@ -57,7 +57,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         const gsc = parseInt(tmpStudy["genetic_sample_size"]).toLocaleString();
                         tmpStudy["genetic_sample_size"] = gsc=='-1' || gsc=='NaN' ? 'N/A' : gsc;
 
-                        let studyConsent = tmpStudy["study_identifier"] + "." + tmpStudy["consent_group_code"];
+                        let studyConsent = tmpStudy["study_identifier"] + (tmpStudy["consent_group_code"] && tmpStudy["consent_group_code"] != "" ? "." + tmpStudy["consent_group_code"] : "");
                         tmpStudy['accession'] = tmpStudy["study_identifier"]+ "." + tmpStudy["study_version"] + "." + tmpStudy["study_phase"]+ "." + tmpStudy["consent_group_code"];
                         if (validConsents.includes(studyConsent)) {
                             tmpStudy['isGranted']=true;

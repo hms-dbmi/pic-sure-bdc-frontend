@@ -1,5 +1,5 @@
 define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPanel.hbs",
-		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "search-interface/modal", "openPicsure/openPicsureHelpView"],
+		"backbone", "handlebars", "overrides/outputPanel", "text!../studyAccess/studies-data.json", "common/transportErrors", "openPicsure/outputModel", "search-interface/filter-model", "common/modal", "openPicsure/openPicsureHelpView"],
 		function($, _, settings, outputTemplate,
 				 BB, HBS, overrides, studiesDataJson, transportErrors, outputModel, filterModel, modal, helpView) {
 
@@ -83,7 +83,8 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 
         for (var key in studiesInfo) {
             studiesInfo[key].consents.forEach((x) => {
-                x.hasPermission = validConsents.includes(x.study_identifier + "." + x.consent_group_code);
+				let consent = x.consent_group_code && x.consent_group_code != "" ? "." + x.consent_group_code : "";
+                x.hasPermission = validConsents.includes(x.study_identifier + consent);
             });
             studiesInfo[key].hasPermission = studiesInfo[key].consents.filter((x) => { return x.hasPermission}).length == studiesInfo[key].consents.length;
         }
@@ -120,9 +121,11 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 					let totalPatients = String(response["\\_studies_consents\\"]);
 					if (totalPatients.includes(" \u00B1")) {
 						outputModel.set("totalPatients", totalPatients.split(" ")[0]);
+						filterModel.set("totalPatients", totalPatients.split(" ")[0]);
 						outputModel.set("totalPatientsSuffix", totalPatients.split(" ")[1]);
 					} else {
 						outputModel.set("totalPatients", totalPatients);
+						filterModel.set("totalPatients", totalPatients);
 						outputModel.set("totalPatientsSuffix", "");
 					}
 					outputModel.stopAll();
@@ -248,7 +251,6 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 			}
 		},
 		destroy: function(){
-			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
 			this.undelegateEvents();	
 			$(this.el).removeData().unbind(); 
 			this.remove();  

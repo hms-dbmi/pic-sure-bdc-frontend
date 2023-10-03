@@ -4,10 +4,17 @@
         <a id="tool-suite-help" class="btn no-padding" title="Tool suite help" tabindex="0" aria-label="Tool suite help">What is this?</a>
     </div>
     <div class="tools panel-body">
+        {{#if isOpenAccess}}
+        <button id="participant-study-data" data-intro="#participant-study-data" data-sequence="10" class="btn btn-default big-btn tool">
+            <i class="fa-solid fa-people-group fa-4x" aria-hidden="true"></i>
+            <span>Participant Count by Study</span>
+        </button>
+        {{else}}
         <button id="package-data" data-intro="#package-data" data-sequence="10" class="btn btn-default big-btn tool" disabled>
             <i class="fa fa-cloud-download fa-4x" aria-hidden="true"></i>
             <span>Select and Package Data</span>
         </button>
+        {{/if}}
         <button style="display: none" id="variant-explorer" class="btn btn-default big-btn tool" disabled>
             <i class="fa fa-cloud-download fa-4x" aria-hidden="true"></i>
             <span>Variant Explorer</span>
