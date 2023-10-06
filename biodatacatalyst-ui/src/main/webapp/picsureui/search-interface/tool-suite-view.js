@@ -1,23 +1,23 @@
 define(["jquery", "backbone", "handlebars", "text!search-interface/tool-suite-view.hbs", "search-interface/filter-model",
         "common/modal", "search-interface/tool-suite-help-view", "search-interface/visualization-modal-view", "search-interface/package-view"
     , "text!search-interface/visualization-modal-view.hbs", "openPicsure/studiesModal"],
-function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView
+function($, Backbone, HBS, template, filterModel, modal, helpView, VisualizationModalView, packageView
     , VisualizationTemplate, studiesModal) {
-    var ToolSuiteView = BB.View.extend({
-        initialize: function(opts){
+    return Backbone.View.extend({
+        initialize: function (opts) {
             this.template = HBS.compile(template);
             this.isOpenAccess = opts.isOpenAccess;
             Backbone.pubSub.on('destroySearchView', this.destroy.bind(this));
         },
         events: {
-            'click #package-data' : 'openPackageData',
+            'click #package-data': 'openPackageData',
             'click #participant-study-data': 'openParticipantStudyData',
-            'click #variant-explorer' : 'openVariantExplorer',
-            'click #distributions' : 'openDistributions',
-            'click #tool-suite-help' : 'openHelp',
-            'keypress #tool-suite-help' : 'openHelp',
+            'click #variant-explorer': 'openVariantExplorer',
+            'click #distributions': 'openDistributions',
+            'click #tool-suite-help': 'openHelp',
+            'keypress #tool-suite-help': 'openHelp',
         },
-        handleFilterChange: function(){
+        handleFilterChange: function () {
             const hasParticipants = parseInt(filterModel.get('totalPatients')) !== 0;
             const filters = filterModel.get('activeFilters');
             const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
@@ -33,19 +33,24 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 }
             }
             this.$el.find('#participant-study-data').prop('disabled', !hasParticipants).prop('title', !hasParticipants ? 'The "Total Participants" must be greater than zero' : 'Participant Count by Study');
-            this.$el.find('#package-data').prop('disabled', shouldDisablePackageData).prop('title', shouldDisablePackageData ? 'Please add a phenotypic filter to your query to package data':'Select and Package data');
-            this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions':'Visualize distributions');
+            this.$el.find('#package-data').prop('disabled', shouldDisablePackageData).prop('title', shouldDisablePackageData ? 'Please add a phenotypic filter to your query to package data' : 'Select and Package data');
+            this.$el.find('#distributions').prop('disabled', shouldDisableDistributions).prop('title', shouldDisableDistributions ? 'Please add a phenotypic filter to your query to view variable distributions' : 'Visualize distributions');
         },
-        openDistributions: function(){
-            const vizModal = new VisualizationModalView.View({model: new VisualizationModalView.Model(), template: VisualizationTemplate});
+        openDistributions: function () {
+            const vizModal = new VisualizationModalView.View({
+                model: new VisualizationModalView.Model(),
+                template: VisualizationTemplate
+            });
             modal.displayModal(
                 vizModal,
                 'Variable distributions of query filters',
-                () => {this.$el.focus();}, 
+                () => {
+                    this.$el.focus();
+                },
                 {isHandleTabs: true}
             );
         },
-        openHelp: function(event){
+        openHelp: function (event) {
             if (event.type === "keypress" && !(event.key === ' ' || event.key === 'Enter')) {
                 return;
             }
@@ -57,18 +62,18 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
                 }, {isHandleTabs: true}
             );
         },
-        openPackageData: function(){
+        openPackageData: function () {
             let exportStatus = 'Ready';
-                if(filterModel.get('estDataPoints') > 1000000){
-                    exportStatus = 'Overload';
-                }
+            if (filterModel.get('estDataPoints') > 1000000) {
+                exportStatus = 'Overload';
+            }
             let exportModel = Backbone.Model.extend({
                 defaults: {},
             });
             this.packageView = new packageView({
                 model: new exportModel({
                     exportStatus: exportStatus,
-                    deletedExports: new BB.Collection,
+                    deletedExports: new Backbone.Collection(),
                     queryId: ""
                 })
             });
@@ -91,20 +96,19 @@ function($, BB, HBS, template, filterModel, modal, helpView, VisualizationModalV
             );
 
         },
-        openVariantExplorer: function(){
+        openVariantExplorer: function () {
             console.log('openVariantExplorer');
         },
-        destroy: function(){
-			this.undelegateEvents();	
-			$(this.el).removeData().unbind(); 
-			this.remove();  
-			Backbone.View.prototype.remove.call(this);
-		},
-        render: function() {
+        destroy: function () {
+            this.undelegateEvents();
+            $(this.el).removeData().unbind();
+            this.remove();
+            Backbone.View.prototype.remove.call(this);
+        },
+        render: function () {
             this.$el.html(this.template(this));
             this.handleFilterChange();
             return this;
         }
     });
-    return ToolSuiteView;
 });

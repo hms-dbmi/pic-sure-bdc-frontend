@@ -3,7 +3,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "picSure/settings",
         "search-interface/filter-list-view", "search-interface/search-view", "search-interface/tool-suite-view",
         "search-interface/query-results-view", "api-interface/apiPanelView", "search-interface/filter-model",
         "search-interface/tag-filter-model",],
-    function(BB, HBS, studyAccess, layoutTemplate, settings, filterList,
+    function(Backbone, HBS, studyAccess, settings, filterList,
              outputPanel, queryBuilder, searchHelpTooltipTemplate, output,
              FilterListView, SearchView, ToolSuiteView, queryResultsView,
              ApiPanelView, filterModel, tagFilterModel) {
@@ -12,7 +12,7 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "picSure/settings",
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/dataAccess']").addClass('active');
             $('#main-content').empty();
-            var studyAccessView = new studyAccess.View;
+            var studyAccessView = new studyAccess.View();
             $('#main-content').append(studyAccessView.$el);
             studyAccessView.render();
         };
