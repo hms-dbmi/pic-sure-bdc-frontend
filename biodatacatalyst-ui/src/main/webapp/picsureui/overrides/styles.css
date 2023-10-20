@@ -977,6 +977,6 @@ remove when above bug is fixed */
     font-weight: bold;
 }
 
-bordered {
-    border-color: var(--catalyst-blue);
+.bordered {
+    border-color: var(--catalyst-blue) !important;
 }
