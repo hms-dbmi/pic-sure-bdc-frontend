@@ -4,7 +4,7 @@
     /*BDC Primary*/
     --nhlbi-red: #c31f3f;
     --nhlbi-grey: #616265;
-    
+
     /*BDC Secondary*/
     --background-grey: #f4f4f6;
     --catalyst-blue: #1a568C;
@@ -18,20 +18,21 @@
     background-color: var(--catalyst-blue);
     border-color: var(--catalyst-blue);
 }
+
 .btn-primary:hover {
     background-color: var(--catalyst-dark-blue);
     border-color: var(--catalyst-dark-blue);
 }
 
 .panel {
-	border-color: #ddd;
-}
-
-.panel-default>.panel-heading {
     border-color: #ddd;
 }
 
-.panel-default>.panel-heading {
+.panel-default > .panel-heading {
+    border-color: #ddd;
+}
+
+.panel-default > .panel-heading {
     color: black;
     background-color: #f5f5f5;
 }
@@ -68,7 +69,7 @@ body {
 }
 
 .advanced-search-btn {
-  display: none;	
+    display: none;
 }
 
 .fill {
@@ -77,9 +78,9 @@ body {
 }
 
 .logo-img {
-  max-height: 90px;
-  max-width: 100%;
-  padding-top: 10px;
+    max-height: 90px;
+    max-width: 100%;
+    padding-top: 10px;
 }
 
 .login-logo {
@@ -94,14 +95,15 @@ body {
 }
 
 .footer-item {
-	display:inline-block;	
+    display: inline-block;
     padding-left: 5px;
     padding-right: 5px;
-    
+
 }
+
 .footer-item a:hover {
-	text-decoration:none;
-	font-weight:bold
+    text-decoration: none;
+    font-weight: bold
 }
 
 .top-bar {
@@ -183,7 +185,7 @@ body {
 
 
 #select-btn {
-	display: none;
+    display: none;
 }
 
 /* <StudyAccess styles> */
@@ -268,7 +270,7 @@ body {
 #studies-access {
     margin-top: 30px;
     margin-left: 15px;
-    width:fit-content;
+    width: fit-content;
     border: 1px solid #aaa;
     border-radius: 8px;
     padding: 8px 0px;
@@ -281,10 +283,12 @@ body {
     font-size: 16px;
     margin: 0;
 }
+
 #studies-access .studies-title {
     font-size: 28px;
     margin: 0;
 }
+
 #studies-access .freeze-message {
     text-align: right;
     min-width: 525px;
@@ -304,12 +308,13 @@ body {
 }
 
 .center-vert {
-    vertical-align: middle!important;
+    vertical-align: middle !important;
 }
 
 #studies-access .button-spacer {
     margin: 0 50px 0 auto;
 }
+
 #studies-access .button-container {
     display: flex;
     width: 100%;
@@ -338,6 +343,7 @@ body {
     background: #f4f4f6;
     color: #000;
 }
+
 .study-lst-btn-no-hov:hover {
     color: #000;
     background-color: #fff;
@@ -346,6 +352,7 @@ body {
 .study-lst-btn2:hover {
     background-color: #76a6de;
 }
+
 /* </StudyAccess styles> */
 
 .search-help-modal h5 {
@@ -364,6 +371,7 @@ body {
 .study-info {
     padding-bottom: 20px;
 }
+
 .dataset-info {
     padding-bottom: 20px;
 }
@@ -385,6 +393,7 @@ body {
     margin: 20px;
     padding: 20px;
 }
+
 .value-container {
     border-radius: 2px;
     border-color: #000000;
@@ -392,6 +401,7 @@ body {
     width: 100%;
     background-color: #ffffff;
 }
+
 .button-container {
     border-radius: 2px;
     border-color: #000000;
@@ -447,7 +457,7 @@ body {
 }
 
 #user-profile .token-container, #user-profile .token-container textarea {
-   width: 100%;
+    width: 100%;
 }
 
 #user-profile .token-buttons {
@@ -474,7 +484,7 @@ body {
 }
 
 #user-profile .token-buttons .token-buttons-confirmed {
-   width: fit-content;
+    width: fit-content;
 }
 
 #user-profile .username-row {
@@ -482,6 +492,7 @@ body {
     flex-direction: row;
     align-items: baseline;
 }
+
 #user-profile .username-row > label {
     margin-right: 10px;
 }
@@ -553,7 +564,7 @@ body {
 }
 
 .m-0 {
-    margin: 0; 
+    margin: 0;
 }
 
 .center {
@@ -570,7 +581,7 @@ body {
 }
 
 .big-grow {
-    flex-grow:100;
+    flex-grow: 100;
 }
 
 .flex-container {
@@ -652,6 +663,7 @@ input[type="search"]::-webkit-search-cancel-button {
         margin-right: -14px;
         right: 35px;
     }
+
     #search-box:not(:valid) ~ input[type="reset"] {
         visibility: hidden;
     }
@@ -664,6 +676,7 @@ remove when above bug is fixed */
     input[type="search"] + input[type="reset"] {
         display: none;
     }
+
     #search-box:valid ~ #search-button,
     #search-box:valid ~ #genomic-filter-btn {
         position: static;
@@ -763,7 +776,7 @@ remove when above bug is fixed */
 }
 
 .focused-search-result {
-    border: 4px solid #a73039!important;
+    border: 4px solid #a73039 !important;
 }
 
 .no-results {
@@ -824,12 +837,19 @@ remove when above bug is fixed */
     background-color: var(--catalyst-blue);
     color: white;
 }
+
+.btn.alternate {
+    color: #fff;
+    background-color: var(--catalyst-blue) !important;
+}
+
 /************************* End Outline Buttons ***************************/
 
 /**************** Explore Page ****************/
 .panel .panel-heading.no-border {
     border-bottom: none;
 }
+
 .plain-list {
     display: flex;
     flex-direction: column;
@@ -841,74 +861,93 @@ remove when above bug is fixed */
     margin-bottom: 0;
     white-space: nowrap;
 }
+
 .plain-list li {
     display: flex;
     width: 100%;
     margin-bottom: 2.5px;
     align-items: center;
 }
+
 .plain-list li i {
     width: 20%;
     font-size: 2.5em;
     text-align: center;
 }
+
 .plain-list li span {
     width: 80%;
 }
+
 .panel-outline {
     border: 1px solid #aaa;
     border-radius: 8px;
 }
+
 .side-border {
     border-right: 1px solid #aaa;
 }
+
 .explor-panel {
     width: 1000px;
     height: 350px;
     margin-bottom: 0;
 }
+
 .explor-panel:not(:first-child) {
     margin-left: 20px;
 }
+
 .access-info {
     width: 50%;
 }
+
 .center-panel {
     display: flex;
     justify-content: center;
 }
+
 .heading-space {
     width: 50%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .heading-space:not(:last-child) {
     padding-right: 20px;
 }
+
 .heading-space:not(:first-child) {
     margin-left: 20px;
 }
+
 .body-space {
     width: 50%;
     display: flex;
     flex-direction: row;
 }
+
 .access-title {
     font-size: 24px;
 }
-.participants-container h4{
+
+.participants-container h4 {
     font-size: 22px;
 }
-.participants-container h5{
+
+.participants-container h5 {
     font-size: 16px;
 }
+
 .body-spacee:not(:last-child) {
     padding-right: 20px;
 }
+
 .body-space:not(:first-child) {
     margin-left: 20px;
 }
+
 /*************** End Explore Page ****************/
 
 #filter-list {
@@ -921,7 +960,7 @@ remove when above bug is fixed */
     justify-content: space-evenly;
 }
 
-.loading{
+.loading {
     position: fixed;
     top: 0;
     left: 0;
@@ -929,10 +968,15 @@ remove when above bug is fixed */
     height: 100%;
     background-color: rgba(16, 16, 16, 0.5);
 }
+
 .spinner-vert-center {
     top: 25%;
 }
 
 #dataset-view .list-title {
     font-weight: bold;
+}
+
+bordered {
+    border-color: var(--catalyst-blue);
 }
