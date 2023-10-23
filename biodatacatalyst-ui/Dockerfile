@@ -1,3 +1,11 @@
+# Usage of IS_OPEN_ACCESS:
+# The build stages are named based on the IS_OPEN_ACCESS flag to conditionally set up the server:
+# - open_access_stage-false: Used when IS_OPEN_ACCESS is set to false, configuring for restricted access.
+# - open_access_stage-true: Used when IS_OPEN_ACCESS is set to true, configuring for open access.
+
+# Docker build stages are structured to accommodate different configurations based on the IS_OPEN_ACCESS value.
+# The final image's IS_OPEN_ACCESS environment variable reflects the value passed during the build process.
+
 ARG FILE_SUFFIX=development
 ARG IS_OPEN_ACCESS
 
