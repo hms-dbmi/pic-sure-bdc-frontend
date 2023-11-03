@@ -1,4 +1,4 @@
-define(["underscore", "dataset/utilities"], function(_, dataUtils) {
+define(["dataset/utilities"], function(dataUtils) {
     return {
         mappers: function(map){
             return {
