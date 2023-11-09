@@ -338,21 +338,6 @@ body {
     background-color: #f4f4f6;
 }
 
-.study-lst-btn1, .study-lst-btn2 {
-    height: 2.5em;
-    background: #f4f4f6;
-    color: #000;
-}
-
-.study-lst-btn-no-hov:hover {
-    color: #000;
-    background-color: #fff;
-}
-
-.study-lst-btn2:hover {
-    background-color: #76a6de;
-}
-
 /* </StudyAccess styles> */
 
 .search-help-modal h5 {

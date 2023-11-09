@@ -95,20 +95,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 studyAccess.auth_cnts.studies = temp.length;
             },
             events:{
-                "click .study-lst-btn1": "toggleConsent",
-                "click .study-lst-btn2": "toggleConsent",
                 "click .clickable-button": "buttonClickHandler"
-            },
-            toggleConsent: function() {
-                if ($("#no-consent-toggle").hasClass("glyphicon-chevron-down")) {
-                    $("#data-access-table-na_wrapper").show();
-                    $("#no-consent-toggle").removeClass("glyphicon-chevron-down");
-                    $("#no-consent-toggle").addClass("glyphicon-chevron-up");
-                } else {
-                    $("#data-access-table-na_wrapper").hide();
-                    $("#no-consent-toggle").removeClass("glyphicon-chevron-up");
-                    $("#no-consent-toggle").addClass("glyphicon-chevron-down");
-                }
             },
             buttonClickHandler: function(event) {
                 if ($(event.target).data("href")) {
@@ -233,54 +220,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         }
                     ]
                 });
-
-                this.dataAccessTableNA = $('#data-access-table-na').DataTable({
-                    data: this.records.na,
-                    "searching": true,
-                    "paging": false,
-                    "ordering": true,
-                    "fixedColumns": false,
-                    "responsive": true,
-                    "tabIndex": -1,
-                    columns: [
-                        {title:'Access', data:null},
-                        {title:'Abbreviation', data:'abbreviated_name'},
-                        {title:'Name',data:'full_study_name'},
-                        {title:'Study Focus',data:'study_focus'},
-                        {title:'Study Design', data:'study_design'}, 
-                        {title:'Clinical Variables',data:'clinical_variable_count'},
-                        {title:'Participants with Phenotypes',data:'clinical_sample_size'},
-                        {title:'Samples Sequenced',data:'genetic_sample_size'},
-                        {title:'Additional Infomation',data:'additional_information'},
-                        {title:'Consents',data:'consent_group_name'},
-                        {title:'Accession',data:'accession'},
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            className: 'center-vert dt-center',
-                            type: 'string'
-						},
-                        {
-                            targets: [1, 3, 4, 5, 6, 7, 10],
-                            className: 'dt-center',
-                            type: 'string'
-						},
-                        {
-                            targets: [2,8,9],
-                            className: 'dt-left',
-                            type: 'string'
-						},
-                        {
-                            render: function (data, type, row, meta) {
-                                return '<span class="btn btn-default disabled">N/A</span>';
-                            },
-                            type: 'string',
-                            targets: 0
-                        }
-                    ]
-                });
-                $("#data-access-table-na_wrapper").hide();
             }
         });
 
