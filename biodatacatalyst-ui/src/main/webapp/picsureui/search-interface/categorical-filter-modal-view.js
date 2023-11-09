@@ -62,10 +62,10 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/c
                     this.$el.find('#add-filter-button').prop('title', 'Please select at least one option to add the filter to the query.');
                 }
             },
-            getNextVariables: function(page, searchTerm) {
+            getNextVariables: function(page, searchTerm, returnAll = false) {
                 let totalVars = this.allVariables.length;
                 let start = this.startLocation * (page - 1);
-                let end = this.startLocation * page;
+                let end = returnAll ? totalVars : this.startLocation * page;
                 if (end > totalVars) {
                     end = totalVars;
                 }
