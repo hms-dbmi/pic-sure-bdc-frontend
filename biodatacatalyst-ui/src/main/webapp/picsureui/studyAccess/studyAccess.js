@@ -63,6 +63,9 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             tmpStudy['isGranted']=true;
                             this.records.permitted.push(tmpStudy);
                         } else {
+                            if (!tmpStudy['authZ']) {
+                                tmpStudy['isSuspended']=true;
+                            }
                             if (tmpStudy["consent_group_code"] == "c0") {
                                 tmpStudy['isGranted']=false;
                                 this.records.na.push(tmpStudy);
@@ -211,6 +214,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                             render: function (data, type, row, meta) {
                                 if (data.isGranted === true) {
                                     return '<span class="btn btn-default disabled">Granted</span>';
+                                } else if (data.isSuspended === true) {
+                                    return '<span aria-label="This button is hidden while the study is suspended."></span>';
                                 }
                                 return '<a href="'+ data.request_access +'" target="_blank" aria-label="Clicking here will take you to the given link in another tab." ' +
                                     'title="Clicking here will take you to the given link in another tab"><span class="btn btn-primary btn-blue" aria-label="Request access to '+data.full_study_name+'. This link will open in a new browser tab.">Request</span></a>';
