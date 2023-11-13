@@ -226,10 +226,6 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                         orderedValues.push(dataMap.continuousMap[key]);
                     });
 
-                    if (orderedKeys.length === 1) {
-                        orderedKeys[0] = orderedKeys[0].concat(' ');
-                    }
-
                     // shaded area at top of bar chart
                     const topBar = Array(orderedValues.length).fill(obfuscationRange);
                     let traceBottomBarText = [];
@@ -297,8 +293,8 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
 
                     let layout = {
                         title: title,
-                    width: dataMap.chartWidth || 500,
-                    height: dataMap.chartHeight || 600,
+                        width: dataMap.chartWidth || 500,
+                        height: dataMap.chartHeight || 600,
                         autosize: false,
                         hovermode: false,
                         bargap: 0.01,
