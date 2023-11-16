@@ -6,7 +6,6 @@
         width: 30%;
         margin: 0 3rem;
         padding: 1rem 3rem 2rem 3rem;
-        font-size: 18px;
     }
 
     .login-panel .fence-login-btn {
@@ -26,7 +25,8 @@
         height: auto;
         transform: scaleX(-1);
         /*    slide the image over a few px to the right*/
-        margin-right: -20px;
+        margin-right: -3rem;
+        margin-bottom: 1.2rem;
     }
 
     #main-content {
@@ -34,7 +34,7 @@
     }
 
     .text-center p {
-        font-size: 20px;
+        font-size: 1.3em;
     }
 
     .panel-body h3 {
@@ -50,16 +50,27 @@
         flex-direction: row;
         justify-content: center;
     }
+
+    .info-link,
+    .fence-login-btn {
+        font-size: 1.1em;
+    }
+
+    .open-link {
+        font-size: 1.2em;
+    }
 </style>
 <div class="text-center">
     <h1>Welcome to Authorized PIC-SURE</h1>
-    <p>Select variables, apply filters, and export participant-level data to jump-start your research.</p>
+    <p>Search variables, apply filters on variables and genomic variants to build cohorts, and export participant-level
+        data to jump-start your research.</p>
     <br/>
     <div class="flex-container">
         <!-- First Box: eRA Commons Login -->
         <div class="login-panel">
             <div class="panel-body">
                 <h3>Log in</h3>
+                <p>Explore studies you are authorized to access</p>
                 <!-- Existing login information here -->
                 <a href="{{ fenceURL }}&amp;idp=ras" class="fence-login-btn">
                     <img src="https://public.era.nih.gov/submithelp/images/banner_eralogo.gif"
