@@ -58,7 +58,9 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         tmpStudy["genetic_sample_size"] = gsc=='-1' || gsc=='NaN' ? 'N/A' : gsc;
 
                         let studyConsent = tmpStudy["study_identifier"] + (tmpStudy["consent_group_code"] && tmpStudy["consent_group_code"] != "" ? "." + tmpStudy["consent_group_code"] : "");
-                        tmpStudy['accession'] = tmpStudy["study_identifier"]+ "." + tmpStudy["study_version"] + "." + tmpStudy["study_phase"]+ "." + tmpStudy["consent_group_code"];
+                        tmpStudy['accession'] = tmpStudy["consent_group_code"] ? 
+                                                tmpStudy["study_identifier"]+ "." + tmpStudy["study_version"] + "." + tmpStudy["study_phase"]+ "." + tmpStudy["consent_group_code"] :
+                                                ""; // Show empty string if no consent group code (open dataset)
                         if (validConsents.includes(studyConsent)) {
                             tmpStudy['isGranted']=true;
                             this.records.permitted.push(tmpStudy);
