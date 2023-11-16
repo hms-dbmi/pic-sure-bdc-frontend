@@ -274,6 +274,15 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 				this.$el.find('#genomic-filter-btn').remove();
 			}
 			$('#search-box').focus();
+
+			// Once the search view is rendered, we can check if the user has a landingSearchQuery in session storage.
+			// If so, we can use that to populate the search box and run the search.
+			const landingSearchQuery = sessionStorage.getItem("landingSearchQuery");
+			if (landingSearchQuery) {
+				$('#search-box').val(landingSearchQuery);
+				$("#search-button", this.$el)[0].click();
+				sessionStorage.removeItem("landingSearchQuery");
+			}
 		}
 	});
 
