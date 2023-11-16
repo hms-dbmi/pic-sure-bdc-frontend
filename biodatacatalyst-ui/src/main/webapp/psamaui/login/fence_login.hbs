@@ -1,24 +1,90 @@
-<div class="row justify-content-center" style="width: 100%;">
-  <div class="col-6">
-    <br />
+<style>
+    .login-panel {
+        border: .125em solid #ccc;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+        background: white;
+        width: 30%;
+        margin: 0 3rem;
+        padding: 1rem 3rem 2rem 3rem;
+        font-size: 18px;
+    }
 
-    <div class="card bg-light mb-3">
-      <div class="card-body">
-        <h3 class="card-title text-center">Log In</h3><br />
-        <br />
+    .login-panel .fence-login-btn {
+        margin-bottom: 1.5rem;
+    }
 
-        <div class="center">
-          <span class="fence-login-wrapper">
-            <a href="{{ fenceURL }}&amp;idp=ras" class="fence-login-btn">
-              <img src="https://public.era.nih.gov/submithelp/images/banner_eralogo.gif" class="fence-login-img"><span class="fence-inner-span">with eRA Commons</span>
-            </a>
-          </span>
+    .corner-image {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 10px;
+        z-index: -1;
+    }
+
+    .corner-image img {
+        width: 70rem;
+        height: auto;
+        transform: scaleX(-1);
+        /*    slide the image over a few px to the right*/
+        margin-right: -20px;
+    }
+
+    #main-content {
+        min-height: unset !important;
+    }
+
+    .text-center p {
+        font-size: 20px;
+    }
+
+    .panel-body h3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .panel-body p {
+        margin-top: 2rem;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+</style>
+<div class="text-center">
+    <h1>Welcome to Authorized PIC-SURE</h1>
+    <p>Select variables, apply filters, and export participant-level data to jump-start your research.</p>
+    <br/>
+    <div class="flex-container">
+        <!-- First Box: eRA Commons Login -->
+        <div class="login-panel">
+            <div class="panel-body">
+                <h3>Log in</h3>
+                <!-- Existing login information here -->
+                <a href="{{ fenceURL }}&amp;idp=ras" class="fence-login-btn">
+                    <img src="https://public.era.nih.gov/submithelp/images/banner_eralogo.gif"
+                         class="fence-login-img"><span class="fence-inner-span">with eRA Commons</span>
+                </a>
+                <a href="https://www.era.nih.gov/register-accounts/understanding-era-commons-accounts.htm"
+                   class="info-link">What is an eRA Commons?</a>
+                <br/><br/>
+                <p>Log In as a BDC Developer? <a href="{{ fenceURL }}&amp;idp=google">Log in</a></p>
+            </div>
         </div>
-        <br />
-        <span class="center">
-          Are you a BDC developer? <a href="{{ fenceURL }}&amp;idp=google">Log In</a>
-        </span>
-      </div>
+
+        <!-- Second Box: Open PIC-SURE -->
+        <div class="login-panel">
+            <div class="panel-body">
+                <h3>Explore data without login</h3>
+                <p>Browse all studies and search all clinical variables in BDC using Open PIC-SURE.</p><br/>
+                <a style="margin: 0 1.5rem" href="https://openpicsure.biodatacatalyst.nhlbi.nih.gov/"
+                   class="open-link">Go to Open PIC-SURE</a>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Bottom Right Corner Image -->
+    <div class="corner-image">
+        <img src="/images/login_dots.png" alt="Dots" class="img-responsive">
+    </div>
 </div>
