@@ -279,7 +279,9 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			// If so, we can use that to populate the search box and run the search.
 			const landingSearchQuery = sessionStorage.getItem("landingSearchQuery");
 			if (landingSearchQuery) {
-				$('#search-box').val(landingSearchQuery);
+				// decode landSearchQuery
+				const decodedLandingSearchQuery = decodeURIComponent(landingSearchQuery);
+				$('#search-box').val(decodedLandingSearchQuery);
 				$("#search-button", this.$el)[0].click();
 				sessionStorage.removeItem("landingSearchQuery");
 			}
