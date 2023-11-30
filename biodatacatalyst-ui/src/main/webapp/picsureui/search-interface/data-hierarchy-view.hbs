@@ -1,0 +1,45 @@
+<style>
+    .hierarchy-list, .hierarchy-list ul, .hierarchy-list ol {
+        list-style-type: none; /* Removes default bullets */
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .hierarchy-list li {
+        position: relative;
+        padding-left: 40px; /* Space for the line */
+        padding-top: 10px; /* Space for the vertical line */
+    }
+
+    /* Combined vertical and horizontal line */
+    .hierarchy-list li::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 35px; /* Width for the horizontal line */
+        border-left: 2px solid #000; /* Vertical line */
+        border-bottom: 2px solid #000; /* Horizontal line */
+        height: 21px; /* Height for the horizontal line */
+    }
+
+    /* Adjustments for nested lists */
+    .hierarchy-list ul {
+        padding-left: 20px; /* Align nested lists */
+    }
+
+    /* Special cases */
+    .hierarchy-list > li:first-child::before {
+        border-top: 2px solid #000; /* Add top border for the first top-level item */
+        top: 50%; /* Adjust starting position */
+    }
+
+/*    Unset the before for the first li */
+    .hierarchy-list > li:first-child::before {
+        border: none;
+    }
+
+</style>
+<ul class="hierarchy-list">
+    {{{hierarchyContent}}}
+</ul>
