@@ -8,13 +8,13 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/data-hier
 
         HBS.registerPartial('hierarchyTemplate', HBS.compile(listTemplate));
 
-        let dataHierarchyView = Backbone.View.extend({
+        return Backbone.View.extend({
             initialize: function (options) {
                 this.dataHierarchy = this.createNestedHierarchy(options.dataHierarchy);
                 this.template = HBS.compile(template);
             },
             createNestedHierarchy: function (inputString, depth = 0) {
-                const createNode = (name, depth) => ({name, children: [], depth});
+                const createNode = (name, depth) => ({name, children: []});
 
                 if (typeof inputString !== 'string') {
                     console.error('Expected a string for inputString but received:', inputString);
@@ -22,15 +22,11 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/data-hier
                 }
 
                 let segments = inputString.split('/').map(s => s.trim());
-                // For testing lets double the segments so we can see how the hierarchy looks with more nodes
-                segments = segments.concat(segments);
-
                 let root = createNode('root', depth);
                 let current = root;
 
                 segments.forEach(segment => {
-                    depth++;
-                    let newNode = createNode(segment, depth);
+                    let newNode = createNode(segment);
                     current.children.push(newNode);
                     current = newNode;
                 });
@@ -55,6 +51,4 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/data-hier
 
 
         });
-
-        return dataHierarchyView;
 });
