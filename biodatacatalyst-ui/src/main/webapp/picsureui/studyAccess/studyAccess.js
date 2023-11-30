@@ -10,7 +10,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
             open_cnts: {},
             auth_cnts: {},
             resources: {
-                open: settings.openAccessResourceId,
                 auth: settings.picSureResourceId
             }
         };
@@ -90,11 +89,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 this.records.denied.sort(funcSort);
                 this.records.na.sort(funcSort);
 
-                // count the number of studies (accessible and total)
-                var allRecs = [].concat(this.records.permitted, this.records.denied, this.records.na);
-                var temp = allRecs.map((rec) => { return rec.study_identifier; });
-                temp = [...new Set(temp)];
-                studyAccess.open_cnts.studies = temp.length;
+                // get counts for studies and participants
                 var temp = this.records.permitted.map((rec) => { return rec.study_identifier; });
                 temp = [...new Set(temp)];
                 studyAccess.auth_cnts.studies = temp.length;
@@ -111,7 +106,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 // get counts for studies and participants
                 this.records.auth_studies_cnt = studyAccess.auth_cnts.studies;
                 this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
-                this.records.open_participants_cnt = studyAccess.open_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
                 this.records.authorizedAccess = !!this.authorizedAccess;
 
@@ -142,36 +136,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                         }
                     });
                     spinner.medium(deferredParticipants, "#authorized-participants-spinner", "spinner1");
-                }
-
-                if (studyAccess.resources.open !== false) {
-                    search.execute("\\_studies\\",
-                        function(response) {
-                            let openStudies = response.suggestions.length;
-                            $('#open-studies-count').html(openStudies + " Studies");
-
-                            var query = queryBuilder.generateQueryNew({}, {}, null, studyAccess.resources.open);
-                            query.query.expectedResultType = "CROSS_COUNT";
-                            query.query.crossCountFields = [STUDY_CONSENTS];
-                            var deferredParticipants = $.ajax({
-                                url: window.location.origin + "/picsure/query/sync",
-                                type: 'POST',
-                                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                                contentType: 'application/json',
-                                data: JSON.stringify(query),
-                                success: (function (response) {
-                                    const parsedCountString = response[STUDY_CONSENTS] ? parseInt(response[STUDY_CONSENTS]).toLocaleString() + " Participants" : "Count Unavailable";
-                                    $("#open-participants").html(parsedCountString);
-                                }).bind(this),
-                                statusCode: {
-                                    401: function(){
-                                    }
-                                },
-                                error: transportErrors.handleAll
-                            });
-                            spinner.medium(deferredParticipants, "#open-participants-spinner", "spinner2");
-                        },
-                        studyAccess.resources.open);
                 }
 
                 this.dataAccessTable = $('#data-access-table').DataTable({

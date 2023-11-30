@@ -34,43 +34,6 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "picSure/settings",
             });
         };
 
-        let displayOpenAccess = function() {
-            sessionStorage.setItem("isOpenAccess", true);
-            Backbone.pubSub.trigger('destroySearchView');
-            $(".header-btn.active").removeClass('active');
-            $(".header-btn[data-href='/picsureui/openAccess#']").addClass('active');
-            $('#main-content').empty();
-            $('#main-content').append(this.layoutTemplate(settings));
-            const toolSuiteView = new ToolSuiteView({
-                el: $('#tool-suite-panel'),
-                isOpenAccess: true
-            });
-
-            const outputPanelView = new outputPanel.View({toolSuiteView: toolSuiteView});
-            const query = queryBuilder.generateQueryNew({}, {}, null, settings.openAccessResourceId);
-            outputPanelView.render();
-            $('#query-results').append(outputPanelView.$el);
-
-            const parsedSess = JSON.parse(sessionStorage.getItem("session"));
-
-            const searchView = new SearchView({
-                queryTemplate: JSON.parse(parsedSess.queryTemplate),
-                queryScopes: parsedSess.queryScopes,
-                el : $('#filter-list')
-            });
-
-            if($('#search-results-panel').is(":visible")) {
-                $('#guide-me-button-container').hide();
-            }
-
-            const filterListView = new FilterListView({
-                outputPanelView : outputPanelView,
-                el : $('#filter-list-panel')
-            });
-            filterListView.render();
-            toolSuiteView.render();
-        };
-
         let displayAPI = function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[data-href='/picsureui/api']").addClass('active');
@@ -91,22 +54,6 @@ define(["backbone", "handlebars", "studyAccess/studyAccess", "picSure/settings",
                  * "picsureui/queryBuilder2" : function() { renderQueryBuilder2(); }
                  */
                 "picsureui/dataAccess" : displayDataAccess,
-                "picsureui/openAccess" : function() {
-                    let genomicFilters = getGenomicFilters();
-                    if (genomicFilters.length>0) {
-                        if (confirm(genomicFilterWarningText)) {
-                            filterModel.get('activeFilters').remove(genomicFilters, {silent: true});
-                            displayOpenAccess.call(this);
-                        } else  {
-                            // go back to the previous page. Since we do not currently track the previous page with
-                            // backbone js we have to use the browser history to go back two pages. Since a user
-                            // must've visited our page and selected filters this should be safe.
-                            window.history.go(-2);
-                        }
-                    } else {
-                        displayOpenAccess.call(this);
-                    }
-                },
                 "picsureui/queryBuilder(/)" : function() {
                     sessionStorage.setItem("isOpenAccess", false);
                     let antiScopes = getInvalidActiveFilters();
