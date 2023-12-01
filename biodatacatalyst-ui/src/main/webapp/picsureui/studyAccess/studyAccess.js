@@ -1,9 +1,9 @@
 define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", "text!studyAccess/studies-data.json",
         "common/transportErrors", "picSure/queryBuilder", "picSure/settings", "common/spinner",
-        "overrides/outputPanel", "picSure/search", "studyAccess/studyAccessUtility"],
+        "overrides/outputPanel", "picSure/search", "studyAccess/study-utility"],
     function($, BB, HBS, studyAccessTemplate, studyAccessConfiguration,
              transportErrors, queryBuilder, settings, spinner,
-             outputPanelOverrides, search, studyAccessUtility){
+             outputPanelOverrides, search, studyUtility){
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
         };
@@ -24,7 +24,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 let session = JSON.parse(sessionStorage.getItem("session"));
                 this.authorizedAccess = session.privileges && session.privileges.includes("FENCE_AUTHORIZED_ACCESS");
 
-                this.records = studyAccessUtility.groupRecordsByAccess();
+                this.records = studyUtility.groupRecordsByAccess();
             },
             events:{
                 "click .clickable-button": "buttonClickHandler"
