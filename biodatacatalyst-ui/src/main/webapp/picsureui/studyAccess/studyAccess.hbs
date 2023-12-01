@@ -9,57 +9,7 @@
     .plain-list li{
         margin-top: .5em;
     }
-    .panel-heading div {
-        width: 50%;
-    }
 </style>
-<div class="center-panel">
-    <div class="panel panel-outline explor-panel">
-        <div class="panel-heading no-border center-panel">
-            <div style="text-align: center">
-                <h4 class="access-title">Authorized Access</h4>
-                <button type="button" data-href="/picsureui/queryBuilder" aria-label="Explore Authorized Access"
-                        {{#if authorizedAccess}}class="btn btn-primary btn-blue clickable-button"{{/if}}
-                    {{#unless authorizedAccess}}class="btn btn-primary btn-grey"{{/unless}}
-                    {{#unless authorizedAccess}}disabled="disabled"{{/unless}}>
-                    Explore Now
-                </button>
-            </div>
-            <div class="participants-container">
-                <h4 class="">{{auth_studies_cnt}} Studies</h4>
-                <h5 class="" id="authorized-participants"></h5>
-                <div style="width: 25%" id="authorized-participants-spinner"></div>
-            </div>
-        </div>
-        <div style="margin-top: 1em;">
-            <ul class="plain-list">
-                <li style="display: flex; flex-direction:row;">
-                    <i class="fa-regular fa-address-card" aria-hidden="true" style="width: 20%; margin-left: 5%"></i>
-                    <i class="fa-solid fa-dna" aria-hidden="true" style="width: 20%; margin-right: 5%"></i>
-                    <span>Phenotypic and Genomic Datasets</span>
-                </li>
-                <li>
-                    <i class="fa fa-users" aria-hidden="true"></i>
-                    <span>Aggregate Counts</span>
-                </li>
-                <li>
-                    <i class="fa-regular fa-user" aria-hidden="true"></i>
-                    <span>Participant-level Data</span>
-                </li>
-                <li>
-                    <i class="fa fa-pie-chart" aria-hidden="true"></i>
-                    <span>Visualizations</span>
-                </li>
-                <li>
-                    <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
-                    <span>R and Python API Access</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-
 <div id="studies-access">
     <div class="space-out">
         <div>

@@ -7,11 +7,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
         const STUDY_CONSENTS = "\\_studies_consents\\";
         var studyAccess = {
             freezeMsg: "(Current TOPMed data is Freeze5b)",
-            open_cnts: {},
-            auth_cnts: {},
-            resources: {
-                auth: settings.picSureResourceId
-            }
         };
 
         // build view
@@ -45,7 +40,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                     na: []
                 };
                 let configurationData = JSON.parse(studyAccessConfiguration);
-                for (groupid in configurationData) {
+                for (let groupid in configurationData) {
                     for (idx = 0; idx < configurationData[groupid].length; idx++) {
                         // determine if logged in user is permmited access
                         let tmpStudy = configurationData[groupid][idx];
@@ -88,11 +83,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
                 this.records.permitted.sort(funcSort);
                 this.records.denied.sort(funcSort);
                 this.records.na.sort(funcSort);
-
-                // get counts for studies and participants
-                var temp = this.records.permitted.map((rec) => { return rec.study_identifier; });
-                temp = [...new Set(temp)];
-                studyAccess.auth_cnts.studies = temp.length;
             },
             events:{
                 "click .clickable-button": "buttonClickHandler"
@@ -104,39 +94,10 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
             },
             render: function() {
                 // get counts for studies and participants
-                this.records.auth_studies_cnt = studyAccess.auth_cnts.studies;
-                this.records.auth_participants_cnt = studyAccess.auth_cnts.participants;
                 this.records.freeze_msg = studyAccess.freezeMsg;
                 this.records.authorizedAccess = !!this.authorizedAccess;
 
                 this.$el.html(this.template(this.records));
-
-
-                // query for participant counts of authorized and open access resources
-                if (studyAccess.resources.auth) {
-                    var query = queryBuilder.createQueryNew({},{}, studyAccess.resources.auth);
-                    query.query.expectedResultType = "COUNT";
-                    queryBuilder.updateConsentFilters(query, settings);
-                    var deferredParticipants = $.ajax({
-                        url: window.location.origin + "/picsure/query/sync",
-                        type: 'POST',
-                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                        contentType: 'application/json',
-                        data: JSON.stringify(query),
-                        success: (function(response){
-                            $("#authorized-participants").html(parseInt(response).toLocaleString() + " Participants");
-                        }).bind(this),
-                        statusCode: {
-                            401: function(){
-                            }
-                        },
-                        error: function () {
-                            $("#authorized-participants").html("0 Participants");
-                            $("#authorized-participants-spinner").html("");
-                        }
-                    });
-                    spinner.medium(deferredParticipants, "#authorized-participants-spinner", "spinner1");
-                }
 
                 this.dataAccessTable = $('#data-access-table').DataTable({
                     data: [...this.records.permitted, ...this.records.denied],
