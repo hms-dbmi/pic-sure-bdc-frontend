@@ -87,7 +87,9 @@
     }
 </style>
 <header id="top-header" class="space-out">
-    <img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
+    <a class="header-navigation" data-href="/picsureui/" href="#" tabindex="-1">
+        <img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
+    </a>
     <nav id="header-tabs" class="nav-menu" role="navigation" aria-label="Main Navigation. You are on the main navigation of Pic-sure. Please use the arrow keys to navigate through the tabs. Use Enter or space to select the tab." tabindex="0">
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
             <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" tabindex="-1" title="Explore" aria-label="Explore">Data Access Dashboard</a>
@@ -95,6 +97,10 @@
         {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
             <a class="header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" tabindex="-1" title="Authorized Access" aria-label="Authorized Access">Authorized Access</a>
         {{/contains}}
+        <a class="header-btn header-navigation open-access-btn" id="open-access-btn"
+           tabindex="-1" title="Go to Open PIC-SURE"
+           href="https://openpicsure.biodatacatalyst.nhlbi.nih.gov/picsureui/"
+           aria-label="Go to Open Open PIC-SURE">Go to Open<br/> PIC-SURE</a>
         {{#contains privileges 'FENCE_PRIV_OPEN_ACCESS'}}
             <a class="header-btn header-navigation" data-href="/picsureui/openAccess#" href="#" id="open-access-btn" tabindex="-1" title="Open Access" aria-label="Open Access">Open Access</a>
             <a id="api-btn" data-href="/picsureui/api" class="header-navigation header-btn authenticated-visible" href="#" tabindex="-1" title="API" aria-haspopup="true" aria-label="API">API</a>
