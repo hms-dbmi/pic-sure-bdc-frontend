@@ -874,8 +874,8 @@ remove when above bug is fixed */
 }
 
 .explor-panel {
-    width: 1000px;
-    height: 350px;
+    width: 650px;
+    min-height: 400px;
     margin-bottom: 0;
 }
 

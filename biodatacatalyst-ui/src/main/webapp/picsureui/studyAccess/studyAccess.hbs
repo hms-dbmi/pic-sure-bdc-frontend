@@ -1,97 +1,16 @@
-<div class="center-panel">
-    <div class="panel panel-outline explor-panel">
-        <div class="panel-heading no-border center-panel">
-            <div class="side-border heading-space">
-                <div>
-                    <h4 class="access-title">Authorized Access</h4>
-                    <button type="button" data-href="/picsureui/queryBuilder" aria-label="Explore Authorized Access"
-                        {{#if authorizedAccess}}class="btn btn-primary btn-blue clickable-button"{{/if}}
-                        {{#unless authorizedAccess}}class="btn btn-primary btn-grey"{{/unless}}
-                        {{#unless authorizedAccess}}disabled="disabled"{{/unless}}>
-                        Explore Now
-                    </button>
-                </div>
-                <div class="participants-container">
-                    <h4 class="">{{auth_studies_cnt}} Studies</h4>
-                    <h5 class="" id="authorized-participants"></h5>
-                    <div id="authorized-participants-spinner"></div>
-                </div>
-            </div>
-            <div class="heading-space">
-                <div>
-                    <h4 class="access-title">Open Access</h4>
-                    <button type="button" class="btn btn-primary btn-blue clickable-button" data-href="/picsureui/openAccess" aria-label="Explore Open Access">Explore Now</button>
-                </div>
-                <div class="participants-container">
-                    <h4 id="open-studies-count" class=""></h4>
-                    <h5 id="open-participants" class=""></h5>
-                    <div id="open-participants-spinner"></div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body" style="display: flex;">
-            <div class="body-space side-border">
-                <ul class="plain-list">
-                    <li style="display: flex; flex-direction:row">
-                        <i class="fa-regular fa-address-card" aria-hidden="true"></i>
-                        <i class="fa-solid fa-dna" aria-hidden="true"></i>
-                        <span>Authorized Phenotypic and Genomic Datasets</span>
-                    </li>
-                    <li>
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        <span>Aggregate Counts</span>
-                    </li>
-                    <li>
-                        <i class="fa-regular fa-user" aria-hidden="true"></i>
-                        <span>Participant-level Data</span>
-                    </li>
-                    <li>
-                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
-                        <span>Visualizations</span>
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
-                        <span>R and Python API Access</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="body-space">
-                <ul class="plain-list">
-                    <li>
-                        <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
-                        <span>No Authorization Required</span>
-                    </li>
-                    <li>
-                        <i class="fa-regular fa-address-card" aria-hidden="true"></i>
-                        <span>All Phenotypic Datasets Available in PIC-SURE</span>
-                    </li>
-                    <li>
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        <span>Aggregate Counts Only</span>
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
-                        <span>R and Python API Access</span>
-                    </li>
-                </ul>
-            </div>
-        </div>  
-    </div>
-</div>
-
-
-
 <div id="studies-access">
     <div class="space-out">
         <div>
             <h2 class="studies-title">Data Access Table</h2>
-            <h4 class="studies-sub-title">View all studies and associated information available in PIC-SURE separated by consent group. Check personalized authorization for available studies in the "Access" column.</h4>
+            <h4 class="studies-sub-title">View all studies and associated information available in PIC-SURE separated by
+                consent group. Check personalized authorization for available studies in the "Access" column.</h4>
         </div>
         <div class="freeze-message">
             <div>{{freeze_msg}}</div>
         </div>
     </div>
     <div class="flex-col table-responsive" style="overflow-x: visible !important;">
-        <table id="data-access-table" style="width:100%" class="table table-striped row-border hover" role="region" aria-label="A table showing infomation about studies included in Pic-sure. Use the first column to request access to studies."></table>
+        <table id="data-access-table" style="width:100%" class="table table-striped row-border hover" role="region"
+               aria-label="A table showing infomation about studies included in Pic-sure. Use the first column to request access to studies."></table>
     </div>
 </div>
