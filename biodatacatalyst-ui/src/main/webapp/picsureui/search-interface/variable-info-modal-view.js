@@ -64,9 +64,12 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 					dataHierarchy: searchResult.result.metadata.data_hierarchy
 				});
 				dataHierarchyView.render();
-				modal.displayModal(dataHierarchyView, "Data Tree for " + searchResult.result.metadata.columnmeta_name, ()=>{
+				modal.displayModal(
+					dataHierarchyView,
+					"Data Hierarchy for " + searchResult.result.metadata.columnmeta_name, ()=> {
 					$('#search-results-div').focus();
-				}, {isHandleTabs: true});
+				}, {isHandleTabs: true, width: "50%"}
+				);
 			},
 			showTagControls: function(event){
 				$('.hover-control', event.target).css('visibility','visible').hover(function() {
