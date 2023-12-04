@@ -1,0 +1,9 @@
+<li>{{name}}
+    {{#if children}}
+        <ul>
+            {{#each children}}
+                {{> hierarchyTemplate}}
+            {{/each}}
+        </ul>
+    {{/if}}
+</li>
