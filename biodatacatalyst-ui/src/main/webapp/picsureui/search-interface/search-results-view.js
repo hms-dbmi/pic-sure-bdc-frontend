@@ -106,7 +106,7 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 					isExcludedTag: isExcludedTag,
 					isUnusedTag: isUnusedTag,
 					tagScore: tagScore,
-					isExportField: filterModel.isExportFieldFromId(variableId),
+					isExportField: filterModel.isExportFieldFromId(variableId, response.metadata.columnmeta_study_id),
 					isHarmonized: searchUtil.isStudyHarmonized(response.metadata.columnmeta_study_id.toLowerCase())
 			}
 			variableInfoCache[variableId].columnmeta_var_id = variableId;
@@ -218,7 +218,11 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 					if (!target.length || target.hasClass('disabled-icon')) return;
 					resultIndex = $(event.target).get(0).data("result-index");
 			}
-			let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
+			let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
+			filteredResults = _.filter(filteredResults, function(result) {
+				let metadata = result.result.metadata;
+				return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))});
+			let searchResult = filteredResults[resultIndex];
 			filterModel.toggleExportField(searchResult);
 		},
 		generateStudyAccession: function(response) {
@@ -292,7 +296,7 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 		updateExportIcons() {
 			let results = this.$("#search-results-datatable tbody tr");
 			_.each(results, (result) => {
-				if (filterModel.isExportFieldFromId(result.dataset.varId) || filterModel.isExportColFromId(result.dataset.varId)) {
+				if (filterModel.isExportFieldFromId(result.dataset.varId, result.dataset.studyId) || filterModel.isExportColFromId(result.dataset.varId, result.dataset.studyId)) {
 					let test = $(result).find('.export-icon');
 					test.removeClass('glyphicon glyphicon-log-out');
 					test.addClass('fa-regular fa-square-check');
@@ -395,10 +399,12 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 								  .attr('data-sequence', "5")
 								  .attr('data-hashed-var-id', data.hashed_var_id)
 								  .attr('data-var-id', data.variable_id)
+								  .attr('data-study-id', data.study_id)
 								  .attr('id', "first-search-result-row");
 						} else {
 							$(row).attr('data-hashed-var-id', data.hashed_var_id)
-								  .attr('data-var-id', data.variable_id);
+								  .attr('data-var-id', data.variable_id)
+								  .attr('data-study-id', data.study_id);
 						}
 					},
 					columnDefs: [

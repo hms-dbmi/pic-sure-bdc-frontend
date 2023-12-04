@@ -121,7 +121,7 @@ define(["backbone", "handlebars", 'underscore', "picSure/settings", "picSure/que
             },
 			toggleExportField: function (searchResult) {
 				var existingField = this.get("exportFields").find((filter) => {
-					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
+					return filter.attributes.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id && filter.attributes.metadata.columnmeta_study_id === searchResult.result.metadata.columnmeta_study_id;
 				});
 				if (existingField === undefined) {
 					this.addExportField(searchResult);
@@ -135,15 +135,15 @@ define(["backbone", "handlebars", 'underscore', "picSure/settings", "picSure/que
 				});
 				return existingField !== undefined;
 			},
-            isExportFieldFromId: function(varId) {
+            isExportFieldFromId: function(varId, studyId) {
                 var existingField = this.get("exportFields").find((filter) => {
-                    return filter.attributes.metadata.columnmeta_var_id === varId;
+                    return filter.attributes.metadata.columnmeta_var_id === varId && filter.attributes.metadata.columnmeta_study_id === studyId;
                 });
                 return existingField !== undefined;
             },
-            isExportColFromId: function(varId) {
+            isExportColFromId: function(varId, studyId) {
                 const existingField = this.get("exportColumns").find((filter) => {
-                    return filter.get('variable').metadata.columnmeta_var_id === varId;
+                    return filter.get('variable').metadata.columnmeta_var_id === varId && filter.get('variable').metadata.columnmeta_study_id === studyId;
                 });
                 return existingField !== undefined;
             },
@@ -208,7 +208,7 @@ define(["backbone", "handlebars", 'underscore', "picSure/settings", "picSure/que
             },
             addExportColumn: function(searchResult, type, source, selectedValues, selectedMin, selectedMax){
                 let existingColumn =   _.find(this.get('exportColumns').models, (model)=>{
-                         return model.attributes.variable.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id;
+                         return model.attributes.variable.metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id && model.attributes.variable.metadata.columnmeta_study_id === searchResult.result.metadata.columnmeta_study_id;
                 });
                 if(existingColumn){
                     existingColumn = existingColumn.attributes;
@@ -258,10 +258,10 @@ define(["backbone", "handlebars", 'underscore', "picSure/settings", "picSure/que
                 else{
                     let column =  type ?
                     _.find(this.get('exportColumns').models, (model)=>{
-                            return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id && model.attributes.type === type;
+                            return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id && model.attributes.variable.metadata.columnmeta_study_id === result.metadata.columnmeta_study_id && model.attributes.type === type;
                     }) :
                     _.find(this.get('exportColumns').models, (model)=>{
-                            return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id;
+                            return model.attributes.variable.metadata.columnmeta_var_id === result.metadata.columnmeta_var_id && model.attributes.variable.metadata.columnmeta_study_id === result.metadata.columnmeta_study_id;
                     });
                     if(column){
                         this.get('exportColumns').remove(column);

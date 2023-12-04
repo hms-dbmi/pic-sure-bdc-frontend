@@ -166,12 +166,11 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 					return;
 				}
 
-				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
-					return filterButton.dataset.target === "variable";
-				}).dataset.id;
+				const dataset = _.find($('.modal .fa-filter'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
 
 				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				if (event.target.dataset.target === "datatable") {
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
