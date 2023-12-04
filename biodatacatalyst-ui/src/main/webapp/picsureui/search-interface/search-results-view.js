@@ -82,7 +82,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                         $('#search-results-datatable').focus();
                     },
                     {
-                        isHandleTabs: true
+                        isHandleTabs: true, width: "50%"
                     }
                 );
             },
