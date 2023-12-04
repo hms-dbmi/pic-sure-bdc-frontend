@@ -41,7 +41,6 @@ define([
 	};
 
 	let goToOpen = function(event){
-		console.log("goToOpen called");
 		event.preventDefault();
 
 		let redirect = new redirectModal();
