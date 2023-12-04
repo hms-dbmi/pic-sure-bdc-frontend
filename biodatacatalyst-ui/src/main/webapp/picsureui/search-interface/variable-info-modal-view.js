@@ -78,11 +78,12 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 				if (event.target.classList.contains('disabled-icon')) {
 					return;
 				}
-				let variableId = _.find($('.modal .fa-filter'),
-					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset.id;
+
+				const dataset = _.find($('.modal .fa-filter'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
 
 				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				if(event.target.dataset.target==='variable'){
 					let filter = filterModel.getByVarId(searchResult.result.varId);

@@ -134,6 +134,7 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 				this.cacheVariableInfo(response, rowData.variable_id);
 				this.dataTableInfoView = new dataTableInfoView({
 					varId: rowData.variable_id,
+					studyId: rowData.study_id,
 					dataTableData: response,
 					isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
 					el: $(".modal-body")
@@ -169,6 +170,7 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 				return;
 			}
 			let varId = $(event.target).data('variable-id');
+			const studyId = $(event.target).data('study-id');
 
 			//Handle Keyboard event
 			if (!varId && !event.target.classList.contains('search-result-action-btn')) {
@@ -178,7 +180,7 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 			}
 
 			let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
-				return varId === result.result.varId;
+				return varId === result.result.varId && studyId === result.result.studyId;
 			});
 
 			let filter = filterModel.getByVarId(varId);
@@ -419,9 +421,9 @@ function(BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
 										exportClass = 'fa-regular fa-square-check';
 									}
 									if (tourAttr) {tourAttr='data-intro="#authorized-actions-row" data-sequence="6" id="first-actions-row"';}
-									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="export-icon search-result-action-btn '+ exportClass+'"></i></span>';
+									return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-study-id="'+row.study_id+'" data-result-index="'+row.result_index+'" title="'+filterTitleText+'" class="fa fa-filter search-result-action-btn"></i><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-study-id="'+row.study_id+'" data-result-index="'+row.result_index+'" title="'+exportTitleText+'" class="export-icon search-result-action-btn '+ exportClass+'"></i></span>';
 								}
-								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
+								return '<span class="search-result-icons col center"'+ tourAttr +'><i data-table-id="'+row.table_id+'" data-variable-id="'+row.variable_id+'" data-study-id="'+row.study_id+'" data-result-index="'+row.result_index+'" title="Click to configure a filter using this variable." class="fa fa-filter search-result-action-btn"></i></span>';
 							},
 							type: 'string',
 							targets: 3
