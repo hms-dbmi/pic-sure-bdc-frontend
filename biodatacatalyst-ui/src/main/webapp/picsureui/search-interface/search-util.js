@@ -89,6 +89,35 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
                 if ( ! (elementBounds.top >= 0 && elementBounds.bottom <= viewportLowerBound)) {
                     element.scrollIntoView();
                 }
+            },
+
+            /**
+             * This function returns the study id from the study abbreviation or study name. If the study id is not found
+             * then the study abbreviation is returned.
+             *
+             * @returns {any[]}
+             */
+            getAntiScopeTags: function() {
+                let queryScopes = JSON.parse(sessionStorage.getItem("session")).queryScopes;
+
+                // tell the back end to exclude concepts from studies not in the user's scope'
+                let antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
+                    //if this study is NOT in the query scopes, _.find will return NULL
+                    return _.find(queryScopes, function(scopeElement){
+                        return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
+                    }) == null;
+                });
+
+                // only include each tag once
+                let antiScopeTags = new Set();
+                _.each(antiScopeStudies, function(study){
+                    //add PHSxxxxxx (caps) and phsxxxxxx.vxx (lower) tags to anti-scope
+                    antiScopeTags.add(study.study_identifier.toUpperCase());
+                    antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
+                });
+
+                // convert set to array
+                return Array.from(antiScopeTags);
             }
         };
     });

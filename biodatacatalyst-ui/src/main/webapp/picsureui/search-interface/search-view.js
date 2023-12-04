@@ -33,21 +33,8 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			let studiesData = JSON.parse(studiesDataJson);
 			this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
-			//tell the back end to exclude concepts from studies not in the user's scope'
-			this.antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
-				//if this study is NOT in the query scopes, _.find will return NULL
-				return _.find(opts.queryScopes, function(scopeElement){
-					return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
-				}) == null;
-			})
-
 			//only include each tag once
-			this.antiScopeTags = new Set();
-			_.each(this.antiScopeStudies, function(study){
-				//add PHSxxxxxx (caps) and phsxxxxxx.vxx (lower) tags to anti-scope
-				this.antiScopeTags.add(study.study_identifier.toUpperCase());
-				this.antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
-			}.bind(this));
+			this.antiScopeTags = searchUtil.getAntiScopeTags();
 
 			this.render();
 			this.tagFilterView = new tagFilterView({
@@ -174,7 +161,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			});
 
 			//exclude the user selected tags as well as tags not in scope
-			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
+			let searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
 			$('#guide-me-button-container').hide();
 			$('#search-results').hide();
 			e && $('#tags-container').hide();
