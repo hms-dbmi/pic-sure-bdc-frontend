@@ -8,7 +8,12 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 			 filterModel, categoricalFilterModalView,
 			 numericalFilterModalView, datatableFilterModalView, datatableExportModalView,
 			 modal, DataHierarchyView){
-
+		let filterUnwantedResultsOut = function (results) {
+			return _.filter(results, function(result) {
+				let metadata = result.result.metadata;
+				return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
+			});
+		};
 		var View = BB.View.extend({
 			initialize: function(opts){
 				this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
@@ -54,11 +59,12 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 				if (event.target.classList.contains('disabled-icon')) {
 					return;
 				}
-				let variableId = _.find($('.modal .fa-sitemap'),
-					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset.id;
 
-				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+				const dataset = _.find($('.modal .fa-sitemap'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
+
+				let searchResult = _.find(filterUnwantedResultsOut(tagFilterModel.attributes.searchResults.results.searchResults),
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				let dataHierarchyView = new DataHierarchyView({
 					dataHierarchy: searchResult.result.metadata.data_hierarchy
@@ -106,11 +112,11 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 				if (event.target.classList.contains('disabled-icon')) {
 					return;
 				}
-				let variableId = _.find($('.modal .fa-filter'),
-					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset.id;
+				const dataset = _.find($('.modal .fa-filter'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
 
-				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+				let searchResult = _.find(filterUnwantedResultsOut(tagFilterModel.attributes.searchResults.results.searchResults),
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				if(event.target.dataset.target==='variable'){
 					let filter = filterModel.getByVarId(searchResult.result.varId);
@@ -193,12 +199,11 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 					return;
 				}
 
-				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
-					return filterButton.dataset.target === "variable";
-				}).dataset.id;
+				const dataset = _.find($('.modal .export-icon'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
 
-				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+				let searchResult = _.find(filterUnwantedResultsOut(tagFilterModel.attributes.searchResults.results.searchResults),
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				if (event.target.dataset.target === "datatable") {
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);

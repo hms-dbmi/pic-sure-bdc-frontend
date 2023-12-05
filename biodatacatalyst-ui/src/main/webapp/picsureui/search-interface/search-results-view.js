@@ -9,24 +9,12 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
               categoricalFilterModalView, filterModel, tagFilterModel,
               modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView, DataHierarchyView) {
         const SPACE = ' ';
-        let shouldDisableActions = function (isHarmonized) {
-            if (isHarmonized) {
-                let nonHarmonizedFitlers = filterModel.get('activeFilters').filter(filter => {
-                    return filter.get('type') !== 'genomic' && !filter.get('isHarmonized');
-                });
-                if (nonHarmonizedFitlers && nonHarmonizedFitlers.length > 0) {
-                    return true;
-                }
-            } else {
-                let harmonizedFitlers = filterModel.get('activeFilters').filter(filter => {
-                    return filter.get('type') !== 'genomic' && filter.get('isHarmonized');
-                });
-                if (harmonizedFitlers && harmonizedFitlers.length > 0) {
-                    return true;
-                }
-            }
-            return false;
-        };
+		let filterUnwantedResultsOut = function (results) {
+			return _.filter(results, function(result) {
+				let metadata = result.result.metadata;
+				return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
+			});
+		};
         let StudyResultsView = BB.View.extend({
             initialize: function (opts) {
                 this.modalTemplate = HBS.compile(modalTemplate);
@@ -57,6 +45,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
             dataHierarchyClickHandler: function (event) {
                 // We need to get the variable id from the parent element
                 let varId = $(event.target).data('variable-id');
+				const studyId = $(event.target).data('study-id');
 
                 if (!varId && !event.target.classList.contains('search-result-action-btn')) {
                     const exportIcon = $(event.target).find('.fa-sitemap.search-result-action-btn').get(0);
@@ -65,7 +54,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                 }
 
                 let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
-                    return varId === result.result.varId;
+                    return varId === result.result.varId && studyId === result.result.studyId;
                 });
 
                 // get the data hierarchy from the search result
@@ -143,7 +132,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                     isExcludedTag: isExcludedTag,
                     isUnusedTag: isUnusedTag,
                     tagScore: tagScore,
-                    isExportField: filterModel.isExportFieldFromId(variableId),
+                    isExportField: filterModel.isExportFieldFromId(variableId, response.metadata.columnmeta_study_id),
                     isHarmonized: searchUtil.isStudyHarmonized(response.metadata.columnmeta_study_id.toLowerCase())
                 };
                 variableInfoCache[variableId].columnmeta_var_id = variableId;
@@ -168,12 +157,20 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                 if (event.target.classList.contains('search-result-action-btn')) {
                     return;
                 }
+				if (event.target.nodeName === 'SPAN') { // user clicked hidden icon
+                    // actions container
+					event.target = event.target.parentNode;
+					// search result row
+					event.target = event.target.parentNode;
+
+                }
                 const rowData = this.searchResultsTable.row(event.target).data();
                 $('#search-results-datatable').blur();
                 this.retrieveDataTableMeta(rowData.study_id + '_' + rowData.table_id, function (response) {
                     this.cacheVariableInfo(response, rowData.variable_id);
                     this.dataTableInfoView = new dataTableInfoView({
                         varId: rowData.variable_id,
+						studyId: rowData.study_id,
                         metadata: rowData.metadata,
                         dataTableData: response,
                         isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
@@ -204,12 +201,16 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                     event.preventDefault();
                     this.infoClickHandler(event);
                 }
+				if (event.key.toLowerCase() === 'h' || event.key.toLowerCase() === 'd') {
+					this.dataHierarchyClickHandler(event);
+				}
             },
             filterClickHandler: function (event) {
                 if (event.target.classList.contains('disabled-icon')) {
                     return;
                 }
                 let varId = $(event.target).data('variable-id');
+				const studyId = $(event.target).data('study-id');
 
                 //Handle Keyboard event
                 if (!varId && !event.target.classList.contains('search-result-action-btn')) {
@@ -219,7 +220,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                 }
 
                 let searchResult = _.find(tagFilterModel.get("searchResults").results.searchResults, (result) => {
-                    return varId === result.result.varId;
+                    return varId === result.result.varId && studyId === result.result.studyId;
                 });
 
                 let filter = filterModel.getByVarId(varId);
@@ -255,9 +256,10 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                     event.target.classList.contains('.glyphicon-log-out.search-result-action-btn'))) {
                     let target = $(event.target).find('.export-icon');
                     if (!target.length || target.hasClass('disabled-icon')) return;
-                    resultIndex = $(event.target).get(0).data("result-index");
+                    resultIndex = $(target).data('result-index');
                 }
-                let searchResult = tagFilterModel.get("searchResults").results.searchResults[resultIndex];
+                const filteredResults = filterUnwantedResultsOut(tagFilterModel.get("searchResults").results.searchResults);
+				const searchResult = filteredResults[resultIndex];
                 filterModel.toggleExportField(searchResult);
             },
             generateStudyAccession: function (response) {
@@ -328,10 +330,10 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                     }, {isHandleTabs: true}
                 );
             },
-            updateExportIcons() {
+            updateExportIcons: function() {
                 let results = this.$("#search-results-datatable tbody tr");
                 _.each(results, (result) => {
-                    if (filterModel.isExportFieldFromId(result.dataset.varId) || filterModel.isExportColFromId(result.dataset.varId)) {
+                    if (filterModel.isExportFieldFromId(result.dataset.varId, result.dataset.studyId) || filterModel.isExportColFromId(result.dataset.varId, result.dataset.studyId)) {
                         let test = $(result).find('.export-icon');
                         test.removeClass('glyphicon glyphicon-log-out');
                         test.addClass('fa-regular fa-square-check');
@@ -350,11 +352,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                 }
 
                 if (tagFilterModel.get("searchResults")) {
-                    let filteredResults = tagFilterModel.get("searchResults").results.searchResults;
-                    filteredResults = _.filter(filteredResults, function (result) {
-                        let metadata = result.result.metadata;
-                        return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
-                    });
+                    let filteredResults = filterUnwantedResultsOut(tagFilterModel.get("searchResults").results.searchResults);
                     if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
                         filteredResults = _.filter(filteredResults, function (result) {
                             return result.result.metadata.columnmeta_is_stigmatized === "false";
@@ -435,10 +433,12 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                                     .attr('data-sequence', "5")
                                     .attr('data-hashed-var-id', data.hashed_var_id)
                                     .attr('data-var-id', data.variable_id)
+									.attr('data-study-id', data.study_id)
                                     .attr('id', "first-search-result-row");
                             } else {
                                 $(row).attr('data-hashed-var-id', data.hashed_var_id)
-                                    .attr('data-var-id', data.variable_id);
+                                    .attr('data-var-id', data.variable_id)
+									.attr('data-study-id', data.study_id);
                             }
                         },
                         columnDefs: [
@@ -451,41 +451,25 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                                 render: function (data, type, row, meta) {
                                     let filterTitleText = "Click to configure a filter using this variable.";
                                     let exportTitleText = "Click to add this variable to your data retrieval.";
+									let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
                                     let tourAttr;
                                     if (row.result_index == 0) {
-                                        tourAttr = 'data-intro="#open-actions-row" data-sequence="6" id="first-actions-row"';
-                                    }
-                                    if (!JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
-                                        let exportClass = 'glyphicon glyphicon-log-out';
-                                        if (filterModel.isExportFieldFromId(row.variable_id)) {
-                                            exportClass = 'fa-regular fa-square-check';
-                                        }
-                                        if (tourAttr) {
-                                            tourAttr = 'data-intro="#authorized-actions-row" data-sequence="6" id="first-actions-row"';
-                                        }
-
-                                        let iconHtml = '<span class="search-result-icons row center"' + tourAttr + '>';
-
-                                        if (row.metadata.data_hierarchy) {
-                                            iconHtml += '<i class="fa-solid fa-sitemap search-result-action-btn" data-variable-id="' + row.variable_id + '" title="View Data Tree"></i>';
-                                        }
-
-                                        iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-result-index="' + row.result_index + '" title="' + filterTitleText + '" class="fa fa-filter search-result-action-btn"></i><i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-result-index="' + row.result_index + '" title="' + exportTitleText + '" class="export-icon search-result-action-btn ' + exportClass + '"></i>' +
-                                            '</span>';
-
-                                        return iconHtml;
+                                        tourAttr = isOpenAccess ? ' data-intro="#open-actions-row"' : ' data-intro="#authorized-actions-row"' + ' data-sequence="6" id="first-actions-row"';
                                     }
 
-                                    let iconHtml = '<span class="search-result-icons row center"' + tourAttr + '>';
+									let iconHtml = tourAttr ? '<span class="search-result-icons row center"' + tourAttr + '>' : '<span class="search-result-icons row center">';
 
-                                    if (row.metadata.data_hierarchy) {
-                                        iconHtml += '<i class="fa-solid fa-sitemap search-result-action-btn" data-variable-id="' + row.variable_id + '" title="View Data Tree"></i>';
-                                    }
-
-                                    iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-result-index="' + row.result_index + '" title="' + filterTitleText + '" class="fa fa-filter search-result-action-btn"></i>' +
-                                        '</span>';
-
-                                    return iconHtml;
+									// add data_hierarchy
+									iconHtml += '<i class="fa-solid fa-sitemap search-result-action-btn ' + (row.metadata.data_hierarchy ? '" title="View Data Tree"' : 'disabled-icon hidden-icon" title="This variable does not have a data hierarchy."') + ' data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '"></i>';
+									// add filter
+									iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + filterTitleText + '" class="fa fa-filter search-result-action-btn"></i>'
+									// add export
+									if (!isOpenAccess) {
+										iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + exportTitleText + '" class="export-icon search-result-action-btn ' 
+												 + (filterModel.isExportFieldFromId(row.variable_id, row.study_id) ? 'fa-regular fa-square-check' : 'glyphicon glyphicon-log-out') + '"></i>';
+									}
+									iconHtml += '</span>';
+									return iconHtml;
                                 },
                                 type: 'string',
                                 targets: 3
