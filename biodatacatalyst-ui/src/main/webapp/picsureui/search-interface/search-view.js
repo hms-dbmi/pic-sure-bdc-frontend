@@ -97,8 +97,6 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 		setUpTour: function() {
 			return new Promise((resolve, reject) => {
 				try{
-					const session = JSON.parse(sessionStorage.getItem("session"));
-					let abbreviatedName;
 					let results = $.Deferred();
 					if (this.isOpenAccess) {
 						$('#search-box').val('epilepsy');
@@ -107,19 +105,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 								resolve();
 							});
 					} else {
-						let phs = undefined;
-						if (tagFilterModel.get('requiredTags').length > 0) {
-							phs = tagFilterModel.get('requiredTags').at(0).get('tag');
-						} else if (filterModel.get('activeFilters').length > 0 && filterModel.get('activeFilters')?.at(0).get('searchResult')) {
-							abbreviatedName = filterModel.get('activeFilters').at(0).get('searchResult').result.metadata.derived_study_abv_name;
-						} else if (session.queryScopes && session.queryScopes[0]) {
-							phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
-							phs = phs.substring(1, phs.length-1); // remove the backslashes
-						}
-						if (!abbreviatedName) {
-							abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs) || 'epilepsy';
-						}
-						$('#search-box').val(abbreviatedName);
+						$("#search-box").val("cardiac surgery");
 						results = this.submitSearch($('#search-button').get());
 						$.when(results).then(()=> {
 							resolve();
