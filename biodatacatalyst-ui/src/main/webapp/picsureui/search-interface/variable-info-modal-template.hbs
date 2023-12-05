@@ -11,14 +11,14 @@
         <div>
             Variable Accession: {{variableMetadata.columnmeta_var_id}}
             {{#if hasDataHierarchy}}
-                <i data-target="variable" data-id="{{variableId}}" aria-label="View Data Hierarchy Button - {{dataTreeTitleText}}" title="{{dataTreeTitleText}}" class="fa-solid fa-sitemap search-result-action-btn" tabindex=1000000></i>
+                <i data-target="variable" data-id="{{variableId}}" data-study="{{variableMetadata.derived_study_id}}" aria-label="View Data Hierarchy Button - {{dataTreeTitleText}}" title="{{dataTreeTitleText}}" class="fa-solid fa-sitemap search-result-action-btn" tabindex=1000000></i>
             {{/if}}
-            <i data-target="variable" data-id="{{variableId}}" aria-label="Filter By Variable Button - {{filterTitleText}}" title="{{filterTitleText}}" tabindex=1000001 class="fa fa-filter search-result-action-btn"></i>
+            <i data-target="variable" data-id="{{variableId}}" data-study="{{variableMetadata.derived_study_id}}" aria-label="Filter By Variable Button - {{filterTitleText}}" title="{{filterTitleText}}" tabindex=1000001 class="fa fa-filter search-result-action-btn"></i>
             {{#if isAuthorized}}
                 {{#if isExportField}}
-                <i data-target="variable" data-id="{{variableId}}" aria-label="Add Variable to Export Button - {{exportTitleText}}" title="{{exportTitleText}}" tabindex=1000002 class="fa-regular fa-square-check export-icon search-result-action-btn"></i>
+                <i data-target="variable" data-id="{{variableId}}" data-study="{{variableMetadata.derived_study_id}}" aria-label="Add Variable to Export Button - {{exportTitleText}}" title="{{exportTitleText}}" tabindex=1000002 class="fa-regular fa-square-check export-icon search-result-action-btn"></i>
                 {{else}}
-                <i data-target="variable" data-id="{{variableId}}" aria-label="Add Variable to Export Button - {{exportTitleText}}" title="{{exportTitleText}}" tabindex=1000002 class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i>
+                <i data-target="variable" data-id="{{variableId}}" data-study="{{variableMetadata.derived_study_id}}" aria-label="Add Variable to Export Button - {{exportTitleText}}" title="{{exportTitleText}}" tabindex=1000002 class="glyphicon glyphicon-log-out export-icon search-result-action-btn"></i>
                 {{/if}}
 
             {{/if}}
