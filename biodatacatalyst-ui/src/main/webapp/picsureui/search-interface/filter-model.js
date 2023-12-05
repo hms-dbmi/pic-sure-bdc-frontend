@@ -212,7 +212,7 @@ define(["backbone", "handlebars", 'underscore', "picSure/settings", "picSure/que
             addExportColumn: function(searchResult, type, source, selectedValues, selectedMin, selectedMax){
                 let existingColumn =   _.find(this.get('exportColumns').models, (model)=>{
                          return model.get('variable').metadata.columnmeta_var_id === searchResult.result.metadata.columnmeta_var_id && 
-                                model.get('variable').metadata.columnmeta_study_id === searchResult.result.metadata.columnmeta_study_id;;
+                                model.get('variable').metadata.columnmeta_study_id === searchResult.result.metadata.columnmeta_study_id;
                 });
                 if(existingColumn){
                     existingColumn = existingColumn.attributes;
