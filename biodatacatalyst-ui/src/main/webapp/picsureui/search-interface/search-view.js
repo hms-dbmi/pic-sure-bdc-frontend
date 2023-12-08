@@ -33,21 +33,8 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			this.searchViewTemplate = HBS.compile(searchViewTemplate);
 			let studiesData = JSON.parse(studiesDataJson);
 			this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
-			//tell the back end to exclude concepts from studies not in the user's scope'
-			this.antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
-				//if this study is NOT in the query scopes, _.find will return NULL
-				return _.find(opts.queryScopes, function(scopeElement){
-					return scopeElement.toLowerCase().includes(studyData.study_identifier.toLowerCase());
-				}) == null;
-			})
-
 			//only include each tag once
-			this.antiScopeTags = new Set();
-			_.each(this.antiScopeStudies, function(study){
-				//add PHSxxxxxx (caps) and phsxxxxxx.vxx (lower) tags to anti-scope
-				this.antiScopeTags.add(study.study_identifier.toUpperCase());
-				this.antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
-			}.bind(this));
+			this.antiScopeTags = searchUtil.getAntiScopeTags();
 
 			this.render();
 			this.tagFilterView = new tagFilterView({
@@ -110,8 +97,6 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 		setUpTour: function() {
 			return new Promise((resolve, reject) => {
 				try{
-					const session = JSON.parse(sessionStorage.getItem("session"));
-					let abbreviatedName;
 					let results = $.Deferred();
 					if (this.isOpenAccess) {
 						$('#search-box').val('epilepsy');
@@ -120,19 +105,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 								resolve();
 							});
 					} else {
-						let phs = undefined;
-						if (tagFilterModel.get('requiredTags').length > 0) {
-							phs = tagFilterModel.get('requiredTags').at(0).get('tag');
-						} else if (filterModel.get('activeFilters').length > 0 && filterModel.get('activeFilters')?.at(0).get('searchResult')) {
-							abbreviatedName = filterModel.get('activeFilters').at(0).get('searchResult').result.metadata.derived_study_abv_name;
-						} else if (session.queryScopes && session.queryScopes[0]) {
-							phs = session.queryScopes.find(scope => scope.startsWith('\\p'));
-							phs = phs.substring(1, phs.length-1); // remove the backslashes
-						}
-						if (!abbreviatedName) {
-							abbreviatedName = searchUtil.findStudyAbbreviationFromId(phs) || 'epilepsy';
-						}
-						$('#search-box').val(abbreviatedName);
+						$("#search-box").val("cardiac surgery");
 						results = this.submitSearch($('#search-button').get());
 						$.when(results).then(()=> {
 							resolve();
@@ -174,7 +147,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			});
 
 			//exclude the user selected tags as well as tags not in scope
-			searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
+			let searchExcludeTags = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? this.excludedTags : [...this.excludedTags, ...this.antiScopeTags];
 			$('#guide-me-button-container').hide();
 			$('#search-results').hide();
 			e && $('#tags-container').hide();

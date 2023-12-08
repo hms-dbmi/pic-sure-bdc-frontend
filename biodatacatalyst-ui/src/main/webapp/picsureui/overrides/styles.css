@@ -775,6 +775,11 @@ remove when above bug is fixed */
     color: #adadad;
 }
 
+.disabled-icon.hidden-icon {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .results-panel {
     background-color: var(--catalyst-dark-blue);
     height: max-content;
@@ -874,8 +879,8 @@ remove when above bug is fixed */
 }
 
 .explor-panel {
-    width: 1000px;
-    height: 350px;
+    width: 650px;
+    min-height: 400px;
     margin-bottom: 0;
 }
 

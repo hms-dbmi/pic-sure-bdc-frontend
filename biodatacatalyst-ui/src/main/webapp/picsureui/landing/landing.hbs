@@ -1,0 +1,148 @@
+<style>
+    #main-content {
+        margin-top: unset;
+        padding-top: unset;
+    }
+
+    .landing-container {
+        width: 80%;
+        margin: 2% auto 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        height: 75%;
+    }
+
+    .landing-nav-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 80%;
+    }
+
+    .landing-anchor {
+        color: var(--catalyst-blue);
+        background-color: transparent;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .landing-anchor i {
+        font-size: 5rem;
+        padding-bottom: .3em;
+        margin: 0 auto;
+        text-decoration: none;
+    }
+
+    .landing-anchor p {
+        font-size: 1.6rem;
+    }
+
+    /* Grow landing anchor on hover */
+    .landing-anchor:hover {
+        transform: scale(1.1);
+        transition: transform .2s;
+    }
+
+    .landing-counts {
+        background: var(--catalyst-blue);
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 3rem 1rem;
+        width: 70%;
+    }
+
+    .landing-count {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 2.5rem;
+        font-weight: 100;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .search-container button {
+        margin-left: 1rem;
+        padding: .625rem 2.5rem;
+        border-radius: .625em;
+    }
+
+    #landingSearch {
+        flex-grow: 1;
+        padding: 1rem;
+    }
+
+    .search-container input {
+        padding: 10px;
+        width: 100%;
+        border: 1px solid #C2C2C2;
+    }
+</style>
+<div class="landing-container">
+    <div>
+        <div class="search-container">
+            <input type="text" placeholder="Search studies or variables" class="form-control" style="padding: 10px; width: 100%;"
+                   id="landingSearchInput"/>
+            <button class="btn btn-primary" id="landingSearchButton">Search</button>
+        </div>
+        <div>
+            <p style="font-size: 1.3em"><i>NHLBI BioData Catalyst® Powered by PIC-SURE</i> can be used to explore studies, conduct feasibility tests, create cohorts,<br /> and select data at the variable-value and genomic variant level.</p>
+        </div>
+    </div>
+    <div class="landing-nav-buttons">
+        <a class="landing-anchor" href="/picsureui/queryBuilder" tabindex="0">
+            <div>
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                <p>Search Variables,<br/> Build Cohorts, and<br /> Export Participant-<br/>Level Data in<br/> <b>Authorized Access</b></p>
+            </div>
+        </a>
+        <a class="landing-anchor" href="/picsureui/dataAccess" tabindex="0">
+            <div>
+                <i class="fa-solid fa-table-list"></i>
+                <p>Browse Your<br/>Access to<br/>Studies in<br/><b>Data Access<br/> Dashboard</b></p>
+            </div>
+        </a>
+        <a class="landing-anchor" href="https://biodatacatalyst.nhlbi.nih.gov/" target="_blank" tabindex="0">
+            <div>
+                <i class="fa-solid fa-graduation-cap"></i>
+                <p>Learn<br/> About the <br/><b>BDC Ecosystem</b></p>
+            </div>
+        </a>
+        <a href="https://openpicsure.biodatacatalyst.nhlbi.nih.gov/picsureui/" target="_blank" class="landing-anchor"
+           tabindex="0">
+            <div style="justify-content: center">
+                <i class="fa-solid fa-lock-open"></i>
+                <p>Discover and<br/> Explore All Studies in<br/><b>Open PIC-SURE</b></p>
+            </div>
+        </a>
+    </div>
+    <div class="landing-counts">
+        <div class="landing-count">
+            <div id="authorized-studies"></div>
+            <div id="authorized-studies-spinner">0</div>
+            <p>Available Studies</p>
+        </div>
+        <div class="landing-count">
+            <div id="authorized-participants"></div>
+            <div id="authorized-participants-spinner">0</div>
+            <p>Total Participants</p>
+        </div>
+        <div class="landing-count">
+            <div id="authorized-variables"></div>
+            <div id="authorized-variables-spinner">0</div>
+            <p>Total Variables</p>
+        </div>
+    </div>
+</div>

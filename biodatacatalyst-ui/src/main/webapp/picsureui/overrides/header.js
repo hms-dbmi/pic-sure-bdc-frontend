@@ -1,11 +1,15 @@
 define([
 	"common/keyboard-nav",
 	"common/pic-dropdown",
-	"common/menu-nav-controls"
+	"common/menu-nav-controls",
+	"common/modal",
+	"common/redirect-modal"
 ],function (
 	keyboardNav,
 	dropdown,
 	menuNavControls,
+	modal,
+	redirectModal
 ) {
 
 	let headerTabs = undefined;
@@ -34,7 +38,14 @@ define([
 		if (!e.relatedTarget) {
 			dropdown.closeDropdown(e);
 		}
-	}
+	};
+
+	let goToOpen = function(event){
+		event.preventDefault();
+
+		let redirect = new redirectModal();
+		redirect.render(event);
+	};
 
 	return {
 		/*
@@ -64,10 +75,14 @@ define([
 				'keynav-end': menuNavControls.endKeyPressed,
 				'keynav-letters': menuNavControls.letterKeyPressed,
 			});
-      
+
 			if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']) {
 				keyboardNav.addNavigableView("headerTabs", view);
 			}
+
+			view.events['click #open-access-btn'] = goToOpen;
+
+			view.delegateEvents();
 		},
 	};
 });

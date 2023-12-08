@@ -2,13 +2,18 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 		"search-interface/tag-filter-model", "text!options/modal.hbs", "search-interface/variable-info-cache",
 		"search-interface/filter-model","search-interface/categorical-filter-modal-view",
 		"search-interface/numerical-filter-modal-view", "search-interface/datatable-filter-modal-view","search-interface/datatable-export-modal-view",
-		"common/modal"],
+		"common/modal", "search-interface/data-hierarchy-view"],
 	function($, BB, HBS, _, dataTableInfoTemplate,
 			 tagFilterModel, modalTemplate, variableInfoCache,
 			 filterModel, categoricalFilterModalView,
 			 numericalFilterModalView, datatableFilterModalView, datatableExportModalView,
-			 modal){
-
+			 modal, DataHierarchyView){
+		let filterUnwantedResultsOut = function (results) {
+			return _.filter(results, function(result) {
+				let metadata = result.result.metadata;
+				return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
+			});
+		};
 		var View = BB.View.extend({
 			initialize: function(opts){
 				this.dataTableInfoTemplate = HBS.compile(dataTableInfoTemplate);
@@ -17,9 +22,12 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 				this.varId = opts.varId;
 				const filterTitleText = "Click to configure a filter using this variable.";
 				const exportTitleText = "Click to add this variable to your data retrieval.";
+				const dataTreeTitleText = "Click to view the data tree for this variable.";
 				variableInfoCache[opts.varId].isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
 				variableInfoCache[opts.varId].filterTitleText = filterTitleText;
 				variableInfoCache[opts.varId].exportTitleText = exportTitleText;
+				variableInfoCache[opts.varId].hasDataHierarchy = opts.metadata.data_hierarchy !== undefined && opts.metadata.data_hierarchy !== null && opts.metadata.data_hierarchy !== "" && opts.metadata.data_hierarchy !== "{}";
+				variableInfoCache[opts.varId].dataTreeTitleText = dataTreeTitleText;
 				this.dataTableData = opts.dataTableData;
 				tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
 				tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
@@ -37,14 +45,40 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 				'click #show-fewer-tags-btn': 'showFewerTags',
 				'click .fa-filter': 'filterClickHandler',
 				'click .export-icon': 'databaseClickHandler',
+				'click .fa-sitemap': 'dataTreeClickHandler',
 				'keypress .fa-filter': 'filterKeypressHandler',
-				'keypress .export-icon': 'databaseKeypressHandler'
+				'keypress .export-icon': 'databaseKeypressHandler',
+				'keypress .fa-sitemap': 'dataTreeKeypressHandler'
+			},
+			dataTreeKeypressHandler: function(event){
+				if(event.key.toLowerCase()==='enter' || event.key.toLowerCase()===' '){
+					this.dataTreeClickHandler(event);
+				}
+			},
+			dataTreeClickHandler: function(event){
+				if (event.target.classList.contains('disabled-icon')) {
+					return;
+				}
+
+				const dataset = _.find($('.modal .fa-sitemap'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
+
+				let searchResult = _.find(filterUnwantedResultsOut(tagFilterModel.attributes.searchResults.results.searchResults),
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
+
+				let dataHierarchyView = new DataHierarchyView({
+					dataHierarchy: searchResult.result.metadata.data_hierarchy
+				});
+				dataHierarchyView.render();
+				modal.displayModal(dataHierarchyView, "Data Tree for " + searchResult.result.metadata.columnmeta_name, ()=>{
+					$('#search-results-div').focus();
+				}, {isHandleTabs: true});
 			},
 			showTagControls: function(event){
 				$('.hover-control', event.target).css('visibility','visible').hover(function() {
 					$(this).css("visibility", "visible");
 					$(this).css("cursor", "pointer");
-				})
+				});
 			},
 			hideTagControls: function(event){
 				$('.hover-control', event.target).css('visibility','hidden');
@@ -78,11 +112,11 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 				if (event.target.classList.contains('disabled-icon')) {
 					return;
 				}
-				let variableId = _.find($('.modal .fa-filter'),
-					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset.id;
+				const dataset = _.find($('.modal .fa-filter'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
 
-				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+				let searchResult = _.find(filterUnwantedResultsOut(tagFilterModel.attributes.searchResults.results.searchResults),
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				if(event.target.dataset.target==='variable'){
 					let filter = filterModel.getByVarId(searchResult.result.varId);
@@ -165,12 +199,11 @@ define(["jquery","backbone","handlebars", "underscore", "text!search-interface/v
 					return;
 				}
 
-				let variableId = _.find($('.modal .export-icon'), (filterButton) => {
-					return filterButton.dataset.target === "variable";
-				}).dataset.id;
+				const dataset = _.find($('.modal .export-icon'),
+					(filterButton)=>{return filterButton.dataset.target==='variable';}).dataset;
 
-				let searchResult = _.find(tagFilterModel.attributes.searchResults.results.searchResults,
-					function(variable){return variable.result.varId===variableId;});
+				let searchResult = _.find(filterUnwantedResultsOut(tagFilterModel.attributes.searchResults.results.searchResults),
+					function(variable){return variable.result.varId===dataset.id && variable.result.studyId===dataset.study;});
 
 				if (event.target.dataset.target === "datatable") {
 					let filter = filterModel.getByDatatableId(event.target.dataset.id);
