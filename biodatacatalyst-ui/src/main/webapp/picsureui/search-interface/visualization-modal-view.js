@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!search-interface/visualization-modal-view.hbs", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings", "common/spinner", "plotly"],
-    function ($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings, spinner, plotly) {
+define(["jquery", "backbone", "handlebars", "text!search-interface/visualization-modal-view.hbs", "search-interface/filter-model", "picSure/queryBuilder", "text!search-interface/visualization-image-partial.hbs", "picSure/settings", "common/spinner"],
+    function ($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings, spinner) {
         let defaultModel = BB.Model.extend({
             defaults: {
                 spinnerClasses: "spinner-medium spinner-medium-center ",
@@ -319,34 +319,43 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                     this.data.layouts.push(layout);
                 });
             },
+            loadPlotly: function (callback) {
+                require(['plotly'], function (plotly) {
+                    callback(plotly);
+                });
+            },
             render: function () {
+                // lazy load plotly js when the modal is opened
                 this.$el.html(this.template(this.model.toJSON()));
-                for (let i = 0; i < this.data.traces.length; i++) {
-                    let plot = document.createElement('div');
-                    let screenReaderText = 'Histogram showing the visualization of ';
+                this.loadPlotly((plotly) => {
+                    for (let i = 0; i < this.data.traces.length; i++) {
+                        let plot = document.createElement('div');
+                        let screenReaderText = 'Histogram showing the visualization of ';
 
-                    // We need to do this because the traces are a 2d array. As long as one of the traces is categorical,
-                    // we need to add the screen reader text
-                    let unformatedTitle;
-                    for (let j = 0; j < this.data.traces[i].length; j++) {
-                        if (this.data.traces[i][j].isCategorical) {
-                            screenReaderText = 'Column chart showing the visualization of ';
+                        // We need to do this because the traces are a 2d array. As long as one of the traces is categorical,
+                        // we need to add the screen reader text
+                        let unformatedTitle;
+                        for (let j = 0; j < this.data.traces[i].length; j++) {
+                            if (this.data.traces[i][j].isCategorical) {
+                                screenReaderText = 'Column chart showing the visualization of ';
+                            }
+
+                            if (this.data.traces[i][j].unformatedTitle) {
+                                unformatedTitle = this.data.traces[i][j].unformatedTitle;
+                                break;
+                            }
                         }
 
-                        if (this.data.traces[i][j].unformatedTitle) {
-                            unformatedTitle = this.data.traces[i][j].unformatedTitle;
-                            break;
-                        }
+                        plot.setAttribute('id', 'plot' + i);
+                        plot.setAttribute('aria-label', screenReaderText + unformatedTitle);
+                        plot.setAttribute('title', 'Visualization of ' + unformatedTitle);
+                        plot.classList.add('image-container');
+                        document.getElementById('visualizations-container').appendChild(plot);
+                        this.config.toImageButtonOptions.filename = unformatedTitle;
+                        plotly.newPlot(plot, this.data.traces[i], this.data.layouts[i], this.config);
                     }
+                });
 
-                    plot.setAttribute('id', 'plot' + i);
-                    plot.setAttribute('aria-label', screenReaderText + unformatedTitle);
-                    plot.setAttribute('title', 'Visualization of ' + unformatedTitle);
-                    plot.classList.add('image-container');
-                    document.getElementById('visualizations-container').appendChild(plot);
-                    this.config.toImageButtonOptions.filename = unformatedTitle;
-                    plotly.newPlot(plot, this.data.traces[i], this.data.layouts[i], this.config);
-                }
                 return this;
             }
         });
