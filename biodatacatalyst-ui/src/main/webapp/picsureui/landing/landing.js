@@ -34,6 +34,8 @@ define(["underscore", "jquery", "backbone", "handlebars", "text!landing/landing.
                 window.location.href = "/picsureui/queryBuilder";
             },
             render: function () {
+                this.$el.html(this.template());
+
                 // get counts for studies and participants
                 let records = studyUtility.groupRecordsByAccess();
 
@@ -97,7 +99,6 @@ define(["underscore", "jquery", "backbone", "handlebars", "text!landing/landing.
                 spinner.medium(deferredParticipants, "#authorized-participants-spinner", "spinner2");
                 spinner.medium(deferredParticipants, "#authorized-studies-spinner", "spinner2");
 
-                this.$el.html(this.template());
                 return this;
             }
         });
