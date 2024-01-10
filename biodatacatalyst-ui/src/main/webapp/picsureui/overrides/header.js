@@ -3,13 +3,15 @@ define([
 	"common/pic-dropdown",
 	"common/menu-nav-controls",
 	"common/modal",
-	"common/redirect-modal"
+	"common/redirect-modal",
+	"common/terms-of-use"
 ],function (
 	keyboardNav,
 	dropdown,
 	menuNavControls,
 	modal,
-	redirectModal
+	redirectModal,
+	tos,
 ) {
 
 	let headerTabs = undefined;
@@ -47,6 +49,19 @@ define([
 		redirect.render(event);
 	};
 
+	let openTermsOfUse = function(event) {
+		event.preventDefault();
+		const tosView = new tos();
+		modal.displayModal(
+			tosView,
+			"BDC PIC-SURE Terms of Service",
+			() => {
+				$('#help-dropdown-toggle').focus();
+			},
+			{isHandleTabs: true}
+		);
+	}
+
 	return {
 		/*
 			* The path to a logo image incase you don't want the default PrecisionLink one.
@@ -81,6 +96,7 @@ define([
 			}
 
 			view.events['click #open-access-btn'] = goToOpen;
+			view.events['click #terms-of-use-option'] = openTermsOfUse;
 
 			view.delegateEvents();
 		},
