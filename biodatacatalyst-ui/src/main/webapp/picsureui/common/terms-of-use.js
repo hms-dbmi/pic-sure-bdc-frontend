@@ -1,7 +1,7 @@
 define([
     'backbone',
     'handlebars',
-    'text!search-interface/terms-of-use.hbs',
+    'text!common/terms-of-use.hbs',
 ], function(BB, HBS, template) {
     var TosView = BB.View.extend({
         initialize: function(){
