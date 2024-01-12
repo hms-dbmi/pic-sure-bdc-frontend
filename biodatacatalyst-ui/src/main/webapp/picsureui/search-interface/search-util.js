@@ -96,9 +96,7 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
             */
             shouldShowDCCDataSets: function() {
                 const queryScopes = JSON.parse(sessionStorage.getItem("session"))?.queryScopes;
-                const harmonizedStudies = _.filter(queryScopes, (scope) => {
-                    return this.isStudyHarmonized(scope.replace(/\\/g, ''));
-                });
+                const harmonizedStudies = queryScopes.filter(scope => this.isStudyHarmonized(scope.replace(/\\/g, '')));
                 return harmonizedStudies?.length > 1;
             },
 
@@ -125,9 +123,8 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
                     antiScopeTags.add(study.study_identifier.toUpperCase());
                     antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
                 });
-                if (!this.shouldShowDCCDataSets()) {
-                    antiScopeTags.add(dccHarmonizedTag);
-                }
+                // add dcc harmonized tag if user does not have access to more than one harmonized study
+                !this.shouldShowDCCDataSets() && antiScopeTags.add(dccHarmonizedTag)
 
                 // convert set to array
                 return Array.from(antiScopeTags);
