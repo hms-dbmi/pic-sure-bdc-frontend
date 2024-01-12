@@ -54,7 +54,7 @@ define([
 		const tosView = new tos();
 		modal.displayModal(
 			tosView,
-			"BDC PIC-SURE Terms of Service",
+			"BDC PIC-SURE Terms of Use",
 			() => {
 				$('#help-dropdown-toggle').focus();
 			},
