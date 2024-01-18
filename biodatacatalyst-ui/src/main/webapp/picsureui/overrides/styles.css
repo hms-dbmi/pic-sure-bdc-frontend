@@ -330,6 +330,10 @@ body {
     font-size: 14px;
 }
 
+#data-access-table_filter {
+    margin: 0 8px;
+}
+
 #data-access-table td, #data-access-table th {
     padding: 8px 0px;
     vertical-align: middle;
