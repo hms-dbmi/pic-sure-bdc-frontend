@@ -1,3 +1,4 @@
+ARG FILE_SUFFIX=development
 FROM hms-dbmi/pic-sure-hpds-ui:TARGET_BUILD_VERSION AS pic-sure-ui
 FROM httpd:2.4.53-alpine as core-ui
 
