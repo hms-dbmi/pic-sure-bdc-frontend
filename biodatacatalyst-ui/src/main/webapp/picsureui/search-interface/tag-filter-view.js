@@ -221,7 +221,7 @@ function(BB, HBS, _, tagFilterViewTemplate, tagFilterModel, filterModel, keyboar
 		render: function(){
 			let unusedTags = this.model.get("unusedTags").toArray();
 			let filteredTags = _.filter(unusedTags, function(tag){
-				return ! (tag.get('tag')===dccHarmonizedTag || studyVersionRegex.test(tag.get('tag'))) && ! tableVersionRegex.test(tag.get('tag'));
+				return ! (tag.get('tag')===dccHarmonizedTag || searchUtil.isStudy(tag.get('tag'))) && ! tableVersionRegex.test(tag.get('tag'));
 			}).map(function(tag){return tag.toJSON();})
 			let tags = filteredTags.slice(0,this.model.get('tagLimit'));
 			let studyTags = this.determineStudyTags(unusedTags);
