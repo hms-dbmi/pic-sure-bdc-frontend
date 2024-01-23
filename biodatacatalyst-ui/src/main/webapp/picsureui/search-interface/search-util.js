@@ -96,7 +96,7 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
             */
             shouldShowDCCDataSets: function() {
                 const queryScopes = JSON.parse(sessionStorage.getItem("session"))?.queryScopes;
-                const harmonizedStudies = queryScopes.filter(scope => this.isStudyHarmonized(scope.replace(/\\/g, '')));
+                const harmonizedStudies = queryScopes?.filter(scope => this.isStudyHarmonized(scope.replace(/\\/g, '')));
                 return harmonizedStudies?.length > 1;
             },
 
