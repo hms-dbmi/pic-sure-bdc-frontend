@@ -5,7 +5,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studyAccess.hbs", 
              transportErrors, queryBuilder, settings, spinner,
              outputPanelOverrides, search, studyUtility){
         var studyAccess = {
-            freezeMsg: "(Current TOPMed data is Freeze5b)",
+            freezeMsg: "(Current TOPMed data is Freeze9)",
         };
 
         // build view

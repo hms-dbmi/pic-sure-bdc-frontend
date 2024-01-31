@@ -91,6 +91,15 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
                 }
             },
 
+             /*
+                This function detects if the user should see the dcc tag and variables in search results.
+            */
+            shouldShowDCCDataSets: function() {
+                const queryScopes = JSON.parse(sessionStorage.getItem("session"))?.queryScopes;
+                const harmonizedStudies = queryScopes?.filter(scope => this.isStudyHarmonized(scope.replace(/\\/g, '')));
+                return harmonizedStudies?.length > 1;
+            },
+
             /**
              * This function returns the study id from the study abbreviation or study name. If the study id is not found
              * then the study abbreviation is returned.
@@ -99,7 +108,6 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
              */
             getAntiScopeTags: function() {
                 let queryScopes = JSON.parse(sessionStorage.getItem("session")).queryScopes;
-
                 // tell the back end to exclude concepts from studies not in the user's scope'
                 let antiScopeStudies = _.filter(studiesData.bio_data_catalyst, function(studyData){
                     //if this study is NOT in the query scopes, _.find will return NULL
@@ -115,6 +123,8 @@ define(["jquery", "underscore", "text!studyAccess/studies-data.json", "text!sett
                     antiScopeTags.add(study.study_identifier.toUpperCase());
                     antiScopeTags.add((study.study_identifier + "." + study.study_version).toLowerCase());
                 });
+                // add dcc harmonized tag if user does not have access to more than one harmonized study
+                !this.shouldShowDCCDataSets() && antiScopeTags.add(dccHarmonizedTag)
 
                 // convert set to array
                 return Array.from(antiScopeTags);

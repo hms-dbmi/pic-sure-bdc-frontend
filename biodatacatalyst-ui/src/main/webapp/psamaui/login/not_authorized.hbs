@@ -3,7 +3,7 @@
     <p>Your user account is not yet authorized to use this system.</p>
     <p>
         Please contact the
-        <a href="https://bdcatalyst.freshdesk.com/support/home"
+        <a href="{{helpLink}}"
             aria-label="Clicking here will take you to the given link in another tab."
             target="_blank" title='Clicking here will take you to the given link in another tab'>
             administrator
@@ -11,6 +11,6 @@
         if you believe this is an error.
     </p>
     <p>If you believe you logged in using the wrong account, please <a
-            href="/psamaui/login/?redirection_url=/picsureui/">Click Here</a> to try logging in again.</p>
+            href="{{loginLink}}">Click Here</a> to try logging in again.</p>
 </div>
 <script>sessionStorage.clear();localStorage.clear();</script>
