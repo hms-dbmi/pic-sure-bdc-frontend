@@ -118,7 +118,7 @@
             </button>
             <ul id="help-menu-list" class="nav-dropdown-menu" tabindex="-1">
                 {{#if videoLink}}<li id="video-demo-option" class="dropdown" aria-label="Video Demonstration, clicking here will open a link in a new tab"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a target="_blank" href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
                 {{#if jupyterExampleLink}}<li id="jupyter-examples-option" class="dropdown" aria-label="Jupyter Examples, clicking here will open a link  in a new tab"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
                 {{#if documentationLink}}<li id="documentation-option" class="dropdown" aria-label="BioData Catalyst Documentation, clicking here will open a link  in a new tab"><a href="{{{documentationLink}}}">BioData Catalyst Documentation</a></li>{{/if}}
                 {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
