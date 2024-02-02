@@ -1,4 +1,4 @@
-define(["jquery", "common/keyboard-nav", "underscore"],function($, keyboardNav, _){
+define(["jquery", "common/keyboard-nav", "underscore"], function ($, keyboardNav, _) {
     let view = undefined;
 
     const OPEN = 'open';
@@ -30,7 +30,7 @@ define(["jquery", "common/keyboard-nav", "underscore"],function($, keyboardNav, 
         if (selectedTab && !currentView) {
             let viewName = selectedTab.parentElement.id;
             const dashLoc = viewName.indexOf('-');
-            viewName = viewName.substring(0,dashLoc) + viewName.charAt(dashLoc+1).toUpperCase() + viewName.substring(dashLoc+2);
+            viewName = viewName.substring(0, dashLoc) + viewName.charAt(dashLoc + 1).toUpperCase() + viewName.substring(dashLoc + 2);
             keyboardNav.setCurrentView(viewName);
         }
         selectedTab.classList.add('selected');
@@ -76,7 +76,7 @@ define(["jquery", "common/keyboard-nav", "underscore"],function($, keyboardNav, 
                 });
             }
 
-            getView().el.querySelector('#header-tab').focus();
+            tab.focus();
         }
     }
 
@@ -89,7 +89,7 @@ define(["jquery", "common/keyboard-nav", "underscore"],function($, keyboardNav, 
             const icon = dropdown.parentNode.querySelector('i.fa');
             if (icon) {
                 icon.classList.remove('fa-caret-up');
-                icon.classList.add('fa-caret-down');			
+                icon.classList.add('fa-caret-down');
             }
             dropdown.classList.remove(OPEN);
             dropdown.setAttribute('aria-expanded', false);
