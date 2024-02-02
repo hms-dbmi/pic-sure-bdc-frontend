@@ -91,6 +91,20 @@
         <img class="logo-img" src="{{logoPath}}" tabindex="0" title="BioData Catalyst Powered by PIC-SURE">
     </a>
     <nav id="header-tabs" class="nav-menu" role="navigation" aria-label="Main Navigation. You are on the main navigation of Pic-sure. Please use the arrow keys to navigate through the tabs. Use Enter or space to select the tab." tabindex="0">
+        {{#contains privileges "SUPER_ADMIN"}}
+        <button id="super-admin-dropdown-toggle" class="dropdown-toggle nav-dropdown header-btn long-name" aria-expanded="false" tabindex="-1" title="Super Admin Console" aria-label="Super Admin Console Dropdown" aria-controls="super-admin-console-menu-list">
+            <span>Super Admin Console</span><i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+        <ul id="super-admin-console-menu-list" class="nav-dropdown-menu" role="menu" tabindex="-1">
+            <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
+            <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
+            <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
+            <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+        </ul>
+        {{/contains}}
+        {{#contains privileges 'ADMIN'}}
+        <a class="header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#" tabindex="-1">Users</a>
+        {{/contains}}
         {{#contains privileges "FENCE_AUTHORIZED_ACCESS"}}
             <a class="header-btn header-navigation" data-href="/picsureui/dataAccess" href="#" id="data-access-btn" tabindex="-1" title="Explore" aria-label="Explore">Data Access Dashboard</a>
             <a class="header-btn authorized-access-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" tabindex="-1" title="Authorized Access" aria-label="Authorized Access">Authorized Access</a>
@@ -104,7 +118,7 @@
             </button>
             <ul id="help-menu-list" class="nav-dropdown-menu" tabindex="-1">
                 {{#if videoLink}}<li id="video-demo-option" class="dropdown" aria-label="Video Demonstration, clicking here will open a link in a new tab"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
-                {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
+                {{#if pdfLink}}<li id="user-guide-option" class="dropdown" aria-label="User Guide, clicking here will open a link in a new tab"><a target="_blank" href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
                 {{#if jupyterExampleLink}}<li id="jupyter-examples-option" class="dropdown" aria-label="Jupyter Examples, clicking here will open a link  in a new tab"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
                 {{#if documentationLink}}<li id="documentation-option" class="dropdown" aria-label="BioData Catalyst Documentation, clicking here will open a link  in a new tab"><a href="{{{documentationLink}}}">BioData Catalyst Documentation</a></li>{{/if}}
                 {{#if helpLink}}<li id="contact-us-option" class="dropdown" aria-label="Contact Us link, clicking here will open a link in a new tab"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}

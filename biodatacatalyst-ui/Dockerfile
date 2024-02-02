@@ -1,16 +1,6 @@
-# Usage of IS_OPEN_ACCESS:
-# The build stages are named based on the IS_OPEN_ACCESS flag to conditionally set up the server:
-# - open_access_stage-false: Used when IS_OPEN_ACCESS is set to false, configuring for restricted access.
-# - open_access_stage-true: Used when IS_OPEN_ACCESS is set to true, configuring for open access.
-
-# Docker build stages are structured to accommodate different configurations based on the IS_OPEN_ACCESS value.
-# The final image's IS_OPEN_ACCESS environment variable reflects the value passed during the build process.
-
 ARG FILE_SUFFIX=development
-ARG IS_OPEN_ACCESS
-
 FROM hms-dbmi/pic-sure-hpds-ui:TARGET_BUILD_VERSION AS pic-sure-ui
-FROM httpd:2.4.53-alpine as base
+FROM httpd:2.4.53-alpine as core-ui
 
 ARG FILE_SUFFIX
 ENV FILE_SUFFIX=${FILE_SUFFIX}
@@ -31,7 +21,7 @@ RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^
 RUN sed -i "s/DirectoryIndex index.html/DirectoryIndex index_${FILE_SUFFIX}.html/" ${HTTPD_PREFIX}/conf/httpd.conf
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
-FROM base as open_access_stage-false
+FROM core-ui
 # copy pic-sure-hpds-ui repo
 COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui /usr/local/apache2/htdocs/picsureui
 
@@ -50,17 +40,3 @@ RUN sed -i "s/urlArgs: \"\"/urlArgs: \"v=${FILE_SUFFIX}\"/" /usr/local/apache2/h
 COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
 COPY stacked-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
 COPY login_dots.png ${HTTPD_PREFIX}/htdocs/images/login_dots.png
-
-FROM open_access_stage-false as open_access_stage-true
-
-# The build will fail if the open-pic-sure-bdc-frontend folder isn't there.
-COPY open-pic-sure-bdc-frontend/ui/src/main/picsureui/ /usr/local/apache2/htdocs/picsureui/
-COPY open-pic-sure-bdc-frontend/ui/src/main/psamaui/ /usr/local/apache2/htdocs/picsureui/psamaui/
-
-
-ARG IS_OPEN_ACCESS
-FROM open_access_stage-${IS_OPEN_ACCESS} as final_stage
-# This stage will container the final image that will be used in deployment
-
-ENV IS_OPEN_ACCESS=${IS_OPEN_ACCESS}
-RUN echo "Final stage IS_OPEN_ACCESS: ${IS_OPEN_ACCESS}"
