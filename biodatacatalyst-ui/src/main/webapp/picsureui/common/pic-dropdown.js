@@ -44,19 +44,39 @@ define(["jquery", "common/keyboard-nav", "underscore"],function($, keyboardNav, 
     let toggleDropdown = (e) => {
         console.debug("toggleDropdown", e.target);
         const tab = e.target.closest('.header-btn');
-        const dropdown = tab.parentElement.querySelector(NAV_DROPDOWN_MENU_CLASS);
+        const dropdown = tab.nextElementSibling;
         toggleArrow(tab);
-        if (dropdown.classList.contains(OPEN)) {
-            dropdown.classList.remove(OPEN);
-            dropdown.setAttribute('aria-expanded', false);
+        if (dropdown.classList.contains('OPEN')) {
+            dropdown.classList.remove('OPEN');
+            dropdown.setAttribute('aria-expanded', 'false');
         } else {
-            dropdown.classList.add(OPEN);
-            dropdown.setAttribute('aria-expanded', true);
+            dropdown.classList.add('OPEN');
+            dropdown.setAttribute('aria-expanded', 'true');
+
+            // Calculate and adjust the dropdown position to avoid going off-screen
+            const dropdownOffset = $(tab).parent().offset().top + $(tab).parent().outerHeight();
+            const dropdownLeft = $(tab).offset().left;
             $(dropdown).offset({
-                top: $(tab).parent().offset().top + $(tab).parent().outerHeight(), 
-                left: $(tab).offset().left
+                top: dropdownOffset,
+                left: dropdownLeft
             });
-            getView().el.querySelector('#header-tabs').focus();
+
+            // Get viewport width
+            const viewportWidth = $(window).width();
+            // Calculate the right edge of the dropdown
+            const dropdownRightEdge = dropdownLeft + $(dropdown).outerWidth();
+
+            // Check if the dropdown goes off the right edge of the screen
+            if (dropdownRightEdge > viewportWidth) {
+                // Calculate the new left position to align the dropdown's right edge with the viewport's right edge
+                const newLeft = viewportWidth - $(dropdown).outerWidth();
+                $(dropdown).offset({
+                    top: dropdownOffset,
+                    left: newLeft
+                });
+            }
+
+            getView().el.querySelector('#header-tab').focus();
         }
     }
 
