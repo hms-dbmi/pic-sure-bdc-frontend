@@ -83,7 +83,7 @@
 		<div class="fill">
 			<form id="search-controls" class="col">
 				<label for='search-box' class='col'>Search:</label>
-				<input id='search-box' type="search" autocomplete="on" role='search' class='form-control col' 
+				<input id='search-box' type="search" autocomplete="on" role='search' class='form-control col'
 				aria-label="Type search terms here, use enter or the search button to submit search"
 				title="Type search terms here, use enter or the search button to submit search"
 				placeholder="Search studies or variables"
@@ -96,12 +96,14 @@
 				<button id="search-button" type="button" class='btn btn-primary col'
 				aria-label="You are on the search button"
 				>Search</button>
+                {{#if genomicFilteringEnabled}}
 				<button id="genomic-filter-btn" type="button" class='btn btn-outline primary col'
 				aria-label="You are on the Genomic Filtering button"
 				data-intro="#genomic-filter-btn"
 				data-sequence="2"
 				>Genomic Filtering</button>
-				<button id="search-reset-button" type="button" class='btn btn-outline danger' 
+                {{/if}}
+				<button id="search-reset-button" type="button" class='btn btn-outline danger'
 				aria-label="You are on the reset button">Reset</button>
 			</form>
 			<hr>
