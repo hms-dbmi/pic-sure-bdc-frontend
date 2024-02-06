@@ -301,7 +301,7 @@ define([
 					$('.close')?.get(0).click();
 				}, classes: "btn btn-primary"}
 			];
-			const message = 'You are transferring data through the BioData Catalyst security boundary which may or may not be supported by your Data Use Agreement(s), Limitation(s), or your Institutional Review Board policies and guidelines. As a BioData Catalyst user, you are solely responsible for adhering to the terms of these policies.';
+			let message = settings?.downloadConfirmationMessage ?? 'You are transferring data through the BioData Catalyst security boundary which may or may not be supported by your Data Use Agreement(s), Limitation(s), or your Institutional Review Board policies and guidelines. As a BioData Catalyst user, you are solely responsible for adhering to the terms of these policies.';
 			const dialogView = new dialog({options: dialogOptions, messages: [message], previousView: {view: this, title: 'Review and Package Data', model: this.model}});
 			modal.displayModal(dialogView, 'Are you sure you want to download data?', function(){
 				$('#package-download-button').focus();
