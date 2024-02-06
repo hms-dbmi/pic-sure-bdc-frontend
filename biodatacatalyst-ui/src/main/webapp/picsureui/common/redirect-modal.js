@@ -29,6 +29,8 @@ define([
         return BB.View.extend({
             initialize: function (opts) {
                 this.data = opts || {};
+                this.headerMessage = this.data.headerMessage ? this.data.headerMessage : "Leaving BDC-PIC-SURE";
+                this.message = this.data.message && Array.isArray(this.data.message) ? this.data.message : ["This external website will be opened as a new tab in your browser.", "Are you sure you want to leave BDC-PIC-SURE?"];
             },
             render: function (sourceEvent, url = undefined) {
                 let closeModal = function (e) {
@@ -59,17 +61,11 @@ define([
                     }
                 ];
 
-                const modalMessage = [
-                    "This external website will be opened as a new tab in your browser.",
-                    "Are you sure you want to leave BDC-PIC-SURE?"
-                ];
-
-
                 const modalContainerId = "modal-redirect";
 
                 const dialogView = new dialog({
                     options: dialogOption,
-                    messages: modalMessage,
+                    messages: this.message,
                     modalContainerId: modalContainerId,
                 });
 
@@ -78,7 +74,7 @@ define([
 
                 modal.displayModal(
                     dialogView
-                    , "Leaving BDC-PIC-SURE"
+                    , this.headerMessage
                     , () => {
                         sourceEvent.target.focus();
                     }
