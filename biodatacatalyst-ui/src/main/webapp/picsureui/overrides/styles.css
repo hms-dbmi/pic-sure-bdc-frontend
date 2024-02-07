@@ -969,6 +969,12 @@ remove when above bug is fixed */
     background-color: rgba(16, 16, 16, 0.5);
 }
 
+.var-loading {
+    position: fixed;
+    background-color: rgba(16, 16, 16, 0.5);
+    z-index: 1;
+}
+
 .spinner-vert-center {
     top: 25%;
 }
