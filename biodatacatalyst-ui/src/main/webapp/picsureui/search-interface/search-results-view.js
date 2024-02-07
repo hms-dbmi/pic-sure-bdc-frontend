@@ -15,6 +15,17 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
 				return (!(metadata.columnmeta_var_id.includes('_Parent Study Accession with Subject ID')) && !(metadata.columnmeta_var_id.includes('_Topmed Study Accession with Subject ID')))
 			});
 		};
+        const showLoadingOverlay = function($) {
+            let loadingScreen = document.createElement('div');
+            let spinnerHolder = document.createElement('div');
+            loadingScreen.id = '#var-loading';
+            spinnerHolder.id = '#var-spinner-holder';
+            loadingScreen.classList += ' var-loading';
+            spinnerHolder.classList += ' spinner spinner-large spinner-center spinner-vert-center';
+            loadingScreen.append(spinnerHolder);
+            $('body').append(loadingScreen);
+            return loadingScreen;
+        };
         let StudyResultsView = BB.View.extend({
             initialize: function (opts) {
                 this.modalTemplate = HBS.compile(modalTemplate);
@@ -166,6 +177,10 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                 }
                 const rowData = this.searchResultsTable.row(event.target).data();
                 $('#search-results-datatable').blur();
+                const loadingScreen = showLoadingOverlay($);
+                $(loadingScreen).height($('#search-results').height());
+                $(loadingScreen).width($('#search-results').width());
+                $('#search-results').prepend(loadingScreen);
                 this.retrieveDataTableMeta(rowData.study_id + '_' + rowData.table_id, function (response) {
                     this.cacheVariableInfo(response, rowData.variable_id);
                     this.dataTableInfoView = new dataTableInfoView({
@@ -176,6 +191,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                         isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
                         el: $(".modal-body")
                     });
+                    $(loadingScreen).remove()
                     this.dataTableInfoView.render();
                     modal.displayModal(this.dataTableInfoView, "Variable Information for " + response.variables[rowData.variable_id].metadata.columnmeta_name, () => {
                         $('#search-results-datatable').focus();
