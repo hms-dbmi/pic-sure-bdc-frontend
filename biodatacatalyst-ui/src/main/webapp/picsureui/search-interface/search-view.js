@@ -10,6 +10,7 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 	"search-interface/filter-model",
 	"common/pic-sure-dialog-view",
 	"search-interface/tour-view",
+	"picSure/ontology"
 ],
 		function($, BB, HBS, _, tagFilterView, tagFilterModel,
 			searchResultsView,
@@ -22,7 +23,8 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			searchUtil,
 			filterModel,
 			dialog,
-			tourView
+			tourView,
+		    ontology
 		){
 	const authMessage = "By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.";
 	const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
@@ -36,7 +38,13 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 			//only include each tag once
 			this.antiScopeTags = searchUtil.getAntiScopeTags();
 
-			this.render();
+			ontology.getInstance().allInfoColumnsLoaded.then(() => {
+				const infoColumns = ontology.getInstance().allInfoColumns();
+				this.hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0;
+				this.render();
+			});
+
+			// this.render();
 			this.tagFilterView = new tagFilterView({
 				el : $('#tag-filters'),
 				isOpenAccess : JSON.parse(sessionStorage.getItem('isOpenAccess')),
@@ -237,8 +245,8 @@ define(["jquery","backbone","handlebars","underscore","search-interface/tag-filt
 		destroy: function(){
 			//https://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js/11534056#11534056
 			this.undelegateEvents();
-			$(this.el).removeData().unbind(); 
-			this.remove();  
+			$(this.el).removeData().unbind();
+			this.remove();
 			Backbone.View.prototype.remove.call(this);
 		},
 		render: function(){
