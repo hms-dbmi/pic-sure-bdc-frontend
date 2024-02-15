@@ -275,13 +275,6 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 Backbone.View.prototype.remove.call(this);
             },
             render: function () {
-                // do the same has above but return hasGenomicData so that we can use it in the render function
-                ontology.getInstance().allInfoColumnsLoaded.then(function () {
-                    const infoColumns = ontology.getInstance().allInfoColumns();
-                    let hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0;
-                    console.log("hasGenomicData: " + hasGenomicData);
-                });
-
                 this.$el.html(this.searchViewTemplate({genomicFilteringEnabled: this.state.hasGenomicData}));
                 if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
                     this.$el.find('#genomic-filter-btn').remove();
