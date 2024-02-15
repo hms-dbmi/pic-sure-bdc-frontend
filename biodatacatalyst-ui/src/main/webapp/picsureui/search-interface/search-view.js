@@ -30,19 +30,35 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
         const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
         var SearchView = BB.View.extend({
             initialize: function (opts) {
-                this.hasGenomicData = false;
                 this.filters = [];
+                // Initialize state and other properties
+                this.state = {
+                    hasGenomicData: false, // Initial state
+                };
+
                 this.queryTemplate = opts.queryTemplate;
                 this.searchViewTemplate = HBS.compile(searchViewTemplate);
                 let studiesData = JSON.parse(studiesDataJson);
                 this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
                 //only include each tag once
                 this.antiScopeTags = searchUtil.getAntiScopeTags();
-                this.hasGenomicData = ontology.getInstance().allInfoColumnsLoaded.then(() => {
-                    const infoColumns = ontology.getInstance().allInfoColumns();
-                    return infoColumns !== undefined && infoColumns.length !== 0;
-                });
+
                 this.render();
+                this.subviews();
+
+                // Fetch and set genomic data availability
+                this.fetchGenomicDataAvailability().then(() => {
+                    this.render(); // Re-render after state update
+                    this.subviews(); // Re-render subviews after state update
+                });
+            },
+            fetchGenomicDataAvailability: function () {
+                return ontology.getInstance().allInfoColumnsLoaded.then(() => {
+                    const infoColumns = ontology.getInstance().allInfoColumns();
+                    this.state.hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0; // Update state
+                });
+            },
+            subviews: function () {
                 this.tagFilterView = new tagFilterView({
                     el: $('#tag-filters'),
                     isOpenAccess: JSON.parse(sessionStorage.getItem('isOpenAccess')),
@@ -259,7 +275,14 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 Backbone.View.prototype.remove.call(this);
             },
             render: function () {
-                this.$el.html(this.searchViewTemplate({genomicFilteringEnabled: this.hasGenomicData}));
+                // do the same has above but return hasGenomicData so that we can use it in the render function
+                ontology.getInstance().allInfoColumnsLoaded.then(function () {
+                    const infoColumns = ontology.getInstance().allInfoColumns();
+                    let hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0;
+                    console.log("hasGenomicData: " + hasGenomicData);
+                });
+
+                this.$el.html(this.searchViewTemplate({genomicFilteringEnabled: this.state.hasGenomicData}));
                 if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
                     this.$el.find('#genomic-filter-btn').remove();
                 }
