@@ -10,7 +10,8 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
         "search-interface/filter-model",
         "common/pic-sure-dialog-view",
         "search-interface/tour-view",
-        "picSure/ontology"
+        "picSure/ontology",
+        "picSure/settings"
     ],
     function ($, BB, HBS, _, tagFilterView, tagFilterModel,
               searchResultsView,
@@ -24,7 +25,8 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
               filterModel,
               dialog,
               tourView,
-              ontology
+              ontology,
+              settings
     ) {
         const authMessage = "By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.";
         const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
@@ -183,7 +185,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 $('#genomic-filter-btn').attr('disabled', 'disabled');
 
                 let deferredSearchResults = $.ajax({
-                    url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
+                    url: window.location.origin + "/picsure/search/" + settings.dictionaryResourceId,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
