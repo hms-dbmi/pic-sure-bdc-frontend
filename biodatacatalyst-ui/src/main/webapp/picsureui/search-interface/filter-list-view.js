@@ -216,7 +216,7 @@ define(["jquery","backbone","handlebars", "text!search-interface/filter-list-vie
                 Backbone.View.prototype.remove.call(this);
             },
             render: function(){
-                const resourceUUID = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? settings.openAccessResourceId:"02e23f52-f354-4e8b-992c-d37c8b9ba140";
+                const resourceUUID = JSON.parse(sessionStorage.getItem('isOpenAccess')) ? settings.openAccessResourceId: settings.picSureResourceId;
                 const query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), null, resourceUUID);
                 this.outputPanelView.runQuery(query);
                 this.$el.html(this.filterListViewTemplate({

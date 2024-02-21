@@ -1,4 +1,4 @@
-define([], function(){
+define(["picSure/settings"], function(settings){
 	return {
 		/*
 		 * Override the ordering of search results
@@ -26,6 +26,6 @@ define([], function(){
 				
 	        	return aOrder - bOrder;
 	    	},
-		queryScopeUUID : '02e23f52-f354-4e8b-992c-d37c8b9ba140'		
+		queryScopeUUID : settings.picSureResourceId
 	};
 });
