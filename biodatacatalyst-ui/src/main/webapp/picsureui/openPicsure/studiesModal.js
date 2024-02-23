@@ -137,17 +137,16 @@ define([
                 "columns": [
                     {title: "Abbreviation", data: "display_name"},
                     {title: "Accession", data: "identifier"},
-                    {title: "Counts", data: "study_matches"},
                     {title: "Counts by Consent Code", data: "consents"},
                     {title: "Access", data: null}
                 ],
                 "columnDefs": [
                     {
-                        targets: [0, 1, 2, 4],
+                        targets: [0, 1, 3],
                         className: "dt-center"
                     },
                     {
-                        targets: 4,
+                        targets: 3,
                         type: 'string',
                         render: function (data, type, row, meta) {
                             // Data is always null. Row is the entire row object.
@@ -159,7 +158,7 @@ define([
                         }
                     },
                     {
-                        targets: 3,
+                        targets: 2,
                         type: 'string',
                         render: function (data, type, row, meta) {
                             // data is a list of consents.
