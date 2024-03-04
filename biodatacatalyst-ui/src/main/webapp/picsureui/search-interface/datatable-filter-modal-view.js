@@ -181,24 +181,29 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 			let existingFilter = filterModel.getByDatatableId(this.model.dtId);
 			let data = this.dtData;
 			if(!data){
-				data = _.map(this.model.dtVariables,function(variable){
+				data = this.model.dtVariables.filter(function (variable) {
+					// Check if the variable is stigmatized and if it is, don't display it
+					return variable.result.metadata?.is_stigmatized === "false" || variable.result.metadata?.columnmeta_is_stigmatized === "false";
+				}).map(function(variable) {
 					let values = variable.result.values.join(", ");
-                	return [
-                		existingFilter ?
-                			(_.find(existingFilter.get('variables'), (conceptPath)=>{
-                			return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
-                			}) !== undefined ? true : false) : false,
-                		variable.result.metadata.columnmeta_var_id,
-                		variable.result.metadata.columnmeta_name,
-                		variable.result.metadata.columnmeta_description,
+					return [
+						existingFilter ?
+							(_.find(existingFilter.get('variables'), (conceptPath)=>{
+								return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
+							}) !== undefined ? true : false) : false,
+						variable.result.metadata.columnmeta_var_id,
+						variable.result.metadata.columnmeta_name,
+						variable.result.metadata.columnmeta_description,
 						variable.result.metadata.columnmeta_data_type,
 						(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.result.metadata.columnmeta_min + ', Max: ' + variable.result.metadata.columnmeta_max : 'See Values',
 						(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + values + ' ]',
-                		variable.result.metadata.columnmeta_HPDS_PATH
-                	];
-                });
+						variable.result.metadata.columnmeta_HPDS_PATH
+					];
+				});
 				this.dtData = data;
 			}
+
+
             $('#vcfData').DataTable( {
                 data: data,
                 columns: [
