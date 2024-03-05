@@ -46,7 +46,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 this.antiScopeTags = searchUtil.getAntiScopeTags();
 
                 // Tour search term, use epilepsy by default because it is available in both open and authorized access
-                this.searchTerm = opts.tourSearchTerm ?? "epilepsy";
+                this.tourSearchTerm = opts.tourSearchTerm ?? "epilepsy";
 
                 this.render();
                 this.subviews();
