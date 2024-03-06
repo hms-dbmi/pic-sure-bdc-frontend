@@ -3,11 +3,13 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
         "search-interface/numerical-filter-modal-view", "search-interface/categorical-filter-modal-view",
         "search-interface/filter-model", "search-interface/tag-filter-model",
         "common/modal", "search-interface/variable-info-cache", "common/keyboard-nav", "search-interface/search-results-table-view",
-        "text!search-interface/no-results-partial.hbs", "search-interface/no-results-help-view", "search-interface/data-hierarchy-view"],
+        "text!search-interface/no-results-partial.hbs", "search-interface/no-results-help-view", "search-interface/data-hierarchy-view",
+    "picSure/settings"],
     function (BB, HBS, _, searchResultsViewTemplate, searchResultsListTemplate,
               modalTemplate, dataTableInfoView, searchUtil, numericFilterModalView,
               categoricalFilterModalView, filterModel, tagFilterModel,
-              modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView, DataHierarchyView) {
+              modal, variableInfoCache, keyboardNav, tableView, noResultsTemplate, noResultHelpView, DataHierarchyView,
+              settings) {
         const SPACE = ' ';
 		let filterUnwantedResultsOut = function (results) {
 			return _.filter(results, function(result) {
@@ -154,7 +156,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        resourceUUID: "36363664-6231-6134-2d38-6538652d3131",
+                        resourceUUID: settings.dictionaryResourceId,
                         query: {id: id, entityType: "DATA_TABLE"}
                     }),
                     success: successHandler,
