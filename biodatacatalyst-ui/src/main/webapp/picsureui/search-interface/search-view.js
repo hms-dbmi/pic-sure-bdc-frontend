@@ -45,6 +45,9 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 //only include each tag once
                 this.antiScopeTags = searchUtil.getAntiScopeTags();
 
+                // Tour search term, use epilepsy by default because it is available in both open and authorized access
+                this.tourSearchTerm = opts.tourSearchTerm ?? "epilepsy";
+
                 this.render();
                 this.subviews();
 
@@ -128,19 +131,11 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 return new Promise((resolve, reject) => {
                     try {
                         let results = $.Deferred();
-                        if (this.isOpenAccess) {
-                            $('#search-box').val('epilepsy');
-                            results = this.submitSearch($('#search-button').get());
-                            $.when(results).then(() => {
-                                resolve();
-                            });
-                        } else {
-                            $("#search-box").val("cardiac surgery");
-                            results = this.submitSearch($('#search-button').get());
-                            $.when(results).then(() => {
-                                resolve();
-                            });
-                        }
+                        $("#search-box").val(this.tourSearchTerm);
+                        results = this.submitSearch($('#search-button').get());
+                        $.when(results).then(() => {
+                            resolve();
+                        });
                     } catch (e) {
                         console.error(e);
                         reject(e);
