@@ -10,7 +10,8 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
         "search-interface/filter-model",
         "common/pic-sure-dialog-view",
         "search-interface/tour-view",
-        "picSure/ontology"
+        "picSure/ontology",
+        "picSure/settings"
     ],
     function ($, BB, HBS, _, tagFilterView, tagFilterModel,
               searchResultsView,
@@ -24,7 +25,8 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
               filterModel,
               dialog,
               tourView,
-              ontology
+              ontology,
+              settings
     ) {
         const authMessage = "By doing this, you will remove all active search tags, variable filters, genomic filters, and variables for export.";
         const openAccessMessage = "By doing this, you will remove all active search tags, variable filters, and variables for export.";
@@ -42,6 +44,9 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
                 //only include each tag once
                 this.antiScopeTags = searchUtil.getAntiScopeTags();
+
+                // Tour search term, use epilepsy by default because it is available in both open and authorized access
+                this.tourSearchTerm = opts.tourSearchTerm ?? "epilepsy";
 
                 this.render();
                 this.subviews();
@@ -126,19 +131,11 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 return new Promise((resolve, reject) => {
                     try {
                         let results = $.Deferred();
-                        if (this.isOpenAccess) {
-                            $('#search-box').val('epilepsy');
-                            results = this.submitSearch($('#search-button').get());
-                            $.when(results).then(() => {
-                                resolve();
-                            });
-                        } else {
-                            $("#search-box").val("cardiac surgery");
-                            results = this.submitSearch($('#search-button').get());
-                            $.when(results).then(() => {
-                                resolve();
-                            });
-                        }
+                        $("#search-box").val(this.tourSearchTerm);
+                        results = this.submitSearch($('#search-button').get());
+                        $.when(results).then(() => {
+                            resolve();
+                        });
                     } catch (e) {
                         console.error(e);
                         reject(e);
@@ -183,7 +180,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 $('#genomic-filter-btn').attr('disabled', 'disabled');
 
                 let deferredSearchResults = $.ajax({
-                    url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
+                    url: window.location.origin + "/picsure/search/" + settings.dictionaryResourceId,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

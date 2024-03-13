@@ -4,9 +4,9 @@ define([
 	"datatables.net",
 	"common/keyboard-nav",
 	"search-interface/filter-model",
-	"search-interface/search-util", 
-	"picSure/queryBuilder", 
-	"search-interface/query-results-view", 
+	"search-interface/search-util",
+	"picSure/queryBuilder",
+	"search-interface/query-results-view",
 	"overrides/outputPanel",
 	"picSure/settings",
 	"search-interface/variable-values-view",
@@ -233,7 +233,7 @@ define([
 			this.model.set("datasetName", undefined);
 			$("#save-named-dataset-btn").html("Save Dataset ID");
 			this.updateHeader();
-			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), "02e23f52-f354-4e8b-992c-d37c8b9ba140");
+			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), settings.picSureResourceId);
 			query = JSON.parse(JSON.stringify(query));
 			query.query.expectedResultType="DATAFRAME";
 			queryBuilder.updateConsentFilters(query, settings);
@@ -394,7 +394,7 @@ define([
 					valuesModel.varMin = target.attributes.selectedMin;
 					valuesModel.varMax = target.attributes.selectedMax;
 				}
-			}			
+			}
 
 			this.valuesView = new variableValuesView({
 				prevModal: {

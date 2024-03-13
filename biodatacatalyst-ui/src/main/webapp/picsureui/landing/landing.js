@@ -74,7 +74,7 @@ define(["underscore", "jquery", "backbone", "handlebars", "text!landing/landing.
 
                 let excludedTags = searchUtil.getAntiScopeTags();
                 let deferredVariables = $.ajax({
-                    url: window.location.origin + "/picsure/search/36363664-6231-6134-2D38-6538652D3131",
+                    url: window.location.origin + "/picsure/search/" + settings.dictionaryResourceId,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
