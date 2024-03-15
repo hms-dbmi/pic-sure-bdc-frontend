@@ -23,11 +23,15 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                 const filterTitleText = "Click to configure a filter using this variable.";
                 const exportTitleText = "Click to add this variable to your data retrieval.";
                 const dataTreeTitleText = "Click to view the data tree for this variable.";
-                variableInfoCache[opts.varId].isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
-                variableInfoCache[opts.varId].filterTitleText = filterTitleText;
-                variableInfoCache[opts.varId].exportTitleText = exportTitleText;
-                variableInfoCache[opts.varId].hasDataHierarchy = opts.metadata.data_hierarchy !== undefined && opts.metadata.data_hierarchy !== null && opts.metadata.data_hierarchy !== "" && opts.metadata.data_hierarchy !== "{}";
-                variableInfoCache[opts.varId].dataTreeTitleText = dataTreeTitleText;
+                const variableInfo = variableInfoCache[opts.varId];
+                variableInfo.isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                variableInfo.filterTitleText = filterTitleText;
+                variableInfo.exportTitleText = exportTitleText;
+                variableInfo.hasDataHierarchy = variableInfo?.variableMetadata?.data_hierarchy !== undefined
+                                              && variableInfo?.variableMetadata?.data_hierarchy !== null
+                                              && variableInfo?.variableMetadata?.data_hierarchy !== ""
+                                              && variableInfo?.variableMetadata?.data_hierarchy !== "{}";
+                variableInfo.dataTreeTitleText = dataTreeTitleText;
                 this.dataTableData = opts.dataTableData;
                 tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
                 tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
