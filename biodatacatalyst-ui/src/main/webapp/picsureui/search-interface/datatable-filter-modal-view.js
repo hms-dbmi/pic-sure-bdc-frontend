@@ -182,16 +182,22 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 			let data = this.dtData;
 			const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
 			if(!data){
-				data = this.model.dtVariables.filter(function (variable) {
-					// Check if the variable is stigmatized and if it is, don't display it
-					return isOpenAccess && (variable.result.metadata?.is_stigmatized === "false" || variable.result.metadata?.columnmeta_is_stigmatized === "false");
-				}).map(function(variable) {
+                if (isOpenAccess) {
+                    // filter out stigmatized variables
+                    data = this.model.dtVariables.filter(function (variable) {
+                        return variable.result.metadata?.is_stigmatized === "false" || variable.result.metadata?.columnmeta_is_stigmatized === "false";
+                    });
+                } else {
+                    data = this.model.dtVariables;
+                }
+
+				data = data.map(function(variable) {
 					let values = variable.result.values.join(", ");
 					return [
 						existingFilter ?
-							(_.find(existingFilter.get('variables'), (conceptPath)=>{
-								return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
-							}) !== undefined ? true : false) : false,
+							(_.find(existingFilter.get('variables'), (conceptPath) => {
+                                return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
+                            }) !== undefined) : false,
 						variable.result.metadata.columnmeta_var_id,
 						variable.result.metadata.columnmeta_name,
 						variable.result.metadata.columnmeta_description,
