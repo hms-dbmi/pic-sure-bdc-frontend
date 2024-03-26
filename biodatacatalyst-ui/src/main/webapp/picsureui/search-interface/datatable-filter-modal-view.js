@@ -184,7 +184,7 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 			if(!data){
 				data = this.model.dtVariables.filter(function (variable) {
 					// Check if the variable is stigmatized and if it is, don't display it
-					return isOpenAccess && (variable.result.metadata?.is_stigmatized === "false" || variable.result.metadata?.columnmeta_is_stigmatized === "false");
+					return !isOpenAccess && (variable.result.metadata?.is_stigmatized === "false" || variable.result.metadata?.columnmeta_is_stigmatized === "false");
 				}).map(function(variable) {
 					let values = variable.result.values.join(", ");
 					return [
