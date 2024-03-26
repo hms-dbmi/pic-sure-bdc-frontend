@@ -182,6 +182,7 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 			let data = this.dtData;
 			const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
 			if(!data){
+
                 if (isOpenAccess) {
                     // filter out stigmatized variables
                     data = this.model.dtVariables.filter(function (variable) {
@@ -198,6 +199,7 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 							(_.find(existingFilter.get('variables'), (conceptPath) => {
                                 return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
                             }) !== undefined) : false,
+
 						variable.result.metadata.columnmeta_var_id,
 						variable.result.metadata.columnmeta_name,
 						variable.result.metadata.columnmeta_description,
