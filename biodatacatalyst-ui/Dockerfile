@@ -22,7 +22,7 @@ RUN sed -i "s/DirectoryIndex index.html/DirectoryIndex index_${FILE_SUFFIX}.html
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
 # Disable directory browsing
-RUN sed -i 's/Options Indexes FollowSymLinks/Options -Indexes FollowSymLinks/' ${HTTPD_PREFIX}/conf/httpd.conf
+RUN sed -i 's/Options Indexes FollowSymLinks/Options -Indexes +FollowSymLinks/' ${HTTPD_PREFIX}/conf/httpd.conf
 
 FROM core-ui
 # copy pic-sure-hpds-ui repo
