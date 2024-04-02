@@ -320,14 +320,16 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                 });
             },
             loadPlotly: function (callback) {
-                require(['plotly'], function (plotly) {
-                    callback(plotly);
+                return new Promise((resolve, reject) => {
+                    require(['plotly'], function (plotly) {
+                        resolve(plotly);
+                    });
                 });
             },
             render: function () {
                 // lazy load plotly js when the modal is opened
                 this.$el.html(this.template(this.model.toJSON()));
-                this.loadPlotly((plotly) => {
+                this.loadPlotly().then(plotly => {
                     for (let i = 0; i < this.data.traces.length; i++) {
                         let plot = document.createElement('div');
                         let screenReaderText = 'Histogram showing the visualization of ';
