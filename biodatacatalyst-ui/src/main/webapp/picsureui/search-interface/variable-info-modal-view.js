@@ -20,10 +20,11 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                 this.isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
                 this.modalTemplate = HBS.compile(modalTemplate);
                 this.varId = opts.varId;
-                const filterTitleText = "Click to configure a filter using this variable.";
+                const variableInfo = variableInfoCache[opts.varId];
+                const filterTitleText = this.isOpenAccess && variableInfo?.variableMetadata.columnmeta_is_stigmatized ? 'This variable is stigmatizing.' : "Click to configure a filter using this variable.";
+                const disabledClass =  (this.isOpenAccess && variableInfo.variableMetadata.columnmeta_is_stigmatized) ? 'disabled-icon' : '';
                 const exportTitleText = "Click to add this variable to your data retrieval.";
                 const dataTreeTitleText = "Click to view the data tree for this variable.";
-                const variableInfo = variableInfoCache[opts.varId];
                 variableInfo.isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
                 variableInfo.filterTitleText = filterTitleText;
                 variableInfo.exportTitleText = exportTitleText;
@@ -32,6 +33,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                                               && variableInfo?.variableMetadata?.data_hierarchy !== ""
                                               && variableInfo?.variableMetadata?.data_hierarchy !== "{}";
                 variableInfo.dataTreeTitleText = dataTreeTitleText;
+                variableInfo.disabledClass = disabledClass;
                 this.dataTableData = opts.dataTableData;
                 tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
                 tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
@@ -179,9 +181,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                             let filterViewData = {
                                 dtId: event.target.dataset.id,
                                 filter: filter ? filter.toJSON() : undefined,
-                                dtVariables: JSON.parse(sessionStorage.getItem('isOpenAccess')) ?
-                                    this.filterStigmatizedVariables(response.results.searchResults) :
-                                    response.results.searchResults,
+                                dtVariables: response.results.searchResults,
                                 dataTableInfo: dataTableInfo
                             };
                             this.filterModalView = new datatableFilterModalView({
@@ -198,9 +198,6 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                         }.bind(this)
                     });
                 }
-            },
-            filterStigmatizedVariables: function (results) {
-                return results.filter(searchResult => searchResult.result.metadata.columnmeta_is_stigmatized !== true);
             },
             filterKeypressHandler: function (event) {
                 if (event.key.toLowerCase() === 'enter' || event.key.toLowerCase() === ' ') {

@@ -371,11 +371,6 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
 
                 if (tagFilterModel.get("searchResults")) {
                     let filteredResults = filterUnwantedResultsOut(tagFilterModel.get("searchResults").results.searchResults);
-                    if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
-                        filteredResults = _.filter(filteredResults, function (result) {
-                            return result.result.metadata.columnmeta_is_stigmatized === "false";
-                        });
-                    }
                     if (filteredResults.length === 0) {
                         if ($('#no-results').length === 0) {
                             $('#guide-me-button-container').show();
@@ -409,6 +404,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                             dataTableDescription: metadata.columnmeta_var_group_description,
                             description: metadata.columnmeta_description,
                             hashed_var_id: metadata.hashed_var_id,
+                            is_stigmatized: metadata.columnmeta_is_stigmatized === 'true',
                             is_harmonized: searchUtil.isStudyHarmonized(metadata.columnmeta_study_id.toLowerCase()),
                             result_index: i,
                             metadata: metadata
@@ -467,9 +463,10 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                             },
                             {
                                 render: function (data, type, row, meta) {
-                                    let filterTitleText = "Click to configure a filter using this variable.";
-                                    let exportTitleText = "Click to add this variable to your data retrieval.";
 									let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                                    let filterTitleText = (isOpenAccess && row.is_stigmatized) ? "This variable is stigmatizing." : "Click to configure a filter using this variable.";
+                                    let filterClasses = 'fa fa-filter search-result-action-btn' + (isOpenAccess && row.is_stigmatized ? " disabled-icon" : '');
+                                    let exportTitleText = "Click to add this variable to your data retrieval.";
                                     let tourAttr;
                                     if (row.result_index == 0) {
                                         tourAttr = isOpenAccess ? ' data-intro="#open-actions-row"' : ' data-intro="#authorized-actions-row"' + ' data-sequence="6" id="first-actions-row"';
@@ -480,7 +477,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
 									// add data_hierarchy
 									iconHtml += '<i class="fa-solid fa-sitemap search-result-action-btn ' + (row.metadata.data_hierarchy ? '" title="View Data Tree"' : 'disabled-icon hidden-icon" title="This variable does not have a data hierarchy."') + ' data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '"></i>';
 									// add filter
-									iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + filterTitleText + '" class="fa fa-filter search-result-action-btn"></i>'
+									iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + filterTitleText + '" class="'+filterClasses+'"></i>'
 									// add export
 									if (!isOpenAccess) {
 										iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + exportTitleText + '" class="export-icon search-result-action-btn ' 
