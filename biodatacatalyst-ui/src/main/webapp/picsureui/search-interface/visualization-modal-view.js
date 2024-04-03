@@ -328,7 +328,7 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
             },
             render: function () {
                 // clear the visualizations container
-                document.getElementById('visualizations-container').innerHTML = '';
+                $('#visualizations-container').empty();
 
                 // lazy load plotly js when the modal is opened
                 this.$el.html(this.template(this.model.toJSON()));
