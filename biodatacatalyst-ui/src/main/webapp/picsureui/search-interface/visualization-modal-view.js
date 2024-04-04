@@ -327,11 +327,10 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                 });
             },
             render: function () {
+                this.$el.html(this.template(this.model.toJSON()));
                 // clear the visualizations container
                 $('#visualizations-container').empty();
-
-                // lazy load plotly js when the modal is opened
-                this.$el.html(this.template(this.model.toJSON()));
+                // load plotly and create the visualizations
                 this.loadPlotly().then(plotly => {
                     for (let i = 0; i < this.data.traces.length; i++) {
                         let plot = document.createElement('div');
