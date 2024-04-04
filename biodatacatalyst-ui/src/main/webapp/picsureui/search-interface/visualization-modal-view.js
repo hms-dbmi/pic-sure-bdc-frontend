@@ -56,7 +56,6 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                         delete query.query.categoryFilters["\\_consents\\"];
                     }
 
-                    this.model.set('spinning', true);
                     $.ajax({
                         url: window.location.origin + '/picsure/query/sync',
                         type: 'POST',
@@ -65,16 +64,15 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                         success: function (response) {
                             this.model.set('categoricalData', response.categoricalData);
                             this.model.set('continuousData', response.continuousData);
-                            this.model.set('spinning', false);
                             response.categoricalData && this.createCategoryPlot();
                             response.continuousData && this.createContinuousPlot();
                             resolve();
                         }.bind(this),
                         error: function (response) {
-                            this.model.set('spinning', false);
                             this.model.set('errors', response);
                             console.error("Viusalzation failed with query: " + JSON.stringify(query), response);
                             console.error(response);
+                            $('#visualizations-container').html('<div class="no-visualizations"><p>No visualizations available</p></div>');
                             reject();
                         }.bind(this)
                     });
@@ -333,8 +331,13 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                 // clear the visualizations container
                 $('#visualizations-container').empty();
 
+                let differed = $.Deferred();
+                spinner.medium(differed, '#visualizations-container', "spinner2");
+
                 // load the images
                 this.getImages().then(() => {
+                    differed.resolve();
+
                     // load plotly and create the visualizations
                     this.loadPlotly().then(plotly => {
                         for (let i = 0; i < this.data.traces.length; i++) {
@@ -364,9 +367,11 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                             plotly.newPlot(plot, this.data.traces[i], this.data.layouts[i], this.config);
                         }
                     });
+                }).catch(() => {
+                    differed.resolve();
                 });
                 return this;
-            }
+            },
         });
         return {
             View: visualizationModalView,
