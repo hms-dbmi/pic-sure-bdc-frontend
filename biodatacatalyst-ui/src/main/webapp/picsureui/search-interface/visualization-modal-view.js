@@ -2,8 +2,6 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
     function ($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings, spinner) {
         let defaultModel = BB.Model.extend({
             defaults: {
-                spinnerClasses: "spinner-medium spinner-medium-center ",
-                spinning: false,
                 viusalizations: [],
             }
         });
