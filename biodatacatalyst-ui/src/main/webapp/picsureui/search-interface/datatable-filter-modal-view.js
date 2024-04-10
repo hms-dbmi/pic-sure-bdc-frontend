@@ -79,7 +79,7 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 					let dataRow = _.find(this.data(), (entry)=>{ return entry[1] === variableId;});
 					dataRow[0] = true;
 					let checkbox = $('input[data-varid="' + variableId +'"]')[0];
-					if(checkbox!==undefined){
+					if(checkbox!==undefined && checkbox.disabled === false){
 						checkbox.checked = true;
 					}
 				});
@@ -182,17 +182,7 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 			let data = this.dtData;
 			const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
 			if(!data){
-
-                if (isOpenAccess) {
-                    // filter out stigmatized variables
-                    data = this.model.dtVariables.filter(function (variable) {
-                        return variable.result.metadata?.is_stigmatized === "false" || variable.result.metadata?.columnmeta_is_stigmatized === "false";
-                    });
-                } else {
-                    data = this.model.dtVariables;
-                }
-
-				data = data.map(function(variable) {
+				data = this.model.dtVariables.map(function(variable) {
 					let values = variable.result.values.join(", ");
 					return [
 						existingFilter ?
@@ -206,7 +196,8 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 						variable.result.metadata.columnmeta_data_type,
 						(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? 'Min: '+ variable.result.metadata.columnmeta_min + ', Max: ' + variable.result.metadata.columnmeta_max : 'See Values',
 						(variable.result.metadata.columnmeta_data_type.toLowerCase() == 'continuous') ? "" : '[ ' + values + ' ]',
-						variable.result.metadata.columnmeta_HPDS_PATH
+						variable.result.metadata.columnmeta_HPDS_PATH,
+						variable.result.metadata.columnmeta_is_stigmatized,
 					];
 				});
 				this.dtData = data;
@@ -237,7 +228,11 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
                     },
                     {
                     	render: function(data,type,row,meta){
-                    		return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
+												if (isOpenAccess && (row[8] === false || row[8] === "false")) {
+													return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
+												} else {
+													return '<input title="This variable is stigmatizing" data-sort-token=' + (data?0:1) + ' type="checkbox" tabindex="-1" disabled></input>';
+												}
                     	},
                     	type:'string',
                     	targets: 0

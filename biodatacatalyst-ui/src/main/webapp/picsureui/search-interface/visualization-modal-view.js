@@ -2,8 +2,6 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
     function ($, BB, HBS, template, filterModel, queryBuilder, imageTemplate, settings, spinner) {
         let defaultModel = BB.Model.extend({
             defaults: {
-                spinnerClasses: "spinner-medium spinner-medium-center ",
-                spinning: false,
                 viusalizations: [],
             }
         });
@@ -26,7 +24,6 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                 this.config = defaultPlotlyConfig;
                 this.template = HBS.compile(template);
                 HBS.registerPartial("visualization-image-partial", imageTemplate);
-                this.getImages();
             },
             events: {
                 'click #package-data': 'openPackageData',
@@ -45,38 +42,38 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                 });
             },
             getImages: function () {
-                let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, settings.visualizationResourceId);
-                query.resourceCredentials = {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
-                queryBuilder.updateConsentFilters(query, settings);
+                return new Promise((resolve, reject) => {
+                    let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, settings.visualizationResourceId);
+                    query.resourceCredentials = {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
+                    queryBuilder.updateConsentFilters(query, settings);
 
-                // We need to remove the consent filter for open access as it will reduce the number of results
-                // and we want to show all results for open access. We just obfuscate the data that is not consented to.
-                const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
-                if (isOpenAccess) {
-                    delete query.query.categoryFilters["\\_consents\\"];
-                }
+                    // We need to remove the consent filter for open access as it will reduce the number of results
+                    // and we want to show all results for open access. We just obfuscate the data that is not consented to.
+                    const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                    if (isOpenAccess) {
+                        delete query.query.categoryFilters["\\_consents\\"];
+                    }
 
-                this.model.set('spinning', true);
-                $.ajax({
-                    url: window.location.origin + '/picsure/query/sync',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(query),
-                    success: function (response) {
-                        this.model.set('categoricalData', response.categoricalData);
-                        this.model.set('continuousData', response.continuousData);
-                        this.model.set('spinning', false);
-                        response.categoricalData && this.createCategoryPlot();
-                        response.continuousData && this.createContinuousPlot();
-                        this.render();
-                    }.bind(this),
-                    error: function (response) {
-                        this.model.set('spinning', false);
-                        this.model.set('errors', response);
-                        console.error("Viusalzation failed with query: " + JSON.stringify(query), response);
-                        console.error(response);
-                        this.render();
-                    }.bind(this)
+                    $.ajax({
+                        url: window.location.origin + '/picsure/query/sync',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(query),
+                        success: function (response) {
+                            this.model.set('categoricalData', response.categoricalData);
+                            this.model.set('continuousData', response.continuousData);
+                            response.categoricalData && this.createCategoryPlot();
+                            response.continuousData && this.createContinuousPlot();
+                            resolve();
+                        }.bind(this),
+                        error: function (response) {
+                            this.model.set('errors', response);
+                            console.error("Viusalzation failed with query: " + JSON.stringify(query), response);
+                            console.error(response);
+                            $('#visualizations-container').html('<div class="no-visualizations"><p>No visualizations available</p></div>');
+                            reject();
+                        }.bind(this)
+                    });
                 });
             },
             getColors: function (num) {
@@ -320,44 +317,59 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
                 });
             },
             loadPlotly: function (callback) {
-                require(['plotly'], function (plotly) {
-                    callback(plotly);
+                return new Promise((resolve, reject) => {
+                    require(['plotly'], function (plotly) {
+                        resolve(plotly);
+                    });
                 });
             },
             render: function () {
-                // lazy load plotly js when the modal is opened
                 this.$el.html(this.template(this.model.toJSON()));
-                this.loadPlotly((plotly) => {
-                    for (let i = 0; i < this.data.traces.length; i++) {
-                        let plot = document.createElement('div');
-                        let screenReaderText = 'Histogram showing the visualization of ';
 
-                        // We need to do this because the traces are a 2d array. As long as one of the traces is categorical,
-                        // we need to add the screen reader text
-                        let unformatedTitle;
-                        for (let j = 0; j < this.data.traces[i].length; j++) {
-                            if (this.data.traces[i][j].isCategorical) {
-                                screenReaderText = 'Column chart showing the visualization of ';
+                // clear the visualizations container
+                $('#visualizations-container').empty();
+
+                let differed = $.Deferred();
+                spinner.medium(differed, '#visualizations-container', "spinner2");
+
+                // load the images
+                this.getImages().then(() => {
+                    differed.resolve();
+
+                    // load plotly and create the visualizations
+                    this.loadPlotly().then(plotly => {
+                        for (let i = 0; i < this.data.traces.length; i++) {
+                            let plot = document.createElement('div');
+                            let screenReaderText = 'Histogram showing the visualization of ';
+
+                            // We need to do this because the traces are a 2d array. As long as one of the traces is categorical,
+                            // we need to add the screen reader text
+                            let unformatedTitle;
+                            for (let j = 0; j < this.data.traces[i].length; j++) {
+                                if (this.data.traces[i][j].isCategorical) {
+                                    screenReaderText = 'Column chart showing the visualization of ';
+                                }
+
+                                if (this.data.traces[i][j].unformatedTitle) {
+                                    unformatedTitle = this.data.traces[i][j].unformatedTitle;
+                                    break;
+                                }
                             }
 
-                            if (this.data.traces[i][j].unformatedTitle) {
-                                unformatedTitle = this.data.traces[i][j].unformatedTitle;
-                                break;
-                            }
+                            plot.setAttribute('id', 'plot' + i);
+                            plot.setAttribute('aria-label', screenReaderText + unformatedTitle);
+                            plot.setAttribute('title', 'Visualization of ' + unformatedTitle);
+                            plot.classList.add('image-container');
+                            document.getElementById('visualizations-container').appendChild(plot);
+                            this.config.toImageButtonOptions.filename = unformatedTitle;
+                            plotly.newPlot(plot, this.data.traces[i], this.data.layouts[i], this.config);
                         }
-
-                        plot.setAttribute('id', 'plot' + i);
-                        plot.setAttribute('aria-label', screenReaderText + unformatedTitle);
-                        plot.setAttribute('title', 'Visualization of ' + unformatedTitle);
-                        plot.classList.add('image-container');
-                        document.getElementById('visualizations-container').appendChild(plot);
-                        this.config.toImageButtonOptions.filename = unformatedTitle;
-                        plotly.newPlot(plot, this.data.traces[i], this.data.layouts[i], this.config);
-                    }
+                    });
+                }).catch(() => {
+                    differed.resolve();
                 });
-
                 return this;
-            }
+            },
         });
         return {
             View: visualizationModalView,

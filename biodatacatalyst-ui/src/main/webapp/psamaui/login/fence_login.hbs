@@ -53,7 +53,7 @@
 
     .info-link,
     .fence-login-btn {
-        font-size: 1.1em;
+        font-size: 1.2em;
     }
 
     .open-link {
@@ -72,12 +72,11 @@
                 <h3>Log in</h3>
                 <p>Explore studies you are authorized to access</p>
                 <!-- Existing login information here -->
-                <a href="{{ fenceURL }}&amp;idp=ras" class="fence-login-btn">
-                    <img src="https://public.era.nih.gov/submithelp/images/banner_eralogo.gif"
-                         class="fence-login-img"><span class="fence-inner-span">with eRA Commons</span>
+                <a id="fence-login-btn" href="{{ fenceURL }}&amp;idp=ras" class="btn btn-primary fence-login-btn">
+                    Login with eRA Commons
                 </a>
                 <a href="https://www.era.nih.gov/register-accounts/understanding-era-commons-accounts.htm"
-                   target="_blank" class="info-link">What is an eRA Commons?</a>
+                   target="_blank" class="info-link">eRA Commons</a>
                 <br/><br/>
                 <p>Are you a BDC Developer? <a href="{{ fenceURL }}&amp;idp=google">Log in</a></p>
             </div>
@@ -89,7 +88,7 @@
                 <h3>Explore data without log in</h3>
                 <p>Browse all studies and search all clinical variables in BDC using Open PIC-SURE.</p><br/>
                 <a style="margin: 0 1.5rem" href="https://openpicsure.biodatacatalyst.nhlbi.nih.gov/"
-                   target="_blank" class="open-link">Go to Open PIC-SURE</a>
+                   target="_blank" class="btn btn-primary open-link">Go to Open PIC-SURE</a>
             </div>
         </div>
     </div>
