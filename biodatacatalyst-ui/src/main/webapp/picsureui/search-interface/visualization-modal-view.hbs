@@ -2,14 +2,6 @@
     <h5>All visualizations display the distributions of each variable for the specified cohort of interest. Note that counts are obfuscated to protect individual-level data.</h5>
     <h5>{{message}}</h5>
     <div class="visualization-body">
-        <div class="center large" id="spinner-holder">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</div>
-        {{#if errors}}
-            {{#unless spinning}}
-                <div class="no-visualizations">
-                    <p>No visualizations available</p>
-                </div>
-            {{/unless}}
-        {{/if}}
         <div id="visualizations-container"></div>
     </div>
 </div>

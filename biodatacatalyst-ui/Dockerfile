@@ -21,6 +21,9 @@ RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^
 RUN sed -i "s/DirectoryIndex index.html/DirectoryIndex index_${FILE_SUFFIX}.html/" ${HTTPD_PREFIX}/conf/httpd.conf
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
+# Disable directory browsing
+RUN sed -i 's/Options Indexes FollowSymLinks/Options -Indexes +FollowSymLinks/' ${HTTPD_PREFIX}/conf/httpd.conf
+
 FROM core-ui
 # copy pic-sure-hpds-ui repo
 COPY --from=pic-sure-ui /usr/local/apache2/htdocs/picsureui /usr/local/apache2/htdocs/picsureui

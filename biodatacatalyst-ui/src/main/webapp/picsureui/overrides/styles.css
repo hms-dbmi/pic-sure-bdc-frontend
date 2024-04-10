@@ -163,7 +163,6 @@ body {
 .fence-login-btn {
     display: block;
     padding: 5px;
-    background-color: #d0d0d0;
     width: auto;
     margin: auto auto;
 }
@@ -172,11 +171,6 @@ body {
     margin: auto auto;
     text-align: center;
     display: inline-block;
-}
-
-.fence-inner-span {
-    left: -60px;
-    position: relative;
 }
 
 .nowrap {

@@ -186,9 +186,10 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 					let values = variable.result.values.join(", ");
 					return [
 						existingFilter ?
-							(_.find(existingFilter.get('variables'), (conceptPath)=>{
-								return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
-							}) !== undefined ? true : false) : false,
+							(_.find(existingFilter.get('variables'), (conceptPath) => {
+                                return conceptPath.includes(variable.result.metadata.columnmeta_var_id);
+                            }) !== undefined) : false,
+
 						variable.result.metadata.columnmeta_var_id,
 						variable.result.metadata.columnmeta_name,
 						variable.result.metadata.columnmeta_description,
