@@ -35,6 +35,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                 variableInfo.dataTreeTitleText = dataTreeTitleText;
                 variableInfo.disabledClass = disabledClass;
                 variableInfo.isStigmatized = variableInfo?.variableMetadata.columnmeta_is_stigmatized === "true";
+                variableInfo.isOpenAccess = this.isOpenAccess;
                 this.dataTableData = opts.dataTableData;
                 tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
                 tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
