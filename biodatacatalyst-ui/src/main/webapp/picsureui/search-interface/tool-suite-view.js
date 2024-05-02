@@ -31,7 +31,7 @@ function($, Backbone, HBS, template, filterModel, modal, helpView, Visualization
 
             let shouldDisableDistributions = true;
             if (this.isOpenAccess) {
-                if (filters.length && filterModel.get('totalPatients') !== '< 10') {
+                if (filters.length && filterModel.get('totalPatients') !== '< 10' && parseInt(filterModel.get('totalPatients')) !== 0) {
                     if (anyRecordOf.length + genomic.length < filters.length) {
                         shouldDisableDistributions = false;
                     }
