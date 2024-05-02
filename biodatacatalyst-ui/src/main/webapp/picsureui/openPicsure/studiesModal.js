@@ -107,8 +107,10 @@ define([
             });
 
             let sortedData = filteredData.sort(function (a, b) {
+                let fixedA = isNaN(a.study_matches) ? 0 : a.study_matches;
+                let fixedB = isNaN(b.study_matches) ? 0 : b.study_matches;
                 // Sort by number of study_matches, descending
-                return b.study_matches - a.study_matches;
+                return fixedB - fixedA;
             });
 
             // Table ID: tool-suite-table-studies-modal
