@@ -73,17 +73,11 @@
         text-align: center;
     }
 </style>
-<p>The Participant Count by Study Tool provides an overview of the obfuscated, aggregate counts of participants per
-    study and consent group that meet the query criteria. Without any variable filters, the counts displayed are the
-    total number of participants in each study and consent. Here, you can request access to studies you are not
-    authorized to access using the “Request” button.</p>
-
+<p>The Participant Count by Study Tool provides an overview of the obfuscated, aggregate counts of participants per study and consent group that meet the query criteria. Without any variable filters, the counts displayed are the total number of participants in each study and consent. Here, you can request access to studies you are not authorized to access using the “Request” button.</p>
 <p>Note that counts are obfuscated using the following methods:</p>
 <ul>
-    <li>If the consent(s) or study(ies) are between 1-9 the query results will show "<10".</li>
-    <li>If the consent(s) results are between 1-9 and the number of participants per study are 10 or higher the results
-        will be obfuscated by ±3.</li>
-    <li>Query results that are zero participants will show "0 ".</li>
+    <li>If the consent(s) or study(ies) are less than 10, the query results will show "<10".</li>
+    <li>If the consent(s) results are between 1-9 and the number of participants per study is 10 or higher, the results will be obfuscated by ±3.</li>
 </ul>
 <table id="tool-suite-table-studies-modal-datatable" style="width:100%" class="table table-bordered row-border hover" tabindex="0" aria-label="A table for showing aggregate counts of participants per
         study and consent group that meet the query criteria">

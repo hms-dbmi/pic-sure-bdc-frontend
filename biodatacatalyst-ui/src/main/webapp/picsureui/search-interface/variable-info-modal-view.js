@@ -21,7 +21,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                 this.modalTemplate = HBS.compile(modalTemplate);
                 this.varId = opts.varId;
                 const variableInfo = variableInfoCache[opts.varId];
-                const filterTitleText = this.isOpenAccess && variableInfo?.variableMetadata.columnmeta_is_stigmatized === "true" ? 'This variable is stigmatizing.' : "Click to configure a filter using this variable.";
+                const filterTitleText = this.isOpenAccess && variableInfo?.variableMetadata.columnmeta_is_stigmatized === "true" ? 'Filtering not for this variable is not publicly available' : "Click to configure a filter using this variable.";
                 const disabledClass =  (this.isOpenAccess && variableInfo.variableMetadata.columnmeta_is_stigmatized === "true") ? 'disabled-icon' : '';
                 const exportTitleText = "Click to add this variable to your data retrieval.";
                 const dataTreeTitleText = "Click to view the data tree for this variable.";
