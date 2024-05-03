@@ -410,6 +410,15 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                             metadata: metadata
                         };
                     });
+
+                    let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                    if (isOpenAccess) {
+                    // filter results by is_stigmatized. The non-stigmatized variables will be shown first
+                        results = _.sortBy(results, function(result) {
+                            return result.is_stigmatized;
+                        });
+                    }
+
                     let pageSize = tagFilterModel.get("limit");
                     let pages = [];
                     for (var offset = 0; offset < tagFilterModel.get("searchResults").results.numResults; offset += pageSize) {
@@ -463,7 +472,6 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                             },
                             {
                                 render: function (data, type, row, meta) {
-									let isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
                                     let filterTitleText = (isOpenAccess && row.is_stigmatized) ? "This variable is stigmatizing." : "Click to configure a filter using this variable.";
                                     let filterClasses = 'fa fa-filter search-result-action-btn' + (isOpenAccess && row.is_stigmatized ? " disabled-icon" : '');
                                     let exportTitleText = "Click to add this variable to your data retrieval.";
@@ -480,7 +488,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
 									iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + filterTitleText + '" class="'+filterClasses+'"></i>'
 									// add export
 									if (!isOpenAccess) {
-										iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + exportTitleText + '" class="export-icon search-result-action-btn ' 
+										iconHtml += '<i data-table-id="' + row.table_id + '" data-variable-id="' + row.variable_id + '" data-study-id="' + row.study_id + '" data-result-index="' + row.result_index + '" title="' + exportTitleText + '" class="export-icon search-result-action-btn '
 												 + (filterModel.isExportFieldFromId(row.variable_id, row.study_id) ? 'fa-regular fa-square-check' : 'glyphicon glyphicon-log-out') + '"></i>';
 									}
 									iconHtml += '</span>';
