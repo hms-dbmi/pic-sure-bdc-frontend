@@ -472,7 +472,7 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                             },
                             {
                                 render: function (data, type, row, meta) {
-                                    let filterTitleText = (isOpenAccess && row.is_stigmatized) ? "This variable is stigmatizing." : "Click to configure a filter using this variable.";
+                                    let filterTitleText = (isOpenAccess && row.is_stigmatized) ? "Filtering for this variable is not publicly available" : "Click to configure a filter using this variable.";
                                     let filterClasses = 'fa fa-filter search-result-action-btn' + (isOpenAccess && row.is_stigmatized ? " disabled-icon" : '');
                                     let exportTitleText = "Click to add this variable to your data retrieval.";
                                     let tourAttr;
