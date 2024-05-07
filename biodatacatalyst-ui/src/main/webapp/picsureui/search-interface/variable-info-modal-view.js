@@ -21,8 +21,8 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                 this.modalTemplate = HBS.compile(modalTemplate);
                 this.varId = opts.varId;
                 const variableInfo = variableInfoCache[opts.varId];
-                const filterTitleText = this.isOpenAccess && variableInfo?.variableMetadata.columnmeta_is_stigmatized ? 'This variable is stigmatizing.' : "Click to configure a filter using this variable.";
-                const disabledClass =  (this.isOpenAccess && variableInfo.variableMetadata.columnmeta_is_stigmatized) ? 'disabled-icon' : '';
+                const filterTitleText = this.isOpenAccess && variableInfo?.variableMetadata.columnmeta_is_stigmatized === "true" ? 'Filtering not for this variable is not publicly available' : "Click to configure a filter using this variable.";
+                const disabledClass =  (this.isOpenAccess && variableInfo.variableMetadata.columnmeta_is_stigmatized === "true") ? 'disabled-icon' : '';
                 const exportTitleText = "Click to add this variable to your data retrieval.";
                 const dataTreeTitleText = "Click to view the data tree for this variable.";
                 variableInfo.isAuthorized = !JSON.parse(sessionStorage.getItem('isOpenAccess'));
@@ -34,6 +34,8 @@ define(["jquery", "backbone", "handlebars", "underscore", "text!search-interface
                                               && variableInfo?.variableMetadata?.data_hierarchy !== "{}";
                 variableInfo.dataTreeTitleText = dataTreeTitleText;
                 variableInfo.disabledClass = disabledClass;
+                variableInfo.isStigmatized = variableInfo?.variableMetadata.columnmeta_is_stigmatized === "true";
+                variableInfo.isOpenAccess = this.isOpenAccess;
                 this.dataTableData = opts.dataTableData;
                 tagFilterModel.get('requiredTags').bind('add', this.tagRequired.bind(this));
                 tagFilterModel.get('excludedTags').bind('add', this.tagExcluded.bind(this));
