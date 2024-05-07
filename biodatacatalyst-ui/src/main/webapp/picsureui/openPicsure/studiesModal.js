@@ -10,7 +10,6 @@ define([
     return BB.View.extend({
         initialize: function (opts) {
             this.studiesModalTemplate = HBS.compile(studiesModalTemplate);
-            this.showZeroParticipants = false;
             keyboardNav.addNavigableView("studiesModal", this);
             this.on({
                 'keynav-arrowup document': this.previousSearchResult,
@@ -20,7 +19,6 @@ define([
             });
         },
         events: {
-            'click #showAllStudies': 'handleShowAllStudiesClick',
             'keypress #tool-suite-table-studies-modal-datatable': 'resultKeyHandler',
             'focus #tool-suite-table-studies-modal-datatable': 'resultsDatatableFocus',
             'blur #tool-suite-table-studies-modal-datatable': 'resultsBlur',
@@ -47,10 +45,6 @@ define([
                 event.preventDefault();
                 this.requestAccessClickHandler(event);
             }
-        },
-        handleShowAllStudiesClick: function () {
-            this.showZeroParticipants = !this.showZeroParticipants;
-            this.render();
         },
         previousSearchResult: function (event) {
             let results = this.$("#tool-suite-table-studies-modal-datatable tbody tr");
@@ -104,25 +98,19 @@ define([
             $(event.target).find(".request-access-button").click();
         },
         displayTable: function (data) {
-            let showAll = this.showZeroParticipants;
-
             // Filter out studies that have a missing value for any of the used columns in the table
             let filteredData = data.filter(function (item) {
                 let requiredCols = ['display_name', 'identifier', 'consents', 'study_matches', "request_access"];
                 return requiredCols.every(function (property) {
-                    if (property === 'study_matches' && !showAll) {
-                        // Only show studies with participants. If showStudiesWithZeroParticipants is true, then show all studies.
-                        return item.hasOwnProperty(property) && item[property] != null && item[property] !== '' &&
-                            (item[property] > 0 || (typeof item[property] === 'string' && item[property] !== '0'));
-                    }
-
                     return item.hasOwnProperty(property) && item[property] != null && item[property] !== '';
                 });
             });
 
             let sortedData = filteredData.sort(function (a, b) {
+                let fixedA = isNaN(a.study_matches) ? 0 : a.study_matches;
+                let fixedB = isNaN(b.study_matches) ? 0 : b.study_matches;
                 // Sort by number of study_matches, descending
-                return b.study_matches - a.study_matches;
+                return fixedB - fixedA;
             });
 
             // Table ID: tool-suite-table-studies-modal
@@ -186,13 +174,6 @@ define([
         render: function () {
             this.$el.html(this.studiesModalTemplate());
             this.displayTable(outputModel.get("studies"));
-
-            // Update the button text
-            if (!this.showZeroParticipants) {
-                $("#showAllStudies").text("Include studies with 0 participants");
-            } else {
-                $("#showAllStudies").text("Show only studies with participants");
-            }
         }
     });
 });
