@@ -231,7 +231,7 @@ define(['backbone', 'handlebars', 'underscore', 'text!search-interface/datatable
 												if (isOpenAccess && (row[8] === false || row[8] === "false")) {
 													return '<input data-sort-token=' + (data?0:1) + ' checked='+data+' type="checkbox" tabindex="-1" data-varid="'+row[1]+'"></input>';
 												} else {
-													return '<input title="This variable is stigmatizing" data-sort-token=' + (data?0:1) + ' type="checkbox" tabindex="-1" disabled></input>';
+													return '<input title="Filtering not for this variable is not publicly available" data-sort-token=' + (data?0:1) + ' type="checkbox" tabindex="-1" disabled></input>';
 												}
                     	},
                     	type:'string',
