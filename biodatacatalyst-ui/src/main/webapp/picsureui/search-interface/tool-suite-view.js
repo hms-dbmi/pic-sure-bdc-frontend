@@ -23,13 +23,23 @@ function($, Backbone, HBS, template, filterModel, modal, helpView, Visualization
             const anyRecordOf = filters.filter(filter => filter.get('filterType') === 'anyRecordOf');
             const genomic = filters.filter(filter => filter.get('filterType') === 'genomic');
             let shouldDisablePackageData = true;
-            let shouldDisableDistributions = true;
             if (filters.length && hasParticipants) {
+                if (anyRecordOf.length + genomic.length < filters.length || anyRecordOf.length) {
+                    shouldDisablePackageData = false;
+                }
+            }
+
+            let shouldDisableDistributions = true;
+            if (this.isOpenAccess) {
+                if (filters.length && filterModel.get('totalPatients') !== '< 10' && parseInt(filterModel.get('totalPatients')) !== 0) {
+                    if (anyRecordOf.length + genomic.length < filters.length) {
+                        shouldDisableDistributions = false;
+                    }
+                }
+            }
+            else if (filters.length && hasParticipants) {
                 if (anyRecordOf.length + genomic.length < filters.length) {
-                    shouldDisablePackageData = false;
                     shouldDisableDistributions = false;
-                } else if (anyRecordOf.length) {
-                    shouldDisablePackageData = false;
                 }
             }
             this.$el.find('#participant-study-data').prop('disabled', !hasParticipants).prop('title', !hasParticipants ? 'The "Total Participants" must be greater than zero' : 'Participant Count by Study');
