@@ -6,10 +6,12 @@
     padding:0px;
 }
 #patient-count {
-    font-size: 200%;
-    font-weight: 800;
     width: 98%;
     margin-bottom: .1em;
+}
+.patient-count-text {
+    font-size: 2em;
+    font-weight: 800;
 }
 #patient-count-label {
     font-size: 150%;
@@ -26,22 +28,35 @@
 .blue-center-large{
     margin: 10px;
 }
+.error-text-box {
+    border: 1px solid red; 
+    padding: 10px; 
+    border-radius: 10px; 
+    background-color: #fff3f5; 
+    font-size: 18px;
+}
 </style>
 
 <div>
-<div class="panel" id="patient-count-box">
-    <div class="space-out panel-heading">
-        <span>Data Summary</span>
-        <a id="data-summary-help" class="btn no-padding" title="Data Summary Help" aria-label="Data Summary Help" tabindex="0" >What is this?</a>
+    <div class="panel" id="patient-count-box">
+        <div class="space-out panel-heading">
+            <span>Data Summary</span>
+            <a id="data-summary-help" class="btn no-padding" title="Data Summary Help" aria-label="Data Summary Help"
+                tabindex="0">What is this?</a>
+        </div>
+        <div class="data-summary-body panel-body">
+            <span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+            <span id="patient-count" class="blue center">
+                {{#if queryRan}}
+                    <span class="patient-count-text">{{totalPatients}}</span>
+                {{/if}}
+            </span>
+
+            <span id="patient-count-label" class="center medium">Total Participants</span>
+
+            <span id="export-count" class="center small">{{#if queryRan}}{{totalVariables}}{{else}}-{{/if}}
+                Variables</span>
+
+            <div class="container" id="pic-sure-instances"></div>
+        </div>
     </div>
-    <div class="data-summary-body panel-body" >
-	       <span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
-	          <span id="patient-count" class="blue center large">{{#if queryRan}}{{totalPatients}}{{else}}-{{/if}}</span>
-
-	             <span id="patient-count-label" class="center medium">Total Participants</span>
-
-                 <span id="export-count" class="center small">{{#if queryRan}}{{totalVariables}}{{else}}-{{/if}} Variables</span>
-
-	                <div class="container" id="pic-sure-instances"></div>
-</div>
-</div>

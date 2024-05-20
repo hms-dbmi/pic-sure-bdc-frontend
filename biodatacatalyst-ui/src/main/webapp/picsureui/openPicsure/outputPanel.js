@@ -173,6 +173,12 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 						studiesInfo[x].study_matches = "(error)";
 					}
 					outputModel.stopAll();
+					const message = '<div class="error-text-box">' +
+						overrides.outputErrorMessage ? 
+							overrides.outputErrorMessage : 
+							"There is something wrong when processing your query, please try it later, if this repeats, please contact admin." +
+            "</div>";
+					$("#patient-count").html(message);
 
 					this.toolSuiteView.render();
 					this.render();

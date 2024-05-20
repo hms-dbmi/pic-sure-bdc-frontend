@@ -85,10 +85,10 @@ function($, queryResultsTemplate, ontology, BB, HBS,
                             this.dataCallback(response, request.getResponseHeader("resultId"));
                         }.bind(this),
                         error: function(response){
-                            if (!transportErrors.handleAll(response, "Error while processing query")) {
-                                response.responseText = "<h4>"
+                            if (!transportErrors.handle401(response, "Error while processing query")) {
+                                response.responseText = '<div class="error-text-box">'
                                 + overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
-                                + "</h4>";
+                                + "</div>";
                                 this.errorCallback(response.responseText);
                             }
                         }.bind(this)

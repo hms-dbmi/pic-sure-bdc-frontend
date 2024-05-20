@@ -58,7 +58,7 @@ define(["handlebars", "backbone", "picSure/settings", "common/transportErrors", 
 		/*
 		 * If you want to show your customized error message, please override this
 		 */
-		outputErrorMessage: undefined,
+		outputErrorMessage: 'There was an error when adding the filter to the query. Please remove your most recent filter and try again. If this error persists, please contact us by filling out the form <a href="https://biodatacatalyst.nhlbi.nih.gov/contact/" target="_blank">here</a>. We will respond to your request as soon as we can.',
 		/*
 		 * The new hook for overriding all custom query logic
 		 */
