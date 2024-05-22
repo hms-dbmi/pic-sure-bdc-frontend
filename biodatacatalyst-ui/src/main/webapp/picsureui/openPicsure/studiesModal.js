@@ -7,6 +7,16 @@ define([
     "common/keyboard-nav",
     "search-interface/search-util"
 ], function (BB, HBS, studiesModalTemplate, settings, outputModel, keyboardNav, searchUtil) {
+    function normalizeValue(valueStr) {
+        if (valueStr.includes("±")) {
+            const base = parseInt(valueStr.split(" ± ")[0]);
+            return base + 3;
+        } else if (valueStr.startsWith("<")) {
+            return 9;
+        } else {
+            return parseInt(valueStr);
+        }
+    }
     return BB.View.extend({
         initialize: function (opts) {
             this.studiesModalTemplate = HBS.compile(studiesModalTemplate);
@@ -107,8 +117,8 @@ define([
             });
 
             let sortedData = filteredData.sort(function (a, b) {
-                let fixedA = isNaN(a.study_matches) ? 0 : a.study_matches;
-                let fixedB = isNaN(b.study_matches) ? 0 : b.study_matches;
+                let fixedA = isNaN(a.study_matches) ? normalizeValue(a.study_matches) : a.study_matches;
+                let fixedB = isNaN(b.study_matches) ? normalizeValue(b.study_matches) : b.study_matches;
                 // Sort by number of study_matches, descending
                 return fixedB - fixedA;
             });
