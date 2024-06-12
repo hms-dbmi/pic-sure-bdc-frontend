@@ -12,7 +12,7 @@ define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs'
                     $('#main-content').html("BioDataCatalyst authentication is successful. Processing UserProfile information...");
 
                     $.ajax({
-                        url: '/psama/authentication',
+                        url: '/psama/authentication/fence',
                         type: 'post',
                         data: JSON.stringify({
                             code: code
