@@ -477,7 +477,8 @@ define(["backbone", "handlebars", "underscore", "text!search-interface/search-re
                                     let exportTitleText = "Click to add this variable to your data retrieval.";
                                     let tourAttr;
                                     if (row.result_index == 0) {
-                                        tourAttr = isOpenAccess ? ' data-intro="#open-actions-row"' : ' data-intro="#authorized-actions-row"' + ' data-sequence="6" id="first-actions-row"';
+                                        tourAttr = isOpenAccess ? ' data-intro="#open-actions-row"' : ' data-intro="#authorized-actions-row"';
+					tourAttr += ' data-sequence="6" id="first-actions-row"';
                                     }
 
 									let iconHtml = tourAttr ? '<span class="search-result-icons row center"' + tourAttr + '>' : '<span class="search-result-icons row center">';

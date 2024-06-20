@@ -3,6 +3,10 @@
         "text": "Search clinical variables of interest. Here, a study you are authorized to access was searched. Click anywhere to continue the tour.",
         "position": "bottom"
     },
+    "#search-box-open": {
+        "text": "Search clinical variables of interest. Here, the term “RECOVER” was used to get all RECOVER-related results. Click anywhere to continue the tour.",
+        "position": "bottom"
+    },
     "#genomic-filter-btn": { 
         "text": "Use the genomic filtering button to apply a filter using genomic information."
     },
