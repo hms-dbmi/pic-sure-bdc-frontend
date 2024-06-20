@@ -45,8 +45,7 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 //only include each tag once
                 this.antiScopeTags = searchUtil.getAntiScopeTags();
 
-                // Tour search term, use epilepsy by default because it is available in both open and authorized access
-                this.tourSearchTerm = opts.tourSearchTerm ?? "epilepsy";
+                this.tourSearchTerm = opts.tourSearchTerm ?? "RECOVER";
 
                 this.render();
                 this.subviews();
@@ -107,12 +106,15 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 ];
                 let title = 'Welcome to PIC-SURE Authorized Access';
                 let message1 = 'PIC-SURE Authorized Access provides access to complete, participant-level data, in addition to aggregate counts, and access to the Tool Suite.';
+                let message2 = '';
                 if (this.isOpenAccess) {
                     title = 'Welcome to PIC-SURE Open Access';
                     message1 = 'PIC-SURE Open Access allows you to search any clinical variable available in PIC-SURE. Your queries will return obfuscated aggregate counts per study and consent.';
+                    message2 = 'This tour uses the Researching COVID to Enhance Recovery (RECOVER) dataset as an example. The RECOVER initiative is focused on understanding, diagnosing, treating, and preventing Long COVID.';
                 }
                 const modalMessages = [
                     message1,
+                    message2,
                     'Once the tour starts you can click anywhere to go to the next step. You can press the escape key to stop the tour at any point. You may also use the arrow keys, enter key, or the spacebar to navigate the tour.'
                 ];
                 const dialogView = new dialog({options: dialogOptions, messages: modalMessages});
@@ -272,8 +274,10 @@ define(["jquery", "backbone", "handlebars", "underscore", "search-interface/tag-
                 Backbone.View.prototype.remove.call(this);
             },
             render: function () {
-                this.$el.html(this.searchViewTemplate({genomicFilteringEnabled: this.state.hasGenomicData}));
-                if (JSON.parse(sessionStorage.getItem('isOpenAccess'))) {
+                const isOpenAccess = JSON.parse(sessionStorage.getItem('isOpenAccess'));
+                const searchBoxTourId = isOpenAccess ? "#search-box-open" : "#search-box";
+                this.$el.html(this.searchViewTemplate({genomicFilteringEnabled: this.state.hasGenomicData, searchBoxTourId: searchBoxTourId}));
+                if (isOpenAccess) {
                     this.$el.find('#genomic-filter-btn').remove();
                 }
                 $('#search-box').focus();
