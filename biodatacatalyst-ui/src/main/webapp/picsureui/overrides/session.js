@@ -1,6 +1,6 @@
 define(['search-interface/search-util'], function(searchUtil){
     let isStudyPrivilege = function(privilege){
-        const prefixToRemove = "PRIV_FENCE_";
+        const prefixToRemove = "PRIV_MANAGED_";
         const study = privilege.startsWith(prefixToRemove)
         ? privilege.slice(prefixToRemove.length)
         : privilege;
