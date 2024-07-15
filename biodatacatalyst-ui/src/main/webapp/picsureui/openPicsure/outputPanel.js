@@ -164,7 +164,7 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 							if(!x.consent_group_code) {
 								x.study_matches = totalPatients;
 							} else {
-								x.study_matches = x.short_title !== "" ? response[studiesInfo[code].study_concept + x.short_title + '\\'] : response[studiesInfo[code].study_concept + '\\\\'];
+								x.study_matches = response[studiesInfo[code].study_concept + x.short_title + '\\'];
 							}
 						});
 					}
