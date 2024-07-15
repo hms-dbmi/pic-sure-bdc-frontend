@@ -161,7 +161,11 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 					// populate the study consent counts
 					for (var code in studiesInfo) {
 						studiesInfo[code].consents.forEach((x) => {
-							x.study_matches = response[studiesInfo[code].study_concept + x.short_title + '\\'];
+							if(!x.consent_group_code) {
+								x.study_matches = totalPatients;
+							} else {
+								x.study_matches = x.short_title !== "" ? response[studiesInfo[code].study_concept + x.short_title + '\\'] : response[studiesInfo[code].study_concept + '\\\\'];
+							}
 						});
 					}
 					outputModel.set("studies",sorted_final);
