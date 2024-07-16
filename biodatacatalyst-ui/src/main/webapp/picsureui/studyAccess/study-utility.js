@@ -24,8 +24,8 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studies-data.json"
             };
             let configurationData = JSON.parse(studyAccessConfiguration);
             for (let groupid in configurationData) {
-                for (idx = 0; idx < configurationData[groupid].length; idx++) {
-                    // determine if logged in user is permmited access
+                for (let idx = 0; idx < configurationData[groupid].length; idx++) {
+                    // determine if logged in user is permitted access
                     let tmpStudy = configurationData[groupid][idx];
                     const cvc = parseInt(tmpStudy["clinical_variable_count"]).toLocaleString();
                     tmpStudy["clinical_variable_count"] = cvc == '-1' || cvc == 'NaN' ? 'N/A' : cvc;
@@ -70,8 +70,60 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studies-data.json"
             return records;
         }
 
+        function calculateAvailableStudiesAndParticipants() {
+            let configurationData = JSON.parse(studyAccessConfiguration);
+            let availableStudiesCount = 0;
+            let countedStudies = [];
+
+            for (let studyMetadata in configurationData) {
+                for (let idx = 0; idx < configurationData[studyMetadata].length; idx++) {
+                    let tmpStudy = configurationData[studyMetadata][idx];
+                    if (tmpStudy['authZ'] !== "" && !countedStudies.includes(tmpStudy["study_identifier"])) {
+                        // We need to keep track of the studies we have already counted.
+                        // It seems there are duplicate studies in the fence mapping
+                        availableStudiesCount++;
+                        countedStudies.push(tmpStudy["study_identifier"]);
+                    }
+                }
+            }
+
+            // Cache the values (for demonstration, using sessionStorage)
+            sessionStorage.setItem("availableStudiesCount", availableStudiesCount);
+
+            return {
+                availableStudiesCount: availableStudiesCount,
+            };
+        }
+
+        function getAvailableStudiesCount() {
+            if (!sessionStorage.getItem("availableStudiesCount") || !sessionStorage.getItem("cachedStudyDataHash") || sessionStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
+                const { availableStudiesCount } = calculateAvailableStudiesAndParticipants();
+                return availableStudiesCount;
+            }
+            return parseInt(sessionStorage.getItem("availableStudiesCount"));
+        }
+
+        // Calculate and cache available studies and total participants if the data is updated
+        if (!sessionStorage.getItem("cachedStudyDataHash") || sessionStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
+            calculateAvailableStudiesAndParticipants();
+            sessionStorage.setItem("cachedStudyDataHash", studyAccessConfiguration.hashCode());
+        }
+
         return {
             getStudyAccessConfiguration: getStudyAccessConfiguration,
-            groupRecordsByAccess: groupRecordsByAccess
+            groupRecordsByAccess: groupRecordsByAccess,
+            getAvailableStudiesCount: getAvailableStudiesCount,
         };
     });
+
+// Helper function to calculate a simple hash code for the JSON data (not cryptographic)
+String.prototype.hashCode = function () {
+    var hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
