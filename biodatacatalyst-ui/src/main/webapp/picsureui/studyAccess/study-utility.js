@@ -72,7 +72,6 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studies-data.json"
 
         function calculateAvailableStudiesAndParticipants() {
             let configurationData = JSON.parse(studyAccessConfiguration);
-            let availableStudiesCount = 0;
             let countedStudies = [];
 
             for (let studyMetadata in configurationData) {
@@ -81,32 +80,31 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studies-data.json"
                     if (tmpStudy['authZ'] !== "" && !countedStudies.includes(tmpStudy["study_identifier"])) {
                         // We need to keep track of the studies we have already counted.
                         // It seems there are duplicate studies in the fence mapping
-                        availableStudiesCount++;
                         countedStudies.push(tmpStudy["study_identifier"]);
                     }
                 }
             }
 
-            // Cache the values (for demonstration, using sessionStorage)
-            sessionStorage.setItem("availableStudiesCount", availableStudiesCount);
+            // Cache the values (for demonstration, using localStoragae)
+            localStorage.setItem("availableStudiesCount", "" + countedStudies.length);
 
             return {
-                availableStudiesCount: availableStudiesCount,
+                availableStudiesCount: countedStudies.length,
             };
         }
 
         function getAvailableStudiesCount() {
-            if (!sessionStorage.getItem("availableStudiesCount") || !sessionStorage.getItem("cachedStudyDataHash") || sessionStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
+            if (!localStorage.getItem("availableStudiesCount") || !localStorage.getItem("cachedStudyDataHash") || localStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
                 const { availableStudiesCount } = calculateAvailableStudiesAndParticipants();
-                return availableStudiesCount;
+                return parse(availableStudiesCount);
             }
-            return parseInt(sessionStorage.getItem("availableStudiesCount"));
+            return parseInt(localStorage.getItem("availableStudiesCount"));
         }
 
         // Calculate and cache available studies and total participants if the data is updated
-        if (!sessionStorage.getItem("cachedStudyDataHash") || sessionStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
+        if (!localStorage.getItem("cachedStudyDataHash") || localStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
             calculateAvailableStudiesAndParticipants();
-            sessionStorage.setItem("cachedStudyDataHash", studyAccessConfiguration.hashCode());
+            localStorage.setItem("cachedStudyDataHash", studyAccessConfiguration.hashCode());
         }
 
         return {
