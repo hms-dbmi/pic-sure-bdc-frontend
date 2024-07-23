@@ -85,9 +85,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studies-data.json"
                 }
             }
 
-            // Cache the values (for demonstration, using localStoragae)
             localStorage.setItem("availableStudiesCount", "" + countedStudies.length);
-
             return {
                 availableStudiesCount: countedStudies.length,
             };
@@ -96,7 +94,7 @@ define(["jquery", "backbone", "handlebars", "text!studyAccess/studies-data.json"
         function getAvailableStudiesCount() {
             if (!localStorage.getItem("availableStudiesCount") || !localStorage.getItem("cachedStudyDataHash") || localStorage.getItem("cachedStudyDataHash") !== studyAccessConfiguration.hashCode()) {
                 const { availableStudiesCount } = calculateAvailableStudiesAndParticipants();
-                return parse(availableStudiesCount);
+                return availableStudiesCount;
             }
             return parseInt(localStorage.getItem("availableStudiesCount"));
         }
