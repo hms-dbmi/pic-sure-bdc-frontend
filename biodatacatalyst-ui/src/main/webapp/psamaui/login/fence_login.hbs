@@ -8,6 +8,14 @@
         padding: 1rem 3rem 2rem 3rem;
     }
 
+    .left-login-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
     .login-panel .fence-login-btn {
         margin-bottom: 1.5rem;
     }
@@ -24,7 +32,6 @@
         width: 70rem;
         height: auto;
         transform: scaleX(-1);
-        /*    slide the image over a few px to the right*/
         margin-right: -3rem;
         margin-bottom: 1.2rem;
     }
@@ -59,6 +66,32 @@
     .open-link {
         font-size: 1.2em;
     }
+
+    .ras-login-btn {
+        font-size: 1.5rem;
+        border: 0.125rem solid black;
+        border-radius: .4em;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .ras-login-btn img {
+        flex-shrink: 0;
+    }
+
+    .ras-login-btn,
+    .ras-login-btn:hover,
+    .ras-login-btn:focus,
+    .ras-login-btn:active {
+        color: inherit;
+        text-decoration: none;
+    }
+
 </style>
 <div class="text-center">
     <h1>Welcome to Authorized PIC-SURE</h1>
@@ -67,17 +100,23 @@
     <br/>
     <div class="flex-container">
         <!-- First Box: eRA Commons Login -->
-        <div class="login-panel">
+        <div class="login-panel left-login-panel">
             <div class="panel-body">
-                <h3>Log in</h3>
-                <p>Explore studies you are authorized to access</p>
-                <!-- Existing login information here -->
-                <a id="fence-login-btn" href="{{ fenceURL }}&amp;idp=ras" class="btn btn-primary fence-login-btn">
-                    Login with eRA Commons
+                <a id="ras-login-btn" href="{{ rasURL }}" class="btn ras-login-btn">
+                    <img src="/images/NIH_2013_logo_vertical_text_removed.svg" alt="NIH 2013 Logo" style="height: 2em;"/>
+                    Login Using Researcher Auth Service (RAS)
                 </a>
-                <a href="https://www.era.nih.gov/register-accounts/understanding-era-commons-accounts.htm"
-                   target="_blank" class="info-link">What is eRA Commons?</a>
                 <br/><br/>
+                <div id="gen3-login" hidden="hidden">
+                    <p>Explore studies you are authorized to access</p>
+                    <a id="fence-login-btn" href="{{ fenceURL }}&amp;idp=ras" class="btn btn-primary fence-login-btn"
+                       disabled>
+                        Login with eRA Commons
+                    </a>
+                    <a href="https://www.era.nih.gov/register-accounts/understanding-era-commons-accounts.htm"
+                       target="_blank" class="info-link">What is eRA Commons?</a>
+                    <br/><br/>
+                </div>
                 <p>Are you a BDC Developer? <a href="{{ fenceURL }}&amp;idp=google">Log in</a></p>
             </div>
         </div>
@@ -92,8 +131,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Bottom Right Corner Image -->
     <div class="corner-image">
         <img src="/images/login_dots.png" alt="Dots" class="img-responsive">
     </div>

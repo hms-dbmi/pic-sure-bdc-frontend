@@ -43,3 +43,4 @@ RUN sed -i "s/urlArgs: \"\"/urlArgs: \"v=${FILE_SUFFIX}\"/" /usr/local/apache2/h
 COPY horizontal-logo.png ${HTTPD_PREFIX}/htdocs/picsureui/static/logo.png
 COPY stacked-logo.png ${HTTPD_PREFIX}/htdocs/images/logo.png
 COPY login_dots.png ${HTTPD_PREFIX}/htdocs/images/login_dots.png
+COPY NIH_2013_logo_vertical_text_removed.svg ${HTTPD_PREFIX}/htdocs/images/NIH_2013_logo_vertical_text_removed.svg
