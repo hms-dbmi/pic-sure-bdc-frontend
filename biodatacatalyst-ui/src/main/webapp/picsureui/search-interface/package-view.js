@@ -241,6 +241,11 @@ define([
 		initiatePackage: function(expectedResultType) {
 			this.model.set('exportStatus', 'Progress');
 			this.model.set("datasetName", undefined);
+			if (expectedResultType === 'DATAFRAME_PFB') {
+				this.model.set('fileExtension', 'avro');
+			} else {
+				this.model.set('fileExtension', 'csv');
+			}
 			$("#save-named-dataset-btn").html("Save Dataset ID");
 			this.updateHeader();
 			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), settings.picSureResourceId);
@@ -349,7 +354,8 @@ define([
 				success: function(response){
 					responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
 					const link = document.createElement('a');
-					link.download = 'data.csv';
+					let fileExtension = viewObj.model.get('fileExtension');
+					link.download = 'data.' + fileExtension;
 					link.href = responseDataUrl;
 					link.click();
 					link.remove();
