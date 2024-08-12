@@ -152,11 +152,15 @@ define([
 			var viewObj = this;
 			if(exportStatus === 'Ready'){
 				statusMessage = 'Status:  Ready to package. \nClick "Package Data" to proceed.';
-				$('#package-package-button').attr('disabled', false);
-				$('#package-package-button', this.$el).click(function(){
-					viewObj.initiatePackage();
+				$('#package-package-button-csv').attr('disabled', false);
+				$('#package-package-button-pbf').attr('disabled', false);
+				$('#package-package-button-csv', this.$el).click(function(){
+					viewObj.initiatePackage('DATAFRAME');
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', 'var(--catalyst-blue)');
+				$('#package-package-button-pfb', this.$el).click(function(){
+					viewObj.initiatePackage('DATAFRAME_PFB');
+				}.bind(viewObj));
+				$('#package-package-button-csv, #package-package-button-pfb').css('background-color', 'var(--catalyst-blue)');
 				$('.package-query-container').hide();
 				$('#package-download-button').hide();
 				$('#package-copy-query-button').hide();
@@ -167,9 +171,9 @@ define([
 			else if (exportStatus === 'Overload') {
 				fontColor = 'Red';
 				statusMessage = 'Status: NUMBER OF DATA POINTS EXCEEDED\nRemove data selections';
-				$('#package-package-button').attr('disabled', true);
-				$('#package-package-button', this.$el).off('click');
-				$('#package-package-button').css('background-color', 'lightgrey');
+				$('#package-package-button-csv, #package-package-button-pfb').attr('disabled', true);
+				$('#package-package-button-csv, #package-package-button-pfb', this.$el).off('click');
+				$('#package-package-button-csv, #package-package-button-pfb').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-copy-query-button').hide();
 				$('#save-named-dataset-btn').hide();
@@ -179,9 +183,9 @@ define([
 			}
 			else if (exportStatus === 'Progress') {
 				statusMessage = 'Status: In Progress';
-				$('#package-package-button').attr('disabled', true);
-				$('#package-package-button', this.$el).off('click');
-				$('#package-package-button').css('background-color', 'lightgrey');
+				$('#package-package-button-csv, #package-package-button-pfb').attr('disabled', true);
+				$('#package-package-button-csv, #package-package-button-pfb', this.$el).off('click');
+				$('#package-package-button-csv, #package-package-button-pfb').css('background-color', 'lightgrey');
 				$('.package-query-container').hide();
 				$('#package-copy-query-button').hide();
 				$('#save-named-dataset-btn').hide();
@@ -191,11 +195,14 @@ define([
 			}
 			else if (exportStatus === 'Done') {
 				statusMessage = 'Status: Available';
-				$('#package-package-button').attr('disabled', false);
-				$('#package-package-button', this.$el).click(function(){
-					viewObj.initiatePackage();
+				$('#package-package-button-csv, #package-package-button-pfb').attr('disabled', false);
+				$('#package-package-button-csv', this.$el).click(function(){
+					viewObj.initiatePackage('DATAFRAME');
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', 'var(--catalyst-blue)');
+				$('#package-package-button-pfb', this.$el).click(function(){
+					viewObj.initiatePackage('DATAFRAME_PFB');
+				}.bind(viewObj));
+				$('#package-package-button-csv, #package-package-button-pfb').css('background-color', 'var(--catalyst-blue)');
 				$('.package-query-container').show();
 				$('#seven-bridges-export').show();
 				$('#terra-export').show();
@@ -214,11 +221,14 @@ define([
 			else {
 				statusMessage = 'Error-please try again';
 				fontColor = 'Red';
-				$('#package-package-button').prop('disabled', false);
-				$('#package-package-button', this.$el).click(function(){
-					viewObj.initiatePackage();
+				$('#package-package-button-csv, #package-package-button-pfb').prop('disabled', false);
+				$('#package-package-button-csv', this.$el).click(function(){
+					viewObj.initiatePackage('DATAFRAME');
 				}.bind(viewObj));
-				$('#package-package-button').css('background-color', '#337ab7');
+				$('#package-package-button-pfb', this.$el).click(function(){
+					viewObj.initiatePackage('DATAFRAME_PFB');
+				}.bind(viewObj));
+				$('#package-package-button-csv, #package-package-button-pfb').css('background-color', '#337ab7');
 			}
 
 			// $('#package-download-button', this.$el).removeAttr("href");
@@ -228,14 +238,19 @@ define([
 			$('#package-status').html(statusMessage);
 			$('#package-status').css('color', fontColor);
 		},
-		initiatePackage: function() {
+		initiatePackage: function(expectedResultType) {
 			this.model.set('exportStatus', 'Progress');
 			this.model.set("datasetName", undefined);
+			if (expectedResultType === 'DATAFRAME_PFB') {
+				this.model.set('fileExtension', 'avro');
+			} else {
+				this.model.set('fileExtension', 'csv');
+			}
 			$("#save-named-dataset-btn").html("Save Dataset ID");
 			this.updateHeader();
 			var query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), filterModel.get("exportFields").toJSON(), settings.picSureResourceId);
 			query = JSON.parse(JSON.stringify(query));
-			query.query.expectedResultType="DATAFRAME";
+			query.query.expectedResultType=expectedResultType;
 			queryBuilder.updateConsentFilters(query, settings);
 			var deferredQueryId = $.Deferred();
 			var viewObj = this;
@@ -339,7 +354,8 @@ define([
 				success: function(response){
 					responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
 					const link = document.createElement('a');
-					link.download = 'data.csv';
+					let fileExtension = viewObj.model.get('fileExtension');
+					link.download = 'data.' + fileExtension;
 					link.href = responseDataUrl;
 					link.click();
 					link.remove();
