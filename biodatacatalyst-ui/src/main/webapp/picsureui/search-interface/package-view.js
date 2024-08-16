@@ -349,7 +349,9 @@ define([
 				type: 'POST',
 				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 				contentType: 'application/json',
-				dataType: 'text',
+				xhrFields: {
+					responseType: "blob" // to avoid binary data being mangled on charset conversion
+				},
 				data: "{}",
 				success: function(response){
 					responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
