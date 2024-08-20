@@ -48,6 +48,8 @@ define(['picSure/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs'
                     sessionStorage.setItem('oauthState', state);
                     // Show the fence_login template, with the generated fenceLoginURL
                     $('#main-content').html(HBS.compile(loginTemplate)({
+                        rasEnabled: !!settings.ras_client_id && settings.ras_client_id !== "false",
+                        fenceEnabled: !!settings.fence_client_id && settings.fence_client_id !== "false",
                         fenceURL: settings.idp_provider_uri + "/user/oauth2/authorize" +
                             "?response_type=code" +
                             "&scope=user+openid" +
