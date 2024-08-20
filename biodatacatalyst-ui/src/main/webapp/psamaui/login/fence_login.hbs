@@ -102,21 +102,23 @@
         <!-- First Box: eRA Commons Login -->
         <div class="login-panel left-login-panel">
             <div class="panel-body">
+                {{#if rasEnabled}}
                 <a id="ras-login-btn" href="{{ rasURL }}" class="btn ras-login-btn">
                     <img src="/images/NIH_2013_logo_vertical_text_removed.svg" alt="NIH 2013 Logo" style="height: 2em;"/>
                     Login Using Researcher Auth Service (RAS)
                 </a>
                 <br/><br/>
-                <div id="gen3-login" hidden="hidden">
-                    <p>Explore studies you are authorized to access</p>
-                    <a id="fence-login-btn" href="{{ fenceURL }}&amp;idp=ras" class="btn btn-primary fence-login-btn"
-                       disabled>
+                {{/if}}
+                {{#if fenceEnabled}}
+                <div id="gen3-login">
+                    <a id="fence-login-btn" href="{{ fenceURL }}&amp;idp=ras" class="btn btn-primary fence-login-btn">
                         Login with eRA Commons
                     </a>
                     <a href="https://www.era.nih.gov/register-accounts/understanding-era-commons-accounts.htm"
                        target="_blank" class="info-link">What is eRA Commons?</a>
                     <br/><br/>
                 </div>
+                {{/if}}
                 <p>Are you a BDC Developer? <a href="{{ fenceURL }}&amp;idp=google">Log in</a></p>
             </div>
         </div>
