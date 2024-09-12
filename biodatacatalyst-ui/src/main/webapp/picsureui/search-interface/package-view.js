@@ -273,7 +273,7 @@ define([
 				$.ajax({
 					url: window.location.origin + "/picsure/query" + queryUrlFragment,
 					type: 'POST',
-					headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+					headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 					contentType: 'application/json',
 					dataType: 'text',
 					data: JSON.stringify(query),
@@ -347,7 +347,7 @@ define([
 			$.ajax({
 				url: window.location.origin + "/picsure/query/" + queryId + "/result",
 				type: 'POST',
-				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 				contentType: 'application/json',
 				xhrFields: {
 					responseType: "blob" // to avoid binary data being mangled on charset conversion

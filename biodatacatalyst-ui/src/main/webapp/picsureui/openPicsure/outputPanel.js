@@ -15,7 +15,7 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 		$.ajax({
 			url: window.location.origin + "/picsure/search/" + settings.openAccessResourceId,
 			type: 'POST',
-			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+			headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 			contentType: 'application/json',
 			data: JSON.stringify({"query":"\\_studies_consents\\"}),
 			success:(function(response) {
@@ -114,7 +114,7 @@ define(["jquery", "underscore", "picSure/settings", "text!openPicsure/outputPane
 			$.ajax({
 				url: window.location.origin + "/picsure/query/sync",
 				type: 'POST',
-				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 				contentType: 'application/json',
 				data: JSON.stringify(queryStudies),
 				success: (function(response) {

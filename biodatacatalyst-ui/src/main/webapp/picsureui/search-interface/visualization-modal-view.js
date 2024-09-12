@@ -44,7 +44,7 @@ define(["jquery", "backbone", "handlebars", "text!search-interface/visualization
             getImages: function () {
                 return new Promise((resolve, reject) => {
                     let query = queryBuilder.createQueryNew(filterModel.get("activeFilters").toJSON(), {}, settings.visualizationResourceId);
-                    query.resourceCredentials = {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token};
+                    query.resourceCredentials = {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token};
                     queryBuilder.updateConsentFilters(query, settings);
 
                     // We need to remove the consent filter for open access as it will reduce the number of results

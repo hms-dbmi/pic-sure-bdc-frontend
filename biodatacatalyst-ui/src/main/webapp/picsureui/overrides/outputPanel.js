@@ -74,7 +74,7 @@ define(["handlebars", "backbone", "picSure/settings", "common/transportErrors", 
 			$.ajax({
 				url: window.location.origin + "/picsure/query/sync",
 				type: 'POST',
-				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+				headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 				contentType: 'application/json',
 				data: JSON.stringify(query),
 				success: function(response, textStatus, request){

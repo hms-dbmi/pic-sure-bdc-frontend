@@ -53,7 +53,7 @@ define(["underscore", "jquery", "backbone", "handlebars", "text!landing/landing.
                 let deferredParticipants = $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
                     type: 'POST',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                     contentType: 'application/json',
                     data: JSON.stringify(query),
                     success: (function (response) {
